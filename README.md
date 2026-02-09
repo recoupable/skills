@@ -93,7 +93,17 @@ Add a row to the appropriate skills table above.
 
 ## Skill Format
 
-Every skill directory must contain a `SKILL.md` with this structure:
+Every skill directory must contain a `SKILL.md`. It may also include:
+
+```
+my-skill/
+├── SKILL.md          ← required — instructions + YAML frontmatter
+├── scripts/          ← optional — executable code (Python, Bash)
+├── references/       ← optional — docs loaded on-demand
+└── assets/           ← optional — templates, fonts, icons
+```
+
+### SKILL.md structure
 
 ```markdown
 ---
@@ -106,12 +116,36 @@ description: What this skill does and when to use it
 Instructions, examples, and guidelines go here.
 ```
 
+### Writing a good description
+
+The `description` field is how Claude decides whether to load your skill. Be specific:
+
+```markdown
+# Bad — too vague
+description: Helps with music projects
+
+# Good — what + when + trigger phrases
+description: Guide for writing and evaluating song lyrics and concepts.
+Use when brainstorming song ideas, writing lyrics, evaluating song drafts,
+refining hooks, or improving existing songs.
+```
+
+### Guidelines
+
+- Keep `SKILL.md` under **5,000 words** — move heavy content to `references/`
+- Put critical instructions at the top
+- Use bullet points and lists over prose
+- No XML angle brackets (`< >`) in skill files
+
 ## Contributing
 
 1. Work in the individual skill repo
 2. Keep skills focused — one clear purpose per skill
 3. Follow the [brand guidelines](./internal/brand-guidelines/) for any user-facing output
-4. Test your skill before committing
+4. Test before committing:
+   - Does the skill trigger on relevant requests?
+   - Does it avoid triggering on unrelated topics?
+   - Does the workflow complete without errors?
 
 ---
 

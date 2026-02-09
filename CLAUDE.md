@@ -14,6 +14,16 @@ This is a **monorepo** containing all of Recoupable's AI agent skills. Skills ar
   - **`external/`** — outward-facing skills that power the product (customers, partners)
   - **`internal/`** — skills for the Recoupable team's own operations
 
+## How Skills Load
+
+Skills use progressive disclosure — three tiers:
+
+1. **Frontmatter** (`name` + `description`) — always loaded. This is how you decide whether to load a skill.
+2. **SKILL.md body** — loaded when the skill is relevant to the task.
+3. **Linked files** (`references/`, `scripts/`) — loaded on-demand as needed.
+
+The `description` field is the most important line in any skill — it determines when the skill activates.
+
 ## How to Work Here
 
 1. **Read the skill's `SKILL.md`** before modifying or referencing any skill — it's the source of truth
