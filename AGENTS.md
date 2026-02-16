@@ -8,10 +8,7 @@ This monorepo holds all of Recoupable's AI agent skills. Each skill is a set of 
 
 ## Structure
 
-Skills are organized into two categories:
-
-- **`external/`** — Skills that power outward-facing agent work (product, customers, partners)
-- **`internal/`** — Skills for the Recoupable team's own operations
+Each skill lives at the top level as its own directory (git submodule). No nested categories.
 
 ```
 skills/                              ← monorepo root
@@ -19,13 +16,10 @@ skills/                              ← monorepo root
 ├── AGENTS.md                        ← this file (all agents)
 ├── README.md                        ← human-readable overview
 │
-├── external/                        ← outward-facing skills
-│   ├── chartmetric/                 ← music analytics API (submodule)
-│   ├── release-management/          ← release campaign management (submodule)
-│   └── songwriting/                 ← songwriting skill (submodule)
-│
-└── internal/                        ← Recoupable team skills
-    └── brand-guidelines/            ← brand identity system (submodule)
+├── brand-guidelines/                ← brand identity system (private, opt-in)
+├── chartmetric/                     ← music analytics API
+├── release-management/              ← release campaign management
+└── songwriting/                     ← songwriting skill
 ```
 
 ## How Skills Load
@@ -43,17 +37,10 @@ The `description` field is the trigger. Write it well or the skill won't activat
 1. **Read before you act.** Always read a skill's `SKILL.md` before executing, modifying, or referencing it.
 2. **Respect boundaries.** Each skill is self-contained. Do not create cross-dependencies between skills.
 3. **Design for composability.** Multiple skills may be loaded at once. Never assume yours is the only one active.
-4. **Follow the brand.** Any user-facing output must follow `internal/brand-guidelines/SKILL.md`. This includes voice, tone, colors, and typography.
+4. **Follow the brand.** Any user-facing output must follow `brand-guidelines/SKILL.md`. This includes voice, tone, colors, and typography.
 5. **Keep it simple.** Prefer the simplest working solution. Don't over-engineer skills.
 6. **One skill, one job.** Each skill should do one thing well. Don't merge unrelated capabilities.
 7. **Document changes.** If you add or modify a skill, update the README's skills table.
-
-## Skill Categories
-
-| Category | Path | Purpose |
-|----------|------|---------|
-| **External** | `external/` | Powers the product — what agents do for customers and partners |
-| **Internal** | `internal/` | Powers the team — how Recoupable operates and stays on-brand |
 
 ## Submodules
 
@@ -62,6 +49,8 @@ All skill repos are linked via git submodules. If a skill folder appears empty, 
 ```bash
 git submodule init && git submodule update
 ```
+
+> Some skills (like `brand-guidelines`) are private and won't auto-clone. They are opt-in — team members with access can run `git submodule update --init -- brand-guidelines`.
 
 ## Skill Format
 

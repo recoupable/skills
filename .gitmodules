@@ -1,13 +1,13 @@
-[submodule "external/chartmetric"]
-	path = external/chartmetric
+[submodule "chartmetric"]
+	path = chartmetric
 	url = https://github.com/recoupable/chartmetric.git
-[submodule "external/release-management"]
-	path = external/release-management
+[submodule "release-management"]
+	path = release-management
 	url = https://github.com/recoupable/release-management.git
-[submodule "external/songwriting"]
-	path = external/songwriting
+[submodule "songwriting"]
+	path = songwriting
 	url = https://github.com/recoupable/songwriting.git
-[submodule "internal/brand-guidelines"]
-	path = internal/brand-guidelines
+[submodule "brand-guidelines"]
+	path = brand-guidelines
 	url = git@github.com:recoupable/brand-guidelines.git
 	update = none

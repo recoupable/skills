@@ -12,10 +12,7 @@ Each skill is a self-contained set of instructions, resources, and references th
 
 ## Repository Structure
 
-This repo uses **git submodules** to pull in skill repos from across the [Recoupable](https://github.com/recoupable) organization. Skills are organized into two categories:
-
-- **`external/`** — Skills that power outward-facing agent work (product, customers, partners)
-- **`internal/`** — Skills for the Recoupable team's own operations
+This repo uses **git submodules** to pull in skill repos from across the [Recoupable](https://github.com/recoupable) organization. Each skill lives at the top level — no nested categories.
 
 ```
 skills/                              ← monorepo root
@@ -23,13 +20,10 @@ skills/                              ← monorepo root
 ├── AGENTS.md                        ← instructions for all AI agents
 ├── README.md                        ← you are here
 │
-├── external/                        ← outward-facing skills
-│   ├── chartmetric/                 ← music analytics API
-│   ├── release-management/          ← release campaign management
-│   └── songwriting/                 ← songwriting with the 7 C's
-│
-└── internal/                        ← Recoupable team skills
-    └── brand-guidelines/            ← brand identity system
+├── brand-guidelines/                ← brand identity system (private, opt-in)
+├── chartmetric/                     ← music analytics API
+├── release-management/              ← release campaign management
+└── songwriting/                     ← songwriting with the 7 C's
 ```
 
 ## Getting Started
@@ -53,47 +47,33 @@ git submodule update
 git submodule update --remote --merge
 ```
 
-> **Note:** Internal skills (under `internal/`) are private repos and won't clone automatically. If you're a Recoupable team member with access, opt in manually:
+> **Note:** Some skills are private repos (like `brand-guidelines`) and won't clone automatically. If you're a Recoupable team member with access, opt in manually:
 >
 > ```bash
-> git submodule update --init -- internal/brand-guidelines
+> git submodule update --init -- brand-guidelines
 > ```
 
 ## Skills
 
-### External
-
-Skills that power Recoupable's AI agents — the capabilities customers and partners interact with.
-
-| Skill | Description |
-|-------|-------------|
-| [chartmetric](./external/chartmetric/) | Music analytics API — streaming data, playlist placements, audience demographics, competitive analysis |
-| [release-management](./external/release-management/) | Manage music release campaigns — DSP pitches, metadata, marketing, press materials, and more |
-| [songwriting](./external/songwriting/) | Song evaluation and writing using the 7 C's framework |
-
-### Internal
-
-Skills for the Recoupable team — how we operate, communicate, and stay on-brand.
-
-| Skill | Description |
-|-------|-------------|
-| [brand-guidelines](./internal/brand-guidelines/) | Recoupable's complete brand identity system — colors, typography, voice, illustration style |
+| Skill | Description | Access |
+|-------|-------------|--------|
+| [brand-guidelines](./brand-guidelines/) | Recoupable's complete brand identity system — colors, typography, voice, illustration style | 🔒 Private |
+| [chartmetric](./chartmetric/) | Music analytics API — streaming data, playlist placements, audience demographics, competitive analysis | Public |
+| [release-management](./release-management/) | Manage music release campaigns — DSP pitches, metadata, marketing, press materials, and more | Public |
+| [songwriting](./songwriting/) | Song evaluation and writing using the 7 C's framework | Public |
 
 ## Adding a New Skill
 
-### 1. Decide the category
-
-- Does it serve customers or partners? → `external/`
-- Does it serve the Recoupable team? → `internal/`
-
-### 2. Add the submodule
+### 1. Add the submodule
 
 ```bash
-git submodule add https://github.com/recoupable/<repo-name>.git external/<folder-name>
-git commit -m "Add <repo-name> as external skill"
+git submodule add https://github.com/recoupable/<repo-name>.git <folder-name>
+git commit -m "Add <repo-name> skill"
 ```
 
-### 3. Update this README
+> For private skills, use the SSH URL (`git@github.com:...`) and add `update = none` in `.gitmodules` so public users aren't affected.
+
+### 2. Update this README
 
 Add a row to the appropriate skills table above.
 
@@ -147,7 +127,7 @@ refining hooks, or improving existing songs.
 
 1. Work in the individual skill repo
 2. Keep skills focused — one clear purpose per skill
-3. Follow the [brand guidelines](./internal/brand-guidelines/) for any user-facing output
+3. Follow the [brand guidelines](./brand-guidelines/) for any user-facing output
 4. Test before committing:
    - Does the skill trigger on relevant requests?
    - Does it avoid triggering on unrelated topics?

@@ -10,9 +10,8 @@ This is a **monorepo** containing all of Recoupable's AI agent skills. Skills ar
 
 - **All skills** are pulled in as **git submodules** — each links to its own repo in the `recoupable` GitHub org
 - Every skill directory contains a `SKILL.md` file with YAML frontmatter (`name`, `description`) and the full instruction set
-- Skills are organized into two categories:
-  - **`external/`** — outward-facing skills that power the product (customers, partners)
-  - **`internal/`** — skills for the Recoupable team's own operations
+- Skills live at the top level — each directory is one skill, no nested categories
+- Some skills (like `brand-guidelines`) are private and opt-in — they won't auto-clone
 
 ## How Skills Load
 
@@ -27,7 +26,7 @@ The `description` field is the most important line in any skill — it determine
 ## How to Work Here
 
 1. **Read the skill's `SKILL.md`** before modifying or referencing any skill — it's the source of truth
-2. **Follow brand guidelines** from `internal/brand-guidelines/SKILL.md` for any user-facing content or artifacts
+2. **Follow brand guidelines** from `brand-guidelines/SKILL.md` for any user-facing content or artifacts
 3. **Keep skills self-contained** — each skill folder should work independently without relying on other skills
 4. **One purpose per skill** — don't combine unrelated capabilities into a single skill
 
@@ -39,7 +38,7 @@ Recoupable's voice is warm, brief, and human-first. When generating any content 
 - Guide, don't command
 - Technology serves people, not the reverse
 
-Refer to `internal/brand-guidelines/SKILL.md` for the full brand identity system.
+Refer to `brand-guidelines/SKILL.md` for the full brand identity system.
 
 ## Submodules
 
@@ -57,5 +56,5 @@ git submodule update
 | `README.md` | Repo overview and setup instructions |
 | `CLAUDE.md` | This file — context for Claude |
 | `AGENTS.md` | Instructions for all AI agents working in this repo |
-| `internal/brand-guidelines/SKILL.md` | Full brand identity system |
-| `*/*/SKILL.md` | Each skill's instruction set |
+| `brand-guidelines/SKILL.md` | Full brand identity system |
+| `*/SKILL.md` | Each skill's instruction set |
