@@ -11,3 +11,6 @@
 	path = brand-guidelines
 	url = git@github.com:recoupable/brand-guidelines.git
 	update = none
+[submodule "setup-sandbox"]
+	path = setup-sandbox
+	url = https://github.com/recoupable/setup-sandbox.git

@@ -19,6 +19,7 @@ skills/                              ← monorepo root
 ├── brand-guidelines/                ← brand identity system (private, opt-in)
 ├── chartmetric/                     ← music analytics API
 ├── release-management/              ← release campaign management
+├── setup-sandbox/                   ← org & artist folder setup via Recoup CLI
 └── songwriting/                     ← songwriting skill
 ```
 

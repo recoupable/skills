@@ -23,6 +23,7 @@ skills/                              ← monorepo root
 ├── brand-guidelines/                ← brand identity system (private, opt-in)
 ├── chartmetric/                     ← music analytics API
 ├── release-management/              ← release campaign management
+├── setup-sandbox/                   ← org & artist folder setup via Recoup CLI
 └── songwriting/                     ← songwriting with the 7 C's
 ```
 
@@ -60,6 +61,7 @@ git submodule update --remote --merge
 | [brand-guidelines](./brand-guidelines/) | Recoupable's complete brand identity system — colors, typography, voice, illustration style | 🔒 Private |
 | [chartmetric](./chartmetric/) | Music analytics API — streaming data, playlist placements, audience demographics, competitive analysis | Public |
 | [release-management](./release-management/) | Manage music release campaigns — DSP pitches, metadata, marketing, press materials, and more | Public |
+| [setup-sandbox](./setup-sandbox/) | Create org and artist folder structure using the Recoup CLI | Public |
 | [songwriting](./songwriting/) | Song evaluation and writing using the 7 C's framework | Public |
 
 ## Adding a New Skill
