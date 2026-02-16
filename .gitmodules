@@ -10,3 +10,4 @@
 [submodule "internal/brand-guidelines"]
 	path = internal/brand-guidelines
 	url = git@github.com:recoupable/brand-guidelines.git
+	update = none

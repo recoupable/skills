@@ -34,7 +34,7 @@ skills/                              ← monorepo root
 
 ## Getting Started
 
-### Clone with all submodules
+### Clone with all public skills
 
 ```bash
 git clone --recurse-submodules https://github.com/recoupable/skills.git
@@ -52,6 +52,12 @@ git submodule update
 ```bash
 git submodule update --remote --merge
 ```
+
+> **Note:** Internal skills (under `internal/`) are private repos and won't clone automatically. If you're a Recoupable team member with access, opt in manually:
+>
+> ```bash
+> git submodule update --init -- internal/brand-guidelines
+> ```
 
 ## Skills
 
