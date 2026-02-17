@@ -1,6 +1,6 @@
 ---
 name: setup-artist
-description: Set up the workspace for a new artist inside a sandbox. Creates the directory structure, context files, memory system, and placeholder content so agents can immediately start working. Use after setup-sandbox has created the org/artist folders, when an artist directory is empty or only has a RECOUP.md. Triggers on "set up artist", "create artist workspace", "initialize artist", or "onboard new artist".
+description: Set up the workspace for a new artist inside a sandbox. Creates the directory structure, context files, memory system, and placeholder content so agents can immediately start working. Use after setup-sandbox has created the org/artist folders, when RECOUP.md has status not-setup. Triggers on "set up artist", "create artist workspace", "initialize artist", or "onboard new artist".
 ---
 
 # Setup Artist
@@ -10,15 +10,15 @@ Scaffold a complete artist workspace so agents can start working immediately.
 ## Prerequisites
 
 - The sandbox has already been set up (see `setup-sandbox` skill)
-- An artist folder exists at `orgs/{org-name}/artists/{artist-name}/`
-- You know the artist's name, slug, and Recoup ID (from the CLI or the user)
+- An artist folder exists at `orgs/{org-name}/artists/{artist-slug}/` with a `RECOUP.md` marker file
+- The `RECOUP.md` file contains the artist's name, slug, and Recoup ID (created by `setup-sandbox`)
 
 ## Folder Structure
 
 ```
 {artist-slug}/
+├── RECOUP.md
 ├── README.md
-├── artist-workspace.json
 ├── context/
 │   ├── artist.md
 │   ├── audience.md
@@ -35,6 +35,7 @@ Scaffold a complete artist workspace so agents can start working immediately.
 ├── releases/
 │   └── README.md
 ├── content/
+│   ├── README.md
 │   ├── images/
 │   └── videos/
 ├── config/
@@ -47,24 +48,37 @@ Scaffold a complete artist workspace so agents can start working immediately.
 
 ## Steps
 
-### Step 1: Create the directory structure
+### Step 1: Read `RECOUP.md` and create the directory structure
+
+1. Navigate to the artist folder and read `RECOUP.md` to get the artist's name, slug, and ID:
 
 ```bash
-mkdir -p {artist-slug}/{context/images,memory,songs,releases,content/images,content/videos,config,library,apps}
+cd orgs/{org-name}/artists/{artist-slug}
+cat RECOUP.md
 ```
 
-### Step 2: Create `artist-workspace.json`
+2. Create the directory structure:
 
-```json
-{
-  "_comment": "Connects this workspace to the Recoupable platform.",
-  "artistSlug": "{artist-slug}",
-  "artistId": "{uuid-from-recoupable}"
-}
+```bash
+mkdir -p {context/images,memory,songs,releases,content/images,content/videos,config,library,apps}
 ```
 
-- `artistSlug` — lowercase-kebab-case (e.g. `gatsby-grace`)
-- `artistId` — the UUID from Recoup. Ask the user if you don't have it.
+### Step 2: Update `RECOUP.md`
+
+Update the `status` field from `not-setup` to `active` and replace the body with a brief description:
+
+```markdown
+---
+artistName: {Artist Name}
+artistSlug: {artist-slug}
+artistId: {uuid-from-recoupable}
+status: active
+---
+
+# {Artist Name}
+
+Connects this workspace to the Recoupable platform. See `README.md` for the full directory guide and setup checklist.
+```
 
 ### Step 3: Create context files
 
@@ -94,6 +108,7 @@ Each directory needs a `README.md` explaining its purpose. See `references/direc
 |-----------|-------------------|
 | `songs/` | Song folder format, naming conventions, what files to add |
 | `releases/` | Release folder format, RELEASE.md as source of truth |
+| `content/` | Generated content output — images and videos |
 | `config/` | Per-artist config for shared automation tools |
 | `library/` | Deep-dive reference docs, research, reports |
 | `apps/` | Artist-specific applications (not shared tools) |

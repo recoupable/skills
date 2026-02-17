@@ -61,6 +61,36 @@ Songs live in `songs/{slug}/` — reference them by slug in RELEASE.md. Don't du
 
 ---
 
+## `content/README.md`
+
+```markdown
+---
+name: Content
+description: Generated content output — images and videos created by the content pipeline. Subdirectories like videos/shortform/ are created automatically as content is produced.
+---
+
+# Content
+
+All generated content lives here — images and videos created by the content pipeline and other tools.
+
+## Structure
+
+content/
+  images/          # Generated images (cover art variations, social graphics, etc.)
+  videos/          # Generated videos — subdirectories by type
+    shortform/     # Short-form content (TikTok, Reels, Shorts)
+
+Subdirectories are created automatically by the pipeline as content is produced. Don't create them ahead of time.
+
+## Not Here
+
+- **Source images** (face guides, visual references) → `context/images/`
+- **Song audio** → `songs/`
+- **Cover art masters** → `releases/{release-slug}/`
+```
+
+---
+
 ## `config/README.md`
 
 ```markdown
@@ -103,6 +133,11 @@ The app creates its subdirectory and files when first configured for this artist
 ## `library/README.md`
 
 ```markdown
+---
+name: Library
+description: Extended reference material — research, reports, strategy docs. Scoped by era so agents prioritize current-era docs. This is NOT for artist identity (that's context/) or learned knowledge (that's memory/).
+---
+
 # Library
 
 Extended context for the artist — notes, research, reports, strategy docs, data, or anything that doesn't fit in `context/` but is useful to reference. Add files as the project grows.
