@@ -14,3 +14,6 @@
 [submodule "setup-sandbox"]
 	path = setup-sandbox
 	url = https://github.com/recoupable/setup-sandbox.git
+[submodule "setup-artist"]
+	path = setup-artist
+	url = https://github.com/recoupable/setup-artist.git
