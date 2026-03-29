@@ -5,124 +5,164 @@ description: Music industry research via `recoup research` CLI — streaming met
 
 # Recoup Research
 
-Music industry research through the `recoup research` CLI. Covers artist analytics, web intelligence, people search, URL extraction, and structured data enrichment — all through one command with `RECOUP_API_KEY` auth.
+Music industry research through the `recoup research` CLI. All commands use `RECOUP_API_KEY` for auth. In sandboxes, this is already configured.
 
-## Setup
+## Before You Research
 
-In sandboxes, the CLI is already installed and authenticated. Otherwise:
+1. Check if the artist has a workspace with `context/artist.md` — don't re-research what's already known.
+2. Decide what the user actually needs. "How's Drake doing?" needs 2-3 commands, not 20.
+3. Always use `--json` when you'll process the output programmatically.
 
-```bash
-npm install -g @recoupable/cli
-export RECOUP_API_KEY=your-api-key
-```
+## Decision Tree
 
-## Quick Start
+Start here based on what the user asks:
 
-```bash
-recoup research "Kaash Paige" --json          # find artist
-recoup research metrics "Kaash Paige" --source spotify --json  # streaming data
-recoup research cities "Kaash Paige" --json    # where fans are
-recoup research similar "Kaash Paige" --json   # competitors
-```
+**"How is [artist] doing?"** → `metrics --source spotify` + `cities` + `insights`
 
-Every artist-scoped command accepts an **artist name** — the API resolves it internally. Always use `--json` when chaining commands.
+**"Research [artist] for me"** → Full chain: `profile` → parallel(`metrics`, `audience`, `cities`, `similar`, `playlists`) → `web` for narrative context → synthesize
+
+**"Who should I pitch to?"** → `similar --audience high --genre high` → `playlists` on each peer → find playlists that have peers but not your artist
+
+**"Where should we tour?"** → `cities` + `audience --platform youtube` + `festivals`
+
+**"Find me [people]"** → `people "A&R reps at [label]"`
+
+**"Tell me about [entity]"** → `enrich "[entity]" --schema '{...}'` for structured data, or `report "[entity]"` for a narrative
+
+**"What does this page say?"** → `extract "https://..."` 
+
+**"Find emerging artists"** → `discover --country US --genre <id> --spotify-listeners 50000,200000`
+
+If none of these match, start with `web "query"` for general research.
 
 ---
 
-## Commands
+## Commands Quick Reference
 
-### Artist Data
+### Artist Data (accept artist name, API resolves internally)
 
-| Command | What It Returns |
-|---------|----------------|
-| `recoup research "Drake"` | Search results with name, ID, listeners, followers |
-| `recoup research profile "Drake"` | Bio, genres, social URLs, label, career stage |
-| `recoup research metrics "Drake" --source spotify` | Time-series streaming/social metrics (14 platforms) |
-| `recoup research audience "Drake"` | Age, gender, country demographics (Instagram default) |
-| `recoup research audience "Drake" --platform tiktok` | TikTok demographics |
-| `recoup research cities "Drake"` | Top cities ranked by listener count |
-| `recoup research similar "Drake"` | Peers with career stage, momentum, listener counts |
-| `recoup research similar "Drake" --audience high --genre high` | Filtered by similarity dimensions |
-| `recoup research urls "Drake"` | All social/streaming links |
-| `recoup research instagram-posts "Drake"` | Top posts/reels by engagement |
-| `recoup research playlists "Drake"` | Current playlist placements with follower counts |
-| `recoup research playlists "Drake" --editorial` | Editorial playlists only |
-| `recoup research albums "Drake"` | Full discography with release dates |
-| `recoup research tracks "Drake"` | All tracks with popularity |
-| `recoup research career "Drake"` | Career timeline and milestones |
-| `recoup research insights "Drake"` | AI-generated observations and trends |
+```bash
+recoup research "Drake" --json                    # search — returns { results: [{ name, id, sp_monthly_listeners, sp_followers }] }
+recoup research profile "Drake" --json            # full profile — { name, genres, country_code, cm_artist_score, ... }
+recoup research metrics "Drake" --source spotify --json  # time-series — { followers: [...], listeners: [...], popularity: [...] }
+recoup research audience "Drake" --json           # demographics — { audience_genders: [...], audience_genders_per_age: [...], top_countries: [...] }
+recoup research cities "Drake" --json             # geography — { cities: [{ name, country, listeners }] }
+recoup research similar "Drake" --json            # competitors — { artists: [{ name, career_stage, recent_momentum, sp_monthly_listeners }] }
+recoup research playlists "Drake" --json          # placements — { placements: [{ playlist: { name, followers }, track: { name } }] }
+recoup research albums "Drake" --json             # discography — { albums: [{ name, release_date }] }
+recoup research tracks "Drake" --json             # tracks — { tracks: [{ name, id }] }
+recoup research career "Drake" --json             # timeline — career milestones array
+recoup research insights "Drake" --json           # AI observations — { insights: [{ insight: "text" }] }
+recoup research urls "Drake" --json               # social links — { urls: [{ domain, url }] }
+recoup research instagram-posts "Drake" --json    # top posts/reels
+```
 
 ### Non-Artist Data
 
-| Command | What It Returns |
-|---------|----------------|
-| `recoup research lookup "https://open.spotify.com/artist/..."` | Artist from platform URL |
-| `recoup research track "God's Plan"` | Track metadata |
-| `recoup research playlist spotify 1645080` | Playlist details |
-| `recoup research curator spotify 1` | Curator profile |
-| `recoup research discover --country US --spotify-listeners 100000,500000` | Find artists by criteria |
-| `recoup research genres` | All genre IDs (use with discover) |
-| `recoup research festivals` | Music festivals |
+```bash
+recoup research lookup "https://open.spotify.com/artist/..." --json
+recoup research track "God's Plan" --json
+recoup research playlist spotify 1645080 --json
+recoup research curator spotify 1 --json
+recoup research discover --country US --spotify-listeners 100000,500000 --json
+recoup research genres --json
+recoup research festivals --json
+```
 
 ### Web Intelligence
 
-| Command | What It Returns |
-|---------|----------------|
-| `recoup research web "Drake brand partnerships"` | Web search results (Perplexity) |
-| `recoup research report "Tell me about Kaash Paige"` | Comprehensive cited research report |
-| `recoup research people "A&R reps at Atlantic Records"` | LinkedIn profiles and summaries (Exa) |
-| `recoup research extract "https://en.wikipedia.org/wiki/Drake_(musician)"` | Clean markdown from any URL (Parallel) |
-| `recoup research enrich "Kaash Paige" --schema '{"properties":{"label":{"type":"string"}}}'` | Structured data with citations (Parallel) |
+```bash
+recoup research web "Drake brand partnerships" --json              # web search — { results: [{ title, url, snippet }] }
+recoup research report "Tell me about Kaash Paige" --json          # deep research — { content: "markdown report", citations: [...] }
+recoup research people "A&R reps at Atlantic Records" --json       # people search — { results: [{ title, url, summary }] }
+recoup research extract "https://example.com" --json               # URL scraping — { results: [{ title, url, excerpts: [...] }] }
+recoup research enrich "Kaash Paige" --schema '{"properties":{"label":{"type":"string"}}}' --json  # structured — { output: { label: "Rostrum Records" } }
+```
 
-### Platform Metrics Sources
+### Platform Sources (for `metrics` command)
 
-Valid `--source` values for the `metrics` command: `spotify`, `instagram`, `tiktok`, `twitter`, `facebook`, `youtube_channel`, `youtube_artist`, `soundcloud`, `deezer`, `twitch`, `line`, `melon`, `wikipedia`, `bandsintown`
+`spotify`, `instagram`, `tiktok`, `twitter`, `facebook`, `youtube_channel`, `youtube_artist`, `soundcloud`, `deezer`, `twitch`, `line`, `melon`, `wikipedia`, `bandsintown`
 
-### Gotcha
-
-YouTube metrics use `youtube_channel` — not `youtube`.
+YouTube uses `youtube_channel` — not `youtube`.
 
 ---
 
-## When to Use Which Command
+## Interpreting the Data
 
-| User asks... | Use |
-|-------------|-----|
-| "How's Drake doing on Spotify?" | `metrics --source spotify` |
-| "Where are Drake's fans?" | `cities` + `audience` |
-| "Who should I pitch to?" | `similar` → `playlists` on each peer |
-| "Who manages this artist?" | `people` |
-| "What does this website say?" | `extract` |
-| "Give me structured data about X" | `enrich` |
-| "Tell me everything about X" | `report` (deep) or chain multiple commands |
-| "Find emerging artists in hip-hop" | `discover --genre <id>` |
-| "Is TikTok translating to Spotify?" | `metrics --source tiktok` + `metrics --source spotify` |
+Raw numbers are noise without interpretation. Here's what to look for:
 
----
+**Metrics:**
+- Follower-to-listener ratio above 20% = dedicated fan base (they follow, not just stream)
+- Save-to-listener ratio above 3% = strong catalog stickiness
+- Week-over-week listener growth above 5% = momentum
+- Popularity score trending up = algorithmic favor
 
-## Workflow Chains
+**Cities:**
+- If top cities are international but playlists are US-only = untapped international opportunity
+- If a city has high listeners but the artist has never toured there = tour opportunity
+- Compare with similar artists' cities to find geographic white space
 
-For strategic questions that require chaining multiple commands, read `references/workflows.md`. It covers 10 workflow chains:
+**Similar Artists:**
+- `career_stage`: undiscovered → developing → mid-level → mainstream → superstar → legendary
+- `recent_momentum`: decline → gradual decline → steady → growth → explosive growth
+- If the artist's peers are all "mainstream" but they're "mid-level" = breakout potential
+- Peers with playlists you're NOT on = pitch targets
 
-| Workflow | Question |
-|----------|----------|
-| Playlist Pitching | Which curators should I pitch to? |
-| TikTok Pipeline | Is TikTok virality translating to Spotify? |
-| Tour Routing | Where should this artist tour next? |
-| A&R Discovery | Find emerging artists before they blow up |
-| Catalog Optimization | Which songs should we push and where? |
-| Competitive Roster | How does our roster compare? |
-| Viral Autopsy | Why did this song go viral? |
-| Market Expansion | Which new markets to focus on? |
-| Collaboration Finder | Who should we collaborate with? |
-| Release Timing | When should we release? |
+**Playlists:**
+- 2 editorial playlists for 5M+ listeners = severely under-playlisted (pitch immediately)
+- Follower count on playlists tells you reach potential
+- Past placements (`--status past`) that dropped off = re-pitch opportunities
+
+**Audience:**
+- Gender skew tells you content strategy (visual style, messaging)
+- Age concentration tells you platform priority (Gen Z = TikTok, 25-34 = Instagram)
+- Country mismatch between audience and cities = content localization opportunity
 
 ---
 
-## Tips
+## Synthesis Patterns
 
-1. **Always use `--json`** when chaining — structured output is easier to parse.
-2. **Run independent commands in parallel** — metrics, audience, cities don't depend on each other.
-3. **YouTube uses `youtube_channel`** not `youtube` — the most common gotcha.
-4. **Cross-reference for insights** — cities + audience = geographic strategy; similar + playlists = pitch targets.
-5. **The `enrich` command is powerful** — define any JSON schema and get structured data back with citations. Use for anything web research can answer.
+Don't dump raw data. Combine endpoints and draw conclusions:
+
+**Geographic Strategy:** `cities` + `audience` → "Sao Paulo is #1 (135K listeners) but audience is 80% US on Instagram. There's a massive Brazilian fan base that isn't being served with localized content."
+
+**Playlist Gap Analysis:** `similar` → `playlists` on each peer → "5 of your 10 peers are on 'R&B Rotation' (450K followers) but you're not. That's your top pitch target."
+
+**Platform Pipeline:** `metrics --source tiktok` + `metrics --source spotify` → "TikTok followers grew 40% last month but Spotify listeners are flat. The TikTok virality isn't converting. Need Spotify-specific CTAs on TikTok content."
+
+**Career Positioning:** `similar` → compare career stages → "You're the only 'mainstream' artist in your peer group — everyone else is 'mid-level'. You have positioning leverage for brand deals and festival slots."
+
+---
+
+## Saving Research
+
+If working in an artist workspace, save research results to `research/` with timestamps:
+
+```
+research/artist-intel-2026-03-27.md
+```
+
+Don't overwrite `context/artist.md` with research data. Static context (who the artist IS) is separate from dynamic research (how they're performing NOW). If the research reveals something that should update the static profile, suggest it to the user — don't auto-update.
+
+---
+
+## What Not to Do
+
+- **Don't run 20 commands when 3 will answer the question.** Start small, expand if needed.
+- **Don't dump raw JSON to the user.** Interpret the data and draw conclusions.
+- **Don't re-research what `context/artist.md` already covers.** Read it first.
+- **Don't ignore the `--json` flag when chaining.** Tables are for humans, JSON is for you.
+- **Don't assume Chartmetric has every artist.** If search returns no results, fall back to `web` or `report`.
+
+---
+
+## Graceful Degradation
+
+If `recoup research "Artist Name"` returns no results:
+1. Try `recoup research web "Artist Name musician"` for web-based research
+2. Try `recoup research enrich "Artist Name" --schema '{...}'` for structured extraction
+3. For very emerging artists, Chartmetric may not have data yet — web research is the fallback
+
+## More Workflows
+
+Read `references/workflows.md` for 10 complete multi-step workflow chains covering playlist pitching, competitive analysis, tour routing, A&R discovery, and more.
