@@ -31,7 +31,7 @@ Start here based on what the user asks:
 
 **"What does this page say?"** → `extract "https://..."` 
 
-**"Find emerging artists"** → `discover --country US --genre <id> --spotify-listeners 50000,200000`
+**"Find emerging artists"** → `discover --country US --genre GENRE_ID --spotify-listeners 50000,200000` (get IDs from `recoup research genres`)
 
 If none of these match, start with `web "query"` for general research.
 
@@ -83,7 +83,7 @@ recoup research enrich "Drake" --schema '{"properties":{"label":{"type":"string"
 
 `spotify`, `instagram`, `tiktok`, `twitter`, `facebook`, `youtube_channel`, `youtube_artist`, `soundcloud`, `deezer`, `twitch`, `line`, `melon`, `wikipedia`, `bandsintown`
 
-YouTube uses `youtube_channel` — not `youtube`.
+For **`metrics` only**, YouTube uses `youtube_channel` (not plain `youtube`). The **`audience`** command is different: Chartmetric’s path is `youtube-audience-stats`, so there you pass `--platform youtube` (see examples above). Do not use `youtube_channel` for `audience`.
 
 ---
 
