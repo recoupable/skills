@@ -73,10 +73,10 @@ recoup research festivals --json
 
 ```bash
 recoup research web "Drake brand partnerships" --json              # web search — { results: [{ title, url, snippet }] }
-recoup research report "Tell me about Kaash Paige" --json          # deep research — { content: "markdown report", citations: [...] }
+recoup research report "Tell me about Drake" --json          # deep research — { content: "markdown report", citations: [...] }
 recoup research people "A&R reps at Atlantic Records" --json       # people search — { results: [{ title, url, summary }] }
 recoup research extract "https://example.com" --json               # URL scraping — { results: [{ title, url, excerpts: [...] }] }
-recoup research enrich "Kaash Paige" --schema '{"properties":{"label":{"type":"string"}}}' --json  # structured — { output: { label: "Rostrum Records" } }
+recoup research enrich "Drake" --schema '{"properties":{"label":{"type":"string"}}}' --json  # structured — { output: { label: "OVO Sound" } }
 ```
 
 ### Platform Sources (for `metrics` command)
