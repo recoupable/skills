@@ -132,10 +132,17 @@ You can't see pixels — but `analyze-video` can. Use it freely throughout the w
 
 ### When to analyze
 
-- **After `generate-video`** — catch quality issues before spending time editing
-- **After `edit`** — evaluate the final product before delivering
-- **After `generate-image`** — optionally check the still before animating it
-- **Anytime** — use it to compare two versions, check if an upscale improved things, or validate a creative direction
+Use it at every creative checkpoint, not just once at the end:
+
+- **After generating a clip** — catch quality issues before spending time editing
+- **After each edit pass** — did the trim land on the right beat? Does the cut feel natural?
+- **After combining multiple clips** — do the cuts flow? Does the pacing hold attention?
+- **After adding audio** — is the lipsync convincing? Does the music energy match the visuals?
+- **After adding text** — is it readable, well-timed, not blocking anything important?
+- **When comparing versions** — which of two outputs is better and why?
+- **When building a storyline** — does the sequence of shots tell a coherent story?
+
+For longer edits with multiple cuts, analyze after each major assembly — not just the final export. If cut 3 of 5 looks wrong, fix it before adding cuts 4 and 5.
 
 ### Acting on feedback
 
