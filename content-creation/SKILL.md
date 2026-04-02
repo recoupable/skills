@@ -42,8 +42,10 @@ recoup content generate-image --prompt "{scene description}" \
 # 3. (Optional) Upscale image
 recoup content upscale --url {imageUrl} --type image --json
 
-# 4. Generate video
+# 4. Generate video (from image, or prompt-only, or both)
 recoup content generate-video --image {imageUrl} --json
+# Or without an image:
+recoup content generate-video --prompt "{video description}" --json
 # Returns: videoUrl
 
 # 5. Generate caption
