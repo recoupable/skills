@@ -13,10 +13,10 @@ Six primitives, each callable independently:
 
 | Primitive | Command | Async? |
 |-----------|---------|--------|
-| Select audio | `recoup content audio` | Yes (30-60s) |
-| Generate image | `recoup content image` | Yes (10-30s) |
-| Generate video | `recoup content video` | Yes (60-180s) |
-| Generate text | `recoup content text` | No (2-5s) |
+| Transcribe audio | `recoup content transcribe-audio` | Yes (30-60s) |
+| Generate image | `recoup content generate-image` | Yes (10-30s) |
+| Generate video | `recoup content generate-video` | Yes (60-180s) |
+| Generate caption | `recoup content generate-caption` | No (2-5s) |
 | Render final | `recoup content render` | Yes (10-30s) |
 | Upscale | `recoup content upscale` | Yes (30-60s) |
 
@@ -48,13 +48,13 @@ Start with audio before image because the song's mood should influence your temp
 - General content? Let the pipeline pick randomly
 - Have a specific audio file? Pass the URL: `--song https://...`
 
-After audio selection completes, check `clipMood` and `clipLyrics` in the output. If the mood doesn't match the template you planned, switch templates before generating the image.
+After transcription completes, check the lyrics and mood in the output. If the mood doesn't match the template you planned, switch templates before generating the image.
 
 ### Evaluating intermediate results
 
 After each step, assess quality before moving on:
 
-- **Image**: Does it match the template's aesthetic? Is the face recognizable? If not, run `recoup content image` again — it picks a different reference composition each time.
+- **Image**: Does it match the template's aesthetic? Is the face recognizable? If not, run `recoup content generate-image` again — it picks a different reference composition each time.
 - **Video**: Is the motion natural? Lipsync clips should show mouth movement matching the lyrics. If the video is too static or glitchy, regenerate.
 - **Text**: Does the text connect to the song's lyrics/theme? Is the length right for the platform? Try a different `--length` if it feels off.
 - **Upscale**: Only upscale if you need higher quality (adds 30-60s per step). Skip for quick drafts.
@@ -70,24 +70,23 @@ After each step, assess quality before moving on:
 ### Step-by-step (creative control)
 
 ```bash
-# 1. Select a song clip
-recoup content audio --artist <id> --json
-# Check output: songTitle, clipLyrics, clipMood
-# Use clipMood to confirm your template choice
+# 1. Transcribe a song
+recoup content transcribe-audio --artist <id> --json
+# Check output: songUrl, fullLyrics, segments
 
 # 2. Generate image
-recoup content image --artist <id> --template <name> --json
+recoup content generate-image --artist <id> --template <name> --json
 # Check output: imageUrl — does it match the aesthetic?
 
 # 3. (Optional) Upscale image
 recoup content upscale --url <imageUrl> --type image --json
 
 # 4. Generate video
-recoup content video --image <imageUrl> --json
+recoup content generate-video --image <imageUrl> --json
 # Check output: videoUrl
 
-# 5. Generate on-screen text
-recoup content text --artist <id> --song "<songTitle>" --length short --json
+# 5. Generate on-screen caption
+recoup content generate-caption --artist <id> --song "<songTitle>" --length short --json
 # Synchronous — returns { content } immediately
 
 # 6. Render final video
@@ -106,7 +105,7 @@ recoup content create --artist <id> --template artist-caption-bedroom --json
 
 ```bash
 # Audio first, then video with --lipsync
-recoup content video --image <imageUrl> --lipsync \
+recoup content generate-video --image <imageUrl> --lipsync \
   --song-url <songUrl> --start <seconds> --duration 15
 
 # When rendering, pass --has-audio so ffmpeg doesn't double the audio
@@ -118,9 +117,9 @@ recoup content render --video <videoUrl> --audio <songUrl> \
 
 The point of primitives is that you can redo any step without rerunning everything:
 
-- Bad image? Run `image` again (different reference each time)
-- Wrong song moment? Run `audio` again
-- Text too long? Run `text` with `--length short`
+- Bad image? Run `generate-image` again (different reference each time)
+- Wrong song moment? Run `transcribe-audio` again
+- Text too long? Run `generate-caption` with `--length short`
 - Low quality? Run `upscale` on the image or video
 - Everything good but text is wrong? Just rerun `render` with new text
 
