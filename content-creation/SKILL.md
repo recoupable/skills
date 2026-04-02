@@ -107,14 +107,32 @@ The `edit` command accepts either a template (deterministic config) or manual fl
 
 All operations run in a single processing pass.
 
-## Evaluating Results
+## Watching Your Work
 
-After each step, assess quality before moving on:
+After generating a video, use `analyze-video` to watch it before moving on. This is how you evaluate your own creative output and decide what to improve.
 
-- **Image**: Does it match the desired aesthetic? If not, run `generate-image` again with a different prompt or reference image.
-- **Video**: Is the motion natural? Lipsync should show movement matching the audio. If glitchy, regenerate.
-- **Caption**: Does the text connect to the topic? Try a different `--length` if it feels off.
-- **Upscale**: Only upscale if you need higher quality (adds 30-60s). Skip for quick drafts.
+```bash
+# After generate-video returns a videoUrl:
+recoup content analyze-video --url <videoUrl> \
+  --prompt "Evaluate this video for social media. Is the motion natural? Is the subject recognizable? Does it feel polished or glitchy? Rate 1-10 and explain what could improve." \
+  --json
+```
+
+Read the analysis. If it flags problems, fix them:
+- **Glitchy motion or artifacts** → regenerate video with a different `--model` or `--motion` prompt
+- **Subject not recognizable** → regenerate image with a better `--reference-image` or more specific `--prompt`
+- **Too static / boring** → try a more dynamic `--motion` prompt or switch to lipsync mode
+- **Good quality but wrong mood** → the video is fine, adjust the caption or audio choice instead
+
+Do this after every video generation, not just when something looks wrong. The analysis catches things you might miss and builds a feedback loop that improves each iteration.
+
+For final edited videos, analyze again after the edit pass:
+
+```bash
+recoup content analyze-video --url <finalVideoUrl> \
+  --prompt "This is the final social video with caption and audio. Is the text readable? Does the crop look right? Is the audio synced? Any issues that would hurt engagement?" \
+  --json
+```
 
 ## Iteration
 
@@ -124,6 +142,7 @@ Redo any step without rerunning everything:
 - Wrong audio moment? Transcribe a different file or URL
 - Caption too long? Run `generate-caption` with `--length short`
 - Low quality? Run `upscale` on the image or video
+- Video glitchy? Check `analyze-video` feedback, then regenerate with adjusted params
 - Everything good but caption is wrong? Just rerun `edit` with new `--overlay-text`
 
 Each retry costs only that step's time, not the full pipeline.
