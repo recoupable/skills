@@ -13,13 +13,13 @@ Seven primitives, each callable independently:
 
 | Primitive | Command | Async? |
 |-----------|---------|--------|
-| Transcribe audio | `recoup content transcribe-audio` | Yes (30-60s) |
-| Generate image | `recoup content generate-image` | Yes (10-30s) |
-| Generate video | `recoup content generate-video` | Yes (60-180s) |
-| Generate caption | `recoup content generate-caption` | No (2-5s) |
+| Transcribe audio | `recoup content transcribe` | Yes (30-60s) |
+| Generate image | `recoup content image` | Yes (10-30s) |
+| Generate video | `recoup content video` | Yes (60-180s) |
+| Generate caption | `recoup content caption` | No (2-5s) |
 | Edit | `recoup content edit` | Yes (10-30s) |
 | Upscale | `recoup content upscale` | Yes (30-60s) |
-| Analyze video | `recoup content analyze-video` | No (10-30s) |
+| Analyze video | `recoup content analyze` | No (10-30s) |
 
 Async primitives return a `runId`. Poll with `recoup tasks status --run {runId} --json` until `status` is `COMPLETED`, then read `output`.
 
@@ -55,11 +55,11 @@ All modes support `--aspect-ratio` (auto, 16:9, 9:16), `--duration` (4s-8s), and
 
 ```bash
 # 1. Transcribe audio
-recoup content transcribe-audio --url {audioUrl} --json
+recoup content transcribe --url {audioUrl} --json
 # Returns: audioUrl, fullLyrics, segments (timestamped words)
 
 # 2. Generate image
-recoup content generate-image --prompt "{scene description}" \
+recoup content image --prompt "{scene description}" \
   --reference-image {referenceImageUrl} --json
 # Returns: imageUrl, images (array if num_images > 1)
 
@@ -67,14 +67,14 @@ recoup content generate-image --prompt "{scene description}" \
 recoup content upscale --url {imageUrl} --type image --json
 
 # 4. Generate video
-recoup content generate-video --mode animate --image {imageUrl} \
+recoup content video --mode animate --image {imageUrl} \
   --prompt "{how to animate}" --json
 # Or from scratch:
-recoup content generate-video --mode prompt --prompt "{scene}" --json
+recoup content video --mode prompt --prompt "{scene}" --json
 # Returns: videoUrl, mode
 
 # 5. Generate caption
-recoup content generate-caption --topic "{topic}" --length short --json
+recoup content caption --topic "{topic}" --length short --json
 # Synchronous — returns { content } immediately
 
 # 6. Edit final video
@@ -92,7 +92,7 @@ recoup content create --artist {artistId} --template artist-caption-bedroom --js
 ### Lipsync
 
 ```bash
-recoup content generate-video --mode lipsync \
+recoup content video --mode lipsync \
   --image {faceUrl} --audio {audioUrl} --json
 
 # Edit — no need to mux audio (already baked into the video)
@@ -104,14 +104,14 @@ recoup content edit --video {videoUrl} \
 ### Extend a clip
 
 ```bash
-recoup content generate-video --mode extend \
+recoup content video --mode extend \
   --video {shortClipUrl} --prompt "continue the scene naturally" --json
 ```
 
 ### Transition between two shots
 
 ```bash
-recoup content generate-video --mode first-last \
+recoup content video --mode first-last \
   --image {startFrameUrl} --end-image {endFrameUrl} \
   --prompt "smooth cinematic transition" --json
 ```
