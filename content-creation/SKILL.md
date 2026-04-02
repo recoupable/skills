@@ -109,30 +109,44 @@ All operations run in a single processing pass.
 
 ## Watching Your Work
 
-After generating a video, use `analyze-video` to watch it before moving on. This is how you evaluate your own creative output and decide what to improve.
+After generating a video, use `analyze-video` to watch it before moving on. This is your eyes. You can't see pixels — but this primitive can. Use it to evaluate three things: **quality**, **taste**, and **readiness**.
+
+### After generating a video (QA check)
 
 ```bash
-# After generate-video returns a videoUrl:
 recoup content analyze-video --url <videoUrl> \
-  --prompt "Evaluate this video for social media. Is the motion natural? Is the subject recognizable? Does it feel polished or glitchy? Rate 1-10 and explain what could improve." \
+  --prompt "QA this video. Check for: 1) Visual artifacts, glitches, or distortion. 2) Whether the subject is recognizable and consistent. 3) Whether motion looks natural or robotic. 4) Any frames that look broken or repeated. Rate quality 1-10. List specific issues." \
   --json
 ```
 
-Read the analysis. If it flags problems, fix them:
-- **Glitchy motion or artifacts** → regenerate video with a different `--model` or `--motion` prompt
+Fix what it finds:
+- **Artifacts or glitches** → regenerate with a different `--model` or `--motion` prompt
 - **Subject not recognizable** → regenerate image with a better `--reference-image` or more specific `--prompt`
-- **Too static / boring** → try a more dynamic `--motion` prompt or switch to lipsync mode
-- **Good quality but wrong mood** → the video is fine, adjust the caption or audio choice instead
+- **Robotic motion** → try a more natural `--motion` prompt or switch to lipsync
 
-Do this after every video generation, not just when something looks wrong. The analysis catches things you might miss and builds a feedback loop that improves each iteration.
-
-For final edited videos, analyze again after the edit pass:
+### After editing the final video (taste + platform readiness)
 
 ```bash
 recoup content analyze-video --url <finalVideoUrl> \
-  --prompt "This is the final social video with caption and audio. Is the text readable? Does the crop look right? Is the audio synced? Any issues that would hurt engagement?" \
+  --prompt "Evaluate this as a social media video for TikTok/Reels. Score each 1-10:
+1) HOOK: Would someone stop scrolling in the first 2 seconds?
+2) VISUAL TASTE: Does it feel intentional and aesthetic, or generic and AI-generated?
+3) TEXT: Is the caption readable, well-positioned, and not blocking the subject?
+4) AUDIO SYNC: Does the audio match the visual energy and pacing?
+5) CROP: Is the framing good for vertical (9:16)?
+6) OVERALL: Would you post this? What one change would make it better?" \
   --json
 ```
+
+This is the creative gut-check. A 6/10 on hook means the opening is boring — try a more dramatic image or motion prompt. A 4/10 on taste means it looks like AI slop — use a different model or reference image. A low text score means reposition or shorten the caption.
+
+### When to analyze
+
+- **Always** after `generate-video` — catch quality issues before wasting time on editing
+- **Always** after the final `edit` — catch taste and platform issues before delivering
+- **Optionally** after `generate-image` if you want to evaluate the still before animating it (use a prompt like "Is this image aesthetic and recognizable? Would it work as a social media thumbnail?")
+
+The goal is not perfection — it's iteration. Generate, watch, fix, watch again. Two rounds usually gets you from mediocre to good.
 
 ## Iteration
 
