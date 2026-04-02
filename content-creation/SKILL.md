@@ -21,7 +21,7 @@ Seven primitives, each callable independently:
 | Upscale | `recoup content upscale` | Yes (30-60s) |
 | Analyze video | `recoup content analyze-video` | No (10-30s) |
 
-Async primitives return a `runId`. Poll with `recoup tasks status --run <runId> --json` until `status` is `COMPLETED`, then read `output`.
+Async primitives return a `runId`. Poll with `recoup tasks status --run {runId} --json` until `status` is `COMPLETED`, then read `output`.
 
 There is also `recoup content create` which runs the full pipeline in one shot — use it when the user just wants a video without creative control.
 
@@ -31,55 +31,55 @@ There is also `recoup content create` which runs the full pipeline in one shot �
 
 ```bash
 # 1. Transcribe audio
-recoup content transcribe-audio --url <audioUrl> --json
+recoup content transcribe-audio --url {audioUrl} --json
 # Returns: audioUrl, fullLyrics, segments (timestamped words)
 
 # 2. Generate image
-recoup content generate-image --prompt "<scene description>" \
-  --reference-image <faceUrl> --json
+recoup content generate-image --prompt "{scene description}" \
+  --reference-image {referenceImageUrl} --json
 # Returns: imageUrl
 
 # 3. (Optional) Upscale image
-recoup content upscale --url <imageUrl> --type image --json
+recoup content upscale --url {imageUrl} --type image --json
 
 # 4. Generate video
-recoup content generate-video --image <imageUrl> --json
+recoup content generate-video --image {imageUrl} --json
 # Returns: videoUrl
 
 # 5. Generate caption
-recoup content generate-caption --topic "<song or theme>" --length short --json
+recoup content generate-caption --topic "{topic}" --length short --json
 # Synchronous — returns { content } immediately
 
 # 6. Edit final video (template mode)
-recoup content edit --video <videoUrl> --audio <audioUrl> \
+recoup content edit --video {videoUrl} --audio {audioUrl} \
   --template artist-caption-bedroom \
-  --overlay-text "<caption>" --json
+  --overlay-text "{caption}" --json
 
 # 6. Edit final video (manual mode)
-recoup content edit --video <videoUrl> \
+recoup content edit --video {videoUrl} \
   --trim-start 30 --trim-duration 15 \
   --crop-aspect 9:16 \
-  --overlay-text "<caption>" \
-  --mux-audio <audioUrl> --json
+  --overlay-text "{caption}" \
+  --mux-audio {audioUrl} --json
 ```
 
 ### Quick (no creative decisions)
 
 ```bash
-recoup content create --artist <id> --template artist-caption-bedroom --json
+recoup content create --artist {artistId} --template artist-caption-bedroom --json
 ```
 
 ### Lipsync (mouth moves to audio)
 
 ```bash
 # Generate video with audio-driven animation
-recoup content generate-video --image <imageUrl> --lipsync \
-  --audio <audioUrl> --json
+recoup content generate-video --image {imageUrl} --lipsync \
+  --audio {audioUrl} --json
 
 # Edit — no need to mux audio separately (already baked in)
-recoup content edit --video <videoUrl> \
+recoup content edit --video {videoUrl} \
   --crop-aspect 9:16 \
-  --overlay-text "<caption>" --json
+  --overlay-text "{caption}" --json
 ```
 
 ## Model Selection
@@ -88,10 +88,10 @@ Each generative primitive accepts an optional `--model` flag to override the def
 
 | Primitive | Default Model | Flag |
 |-----------|---------------|------|
-| generate-image | `fal-ai/nano-banana-pro/edit` | `--model <id>` |
-| generate-video | `fal-ai/veo3.1/fast/image-to-video` | `--model <id>` |
-| generate-video (lipsync) | `fal-ai/ltx-2-19b/audio-to-video` | `--model <id>` |
-| transcribe-audio | `fal-ai/whisper` | `--model <id>` |
+| generate-image | `fal-ai/nano-banana-pro/edit` | `--model {modelId}` |
+| generate-video | `fal-ai/veo3.1/fast/image-to-video` | `--model {modelId}` |
+| generate-video (lipsync) | `fal-ai/ltx-2-19b/audio-to-video` | `--model {modelId}` |
+| transcribe-audio | `fal-ai/whisper` | `--model {modelId}` |
 
 ## Edit Operations
 
@@ -99,11 +99,11 @@ The `edit` command accepts either a template (deterministic config) or manual fl
 
 | Operation | Flags | What it does |
 |-----------|-------|-------------|
-| Trim | `--trim-start <s> --trim-duration <s>` | Cut a time window |
-| Crop | `--crop-aspect <ratio>` | Crop to aspect ratio (e.g. 9:16) |
-| Overlay text | `--overlay-text <text> --text-color <color> --text-position <pos>` | Add on-screen text |
-| Mux audio | `--mux-audio <url>` | Add audio track to video |
-| Template | `--template <name>` | Use template's preset operations |
+| Trim | `--trim-start {s} --trim-duration {s}` | Cut a time window |
+| Crop | `--crop-aspect {ratio}` | Crop to aspect ratio (e.g. 9:16) |
+| Overlay text | `--overlay-text {text} --text-color {color} --text-position {pos}` | Add on-screen text |
+| Mux audio | `--mux-audio {url}` | Add audio track to video |
+| Template | `--template {name}` | Use template's preset operations |
 
 All operations run in a single processing pass.
 
@@ -146,12 +146,12 @@ For longer edits with multiple cuts, analyze after each major assembly — not j
 
 ### Acting on feedback
 
-- Artifacts or glitches → regenerate with a different `--model` or `--motion` prompt
-- Subject not recognizable → regenerate image with a better `--reference-image` or prompt
-- Robotic motion → try a more natural motion prompt or switch to lipsync
-- Boring opening → more dramatic image or motion
-- Looks like AI slop → different model, better reference image, or more specific prompt
-- Bad text placement → adjust position or shorten caption in `edit`
+- Artifacts or glitches — regenerate with a different `--model` or `--motion` prompt
+- Subject not recognizable — regenerate image with a better `--reference-image` or prompt
+- Robotic motion — try a more natural motion prompt or switch to lipsync
+- Boring opening — more dramatic image or motion
+- Looks like AI slop — different model, better reference image, or more specific prompt
+- Bad text placement — adjust position or shorten caption in `edit`
 
 Generate, watch, fix, watch again. Two rounds usually gets you from mediocre to good.
 
