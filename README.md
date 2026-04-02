@@ -20,11 +20,13 @@ skills/                              ← monorepo root
 ├── AGENTS.md                        ← instructions for all AI agents
 ├── README.md                        ← you are here
 │
+├── artist-growth-threshold/          ← streaming threshold growth playbook
 ├── brand-guidelines/                ← brand identity system (private, opt-in)
 ├── chartmetric/                     ← music analytics API
 ├── release-management/              ← release campaign management
 ├── setup-sandbox/                   ← org & artist folder setup via Recoup CLI
-└── songwriting/                     ← songwriting with the 7 C's
+├── songwriting/                     ← songwriting with the 7 C's
+└── trend-to-song/                   ← cultural moment → song → campaign pipeline
 ```
 
 ## Getting Started
@@ -63,6 +65,8 @@ git submodule update --remote --merge
 | [release-management](./release-management/) | Manage music release campaigns — DSP pitches, metadata, marketing, press materials, and more | Public |
 | [setup-sandbox](./setup-sandbox/) | Create org and artist folder structure using the Recoup CLI | Public |
 | [songwriting](./songwriting/) | Song evaluation and writing using the 7 C's framework | Public |
+| [trend-to-song](./trend-to-song/) | Turn trending cultural moments into songs and test campaigns in 72 hours | Public |
+| [artist-growth-threshold](./artist-growth-threshold/) | Playbook for growing new artists past key streaming thresholds (1K listeners, Showcase, Marquee, Popularity 50) | Public |
 
 ## Adding a New Skill
 
