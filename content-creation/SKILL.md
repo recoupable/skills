@@ -1,6 +1,6 @@
 ---
 name: content-creation
-description: Create social videos, TikToks, Reels, and visual content using AI-generated images, video, captions, and audio. Use this skill whenever the user asks to create content, make a video, generate an image, produce a TikTok or Reel, create a promotional clip, add captions to a video, make visual content, or create short-form video. Also use when the user wants to iterate on content quality — regenerate images, try different audio, adjust text, or upscale for higher quality.
+description: Create social videos, TikToks, Reels, and visual content using AI-generated images, video, captions, and audio. Use this skill whenever the user asks to create content, make a video, generate an image, produce a TikTok or Reel, create a promotional clip, add captions to a video, make visual content, or create short-form video. Also use when the user wants to iterate on content quality — regenerate images, try different audio, adjust text, or upscale for higher quality. Templates are optional — pass your own prompts for full creative control, or use templates as curated shortcuts.
 ---
 
 # Content Creation
@@ -8,6 +8,8 @@ description: Create social videos, TikToks, Reels, and visual content using AI-g
 Create social-ready short-form videos by composing independent primitives. Each primitive does one thing. You orchestrate them.
 
 ## Primitives
+
+Every primitive works without a template. Pass your own prompt, reference images, and style rules directly. Templates are optional shortcuts — curated creative recipes that pre-fill parameters for a specific look.
 
 Seven primitives, each callable independently:
 
@@ -51,7 +53,7 @@ All modes support `--aspect-ratio` (auto, 16:9, 9:16), `--duration` (4s-8s), and
 
 ## Workflow
 
-### Step-by-step (creative control)
+### Without a template (full control)
 
 ```bash
 # 1. Transcribe audio
@@ -78,12 +80,17 @@ recoup content caption --topic "{topic}" --length short --json
 # Synchronous — returns { content } immediately
 
 # 6. Edit final video
-recoup content edit --video {videoUrl} --audio {audioUrl} \
+recoup content edit --url {videoUrl} --audio {audioUrl} \
   --template artist-caption-bedroom \
   --overlay-text "{caption}" --json
+
+# 7. (Optional) Analyze the result
+recoup content analyze --video {videoUrl} --prompt "Rate this content 1-10 for social media engagement. Note any quality issues." --json
 ```
 
-### Quick (no creative decisions)
+### With a template (shortcuts)
+
+Templates pre-fill prompts, reference images, and style rules. You can override any parameter.
 
 ```bash
 recoup content create --artist {artistId} --template artist-caption-bedroom --json
@@ -96,7 +103,7 @@ recoup content video --mode lipsync \
   --image {faceUrl} --audio {audioUrl} --json
 
 # Edit — no need to mux audio (already baked into the video)
-recoup content edit --video {videoUrl} \
+recoup content edit --url {videoUrl} \
   --crop-aspect 9:16 \
   --overlay-text "{caption}" --json
 ```
@@ -134,7 +141,7 @@ Each generative primitive accepts an optional `--model` flag to override the def
 
 ## Edit Operations
 
-The `edit` command accepts either a template (deterministic config) or manual flags:
+The `edit` command accepts either a template (deterministic config) or manual flags. Point `--url` at image or video — both are supported.
 
 | Operation | Flags | What it does |
 |-----------|-------|-------------|
@@ -145,6 +152,23 @@ The `edit` command accepts either a template (deterministic config) or manual fl
 | Template | `--template {name}` | Use template's preset operations |
 
 All operations run in a single processing pass.
+
+## Template Override Priority
+
+When using a template, your explicit params always win:
+
+1. **Your flags** — highest priority. `--prompt`, `--reference-image`, etc. override everything.
+2. **Artist context** — if the artist has a style guide, it personalizes the template.
+3. **Template defaults** — lowest priority. The recipe's built-in values.
+
+Example: Use the bedroom template but override the prompt:
+
+```bash
+recoup content image --template artist-caption-bedroom \
+  --prompt "A candid selfie in a sunlit kitchen, warm tones" --json
+```
+
+The template provides reference images and style rules, but your prompt replaces the template's default prompt.
 
 ## Watching Your Work
 
