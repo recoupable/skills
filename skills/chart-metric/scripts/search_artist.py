@@ -29,7 +29,8 @@ def search_artist(name: str, limit: int = 5) -> dict:
     response = requests.get(
         f"{API_BASE}/search",
         headers={"Authorization": f"Bearer {token}"},
-        params={"q": name, "type": "artists", "limit": limit}
+        params={"q": name, "type": "artists", "limit": limit},
+        timeout=10
     )
     
     if response.status_code == 402:

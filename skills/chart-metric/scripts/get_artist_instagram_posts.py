@@ -24,7 +24,8 @@ def get_artist_instagram_posts(cm_id: str) -> dict:
     
     response = requests.get(
         f"{API_BASE}/SNS/deepSocial/cm_artist/{cm_id}/instagram",
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=10
     )
     
     if response.status_code == 402:

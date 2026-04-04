@@ -144,7 +144,8 @@ def discover_artists(
     response = requests.get(
         url,
         headers={"Authorization": f"Bearer {token}"},
-        params=combined_params
+        params=combined_params,
+        timeout=10
     )
     
     if response.status_code == 402:

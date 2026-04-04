@@ -49,7 +49,8 @@ def get_artist_metrics(cm_id: str, source: str) -> dict:
     
     response = requests.get(
         f"{API_BASE}/artist/{cm_id}/stat/{source}",
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=10
     )
     
     if response.status_code == 402:

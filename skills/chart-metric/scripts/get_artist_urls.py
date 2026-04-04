@@ -24,7 +24,8 @@ def get_artist_urls(cm_id: str) -> dict:
     
     response = requests.get(
         f"{API_BASE}/artist/{cm_id}/urls",
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=10
     )
     
     if response.status_code == 402:

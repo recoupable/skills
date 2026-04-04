@@ -35,7 +35,9 @@ def get_artist_audience(cm_id: str, platform: str = "instagram") -> dict:
     if not url:
         return {"error": f"Unknown platform: {platform}", "valid_platforms": list(endpoint_map.keys())}
     
-    response = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+    response = requests.get(url, headers={"Authorization": f"Bearer {token}"},
+        timeout=10
+    )
     
     if response.status_code == 402:
         return {"error": "Payment Required", "message": "Check your Chartmetric subscription."}

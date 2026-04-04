@@ -104,7 +104,8 @@ def get_artist_playlists(
     response = requests.get(
         f"{API_BASE}/artist/{cm_id}/{platform}/{status}/playlists",
         headers={"Authorization": f"Bearer {token}"},
-        params=params
+        params=params,
+        timeout=10
     )
     
     if response.status_code == 402:

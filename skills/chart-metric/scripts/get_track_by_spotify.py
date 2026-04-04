@@ -34,7 +34,8 @@ def get_track_by_spotify(spotify_id: str) -> dict:
     
     response = requests.get(
         f"{API_BASE}/track/spotify/{spotify_id}/get-ids",
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=10
     )
     
     if response.status_code == 402:

@@ -22,7 +22,8 @@ def list_genres() -> dict:
     
     response = requests.get(
         f"{API_BASE}/genres",
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=10
     )
     
     response.raise_for_status()

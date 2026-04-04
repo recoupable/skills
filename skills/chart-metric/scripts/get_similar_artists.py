@@ -41,7 +41,8 @@ def get_related_artists(cm_id: str, limit: int = 10) -> dict:
     response = requests.get(
         f"{API_BASE}/artist/{cm_id}/relatedartists",
         headers={"Authorization": f"Bearer {token}"},
-        params={"limit": limit}
+        params={"limit": limit},
+        timeout=10
     )
     
     if response.status_code == 402:
@@ -91,7 +92,8 @@ def get_similar_artists_by_config(
     response = requests.get(
         f"{API_BASE}/artist/{cm_id}/similar-artists/by-configurations",
         headers={"Authorization": f"Bearer {token}"},
-        params=params
+        params=params,
+        timeout=10
     )
     
     if response.status_code == 402:
