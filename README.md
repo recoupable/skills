@@ -41,7 +41,7 @@ Use the [template](template/SKILL.md) to get started. Every skill needs:
 2. A clear description that tells the agent **when** to use it
 3. Instructions the agent follows to complete the task
 
-```
+```text
 skills/
 └── my-skill/
     ├── SKILL.md              ← required

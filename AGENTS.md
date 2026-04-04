@@ -8,13 +8,15 @@ Public skills for AI agents working in the music industry. Skills teach agents h
 
 ## Structure
 
-```
+```text
 recoupable/skills/
 ├── .claude-plugin/           ← plugin manifest for Claude Code
+├── .codex-plugin/            ← plugin manifest for OpenAI Codex
 ├── skills/                   ← all skills live here
-│   ├── chartmetric/          ← general
-│   ├── songwriting/          ← general
-│   ├── artist-workspace/     ← platform (requires Recoup)
+│   ├── chart-metric/
+│   ├── content-creation/
+│   ├── industry-research/
+│   ├── song-writing/
 │   └── ...
 ├── template/                 ← starter template for new skills
 ├── README.md
@@ -45,7 +47,7 @@ The `description` field is the trigger. If it's vague, the skill won't activate.
 
 Every skill directory must contain a `SKILL.md`:
 
-```
+```text
 my-skill/
 ├── SKILL.md          ← required — instructions + YAML frontmatter
 ├── references/       ← optional — docs loaded on-demand

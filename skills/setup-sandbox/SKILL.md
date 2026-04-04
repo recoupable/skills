@@ -22,7 +22,7 @@ Create the folder structure for the connected account's organizations and artist
    - `mkdir -p orgs/{org}/artists/{artist-slug}` for each new artist
    - Write a `RECOUP.md` using the template below
 5. Commit and push:
-   - `git add -A && git commit -m "setup: create org and artist folders" && git push origin main`
+   - `git add -A && git commit -m "setup: create org and artist folders" && git push`
 
 ## `RECOUP.md`
 

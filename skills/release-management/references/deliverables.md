@@ -99,7 +99,7 @@ Press Photos: [Link from 9.3]
 EPK: [Link from 9.3]
 
 CONTACT
-Publicist: [From Section 15 - only if sharing externally]
+Publicist: [Public-facing press contact name and email]
 
 ═══════════════════════════════════════
 ```
@@ -290,8 +290,9 @@ LOCAL CONTENT PLAN
    - Section 17: Performance Tracking
 3. Remove `[INTERNAL]` subsections within `[OPS]` sections:
    - Section 2.3: Audio Asset Links
-4. Keep all `[SHAREABLE]` and `[OPS]` sections
-5. Rename to `RELEASE-EXTERNAL.md`
+4. Strip any remaining `[OPS / INTERNAL]` or `[INTERNAL]` markers from kept sections
+5. Keep all `[SHAREABLE]` and `[OPS]` sections
+6. Rename to `RELEASE-EXTERNAL.md`
 
 ---
 
