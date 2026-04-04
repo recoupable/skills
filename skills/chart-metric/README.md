@@ -50,4 +50,4 @@ If Python is unavailable, see [references/curl-fallback.md](references/curl-fall
 
 ## License
 
-MIT
+Apache-2.0
