@@ -41,11 +41,6 @@ The `description` field is the trigger. If it's vague, the skill won't activate.
 5. **One skill, one job.** Each skill does one thing well.
 6. **No secrets in skills.** Reference environment variables — never hardcode credentials.
 
-## Skill Categories
-
-- **General** — Works for anyone. No account or API key needed.
-- **Platform** — Requires a [Recoupable](https://recoupable.com) account and API key. These skills use the Recoup CLI or API.
-
 ## Skill Format
 
 Every skill directory must contain a `SKILL.md`:

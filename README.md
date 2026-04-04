@@ -20,25 +20,16 @@ git clone https://github.com/recoupable/skills.git
 
 ## Skills
 
-### General — works for anyone
-
 | Skill | What it does |
 |-------|-------------|
-| [chartmetric](skills/chartmetric) | Query and analyze music data from the Chartmetric API |
-| [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
-| [artist-growth-threshold](skills/artist-growth-threshold) | Identify streaming threshold milestones for artist growth |
-| [trend-to-song](skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
-
-### Platform — requires a [Recoupable](https://recoupable.com) account
-
-These skills integrate with the Recoupable platform. They require a Recoup API key or CLI access.
-
-| Skill | What it does |
-|-------|-------------|
-| [setup-sandbox](skills/setup-sandbox) | Scaffold the workspace for an account's orgs and artists via the Recoup CLI |
 | [artist-workspace](skills/artist-workspace) | Manage artist directories — context, songs, brand, audience |
-| [release-management](skills/release-management) | Plan and execute release campaigns |
+| [artist-growth-threshold](skills/artist-growth-threshold) | Identify streaming threshold milestones for artist growth |
 | [brand-guidelines](skills/brand-guidelines) | Apply Recoupable's brand identity to agent outputs |
+| [chartmetric](skills/chartmetric) | Query and analyze music data from the Chartmetric API |
+| [release-management](skills/release-management) | Plan and execute release campaigns |
+| [setup-sandbox](skills/setup-sandbox) | Scaffold the workspace for an account's orgs and artists |
+| [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
+| [trend-to-song](skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
 
 ## Creating a Skill
 
