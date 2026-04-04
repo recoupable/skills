@@ -23,7 +23,7 @@ git clone https://github.com/recoupable/skills.git
 | Skill | What it does |
 |-------|-------------|
 | [artist-workspace](skills/artist-workspace) | Manage artist directories — context, songs, brand, audience |
-| [artist-growth-threshold](skills/artist-growth-threshold) | Identify streaming threshold milestones for artist growth |
+| [streaming-growth](skills/streaming-growth) | Grow a new artist past streaming milestones that unlock platform tools |
 | [brand-guidelines](skills/brand-guidelines) | Apply Recoupable's brand identity to agent outputs |
 | [chartmetric](skills/chartmetric) | Query and analyze music data from the Chartmetric API |
 | [release-management](skills/release-management) | Plan and execute release campaigns |

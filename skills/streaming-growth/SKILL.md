@@ -1,9 +1,9 @@
 ---
-name: artist-growth-threshold
-description: Strategy playbook for growing a new or early-stage music artist to key streaming thresholds on Spotify and other DSPs. Use when someone asks about getting an artist to 1,000 streams, unlocking Spotify Showcase or Marquee, increasing Spotify Popularity score, playlist pitching strategy, DSP advertising, or growing a "baby artist" from near-zero. Also triggers on "how do we get more streams," "unlock Spotify ads," "playlist push," "get to a thousand," "artist growth strategy," or "Spotify Popularity score."
+name: streaming-growth
+description: Strategy for growing a new or early-stage music artist to key streaming milestones on Spotify and other DSPs. Use when someone asks about getting more streams, unlocking Spotify Showcase or Marquee, increasing Spotify Popularity score, playlist pitching, DSP advertising, or growing an artist from near-zero. Triggers on "how do we get more streams," "unlock Spotify ads," "playlist push," "get to a thousand listeners," "artist growth strategy," or "Spotify Popularity score."
 ---
 
-# Artist Growth Threshold Strategy
+# Streaming Growth
 
 A playbook for getting new artists past the streaming milestones that unlock platform advertising tools, algorithmic boosting, and organic discovery.
 
@@ -21,6 +21,8 @@ The strategic goal is not just "get more streams." It's: get to the threshold as
 | Spotify Marquee | 5,000 monthly listeners (month-over-month) | Full-screen recommendations to targeted listeners when they open Spotify |
 | Spotify Popularity 30 | ~30 on 0-100 scale | Baseline algorithmic consideration. Easy to reach with a few hundred consistent listeners |
 | Spotify Popularity 50 | ~50 on 0-100 scale | Algorithmic boosting kicks in. Discovery mode benefits. Potential radio pushes. This is where growth starts compounding |
+| Apple Music Artist Spotlight | Varies | Featured placement in Browse tab. Requires distributor relationship and editorial pitch |
+| Amazon Music Unlimited | Active catalog | Access to Amazon's Alexa-driven discovery and voice-search recommendations |
 
 **Spotify Popularity** is a 0-100 score that drives the core algorithm. New artists start around 10. It's relatively easy to push to 30 with some audience development. 100 is Drake/Taylor Swift territory. Crossing 50 is where you start getting real algorithmic lift without paying for it.
 
@@ -37,12 +39,20 @@ The key insight: getting people to stream from *within* Spotify is dramatically 
 **What it is:** Pay a service to pitch your track to independent playlist curators.
 
 **How it works:**
-1. Submit your track + a pitching brief to a playlist service
-2. Service pitches to curators who run playlists in your genre
-3. Curators who like it add it to their playlists
-4. Playlist listeners discover your track organically
+1. Choose a playlist pitching service (SubmitHub, Playlist Push, Groover, or similar)
+2. Write a pitching brief: genre, mood, comparable artists, what makes the track stand out, target playlist types
+3. Submit your track with the brief — the service pitches to curators who run playlists in your genre
+4. Curators who like it add it to their playlists
+5. Playlist listeners discover your track organically
 
-**Benchmarks (real data):**
+**What a good pitching brief includes:**
+- Genre and subgenre (be specific — "indie bedroom pop" not just "indie")
+- 3 comparable artists the target audience already listens to
+- The mood or moment the song fits (workout, late night drive, study session)
+- One sentence on what makes this track different
+- Release date and any timing context
+
+**Benchmarks (Q1 2026):**
 - $500 spend
 - Pitched to ~50 playlists
 - ~16 playlists picked it up
@@ -69,7 +79,7 @@ The key insight: getting people to stream from *within* Spotify is dramatically 
 3. Ad links to Spotify/Apple Music
 4. Track click-through and listen rates
 
-**Cost benchmarks:**
+**Cost benchmarks (Q1 2026):**
 - CPC (cost per click): ~$0.34
 - Click-to-listen conversion: ~30% of clicks result in an actual listen
 - Effective cost per listen: ~$1.13
@@ -88,12 +98,6 @@ The key insight: getting people to stream from *within* Spotify is dramatically 
 
 **What it is:** Post consistent social content using the music, grow the audience naturally, hope for algorithmic lift.
 
-**How it works:**
-1. Post 1-3 times daily across platforms using the music
-2. Optimize content for engagement signals (watch time, saves, shares)
-3. Include links to DSPs in bio/captions
-4. Wait for organic momentum
-
 **When to use this path:**
 - As a baseline alongside paid strategies
 - When budget is extremely limited
@@ -103,6 +107,8 @@ The key insight: getting people to stream from *within* Spotify is dramatically 
 - Slowest path to 1,000
 - Social engagement doesn't directly translate to streams without a catalyst
 - YouTube subscribers and TikTok views don't automatically become Spotify listeners
+
+Read `references/content-strategy.md` for specific content tactics and posting cadences that convert social views to streams.
 
 ### Recommended Approach
 
@@ -149,27 +155,6 @@ The Popularity score (0-100) is the single most important algorithmic signal on 
 **The compounding effect at 50+:**
 Once you cross ~50 Popularity, you benefit from algorithmic recommendations without paying for them. This is where you can start pulling back on paid promotion because the platform is doing organic discovery for you. Getting a track to Popularity 50 is the strategic goal that lets you ease off paid ads.
 
-## Content Strategy That Supports Growth
-
-Social content drives awareness, but specific content patterns convert better to streams.
-
-**What works (from real testing):**
-
-1. **Hyper-relatable first lines** — "Have you ever just briefly made eye contact with someone in the grocery store?" beats "Have you ever felt so in love." The more universal and specific the opening line, the longer people watch
-2. **Lots of mouth movement** — When the artist appears to be talking (dense lyrics, lots of words), viewers unmute to hear what's being said. TikTok rewards that touch/unmute interaction as engagement
-3. **Long text-on-screen** — Forces viewers to hold the screen to read, which platforms count as engagement
-4. **Select clips with dense lyrics** — For 15-second clips, pick the section of the song with the most words. More mouth movement = more curiosity = more unmutes
-
-**Posting cadence (tested benchmarks):**
-
-| Platform | Frequency | Notes |
-|----------|-----------|-------|
-| TikTok | 3x daily | Rewards both consistency and frequency |
-| YouTube Shorts | 3x daily | Mirror TikTok cadence |
-| Instagram Reels | 1x daily | Lower frequency, higher polish |
-
-Consistency matters as much as frequency. Daily posting for 30 days beats 10 posts in one day then silence.
-
 ## Decision Framework
 
 When you're trying to hit a threshold, ask:
@@ -187,10 +172,3 @@ Monitor these weekly:
 - Playlist placements (count + combined follower reach)
 - Save rate (saves / streams — high save rate = strong signal)
 - Listener retention (average listen duration / song duration)
-
-## Integration with Recoupable
-
-- Use the content agent to generate daily social content at the cadences above
-- Track streaming metrics through the analytics pipeline
-- Playlist pitching results can be logged in the artist workspace
-- Showcase/Marquee campaign performance feeds back into audience understanding
