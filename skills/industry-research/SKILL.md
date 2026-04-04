@@ -1,5 +1,5 @@
 ---
-name: recoup-research
+name: industry-research
 description: Music industry research via `recoup research` CLI — streaming metrics, audience demographics, playlist placements, competitive analysis, people search, URL extraction, structured enrichment, and web intelligence. Use when the user needs artist analytics, streaming numbers, audience insights, playlist tracking, similar artists, collaboration targets, tour routing data, or any music industry research. Also use for finding people in the industry (managers, A&R), extracting data from URLs, or enriching entities with structured web research. Triggers on requests involving Spotify followers, monthly listeners, TikTok trends, Instagram audience, playlist pitching, competitive analysis, "how is [artist] doing," "research [artist]," "find me [people]," or any question about an artist's performance, market position, or industry contacts.
 ---
 
