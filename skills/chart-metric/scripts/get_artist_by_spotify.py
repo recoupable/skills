@@ -64,3 +64,5 @@ if __name__ == "__main__":
     spotify_id = extract_spotify_id(sys.argv[1])
     result = get_artist_by_spotify(spotify_id)
     print(json.dumps(result, indent=2))
+    if "error" in result:
+        sys.exit(1)

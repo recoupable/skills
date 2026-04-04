@@ -79,6 +79,8 @@ def main():
     args = parser.parse_args()
     result = get_artist_metrics(args.chartmetric_id, args.source)
     print(json.dumps(result, indent=2))
+    if "error" in result:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

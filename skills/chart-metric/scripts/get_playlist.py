@@ -47,3 +47,5 @@ if __name__ == "__main__":
     
     result = get_playlist(sys.argv[1], sys.argv[2])
     print(json.dumps(result, indent=2))
+    if "error" in result:
+        sys.exit(1)

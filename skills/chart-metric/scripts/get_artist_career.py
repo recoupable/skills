@@ -45,3 +45,5 @@ if __name__ == "__main__":
     
     result = get_artist_career(sys.argv[1])
     print(json.dumps(result, indent=2))
+    if "error" in result:
+        sys.exit(1)
