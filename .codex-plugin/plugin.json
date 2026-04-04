@@ -1,0 +1,34 @@
+{
+  "name": "recoupable-skills",
+  "version": "1.0.0",
+  "description": "AI agent skills for the music industry — artist management, songwriting, analytics, release campaigns, and more.",
+  "author": {
+    "name": "Recoupable",
+    "email": "agent@recoupable.com",
+    "url": "https://recoupable.com"
+  },
+  "homepage": "https://recoupable.com",
+  "repository": "https://github.com/recoupable/skills",
+  "license": "Apache-2.0",
+  "keywords": [
+    "music",
+    "artist-management",
+    "songwriting",
+    "music-marketing",
+    "analytics",
+    "release-management",
+    "chartmetric",
+    "agent-skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Recoupable Skills",
+    "shortDescription": "Music industry skills for AI agents",
+    "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and more. General skills work for anyone — platform skills integrate with the Recoupable platform.",
+    "developerName": "Recoupable",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://recoupable.com",
+    "brandColor": "#345A5D"
+  }
+}
