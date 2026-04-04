@@ -1,144 +1,61 @@
 # Recoupable Skills
 
-*Spend more time doing what you love. Let agents handle the rest.*
+AI agent skills for the music industry. Teach your coding agent how to manage artists, write songs, analyze analytics, plan releases, and more.
 
----
+## Install
 
-## What Is This?
-
-This is the **Recoupable Skills Monorepo** — a single home for every AI skill we build and maintain across the organization.
-
-Each skill is a self-contained set of instructions, resources, and references that teaches AI agents how to do specific work — from songwriting to brand design to music business operations. Think of them as playbooks that agents follow so you don't have to repeat yourself.
-
-## Repository Structure
-
-This repo uses **git submodules** to pull in skill repos from across the [Recoupable](https://github.com/recoupable) organization. Each skill lives at the top level — no nested categories.
-
-```
-skills/                              ← monorepo root
-├── CLAUDE.md                        ← instructions for Claude
-├── AGENTS.md                        ← instructions for all AI agents
-├── README.md                        ← you are here
-│
-├── artist-growth-threshold/          ← streaming threshold growth playbook
-├── brand-guidelines/                ← brand identity system (private, opt-in)
-├── chartmetric/                     ← music analytics API
-├── release-management/              ← release campaign management
-├── setup-sandbox/                   ← org & artist folder setup via Recoup CLI
-├── songwriting/                     ← songwriting with the 7 C's
-└── trend-to-song/                   ← cultural moment → song → campaign pipeline
-```
-
-## Getting Started
-
-### Clone with all public skills
+### Claude Code
 
 ```bash
-git clone --recurse-submodules https://github.com/recoupable/skills.git
+/plugin marketplace add recoupable/skills
 ```
 
-### Already cloned? Pull in submodules
+### Manual
+
+Clone and point your agent at the `skills/` directory:
 
 ```bash
-git submodule init
-git submodule update
+git clone https://github.com/recoupable/skills.git
 ```
-
-### Update all submodules to latest
-
-```bash
-git submodule update --remote --merge
-```
-
-> **Note:** Some skills are private repos (like `brand-guidelines`) and won't clone automatically. If you're a Recoupable team member with access, opt in manually:
->
-> ```bash
-> git submodule update --init -- brand-guidelines
-> ```
 
 ## Skills
 
-| Skill | Description | Access |
-|-------|-------------|--------|
-| [brand-guidelines](./brand-guidelines/) | Recoupable's complete brand identity system — colors, typography, voice, illustration style | 🔒 Private |
-| [chartmetric](./chartmetric/) | Music analytics API — streaming data, playlist placements, audience demographics, competitive analysis | Public |
-| [release-management](./release-management/) | Manage music release campaigns — DSP pitches, metadata, marketing, press materials, and more | Public |
-| [setup-sandbox](./setup-sandbox/) | Create org and artist folder structure using the Recoup CLI | Public |
-| [songwriting](./songwriting/) | Song evaluation and writing using the 7 C's framework | Public |
-| [trend-to-song](./trend-to-song/) | Turn trending cultural moments into songs and test campaigns in 72 hours | Public |
-| [artist-growth-threshold](./artist-growth-threshold/) | Playbook for growing new artists past key streaming thresholds (1K listeners, Showcase, Marquee, Popularity 50) | Public |
+| Skill | What it does |
+|-------|-------------|
+| [artist-workspace](skills/artist-workspace) | Manage artist directories — context, songs, brand, audience |
+| [streaming-growth](skills/streaming-growth) | Grow a new artist past streaming milestones that unlock platform tools |
+| [brand-guidelines](skills/brand-guidelines) | Apply Recoupable's brand identity to agent outputs |
+| [chartmetric](skills/chartmetric) | Query and analyze music data from the Chartmetric API |
+| [content-creation](skills/content-creation) | Create social videos, TikToks, Reels, and visual content using AI primitives |
+| [industry-research](skills/industry-research) | Music industry research — artist analytics, people search, competitive analysis, web intelligence |
+| [release-management](skills/release-management) | Plan and execute release campaigns |
+| [setup-sandbox](skills/setup-sandbox) | Scaffold the workspace for an account's orgs and artists |
+| [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
+| [trend-to-song](skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
 
-## Adding a New Skill
+## Creating a Skill
 
-### 1. Add the submodule
+Use the [template](template/SKILL.md) to get started. Every skill needs:
 
-```bash
-git submodule add https://github.com/recoupable/<repo-name>.git <folder-name>
-git commit -m "Add <repo-name> skill"
+1. A `SKILL.md` file with YAML frontmatter (`name` + `description`)
+2. A clear description that tells the agent **when** to use it
+3. Instructions the agent follows to complete the task
+
+```text
+skills/
+└── my-skill/
+    ├── SKILL.md              ← required
+    ├── references/           ← optional — docs loaded on-demand
+    ├── scripts/              ← optional — executable code
+    └── assets/               ← optional — templates, fonts, icons
 ```
 
-> For private skills, use the SSH URL (`git@github.com:...`) and add `update = none` in `.gitmodules` so public users aren't affected.
+See [contributing.md](contributing.md) for guidelines.
 
-### 2. Update this README
+## About
 
-Add a row to the appropriate skills table above.
+[Recoupable](https://recoupable.com) is an AI-powered music management platform. These skills power the agents that help artists and labels manage their careers.
 
-## Skill Format
-
-Every skill directory must contain a `SKILL.md`. It may also include:
-
-```
-my-skill/
-├── SKILL.md          ← required — instructions + YAML frontmatter
-├── scripts/          ← optional — executable code (Python, Bash)
-├── references/       ← optional — docs loaded on-demand
-└── assets/           ← optional — templates, fonts, icons
-```
-
-### SKILL.md structure
-
-```markdown
----
-name: your-skill-name
-description: What this skill does and when to use it
----
-
-# Your Skill Name
-
-Instructions, examples, and guidelines go here.
-```
-
-### Writing a good description
-
-The `description` field is how Claude decides whether to load your skill. Be specific:
-
-```markdown
-# Bad — too vague
-description: Helps with music projects
-
-# Good — what + when + trigger phrases
-description: Guide for writing and evaluating song lyrics and concepts.
-Use when brainstorming song ideas, writing lyrics, evaluating song drafts,
-refining hooks, or improving existing songs.
-```
-
-### Guidelines
-
-- Keep `SKILL.md` under **5,000 words** — move heavy content to `references/`
-- Put critical instructions at the top
-- Use bullet points and lists over prose
-- No XML angle brackets (`< >`) in skill files
-
-## Contributing
-
-1. Work in the individual skill repo
-2. Keep skills focused — one clear purpose per skill
-3. Follow the [brand guidelines](./brand-guidelines/) for any user-facing output
-4. Test before committing:
-   - Does the skill trigger on relevant requests?
-   - Does it avoid triggering on unrelated topics?
-   - Does the workflow complete without errors?
-
----
-
-Built by [Recoupable](https://recoupable.com) — the new music industry.
+- **Website**: [recoupable.com](https://recoupable.com)
+- **App**: [chat.recoupable.com](https://chat.recoupable.com)
+- **Support**: agent@recoupable.com
