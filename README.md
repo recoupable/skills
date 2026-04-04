@@ -26,6 +26,7 @@ git clone https://github.com/recoupable/skills.git
 | [streaming-growth](skills/streaming-growth) | Grow a new artist past streaming milestones that unlock platform tools |
 | [brand-guidelines](skills/brand-guidelines) | Apply Recoupable's brand identity to agent outputs |
 | [chartmetric](skills/chartmetric) | Query and analyze music data from the Chartmetric API |
+| [content-creation](skills/content-creation) | Create social videos, TikToks, Reels, and visual content using AI primitives |
 | [industry-research](skills/industry-research) | Music industry research — artist analytics, people search, competitive analysis, web intelligence |
 | [release-management](skills/release-management) | Plan and execute release campaigns |
 | [setup-sandbox](skills/setup-sandbox) | Scaffold the workspace for an account's orgs and artists |
