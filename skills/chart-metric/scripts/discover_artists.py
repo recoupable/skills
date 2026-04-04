@@ -138,25 +138,14 @@ def discover_artists(
         range_params.append(("cpp[]", cpp[0]))
         range_params.append(("cpp[]", cpp[1]))
     
-    # Build URL with array params
     url = f"{API_BASE}/artist/list/filter"
     
+    combined_params = list(params.items()) + range_params if range_params else params
     response = requests.get(
         url,
         headers={"Authorization": f"Bearer {token}"},
-        params=params if not range_params else None
+        params=combined_params
     )
-    
-    # If we have range params, we need to build the URL manually
-    if range_params:
-        from urllib.parse import urlencode
-        base_query = urlencode(params)
-        range_query = "&".join([f"{k}={v}" for k, v in range_params])
-        full_url = f"{url}?{base_query}&{range_query}"
-        response = requests.get(
-            full_url,
-            headers={"Authorization": f"Bearer {token}"}
-        )
     
     if response.status_code == 402:
         return {"error": "Payment Required", "message": "Check your Chartmetric subscription."}
