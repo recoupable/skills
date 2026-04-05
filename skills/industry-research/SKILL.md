@@ -83,7 +83,7 @@ recoup research enrich "Drake" --schema '{"properties":{"label":{"type":"string"
 
 `spotify`, `instagram`, `tiktok`, `twitter`, `facebook`, `youtube_channel`, `youtube_artist`, `soundcloud`, `deezer`, `twitch`, `line`, `melon`, `wikipedia`, `bandsintown`
 
-For **`metrics` only**, YouTube uses `youtube_channel` (not plain `youtube`). The **`audience`** command is different: Chartmetric’s path is `youtube-audience-stats`, so there you pass `--platform youtube` (see examples above). Do not use `youtube_channel` for `audience`.
+For **`metrics` only**, YouTube uses `youtube_channel` (not plain `youtube`). The **`audience`** command is different — pass `--platform youtube` (see examples above). Do not use `youtube_channel` for `audience`.
 
 ---
 
@@ -152,7 +152,7 @@ Don't overwrite `context/artist.md` with research data. Static context (who the 
 - **Don't dump raw JSON to the user.** Interpret the data and draw conclusions.
 - **Don't re-research what `context/artist.md` already covers.** Read it first.
 - **Don't ignore the `--json` flag when chaining.** Tables are for humans, JSON is for you.
-- **Don't assume Chartmetric has every artist.** If search returns no results, fall back to `web` or `deep`.
+- **Don't assume every artist has data.** If search returns no results, fall back to `web` or `deep`.
 
 ---
 
@@ -161,7 +161,7 @@ Don't overwrite `context/artist.md` with research data. Static context (who the 
 If `recoup research "Artist Name"` returns no results:
 1. Try `recoup research web "Artist Name musician"` for web-based research
 2. Try `recoup research enrich "Artist Name" --schema '{...}'` for structured extraction
-3. For very emerging artists, Chartmetric may not have data yet — web research is the fallback
+3. For very emerging artists, structured data may not exist yet — web research is the fallback
 
 ## More Workflows
 
