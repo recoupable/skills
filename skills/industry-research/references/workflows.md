@@ -280,4 +280,4 @@ The power is in combining data types:
 | **Where** — geographic data | `cities`, `audience` | Tour routing, market expansion, geographic strategy |
 | **What** — content and catalog | `playlists`, `tracks`, `albums` | Content strategy, playlist pitching, catalog optimization |
 | **When** — timing and trajectory | `metrics`, `career` | Release timing, growth analysis, trend detection |
-| **Why** — context and narrative | `insights`, `web`, `report` | Cultural positioning, press strategy, brand partnerships |
+| **Why** — context and narrative | `insights`, `web`, `deep` | Cultural positioning, press strategy, brand partnerships |

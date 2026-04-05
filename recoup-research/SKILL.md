@@ -1,5 +1,5 @@
 ---
-name: industry-research
+name: recoup-research
 description: Music industry research via `recoup research` CLI — streaming metrics, audience demographics, playlist placements, competitive analysis, people search, URL extraction, structured enrichment, and web intelligence. Use when the user needs artist analytics, streaming numbers, audience insights, playlist tracking, similar artists, collaboration targets, tour routing data, or any music industry research. Also use for finding people in the industry (managers, A&R), extracting data from URLs, or enriching entities with structured web research. Triggers on requests involving Spotify followers, monthly listeners, TikTok trends, Instagram audience, playlist pitching, competitive analysis, "how is [artist] doing," "research [artist]," "find me [people]," or any question about an artist's performance, market position, or industry contacts.
 ---
 
@@ -27,7 +27,7 @@ Start here based on what the user asks:
 
 **"Find me [people]"** → `people "A&R reps at [label]"`
 
-**"Tell me about [entity]"** → `enrich "[entity]" --schema '{...}'` for structured data, or `deep "[entity]"` for a narrative
+**"Tell me about [entity]"** → `enrich "[entity]" --schema '{...}'` for structured data, or `report "[entity]"` for a narrative
 
 **"What does this page say?"** → `extract "https://..."` 
 
@@ -73,7 +73,7 @@ recoup research festivals --json
 
 ```bash
 recoup research web "Drake brand partnerships" --json              # web search — { results: [{ title, url, snippet }] }
-recoup research deep "Tell me about Drake" --json            # deep research — { content: "markdown report", citations: [...] }
+recoup research report "Tell me about Drake" --json          # deep research — { content: "markdown report", citations: [...] }
 recoup research people "A&R reps at Atlantic Records" --json       # people search — { results: [{ title, url, summary }] }
 recoup research extract "https://example.com" --json               # URL scraping — { results: [{ title, url, excerpts: [...] }] }
 recoup research enrich "Drake" --schema '{"properties":{"label":{"type":"string"}}}' --json  # structured — { output: { label: "OVO Sound" } }
@@ -152,7 +152,7 @@ Don't overwrite `context/artist.md` with research data. Static context (who the 
 - **Don't dump raw JSON to the user.** Interpret the data and draw conclusions.
 - **Don't re-research what `context/artist.md` already covers.** Read it first.
 - **Don't ignore the `--json` flag when chaining.** Tables are for humans, JSON is for you.
-- **Don't assume Chartmetric has every artist.** If search returns no results, fall back to `web` or `deep`.
+- **Don't assume Chartmetric has every artist.** If search returns no results, fall back to `web` or `report`.
 
 ---
 
