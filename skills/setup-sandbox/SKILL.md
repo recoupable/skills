@@ -5,7 +5,7 @@ description: Set up the initial file system for a new sandbox. Fetches the accou
 
 # Setup Sandbox
 
-**Before running, check:** `ls orgs/` from the sandbox root. If the directory exists and contains org folders, the sandbox is already set up — stop here. Only continue if `orgs/` doesn't exist or is empty.
+**Before running, check:** `ls orgs/` from the sandbox root. If the directory exists and contains org folders, the sandbox is already set up — stop here and read the `artist-workspace` skill instead. Only continue if `orgs/` doesn't exist or is empty.
 
 Create the folder structure for the connected account's organizations and artists.
 
