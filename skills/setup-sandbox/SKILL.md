@@ -25,6 +25,7 @@ Create the folder structure for the connected account's organizations and artist
    - Write a `RECOUP.md` using the template below
 5. Commit and push:
    - `git add -A && git commit -m "setup: create org and artist folders" && git push`
+6. Read the `artist-workspace` skill — it teaches how to work inside the directories you just created.
 
 ## `RECOUP.md`
 
