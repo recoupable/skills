@@ -22,6 +22,7 @@ git clone https://github.com/recoupable/skills.git
 
 | Skill | What it does |
 |-------|-------------|
+| [getting-started](skills/getting-started) | Install CLI, get API key, connect via MCP/REST — start here |
 | [artist-workspace](skills/artist-workspace) | Manage artist directories — context, songs, brand, audience |
 | [streaming-growth](skills/streaming-growth) | Grow a new artist past streaming milestones that unlock platform tools |
 | [brand-guidelines](skills/brand-guidelines) | Apply Recoupable's brand identity to agent outputs |
