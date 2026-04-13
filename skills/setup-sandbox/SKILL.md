@@ -5,15 +5,17 @@ description: Set up the initial file system for a new sandbox. Fetches the accou
 
 # Setup Sandbox
 
+**Before running, check:** `ls orgs/` from the sandbox root. If the directory exists and contains org folders, the sandbox is already set up — stop here and read the `artist-workspace` skill instead. Only continue if `orgs/` doesn't exist or is empty.
+
 Create the folder structure for the connected account's organizations and artists.
 
 ## Environment
 
-- `RECOUP_ACCOUNT_ID` — The account ID to fetch data for. Only needed when using an Org API Key. When using a Personal API Key, omit the `--account` flag and the CLI will use the authenticated account automatically.
+- `RECOUP_ACCOUNT_ID` — The account ID this sandbox belongs to. Injected automatically when a sandbox is provisioned. When set, pass `--account $RECOUP_ACCOUNT_ID` on CLI commands to scope requests to this account.
 
 ## Steps
 
-1. Check if `RECOUP_ACCOUNT_ID` is set. If set, use `--account $RECOUP_ACCOUNT_ID` on all CLI commands below. If not set, omit the `--account` flag.
+1. Check if `RECOUP_ACCOUNT_ID` is set. If set, use `--account $RECOUP_ACCOUNT_ID` on all CLI commands below. If not set, omit the `--account` flag — the CLI will use the authenticated account automatically.
 2. Run `recoup orgs list --json [--account $RECOUP_ACCOUNT_ID]` to get all organizations
 3. For each organization, run `recoup artists list --org {organization_id} --json [--account $RECOUP_ACCOUNT_ID]` to get its artists
 4. Create the folder structure and a `RECOUP.md` marker in each artist folder:
@@ -23,6 +25,7 @@ Create the folder structure for the connected account's organizations and artist
    - Write a `RECOUP.md` using the template below
 5. Commit and push:
    - `git add -A && git commit -m "setup: create org and artist folders" && git push`
+6. Read the `artist-workspace` skill — it teaches how to work inside the directories you just created.
 
 ## `RECOUP.md`
 
