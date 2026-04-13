@@ -5,6 +5,8 @@ description: Set up the initial file system for a new sandbox. Fetches the accou
 
 # Setup Sandbox
 
+> **Skip this skill** if the sandbox already has an `orgs/` directory — it's already set up.
+
 Create the folder structure for the connected account's organizations and artists.
 
 ## Environment
