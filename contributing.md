@@ -4,7 +4,7 @@ We welcome contributions — especially new skills for the music industry.
 
 ## Adding a Skill
 
-1. Copy `template/SKILL.md` into a new directory under `skills/`:
+1. Create a new directory under `skills/` with a `SKILL.md`:
 
 ```
 skills/my-new-skill/

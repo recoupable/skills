@@ -36,7 +36,7 @@ git clone https://github.com/recoupable/skills.git
 
 ## Creating a Skill
 
-Use the [template](template/SKILL.md) to get started. Every skill needs:
+Every skill needs:
 
 1. A `SKILL.md` file with YAML frontmatter (`name` + `description`)
 2. A clear description that tells the agent **when** to use it

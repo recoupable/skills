@@ -18,7 +18,6 @@ recoupable/skills/
 │   ├── industry-research/
 │   ├── song-writing/
 │   └── ...
-├── template/                 ← starter template for new skills
 ├── README.md
 ├── contributing.md
 └── AGENTS.md                 ← this file
