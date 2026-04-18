@@ -15,7 +15,7 @@ recoupable/skills/
 ├── skills/                   ← all skills live here
 │   ├── chart-metric/
 │   ├── content-creation/
-│   ├── industry-research/
+│   ├── music-industry-research/
 │   ├── song-writing/
 │   └── ...
 ├── README.md
