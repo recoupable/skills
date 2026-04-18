@@ -404,6 +404,170 @@ curl -s -X POST "$RECOUP_API/research/enrich" -H "$AUTH" -H "Content-Type: appli
 
 ---
 
+## Chaining workflows and tools
+
+The 11 workflows above are **building blocks, not complete answers**. Almost no real user question maps cleanly onto exactly one workflow — the real deliverable is usually a chain: `Workflow A` → `Workflow B` → external tool call → hand off to another skill.
+
+This section teaches you how to compose.
+
+### The three chain patterns
+
+Every chain you'll ever build is one of three shapes:
+
+| Pattern | Shape | Example |
+| ------- | ----- | ------- |
+| **Data → Data** | Workflow A's output feeds Workflow B's input | `/similar` (W9) returns peer list → for each peer, run playlist gap analysis (W1) |
+| **Data → Action** | Research output triggers a tool call outside this skill | Peer research (W9) + people search (W11) → draft email → `send_email` MCP tool |
+| **Skill → Skill** | Finish with this skill, hand off to another | Research sweep (W4) → hand off to `content-creation` skill for press one-sheet; or to `release-management` for timing; or to `streaming-growth` for ads strategy |
+
+Most real deliverables are all three stacked: compose several workflows (Data → Data), pipe the result into an action (Data → Action), then hand off whatever remains to another skill (Skill → Skill).
+
+### Tools this skill chains into
+
+Beyond the `/research/*` endpoints, the agent running this skill typically has access to:
+
+- **`send_email`** — MCP tool that sends via Resend from `@recoupable.com`. Used at the end of outreach chains. **Never auto-fire on cold contacts — require human approval first.**
+- **Artist workspace writes** — save synthesized research to `context/artist.md`, `research/{date}.md`, `releases/{slug}/RELEASE.md`. See "Saving research" above.
+- **Other skills in this repo** — `content-creation` (promo content, captions, one-sheets), `release-management` (RELEASE.md lifecycle), `streaming-growth` (Spotify Showcase/Marquee, DSP ads), `artist-workspace` (workspace setup/lookup), `trend-to-song` (reverse from cultural moment to song).
+
+### Chaining rules (read before composing)
+
+1. **Don't re-fetch what you already have.** If `/similar` already returned `cities` for a peer, reuse it — don't call `/research/cities` on the peer again.
+2. **Preserve artist context through the chain.** Every downstream step should reference the user's specific artist data (cities, audience, playlist reach), not generic templates. That's what makes the final output feel researched instead of auto-generated.
+3. **External-facing actions require a human-approval gate.** Anything that touches a real human (`send_email`, posting content, contacting a manager) must be drafted → presented → confirmed. Never auto-send cold outreach.
+4. **Save once, reference many.** Write synthesized research to the artist workspace once; subsequent chains read from there instead of re-running the whole fan-out. Check `context/artist.md` before starting a new research pass.
+5. **Stop when the question is answered.** Chains can loop forever if ungated. Finish when the user's original ask is satisfied, not when you run out of endpoints to call.
+
+---
+
+### Example A — Peer collab outreach
+
+**User question:** "Who should Artist X collab with, and can you start outreach?"
+
+```text
+Step 1 — Research the artist (Workflow 0: full sweep)
+  Calls: /research/profile + /research/metrics + /research/cities
+         + /research/audience + /research/similar
+  Writes: context/artist.md (if workspace exists)
+  Output: full artist context — cities, audience demos, network strength
+
+Step 2 — Narrow to realistic collab targets (Workflow 9)
+  Input: similar[] from Step 1
+  Filters: career_stage == "developing" (tier match),
+           audience_match high, shared-city overlap >= 2
+  Output: 3-5 ranked peer candidates
+
+Step 3 — Find each target's manager / A&R (Workflow 11)
+  For each peer in Step 2:
+    POST /research/people  {query: "manager for {peer}"}
+    POST /research/enrich  {input, schema: {name, role, email, recent_signings}}
+  Output: ranked outreach list with contact + angle
+
+Step 4 — Draft outreach (LLM, no tool call)
+  Reference:
+    - Artist X specifics from Step 1 (cities, listeners, reach)
+    - Peer specifics from Step 3 (recent signings, stylistic fit)
+  Output: personalized drafts — NOT generic "love your music" copy
+
+Step 5 — HUMAN APPROVAL GATE (mandatory)
+  Present full draft(s): recipient, subject, body.
+  Wait for explicit "send" before Step 6.
+
+Step 6 — Send (send_email MCP tool)
+  Only after approval.
+  send_email({to, subject, html})
+
+Optional handoff:
+  → content-creation skill: draft the follow-up nurture sequence
+  → release-management skill: if the collab lands, open a RELEASE.md
+```
+
+---
+
+### Example B — "How is Artist X doing, and what's next?"
+
+**User question:** State of the artist + recommended next move.
+
+```text
+Step 1 — Snapshot (Workflow: metrics + cities + insights)
+  Calls: /research/metrics?source=spotify + /research/cities
+         + /research/insights + /research/milestones
+  Output: trend read (follower/listener divergence, popularity direction)
+
+Step 2 — Diagnose the gap (Workflow 1: playlist pitching)
+  Input: profile.num_sp_editorial_playlists from Step 1
+  If editorials == 0 and total_reach > 500k → editorial gap confirmed
+  Call: /research/similar (peers) → /research/playlists (each peer)
+  Output: playlists peers are on that Artist X isn't → pitch targets
+
+Step 3 — HANDOFF to streaming-growth skill
+  Context to pass:
+    - Current monthly listeners + trend from Step 1
+    - Editorial gap from Step 2
+    - Nearest milestone (1k MLs for Showcase, 5k for Marquee)
+  streaming-growth skill owns: which lever to pull first
+  (playlist push vs social-to-DSP ads vs organic content)
+
+Step 4 — HANDOFF to release-management skill
+  If Step 3 recommends a new release:
+    Open releases/{slug}/RELEASE.md
+    Populate DSP pitch from Step 1 data + Step 2 playlist targets
+
+Human-approval gate: none (internal reasoning only, no external contacts).
+```
+
+---
+
+### Example C — Market scouting for a TikTok-driven breakout
+
+**User question:** "Find tracks that are blowing up on TikTok and the indie artists driving them."
+
+```text
+Step 1 — Find trending music (Workflow: charts + discover)
+  Calls: /research/charts?platform=tiktok&country=US
+         /research/discover?country=US&genre={GENRE_ID}
+                            &sp_monthly_listeners_min=10000
+                            &sp_monthly_listeners_max=100000
+  Output: candidate track + artist list
+
+Step 2 — Validate TikTok-to-Spotify pipeline (Workflow 2)
+  For each candidate:
+    /research/metrics?source=tiktok (track posts trend)
+    /research/metrics?source=spotify (listener response)
+    /research/track/playlists?id={track_id} (editorial pickup?)
+  Output: ranked by TikTok velocity + Spotify conversion
+
+Step 3 — Enrich (optional, deep context)
+  POST /research/deep {query: "why is {track} going viral?"}
+  Output: cited narrative — the cultural thread driving the trend
+
+Step 4 — Write to artist workspace
+  If any candidate warrants ongoing tracking:
+    Create context/artist.md scaffold via artist-workspace skill
+    Save Step 1-3 synthesis to research/{date}-tiktok-scout.md
+
+Step 5 — HANDOFF to trend-to-song skill
+  If the trend itself (not the artist) is the opportunity:
+    trend-to-song owns: reverse from cultural moment to song
+                        + test campaign in 72 hours
+
+Human-approval gate: none for research; required if Step 5 triggers an ad spend.
+```
+
+---
+
+### When NOT to chain
+
+Chaining has a cost — every step is latency, credits, and a place for the agent to lose context. Don't chain when:
+
+- The user asked a single-fact question ("how many Spotify followers does Artist X have?"). Just answer it.
+- The next workflow depends on data the previous one already surfaced well enough. Reuse the data; don't re-query.
+- You're about to make an external-facing action without clear user intent. Stop and confirm first.
+
+A three-step chain that answers the real question beats an eleven-step chain that shows off every endpoint.
+
+---
+
 ## Building Your Own Workflows
 
 The power is in combining data types:
