@@ -445,7 +445,7 @@ Beyond the `/research/*` endpoints, the agent running this skill typically produ
 **User question:** "Who should Artist X collab with, and draft some outreach I can send?"
 
 ```text
-Step 1 — Research the artist (Workflow 0: full sweep)
+Step 1 — Research the artist (full sweep per SKILL.md decision tree)
   Calls: /research/profile + /research/metrics + /research/cities
          + /research/audience + /research/similar
   Writes: context/artist.md (if workspace exists)
