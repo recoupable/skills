@@ -417,32 +417,32 @@ Every chain you'll ever build is one of three shapes:
 | Pattern | Shape | Example |
 | ------- | ----- | ------- |
 | **Data → Data** | Workflow A's output feeds Workflow B's input | `/similar` (W9) returns peer list → for each peer, run playlist gap analysis (W1) |
-| **Data → Action** | Research output triggers a tool call outside this skill | Peer research (W9) + people search (W11) → draft email → `send_email` MCP tool |
+| **Data → Draft** | Research output becomes a deliverable the user can act on | Peer research (W9) + people search (W11) → drafted outreach email the user reviews and sends themselves |
 | **Skill → Skill** | Finish with this skill, hand off to another | Research sweep (W4) → hand off to `content-creation` skill for press one-sheet; or to `release-management` for timing; or to `streaming-growth` for ads strategy |
 
-Most real deliverables are all three stacked: compose several workflows (Data → Data), pipe the result into an action (Data → Action), then hand off whatever remains to another skill (Skill → Skill).
+Most real deliverables are all three stacked: compose several workflows (Data → Data), turn the result into a draft (Data → Draft), then hand off whatever remains to another skill (Skill → Skill).
 
-### Tools this skill chains into
+### What this skill produces
 
-Beyond the `/research/*` endpoints, the agent running this skill typically has access to:
+Beyond the `/research/*` endpoints, the agent running this skill typically produces:
 
-- **`send_email`** — MCP tool that sends via Resend from `@recoupable.com`. Used at the end of outreach chains. **Never auto-fire on cold contacts — require human approval first.**
+- **Written drafts** for the user to act on — outreach emails, pitch copy, press blurbs, DSP pitches. This skill drafts; the user sends. It does not execute external-facing actions (no email sending, no social posting, no contacting managers).
 - **Artist workspace writes** — save synthesized research to `context/artist.md`, `research/{date}.md`, `releases/{slug}/RELEASE.md`. See "Saving research" above.
-- **Other skills in this repo** — `content-creation` (promo content, captions, one-sheets), `release-management` (RELEASE.md lifecycle), `streaming-growth` (Spotify Showcase/Marquee, DSP ads), `artist-workspace` (workspace setup/lookup), `trend-to-song` (reverse from cultural moment to song).
+- **Handoffs to other skills** — `content-creation` (promo content, captions, one-sheets), `release-management` (RELEASE.md lifecycle), `streaming-growth` (Spotify Showcase/Marquee, DSP ads), `artist-workspace` (workspace setup/lookup), `trend-to-song` (reverse from cultural moment to song).
 
 ### Chaining rules (read before composing)
 
 1. **Don't re-fetch what you already have.** If `/similar` already returned `cities` for a peer, reuse it — don't call `/research/cities` on the peer again.
 2. **Preserve artist context through the chain.** Every downstream step should reference the user's specific artist data (cities, audience, playlist reach), not generic templates. That's what makes the final output feel researched instead of auto-generated.
-3. **External-facing actions require a human-approval gate.** Anything that touches a real human (`send_email`, posting content, contacting a manager) must be drafted → presented → confirmed. Never auto-send cold outreach.
+3. **Draft, don't execute, for external-facing actions.** Anything that touches a real human (cold outreach to managers/A&R, social posts, press contacts) should be drafted and presented for the user to send themselves. This skill composes research and produces drafts — it does not send email, post content, or contact anyone.
 4. **Save once, reference many.** Write synthesized research to the artist workspace once; subsequent chains read from there instead of re-running the whole fan-out. Check `context/artist.md` before starting a new research pass.
 5. **Stop when the question is answered.** Chains can loop forever if ungated. Finish when the user's original ask is satisfied, not when you run out of endpoints to call.
 
 ---
 
-### Example A — Peer collab outreach
+### Example A — Peer collab outreach draft
 
-**User question:** "Who should Artist X collab with, and can you start outreach?"
+**User question:** "Who should Artist X collab with, and draft some outreach I can send?"
 
 ```text
 Step 1 — Research the artist (Workflow 0: full sweep)
@@ -467,19 +467,13 @@ Step 4 — Draft outreach (LLM, no tool call)
   Reference:
     - Artist X specifics from Step 1 (cities, listeners, reach)
     - Peer specifics from Step 3 (recent signings, stylistic fit)
-  Output: personalized drafts — NOT generic "love your music" copy
-
-Step 5 — HUMAN APPROVAL GATE (mandatory)
-  Present full draft(s): recipient, subject, body.
-  Wait for explicit "send" before Step 6.
-
-Step 6 — Send (send_email MCP tool)
-  Only after approval.
-  send_email({to, subject, html})
+  Output: personalized drafts — NOT generic "love your music" copy.
+  Present drafts to the user with recipient, subject, and body.
+  The user sends them manually.
 
 Optional handoff:
   → content-creation skill: draft the follow-up nurture sequence
-  → release-management skill: if the collab lands, open a RELEASE.md
+  → release-management skill: if a collab lands, open a RELEASE.md
 ```
 
 ---
@@ -562,7 +556,7 @@ Chaining has a cost — every step is latency, credits, and a place for the agen
 
 - The user asked a single-fact question ("how many Spotify followers does Artist X have?"). Just answer it.
 - The next workflow depends on data the previous one already surfaced well enough. Reuse the data; don't re-query.
-- You're about to make an external-facing action without clear user intent. Stop and confirm first.
+- You're about to write to the artist workspace or kick off a long chain without clear user intent. Confirm first.
 
 A three-step chain that answers the real question beats an eleven-step chain that shows off every endpoint.
 
