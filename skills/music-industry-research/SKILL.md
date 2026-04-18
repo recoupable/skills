@@ -121,8 +121,7 @@ curl -s "$RECOUP_API/research/venues?artist=Drake" -H "x-api-key: $RECOUP_API_KE
 curl -s "$RECOUP_API/research/rank?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
 ```
 
-**`/research/playlists` filter flags** (all optional, all accept `true`/`false`):
-`platform` (`spotify|applemusic|deezer|amazon|youtube`), `status` (`current|past`), `editorial`, `indie`, `majorCurator`, `popularIndie`, `personalized`, `chart`, `since=YYYY-MM-DD`, `sort`, `limit`.
+See the **Playlist filter & pagination semantics** section below — the filter flag behavior on `/research/playlists` is the single biggest gotcha in the skill and it applies to `/research/track/playlists` too.
 
 ### 3. Chartmetric ID-based detail endpoints (require a numeric ID from search)
 
@@ -146,7 +145,48 @@ curl -s "$RECOUP_API/research/track/playlists?id=15194376&platform=spotify&edito
   -H "x-api-key: $RECOUP_API_KEY" | jq
 ```
 
-`track/playlists` also accepts `q=` + optional `artist=` in place of `id=` for name-based lookup, plus `status`, `since`, `until`, `limit`, `offset`, `sort`, and the same filter flags as `/research/playlists` (`editorial`, `indie`, `majorCurator`, `popularIndie`, `personalized`, `chart`, `newMusicFriday`, `thisIs`, `radio`, `brand`).
+`track/playlists` also accepts `q=` + optional `artist=` in place of `id=` for name-based lookup, plus `status`, `since`, `until`, `limit`, `offset`, `sort`, and the filter flags documented in the next section.
+
+---
+
+## Playlist filter & pagination semantics
+
+This section is the single biggest footgun in the skill. Read it before calling either playlist endpoint.
+
+### Filter flags are **exclusive when set**
+
+Both `/research/playlists` (artist-level) and `/research/track/playlists` (track-level) accept a set of filter flags: `editorial`, `indie`, `majorCurator`, `popularIndie`, `personalized`, `chart`. The track-level endpoint adds `newMusicFriday`, `thisIs`, `radio`, `brand`.
+
+**Defaults with no flags passed:**
+
+- `/research/track/playlists` — defaults to `editorial + indie + majorCurator + popularIndie = true` (the rest off).
+- `/research/playlists` (artist-level) — behaves the same way empirically: no flags → a mix of indie/curator placements, editorial excluded.
+
+**The moment you pass ANY flag, the others flip to `false`.** `?editorial=true` doesn't mean "show me editorials in addition to the defaults" — it means "show me ONLY editorials, exclude everything else." This is how users end up getting `{ placements: [] }` when the artist actually has hundreds of indie and curator placements.
+
+How to get the results you probably want:
+
+| You want | Query |
+| -------- | ----- |
+| All editorial **plus** curator/indie placements | `?editorial=true&indie=true&majorCurator=true&popularIndie=true` |
+| Only editorial, nothing else | `?editorial=true` |
+| All default categories (curator/indie mix, no editorial) | no flags |
+| Everything the API will give you | pass all 6 (artist) or all 10 (track) flags = `true` |
+
+### Hard cap: `limit=100`
+
+Both endpoints reject `limit > 100` with a `400`. Empirically verified — `limit=150`, `200`, `500` all fail. There's no documented cap, but `100` is it.
+
+### Pagination: `/research/playlists` is single-shot, `/research/track/playlists` paginates
+
+- **Artist-level `/research/playlists`** — `offset` is **ignored**. `offset=0` and `offset=50` return the same first row. Combined with the 100-cap, this is a single-shot snapshot. For bulk artist-wide playlist data, enumerate tracks via `/research/tracks` and then call `/research/track/playlists?id=...&offset=...` per track.
+- **Track-level `/research/track/playlists`** — `offset` **works**. Page by calling `offset=0, 100, 200, …` until you get an empty batch.
+
+### The aggregate-vs-detail gap
+
+`/research/profile` reports counts like `num_sp_playlists: 3,418,778` (for Drake) and `num_sp_editorial_playlists: 2,392`. **The detail endpoints will never return numbers that big.** The profile aggregate counts are derived from Chartmetric's full graph, but `/research/playlists` and `/research/track/playlists` each expose at most `~100 per call`, and `/research/track/playlists` pagination bottoms out well before the aggregate count (often in the low hundreds per track, sometimes as few as ~40 even with all 10 flags `true`).
+
+**Plan for this:** use profile counts as the signal of "does this artist have playlist support at all?", and the detail endpoints as a sampled list of the top placements — not as ground truth for bulk retrieval. If you need to reason about total reach, `/research/profile.sp_playlist_total_reach` and `sp_editorial_playlist_total_reach` are the trustworthy numbers.
 
 ### 4. Non-artist discovery + reference data
 
@@ -399,7 +439,10 @@ Don't overwrite `context/artist.md` with research data. Static context (who the 
 - **Don't forget `"type":"object"` in enrich schemas.** The endpoint rejects schemas without it.
 - **Don't guess field names.** If you're unsure of a field, run the curl once and `jq '.<collection>[0] | keys'` before parsing. Common wrong guesses: `trend` (it's `recent_momentum`), `metrics` wrapper (platform counts are top-level: `sp_followers`, `ins_followers`, etc.), flat `playlist_name` (it's nested: `placements[].playlist.name`).
 - **Don't read `/research/profile` nulls as "no data".** Profile is an aggregator that commonly returns null fields for less-covered artists. Fall back to `/research/similar`, `/research/metrics`, `/research/cities`, `/research/playlists` — those hit platform data directly.
-- **Don't over-filter playlists blind.** `editorial=true` will legitimately return `{ placements: [] }` for artists with no editorial placements. Check `/research/profile`'s `num_sp_editorial_playlists` first, or widen to `&indie=true&majorCurator=true&popularIndie=true`.
+- **Don't over-filter playlists blind.** Playlist filter flags are **exclusive when set** — `editorial=true` alone means "only editorial, exclude everything else." If you want editorial alongside curator/indie placements, pass all four: `?editorial=true&indie=true&majorCurator=true&popularIndie=true`. Preflight with `/research/profile.num_sp_editorial_playlists` so an empty editorial result is recognized as "this artist genuinely has no editorials" vs. "you ate the defaults." Full rules in the Playlist filter & pagination semantics section.
+- **Don't try to paginate `/research/playlists` (artist-level).** `offset` is ignored there; the endpoint is a single 100-max snapshot. For bulk playlist data, enumerate `/research/tracks` and then page `/research/track/playlists?id=...&offset=...` per track (that one *does* honor `offset`).
+- **Don't request `limit > 100`.** Both playlist endpoints cap at `limit=100`; `150`+ returns `400`.
+- **Don't treat profile aggregate counts as reachable via detail endpoints.** `num_sp_playlists` (e.g. 3.4M for Drake) is a full-graph count; detail endpoints cap per-call and per-track far below that. Use profile counts for magnitude, detail endpoints for a sample of top placements.
 
 ---
 
