@@ -1,27 +1,25 @@
 ---
 name: getting-started
-description: Set up Recoupable from scratch — install the CLI, get an API key, and make your first call. Use this skill when the user says "set up Recoupable", "install Recoup", "get an API key", "connect to Recoup", "use Recoupable", "onboard to Recoup", "how do I start", or when an agent needs to configure itself to use the Recoupable platform.
+description: Set up Recoupable from scratch — get an API key, verify it, and make your first call via REST or MCP. Use this skill when the user says "set up Recoupable", "install Recoup", "get an API key", "connect to Recoup", "use Recoupable", "onboard to Recoup", "how do I start", or when an agent needs to configure itself to use the Recoupable platform.
 ---
 
 # Getting Started with Recoupable
 
-From zero to your first API call in under 2 minutes. Three steps: install, authenticate, use.
+From zero to your first API call in under 2 minutes. Two steps: authenticate, call. No install needed — everything is HTTP.
 
-## Step 1 — Install the CLI
+- **Base URL:** `https://recoup-api.vercel.app/api`
+- **MCP URL:** `https://recoup-api.vercel.app/mcp`
+- **Auth header (REST):** `x-api-key: YOUR_RECOUP_API_KEY`
+- **Auth header (MCP):** `Authorization: Bearer YOUR_RECOUP_API_KEY`
+- **Full docs:** <https://developers.recoupable.com>
 
-```bash
-npm install -g @recoupable/cli
-```
-
-Requires Node.js 18+. The CLI wraps the REST API with convenient commands.
-
-## Step 2 — Get an API key
+## Step 1 — Get an API key
 
 Two paths depending on who is doing this.
 
 ### Path A: Agent (instant, no verification)
 
-POST to the signup endpoint with an `agent+` email. Key comes back immediately.
+POST to the signup endpoint with an `agent+` email. The key comes back immediately and is exported for the rest of the session.
 
 ```bash
 export RECOUP_API_KEY=$(curl -s -X POST "https://recoup-api.vercel.app/api/agents/signup" \
@@ -29,7 +27,7 @@ export RECOUP_API_KEY=$(curl -s -X POST "https://recoup-api.vercel.app/api/agent
   -d '{"email": "agent+'$(date +%s)-$RANDOM'@recoupable.com"}' | jq -r .api_key)
 ```
 
-The `agent+{unique}@recoupable.com` pattern always returns a key with no verification step. Combining `$(date +%s)` with `$RANDOM` guarantees unique addresses.
+The `agent+{unique}@recoupable.com` pattern always returns a key with no verification step. Combining `$(date +%s)` with `$RANDOM` guarantees a unique address.
 
 ### Path B: Human (email verification)
 
@@ -41,7 +39,7 @@ curl -X POST "https://recoup-api.vercel.app/api/agents/signup" \
   -d '{"email": "user@example.com"}'
 ```
 
-This sends a verification code to their email. Ask the user for the code, then:
+This sends a verification code to the user's email. Ask the user for the code, then:
 
 ```bash
 curl -X POST "https://recoup-api.vercel.app/api/agents/verify" \
@@ -51,39 +49,55 @@ curl -X POST "https://recoup-api.vercel.app/api/agents/verify" \
 
 The response contains the `api_key`.
 
+### Path C: Dashboard (humans only, optional)
+
+Prefer clicking over scripting? Create a key at [chat.recoupable.com/keys](https://chat.recoupable.com/keys).
+
+1. Sign in
+2. Enter a descriptive name (e.g. "Production Server")
+3. Click **Create API Key** and copy it immediately — it's only shown once.
+
 ### Save the key
 
-Add to shell profile so it persists:
+Add it to the shell profile so it survives new sessions:
 
 ```bash
 echo 'export RECOUP_API_KEY="recoup_sk_..."' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-## Step 3 — Verify it works
+## Step 2 — Verify it works
+
+Hit the "whoami" endpoint. It echoes the account ID the key belongs to:
 
 ```bash
-recoup whoami
+curl -s "https://recoup-api.vercel.app/api/accounts/id" \
+  -H "x-api-key: $RECOUP_API_KEY"
 ```
 
-Should print your account ID and email. If it does, you're ready.
+A `200` with an `accountId` in the body means you're ready. `401` means the key is missing or wrong.
 
-## First useful command
+## First useful call — research any artist
 
-Research any artist:
+Research runs entirely over REST. Everything sits under `/api/research/*`.
 
 ```bash
-recoup research "Drake"
+curl -s "https://recoup-api.vercel.app/api/research?q=Drake&type=artists&beta=true" \
+  -H "x-api-key: $RECOUP_API_KEY" | jq
 ```
 
-Returns structured data: streaming metrics, audience demographics, social traction, career history — pulled from 14 platforms.
+That returns ranked matches with Chartmetric IDs. To get a full profile:
+
+```bash
+curl -s "https://recoup-api.vercel.app/api/research/profile?artist=Drake" \
+  -H "x-api-key: $RECOUP_API_KEY" | jq
+```
+
+For the full research surface — metrics, audience, cities, similar artists, playlists, charts, people search, deep research, URL extraction, structured enrichment — use the `music-industry-research` skill.
 
 ## Connect via MCP
 
-For AI tools that support MCP (Claude, Cursor, etc.):
-
-- **URL:** `https://recoup-api.vercel.app/mcp`
-- **Auth:** Bearer token — use your API key as the token
+For AI tools that speak MCP (Claude, Cursor, etc.), point them at the Recoup MCP server and pass the API key as a Bearer token:
 
 ```json
 {
@@ -98,30 +112,49 @@ For AI tools that support MCP (Claude, Cursor, etc.):
 }
 ```
 
-This gives your AI tool access to 40+ music intelligence tools.
+This gives the tool access to Recoup's MCP tools — sandbox execution, research, and more. See the [MCP docs](https://developers.recoupable.com/mcp) for the current tool list and schemas.
 
 ## Connect via REST API
 
-Base URL: `https://recoup-api.vercel.app/api`
-
-Auth header: `x-api-key: YOUR_RECOUP_API_KEY`
+Every endpoint follows the same pattern: `https://recoup-api.vercel.app/api/<resource>` with `x-api-key` for auth. A minimal REST client in any language:
 
 ```bash
-curl "https://recoup-api.vercel.app/api/research?q=Drake" \
+curl -s "https://recoup-api.vercel.app/api/tasks" \
   -H "x-api-key: $RECOUP_API_KEY"
 ```
 
-Full API reference: https://developers.recoupable.com
+```python
+import os, requests
+headers = {"x-api-key": os.environ["RECOUP_API_KEY"]}
+r = requests.get("https://recoup-api.vercel.app/api/tasks", headers=headers)
+print(r.json())
+```
+
+```javascript
+const r = await fetch("https://recoup-api.vercel.app/api/tasks", {
+  headers: { "x-api-key": process.env.RECOUP_API_KEY },
+});
+console.log(await r.json());
+```
+
+Full reference (all resources, request/response shapes, auth rules): <https://developers.recoupable.com>
+
+## Auth gotchas
+
+- Use `x-api-key` for server-to-server, or `Authorization: Bearer <privy_jwt>` for frontend sessions via Privy. **Never both in the same request** — the API returns `401`.
+- API keys are personal by default. If your account is in an organization, you can pass `account_id` on supported endpoints to access other accounts in that org.
+- Keys are hashed (HMAC-SHA256) on save — if you lose the key, you rotate it, not recover it. Rotate at [chat.recoupable.com/keys](https://chat.recoupable.com/keys).
 
 ## What's next
 
 After setup, use these skills for specific workflows:
 
 | Skill | What it does |
-|-------|-------------|
+| ----- | ------------ |
+| music-industry-research | Deep artist analytics, people search, charts, competitive analysis, web intelligence |
 | content-creation | Generate videos, images, captions from artist catalogs |
-| industry-research | Deep artist analytics, people search, competitive analysis |
 | release-management | Plan and execute release campaigns |
-| setup-sandbox | Scaffold workspace for an account's orgs and artists |
+| setup-sandbox | Scaffold the workspace for an account's orgs and artists |
 | streaming-growth | Grow artists past streaming milestones |
 | songwriting | Structured songwriting using the 7 C's method |
+| artist-workspace | Manage artist directories — context, songs, brand, audience |

@@ -25,13 +25,12 @@ git clone https://github.com/recoupable/skills.git
 | [getting-started](skills/getting-started) | Install CLI, get API key, connect via MCP/REST — start here |
 | [artist-workspace](skills/artist-workspace) | Manage artist directories — context, songs, brand, audience |
 | [streaming-growth](skills/streaming-growth) | Grow a new artist past streaming milestones that unlock platform tools |
-| [brand-guidelines](skills/brand-guidelines) | Apply Recoupable's brand identity to agent outputs |
-| [chartmetric](skills/chartmetric) | Query and analyze music data from the Chartmetric API |
+| [chart-metric](skills/chart-metric) | Query and analyze music data from the Chartmetric API |
 | [content-creation](skills/content-creation) | Create social videos, TikToks, Reels, and visual content using AI primitives |
 | [music-industry-research](skills/music-industry-research) | Music industry research — artist analytics, people search, competitive analysis, web intelligence |
 | [release-management](skills/release-management) | Plan and execute release campaigns |
 | [setup-sandbox](skills/setup-sandbox) | Scaffold the workspace for an account's orgs and artists |
-| [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
+| [song-writing](skills/song-writing) | Structured songwriting using the 7 C's method |
 | [trend-to-song](skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
 
 ## Creating a Skill
