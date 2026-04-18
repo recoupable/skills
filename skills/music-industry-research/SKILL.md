@@ -63,7 +63,19 @@ Query params: `q` (required), `type` (`artists|tracks|albums|playlists|curators|
 
 `q` can also be a streaming URL (e.g. `https://open.spotify.com/artist/...`).
 
+**Interpreting `match_strength` (beta only):** real matches score orders of magnitude above 1 — a well-known artist like Drake comes back at ~52,000 and even smaller artists score in the hundreds. Noise/wrong-category hits sit below 1 (often 0.005–0.1). **Treat a top result with `match_strength < 1` as "not found"** and fall through to Graceful Degradation (`/research/web` or `/research/deep`). Same rule if the `results` array is empty. Don't pass sub-1 IDs into detail endpoints — you'll get the wrong entity back.
+
 ### 2. Artist data (accept `artist=` name or Recoup UUID)
+
+**For URL-based entry (Spotify, Apple Music, etc.), use `/research/lookup?url=` first** and chain the resolved name into the endpoints below. Passing a streaming URL directly to `/profile?artist=...` works sometimes but can return `404` or `406` depending on the URL shape (trailing `?si=` query strings, `http` vs `https`, non-artist URLs). `/research/lookup` is the canonical URL resolver — use it.
+
+```bash
+# URL → artist resolution (canonical entry for any platform URL)
+curl -s "$RECOUP_API/research/lookup?url=https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4" \
+  -H "x-api-key: $RECOUP_API_KEY" | jq '.name'
+# Then chain the name into every other endpoint:
+curl -s "$RECOUP_API/research/profile?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
+```
 
 ```bash
 # Profile — bio, genres, social URLs, label, career stage
@@ -198,6 +210,14 @@ curl -s -X POST "$RECOUP_API/research/enrich" \
 
 `enrich.processor` is one of `base` (fast), `core` (balanced, default), `ultra` (comprehensive).
 
+**Latency — do not abort early.** The POST research endpoints do multi-source web browsing and take real wall-clock time. Plan for long awaits:
+
+- `/research/enrich` — typically **60–90 seconds** (`core` processor). `ultra` can take longer.
+- `/research/deep` — often **2+ minutes** for comprehensive reports with citations.
+- `/research/people`, `/research/web`, `/research/extract` — usually seconds to tens of seconds.
+
+If you wrap these in a client with a default 30s timeout, they'll appear "hung" and you'll abort successful calls. Set client timeouts to **at least 3 minutes** for `/enrich` and `/deep`, or stream/queue them if the UX allows.
+
 ---
 
 ## Response shapes (what the fields actually are)
@@ -286,6 +306,8 @@ The individual endpoints pull direct from platform data and often succeed when p
 - `num_sp_editorial_playlists` null or 0? → call `/research/playlists?editorial=true` and trust the actual result set
 
 **Preflight filter decisions with profile counts.** Before calling `/research/playlists?editorial=true`, check `/research/profile` for `num_sp_editorial_playlists`. If it's 0, an empty editorial result isn't a skill or API bug — the artist genuinely has no editorial placements. Drop the filter or switch to `&indie=true&majorCurator=true&popularIndie=true` to see what they *are* on.
+
+**Empty `/research/milestones` is also legit.** `{ status: "success", milestones: [] }` is common — even for artists with a real global rank. Milestones are discrete events (chart entries, major playlist adds, award mentions); many artists just haven't had one recently. Don't retry or escalate on empty — fall back to `/research/insights` or `/research/career` for narrative context.
 
 ---
 
@@ -383,11 +405,19 @@ Don't overwrite `context/artist.md` with research data. Static context (who the 
 
 ## Graceful Degradation
 
-If `GET /research?q=...&type=artists&beta=true` returns no results:
+Fall through to web research if **any** of these are true:
 
-1. `POST /research/web` with the artist's name for web-based research
-2. `POST /research/enrich` with a schema to extract structured facts
-3. For very emerging artists, Chartmetric may not have data yet — web + enrich is the fallback
+- `GET /research?q=...&type=artists&beta=true` returns `{ results: [] }`
+- The top result's `match_strength < 1` (see the match_strength heuristic in the Search section)
+- You tried `/research/lookup?url=` with a streaming URL and got a non-200
+
+Then:
+
+1. `POST /research/web` with the artist's name for ranked web search results
+2. `POST /research/enrich` with a schema to extract structured facts (budget ~60–90s)
+3. `POST /research/deep` for a full cited narrative (budget ~2+ minutes)
+
+For very emerging artists, Chartmetric may not have data yet — web + enrich + deep is the fallback.
 
 ## More Workflows
 
