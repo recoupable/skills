@@ -200,7 +200,7 @@ Both `/research/playlists` (artist-level) and `/research/track/playlists` (track
 
 **Defaults with no flags:**
 
-- `/research/track/playlists` — defaults to `editorial + indie + majorCurator + popularIndie = true` (the rest off).
+- `/research/track/playlists` — defaults to `indie + majorCurator + popularIndie = true` (editorial and the rest off). Matches the exclusive-when-set rule in SKILL.md — passing `?editorial=true` alone replaces these defaults rather than adding to them.
 - `/research/playlists` (artist-level) — behaves the same way empirically: no flags → mix of indie/curator placements, editorial excluded.
 
 **The moment you pass ANY flag, the others flip to `false`.** `?editorial=true` doesn't mean "show me editorials in addition to defaults" — it means "show me ONLY editorials." This is how users end up getting `{ placements: [] }` when the artist actually has hundreds of indie/curator placements.

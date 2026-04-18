@@ -39,7 +39,7 @@ Raw numbers are noise without interpretation. Heuristics for each data type:
 **Playlists:**
 
 - 2 editorial playlists for 5M+ listeners = severely under-playlisted (pitch immediately)
-- `placements[].playlist.followers` is often `0` — use `peak_position` or `/research/playlist?id=` for true reach
+- `placements[].playlist.followers` is often `0` — use `peak_position` or `/research/playlist?platform=spotify&id=` for true reach
 - Past placements (`status=past`) that dropped off = re-pitch opportunities
 
 **Audience:**
