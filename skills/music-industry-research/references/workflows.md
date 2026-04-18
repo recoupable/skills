@@ -460,7 +460,7 @@ Step 2 — Narrow to realistic collab targets (Workflow 9)
 Step 3 — Find each target's manager / A&R (Workflow 11)
   For each peer in Step 2:
     POST /research/people  {query: "manager for {peer}"}
-    POST /research/enrich  {input, schema: {name, role, email, recent_signings}}
+    POST /research/enrich  {input, schema: {type: "object", properties: {name, role, email, recent_signings}}}
   Output: ranked outreach list with contact + angle
 
 Step 4 — Draft outreach (LLM, no tool call)
