@@ -1,6 +1,6 @@
-# Research Workflow Chains
+# Research workflows, interpretation, and synthesis
 
-Multi-step workflows that chain `/api/research/*` endpoints to answer strategic questions. Each workflow tells you what to call, in what order, and what to look for in the results.
+Multi-step workflows that chain `/api/research/*` endpoints to answer strategic questions, plus the interpretation rules of thumb and cross-cutting synthesis patterns to apply once you have the data.
 
 All examples assume:
 
@@ -9,6 +9,74 @@ export RECOUP_API_KEY="recoup_sk_..."
 export RECOUP_API="https://recoup-api.vercel.app/api"
 AUTH="x-api-key: $RECOUP_API_KEY"
 ```
+
+---
+
+## Interpretation cheat sheet
+
+Raw numbers are noise without interpretation. Heuristics for each data type:
+
+**Metrics:**
+
+- Follower-to-listener ratio above 20% = dedicated fan base (they follow, not just stream)
+- Save-to-listener ratio above 3% = strong catalog stickiness
+- Week-over-week listener growth above 5% = momentum
+- Popularity score trending up = algorithmic favor
+
+**Cities:**
+
+- Top cities international but playlists US-only = untapped international opportunity
+- High listeners in a city the artist has never toured = tour opportunity
+- Compare with similar artists' cities to find geographic white space
+
+**Similar artists:**
+
+- `career_stage`: undiscovered → developing → mid-level → mainstream → superstar → legendary
+- `recent_momentum`: decline → gradual decline → steady → growth → explosive growth
+- Peers all "mainstream" but artist is "mid-level" = breakout potential
+- Peers with playlists you're NOT on = pitch targets
+
+**Playlists:**
+
+- 2 editorial playlists for 5M+ listeners = severely under-playlisted (pitch immediately)
+- `placements[].playlist.followers` is often `0` — use `peak_position` or `/research/playlist?id=` for true reach
+- Past placements (`status=past`) that dropped off = re-pitch opportunities
+
+**Audience:**
+
+- Gender skew tells you content strategy (visual style, messaging)
+- Age concentration tells you platform priority (Gen Z = TikTok, 25–34 = Instagram)
+- Country mismatch between audience and cities = content localization opportunity
+
+**Charts / rank / milestones:**
+
+- `/research/rank` is one number — useful for before/after deltas over time
+- `/research/milestones` is the activity feed — filter for high star ratings when summarizing
+- `/research/charts` is platform-wide, not artist-scoped — find what's hot on a market/platform, then cross-reference with `/similar`
+
+---
+
+## Cross-cutting synthesis patterns
+
+Don't dump raw JSON. Combine endpoints and draw conclusions:
+
+- **Geographic strategy:** `cities` + `audience?platform=instagram` → "Sao Paulo is #1 (135K listeners) but IG audience is 80% US. Massive Brazilian fan base isn't being served with localized content."
+- **Playlist gap analysis:** `similar` → `playlists` on each peer → "5 of your 10 peers are on 'R&B Rotation' (450K followers), you're not. Top pitch target."
+- **Platform pipeline:** `metrics?source=tiktok` + `metrics?source=spotify` → "TikTok followers up 40% last month, Spotify listeners flat. Virality isn't converting. Add Spotify-specific CTAs to TikTok content."
+- **Career positioning:** `similar` → compare career stages → "You're the only 'mainstream' artist in your peer group — everyone else is 'mid-level'. Leverage for brand deals and festival slots."
+- **Chart → catalog:** `charts?platform=tiktok&country=US` + `tracks` → identify sound trends the artist's catalog could slot into.
+
+---
+
+## Saving research
+
+If working in an artist workspace, save research results to `research/` with timestamps:
+
+```
+research/artist-intel-2026-04-17.md
+```
+
+Don't overwrite `context/artist.md` with research data. Static context (who the artist IS) is separate from dynamic research (how they're performing NOW). If the research reveals something that should update the static profile, suggest it — don't auto-update.
 
 ---
 

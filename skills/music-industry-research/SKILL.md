@@ -1,467 +1,116 @@
 ---
 name: music-industry-research
-description: Music industry research via the Recoup `/api/research/*` REST endpoints — streaming metrics, audience demographics, playlist placements, competitive analysis, charts, venues, people search, URL extraction, structured enrichment, and web intelligence. Use when the user needs artist analytics, streaming numbers, audience insights, playlist tracking, similar artists, collaboration targets, tour routing data, chart positions, or any music industry research. Also use for finding people in the industry (managers, A&R), extracting data from URLs, or enriching entities with structured web research. Triggers on requests involving Spotify followers, monthly listeners, TikTok trends, Instagram audience, playlist pitching, competitive analysis, "how is [artist] doing," "research [artist]," "find me [people]," or any question about an artist's performance, market position, or industry contacts.
+description: Music industry research via the Recoup `/api/research/*` REST endpoints. Use when the user asks about an artist's analytics, streaming numbers, audience demographics, playlist placements, similar artists, charts, tour/venue data, or any music industry research. Also use for finding people in the industry (managers, A&R), extracting data from URLs, or enriching entities with structured web research. Triggers include "Spotify followers", "monthly listeners", "TikTok trends", "Instagram audience", "playlist pitching", "competitive analysis", "how is [artist] doing", "research [artist]", "find me [people]", or any question about an artist's performance, market position, or industry contacts.
 ---
 
 # Recoup Research
 
-Music industry research through the Recoup API. Every endpoint lives under `https://recoup-api.vercel.app/api/research` and authenticates with the `x-api-key` header.
+Music industry research through the Recoup API. All endpoints live under `https://recoup-api.vercel.app/api/research` and authenticate with `x-api-key`.
 
 ```bash
 export RECOUP_API_KEY="recoup_sk_..."   # already set in Recoup sandboxes
 export RECOUP_API="https://recoup-api.vercel.app/api"
 ```
 
-Every example below assumes those two variables are exported. Full reference: https://developers.recoupable.com
+Reference docs: <https://developers.recoupable.com>
 
-## Before You Research
-
-1. Check if the artist has a workspace with `context/artist.md` — don't re-research what's already known.
-2. Decide what the user actually needs. "How's Drake doing?" needs 2-3 calls, not 20.
-3. Pipe responses to `jq` when you need to extract fields (`curl ... | jq '.results[0]'`).
-
-## Decision Tree
+## Decision tree
 
 Start here based on what the user asks:
 
-**"How is [artist] doing?"** → `GET /research/metrics?source=spotify` + `GET /research/cities` + `GET /research/insights`
-
-**"Research [artist] for me"** → `GET /research/profile` → parallel(`metrics`, `audience`, `cities`, `similar`, `playlists`) → `POST /research/web` or `POST /research/deep` for narrative context → synthesize
-
-**"Who should I pitch to?"** → `GET /research/similar?audience=high&genre=high` → `GET /research/playlists` on each peer → find playlists peers are on and your artist isn't
-
-**"Where should we tour?"** → `GET /research/cities` + `GET /research/audience?platform=youtube` + `GET /research/festivals` + `GET /research/venues`
-
-**"Find me [people]"** → `POST /research/people` with `{ "query": "A&R reps at Atlantic Records" }`
-
-**"Tell me about [entity]"** → `POST /research/enrich` for structured data, or `POST /research/deep` for a cited narrative report
-
-**"What does this page say?"** → `POST /research/extract` with `{ "urls": ["https://..."] }`
-
-**"Find emerging artists"** → `GET /research/discover?country=US&genre=GENRE_ID&sp_monthly_listeners_min=50000&sp_monthly_listeners_max=200000` (list genre IDs via `GET /research/genres`)
-
-**"What's charting on [platform]?"** → `GET /research/charts?platform=spotify&country=US`
-
-**"Where does this track get played?"** → `GET /research/track/playlists?id=CM_TRACK_ID` (get `id` via search first)
-
-If none of these match, start with `POST /research/web` for general research.
-
----
-
-## Endpoints Reference
-
-### 1. Search (the discovery primitive)
-
-`GET /research` — find Chartmetric `id`s to pass into the ID-based lookups (`albums`, `track`, `playlist`, `curator`, `track/playlists`).
-
-```bash
-curl -s "$RECOUP_API/research?q=Drake&type=artists&beta=true" \
-  -H "x-api-key: $RECOUP_API_KEY" | jq
-```
-
-Query params: `q` (required), `type` (`artists|tracks|albums|playlists|curators|stations`, default `artists`), `limit`, `offset`, `beta` (`true|false` — **always pass `beta=true` for ambiguous queries**; beta results carry a numeric `match_strength` and rank far better than the default engine), `platforms` (e.g. `cm,spotify`, only with `beta=true`).
-
-`q` can also be a streaming URL (e.g. `https://open.spotify.com/artist/...`).
-
-**Interpreting `match_strength` (beta only):** real matches score orders of magnitude above 1 — a well-known artist like Drake comes back at ~52,000 and even smaller artists score in the hundreds. Noise/wrong-category hits sit below 1 (often 0.005–0.1). **Treat a top result with `match_strength < 1` as "not found"** and fall through to Graceful Degradation (`/research/web` or `/research/deep`). Same rule if the `results` array is empty. Don't pass sub-1 IDs into detail endpoints — you'll get the wrong entity back.
-
-### 2. Artist data (accept `artist=` name or Recoup UUID)
-
-**For URL-based entry (Spotify, Apple Music, etc.), use `/research/lookup?url=` first** and chain the resolved name into the endpoints below. Passing a streaming URL directly to `/profile?artist=...` works sometimes but can return `404` or `406` depending on the URL shape (trailing `?si=` query strings, `http` vs `https`, non-artist URLs). `/research/lookup` is the canonical URL resolver — use it.
-
-```bash
-# URL → artist resolution (canonical entry for any platform URL)
-curl -s "$RECOUP_API/research/lookup?url=https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4" \
-  -H "x-api-key: $RECOUP_API_KEY" | jq '.name'
-# Then chain the name into every other endpoint:
-curl -s "$RECOUP_API/research/profile?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-```
-
-```bash
-# Profile — bio, genres, social URLs, label, career stage
-curl -s "$RECOUP_API/research/profile?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Time-series platform metrics ({ followers, listeners, popularity, ... })
-curl -s "$RECOUP_API/research/metrics?artist=Drake&source=spotify" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Audience demographics — platform: instagram | tiktok | youtube (default instagram)
-curl -s "$RECOUP_API/research/audience?artist=Drake&platform=tiktok" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Top listener cities
-curl -s "$RECOUP_API/research/cities?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Similar artists (competitors, collab targets)
-curl -s "$RECOUP_API/research/similar?artist=Drake&audience=high&genre=high&limit=20" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Playlist placements (see filter flags below)
-curl -s "$RECOUP_API/research/playlists?artist=Drake&editorial=true&sort=followers" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# All tracks with popularity
-curl -s "$RECOUP_API/research/tracks?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Career timeline
-curl -s "$RECOUP_API/research/career?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# AI-surfaced observations
-curl -s "$RECOUP_API/research/insights?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Activity feed — playlist adds, chart entries, notable events (with star ratings)
-curl -s "$RECOUP_API/research/milestones?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Social + streaming URLs (Spotify, IG, TikTok, YT, Twitter, SoundCloud, …)
-curl -s "$RECOUP_API/research/urls?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Top Instagram posts and reels, sorted by engagement
-curl -s "$RECOUP_API/research/instagram-posts?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Venues the artist has performed at (capacity + location)
-curl -s "$RECOUP_API/research/venues?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Single-integer global Chartmetric rank
-curl -s "$RECOUP_API/research/rank?artist=Drake" -H "x-api-key: $RECOUP_API_KEY" | jq
-```
-
-See the **Playlist filter & pagination semantics** section below — the filter flag behavior on `/research/playlists` is the single biggest gotcha in the skill and it applies to `/research/track/playlists` too.
-
-### 3. Chartmetric ID-based detail endpoints (require a numeric ID from search)
-
-Always discover the `id` via `GET /research?q=...&type=...&beta=true` first, then call these.
-
-```bash
-# Albums — note: artist_id, NOT name. is_primary=true (default) excludes features/compilations
-curl -s "$RECOUP_API/research/albums?artist_id=3380&is_primary=true&limit=50" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Full track metadata
-curl -s "$RECOUP_API/research/track?id=15194376" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Playlist metadata (NOT Spotify's base62 ID — Chartmetric's numeric ID)
-curl -s "$RECOUP_API/research/playlist?platform=spotify&id=848051" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Curator profile — platforms: spotify | applemusic | deezer
-curl -s "$RECOUP_API/research/curator?platform=spotify&id=2" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Playlists a specific track appears on (5 credits per call)
-curl -s "$RECOUP_API/research/track/playlists?id=15194376&platform=spotify&editorial=true" \
-  -H "x-api-key: $RECOUP_API_KEY" | jq
-```
-
-`track/playlists` also accepts `q=` + optional `artist=` in place of `id=` for name-based lookup, plus `status`, `since`, `until`, `limit`, `offset`, `sort`, and the filter flags documented in the next section.
-
----
-
-## Playlist filter & pagination semantics
-
-This section is the single biggest footgun in the skill. Read it before calling either playlist endpoint.
-
-### Filter flags are **exclusive when set**
-
-Both `/research/playlists` (artist-level) and `/research/track/playlists` (track-level) accept a set of filter flags: `editorial`, `indie`, `majorCurator`, `popularIndie`, `personalized`, `chart`. The track-level endpoint adds `newMusicFriday`, `thisIs`, `radio`, `brand`.
-
-**Defaults with no flags passed:**
-
-- `/research/track/playlists` — defaults to `editorial + indie + majorCurator + popularIndie = true` (the rest off).
-- `/research/playlists` (artist-level) — behaves the same way empirically: no flags → a mix of indie/curator placements, editorial excluded.
-
-**The moment you pass ANY flag, the others flip to `false`.** `?editorial=true` doesn't mean "show me editorials in addition to the defaults" — it means "show me ONLY editorials, exclude everything else." This is how users end up getting `{ placements: [] }` when the artist actually has hundreds of indie and curator placements.
-
-How to get the results you probably want:
-
-| You want | Query |
-| -------- | ----- |
-| All editorial **plus** curator/indie placements | `?editorial=true&indie=true&majorCurator=true&popularIndie=true` |
-| Only editorial, nothing else | `?editorial=true` |
-| All default categories (curator/indie mix, no editorial) | no flags |
-| Everything the API will give you | pass all 6 (artist) or all 10 (track) flags = `true` |
-
-### Hard cap: `limit=100`
-
-Both endpoints reject `limit > 100` with a `400`. Empirically verified — `limit=150`, `200`, `500` all fail. There's no documented cap, but `100` is it.
-
-### Pagination: `/research/playlists` is single-shot, `/research/track/playlists` paginates
-
-- **Artist-level `/research/playlists`** — `offset` is **ignored**. `offset=0` and `offset=50` return the same first row. Combined with the 100-cap, this is a single-shot snapshot. For bulk artist-wide playlist data, enumerate tracks via `/research/tracks` and then call `/research/track/playlists?id=...&offset=...` per track.
-- **Track-level `/research/track/playlists`** — `offset` **works**. Page by calling `offset=0, 100, 200, …` until you get an empty batch.
-
-### The aggregate-vs-detail gap
-
-`/research/profile` reports counts like `num_sp_playlists: 3,418,778` (for Drake) and `num_sp_editorial_playlists: 2,392`. **The detail endpoints will never return numbers that big.** The profile aggregate counts are derived from Chartmetric's full graph, but `/research/playlists` and `/research/track/playlists` each expose at most `~100 per call`, and `/research/track/playlists` pagination bottoms out well before the aggregate count (often in the low hundreds per track, sometimes as few as ~40 even with all 10 flags `true`).
-
-**Plan for this:** use profile counts as the signal of "does this artist have playlist support at all?", and the detail endpoints as a sampled list of the top placements — not as ground truth for bulk retrieval. If you need to reason about total reach, `/research/profile.sp_playlist_total_reach` and `sp_editorial_playlist_total_reach` are the trustworthy numbers.
-
-### 4. Non-artist discovery + reference data
-
-```bash
-# Global chart positions — platform examples: spotify, applemusic, tiktok, youtube, itunes, shazam
-curl -s "$RECOUP_API/research/charts?platform=spotify&country=US&interval=daily&type=regional" \
-  -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Artist discovery by filters
-curl -s "$RECOUP_API/research/discover?country=US&genre=86&sp_monthly_listeners_min=50000&sp_monthly_listeners_max=200000&sort=weekly_diff.sp_monthly_listeners&limit=50" \
-  -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Genre ID lookup (use the returned IDs with /research/discover)
-curl -s "$RECOUP_API/research/genres" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Festival list
-curl -s "$RECOUP_API/research/festivals" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Radio station list (NOT artist-scoped)
-curl -s "$RECOUP_API/research/radio" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Lookup an artist by platform URL or platform ID
-curl -s "$RECOUP_API/research/lookup?url=https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4" \
-  -H "x-api-key: $RECOUP_API_KEY" | jq
-```
-
-### 5. Web intelligence (POST)
-
-All POSTs send `Content-Type: application/json` + `x-api-key` and take a JSON body.
-
-```bash
-# Web search — ranked results with title/url/snippet + markdown-formatted digest
-curl -s -X POST "$RECOUP_API/research/web" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
-  -d '{"query":"Drake brand partnerships 2026","max_results":10,"country":"US"}' | jq
-
-# Deep research — comprehensive multi-source report with citations (use instead of the old `report` CLI idea)
-curl -s -X POST "$RECOUP_API/research/deep" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
-  -d '{"query":"Full deep dive on Drake: label relationships, recent brand deals, tour grosses, cultural moments in the last 18 months"}' | jq
-
-# People search — returns multi-source profiles (LinkedIn, etc.)
-curl -s -X POST "$RECOUP_API/research/people" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
-  -d '{"query":"A&R reps at Atlantic Records","num_results":10}' | jq
-
-# URL extraction — up to 10 URLs, objective-targeted excerpts or full_content
-curl -s -X POST "$RECOUP_API/research/extract" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
-  -d '{"urls":["https://example.com/article"],"objective":"tour dates","full_content":false}' | jq
-
-# Structured enrichment — schema MUST include "type":"object" at the top level
-curl -s -X POST "$RECOUP_API/research/enrich" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
-  -d '{
-    "input":"Drake rapper from Toronto",
-    "schema":{"type":"object","properties":{"label":{"type":"string"},"manager":{"type":"string"}}},
-    "processor":"core"
-  }' | jq
-```
-
-`enrich.processor` is one of `base` (fast), `core` (balanced, default), `ultra` (comprehensive).
-
-**Latency — do not abort early.** The POST research endpoints do multi-source web browsing and take real wall-clock time. Plan for long awaits:
-
-- `/research/enrich` — typically **60–90 seconds** (`core` processor). `ultra` can take longer.
-- `/research/deep` — often **2+ minutes** for comprehensive reports with citations.
-- `/research/people`, `/research/web`, `/research/extract` — usually seconds to tens of seconds.
-
-If you wrap these in a client with a default 30s timeout, they'll appear "hung" and you'll abort successful calls. Set client timeouts to **at least 3 minutes** for `/enrich` and `/deep`, or stream/queue them if the UX allows.
-
----
-
-## Response shapes (what the fields actually are)
-
-Don't guess field names. Chartmetric pass-through responses are richer than the OpenAPI schema enumerates (`additionalProperties: true` everywhere), but these are the fields that exist and matter. If you're looking for a field that isn't listed here, it probably doesn't exist — `dump the raw response once with jq '.artists[0] | keys'` before coding against it.
-
-**`/research/similar` → `artists[].*`:**
-
-```jsonc
-{
-  "id": 3380,                    // Chartmetric artist ID
-  "name": "Drake",
-  "image_url": "...",
-  "code2": "CA",                 // 2-letter country
-  "verified": true,
-  "band": false,
-  "score": 98.74,                // overall match score (0-100)
-  "similarity": 0.88,            // audience-config similarity (0-1)
-  "rank": 7,                     // global Chartmetric rank
-  "career_stage": "superstar",   // undiscovered|developing|mid-level|mainstream|superstar|legendary
-  "recent_momentum": "growth",   // decline|gradual decline|steady|growth|explosive growth
-  "sp_followers": 109449837,
-  "sp_monthly_listeners": 88857078,
-  "sp_playlist_count": 3418778,
-  "spotify_playlist_total_reach": 905221589,
-  "youtube_subscribers": 32000000,
-  "youtube_monthly_video_views": 241476550,
-  "ins_followers": 141635181,
-  "tiktok_followers": 1400000,
-  "network_strength": "influential",
-  "label": "UMG",
-  "primary_genre_smart": { "id": 501121, "name": "hip-hop/rap" },
-  "genres": [ { "id": 501121, "name": "hip-hop/rap" }, ... ],
-  "normalizedScores": { "sp_followers": 1, "tiktok_followers": 0.36, ... },
-  "rank_stats_monthly": [ { "rank": 7, "timestp": "2026-04-17" }, ... ]
-}
-```
-
-There is **no** `trend` field and **no** `metrics` object. Momentum is `recent_momentum`. Platform counts are top-level (`sp_followers`, `ins_followers`, etc.) — not nested under a wrapper.
-
-**`/research/playlists` → `placements[].*` (NESTED, not flat):**
-
-```jsonc
-{
-  "playlist": {
-    "id": 1805667,                // Chartmetric playlist ID
-    "playlist_id": "7aa...",      // Spotify base62 ID
-    "name": "My Shazam Tracks",
-    "curator_name": "Erica Anne Benoit",
-    "owner_name": "Erica Anne Benoit",
-    "editorial": false,
-    "personalized": false,
-    "followers": 0,               // ⚠️  often 0 in placements — not a reliable reach signal here
-    "position": 20,
-    "peak_position": 2,           // better reach proxy than `followers`
-    "added_at": "2025-11-11",
-    "num_track": 486,
-    "image_url": "...",
-    "genres": [...], "moods": [...], "activities": [...], "tags": [...]
-  },
-  "track": {
-    "id": 72120853,
-    "name": "When You Were Mine",
-    "isrc": "GBARL2100707",
-    "spotify_popularity": 57,
-    "artist_names": ["Joy Crookes"],
-    "album_label": ["Speakerbox Recordings"],
-    "release_dates": ["2021-08-24"],
-    // ...
-  }
-}
-```
-
-So to filter editorial placements in jq: `.placements[] | select(.playlist.editorial == true)`. To rank by true reach, call `/research/playlist?platform=spotify&id={playlist.id}` for the detail record — the placement `followers` field is usually stale/zero.
-
----
-
-## Gotcha: nulls in `/research/profile` don't mean "no data"
-
-`/research/profile` is a convenience aggregator and it returns `null` for a lot of fields on less-covered artists (`sp_followers`, `sp_monthly_listeners`, `career_stage`, `num_sp_editorial_playlists`, etc.). Do **not** treat those nulls as "artist has no data" and give up.
-
-The individual endpoints pull direct from platform data and often succeed when profile doesn't:
-
-- `sp_followers` / `sp_monthly_listeners` null? → call `/research/metrics?source=spotify`
-- `career_stage` / `recent_momentum` null? → call `/research/similar?artist=...` (the artist's own row is the first result and has these fields populated even when profile is sparse)
-- `num_sp_editorial_playlists` null or 0? → call `/research/playlists?editorial=true` and trust the actual result set
-
-**Preflight filter decisions with profile counts.** Before calling `/research/playlists?editorial=true`, check `/research/profile` for `num_sp_editorial_playlists`. If it's 0, an empty editorial result isn't a skill or API bug — the artist genuinely has no editorial placements. Drop the filter or switch to `&indie=true&majorCurator=true&popularIndie=true` to see what they *are* on.
-
-**Empty `/research/milestones` is also legit.** `{ status: "success", milestones: [] }` is common — even for artists with a real global rank. Milestones are discrete events (chart entries, major playlist adds, award mentions); many artists just haven't had one recently. Don't retry or escalate on empty — fall back to `/research/insights` or `/research/career` for narrative context.
-
----
-
-## Platform Sources (for `/research/metrics?source=`)
-
-`spotify`, `instagram`, `tiktok`, `twitter`, `facebook`, `youtube_channel`, `youtube_artist`, `soundcloud`, `deezer`, `twitch`, `line`, `melon`, `wikipedia`, `bandsintown`.
-
-Two gotchas:
-
-- For `metrics`, **YouTube uses `youtube_channel` or `youtube_artist`** — not plain `youtube`.
-- `audience` is a different endpoint with its own, narrower enum: `platform=instagram|tiktok|youtube` (default `instagram`). Do **not** send `youtube_channel` there.
-
----
-
-## Interpreting the Data
-
-Raw numbers are noise without interpretation. Here's what to look for:
-
-**Metrics:**
-- Follower-to-listener ratio above 20% = dedicated fan base (they follow, not just stream)
-- Save-to-listener ratio above 3% = strong catalog stickiness
-- Week-over-week listener growth above 5% = momentum
-- Popularity score trending up = algorithmic favor
-
-**Cities:**
-- If top cities are international but playlists are US-only = untapped international opportunity
-- High listeners in a city the artist has never toured = tour opportunity
-- Compare with similar artists' cities to find geographic white space
-
-**Similar Artists:**
-- `career_stage`: undiscovered → developing → mid-level → mainstream → superstar → legendary
-- `recent_momentum`: decline → gradual decline → steady → growth → explosive growth
-- If the artist's peers are all "mainstream" but they're "mid-level" = breakout potential
-- Peers with playlists you're NOT on = pitch targets
-
-**Playlists:**
-- 2 editorial playlists for 5M+ listeners = severely under-playlisted (pitch immediately)
-- `placements[].playlist.followers` is often `0` — use `peak_position` or call `/research/playlist?id=` for true reach
-- Past placements (`status=past`) that dropped off = re-pitch opportunities
-
-**Audience:**
-- Gender skew tells you content strategy (visual style, messaging)
-- Age concentration tells you platform priority (Gen Z = TikTok, 25-34 = Instagram)
-- Country mismatch between audience and cities = content localization opportunity
-
-**Charts / Rank / Milestones:**
-- `/research/rank` gives one number — useful for before/after deltas over time
-- `/research/milestones` is the activity feed — filter for high star ratings when summarizing
-- `/research/charts` is platform-wide, not artist-scoped — use it to find what's hot on a market/platform, then cross-reference with `similar`
-
----
-
-## Synthesis Patterns
-
-Don't dump raw JSON. Combine endpoints and draw conclusions:
-
-**Geographic Strategy:** `cities` + `audience?platform=instagram` → "Sao Paulo is #1 (135K listeners) but IG audience is 80% US. Massive Brazilian fan base isn't being served with localized content."
-
-**Playlist Gap Analysis:** `similar` → `playlists` on each peer → "5 of your 10 peers are on 'R&B Rotation' (450K followers), you're not. That's the top pitch target."
-
-**Platform Pipeline:** `metrics?source=tiktok` + `metrics?source=spotify` → "TikTok followers up 40% last month, Spotify listeners flat. Virality isn't converting. Add Spotify-specific CTAs to TikTok content."
-
-**Career Positioning:** `similar` → compare career stages → "You're the only 'mainstream' artist in your peer group — everyone else is 'mid-level'. Leverage for brand deals and festival slots."
-
-**Chart → Catalog:** `charts?platform=tiktok&country=US` + `tracks` → identify sound trends the artist's catalog could slot into.
-
----
-
-## Saving Research
-
-If working in an artist workspace, save research results to `research/` with timestamps:
-
-```
-research/artist-intel-2026-04-17.md
-```
-
-Don't overwrite `context/artist.md` with research data. Static context (who the artist IS) is separate from dynamic research (how they're performing NOW). If the research reveals something that should update the static profile, suggest it — don't auto-update.
-
----
-
-## What Not to Do
-
-- **Don't run 20 endpoints when 3 will answer the question.** Start small, expand if needed.
-- **Don't dump raw JSON to the user.** Interpret the data and draw conclusions.
-- **Don't re-research what `context/artist.md` already covers.** Read it first.
-- **Don't send name strings to ID-based endpoints.** `/albums`, `/track`, `/playlist`, `/curator`, `/track/playlists` require a numeric Chartmetric ID — call `GET /research?q=...&type=...&beta=true` first.
-- **Don't use plain `youtube` for `/research/metrics`.** It's `youtube_channel` or `youtube_artist`.
-- **Don't assume Chartmetric has every artist.** If `/research?q=...` returns no results, fall back to `POST /research/web` or `POST /research/deep`.
-- **Don't forget `"type":"object"` in enrich schemas.** The endpoint rejects schemas without it.
-- **Don't guess field names.** If you're unsure of a field, run the curl once and `jq '.<collection>[0] | keys'` before parsing. Common wrong guesses: `trend` (it's `recent_momentum`), `metrics` wrapper (platform counts are top-level: `sp_followers`, `ins_followers`, etc.), flat `playlist_name` (it's nested: `placements[].playlist.name`).
-- **Don't read `/research/profile` nulls as "no data".** Profile is an aggregator that commonly returns null fields for less-covered artists. Fall back to `/research/similar`, `/research/metrics`, `/research/cities`, `/research/playlists` — those hit platform data directly.
-- **Don't over-filter playlists blind.** Playlist filter flags are **exclusive when set** — `editorial=true` alone means "only editorial, exclude everything else." If you want editorial alongside curator/indie placements, pass all four: `?editorial=true&indie=true&majorCurator=true&popularIndie=true`. Preflight with `/research/profile.num_sp_editorial_playlists` so an empty editorial result is recognized as "this artist genuinely has no editorials" vs. "you ate the defaults." Full rules in the Playlist filter & pagination semantics section.
-- **Don't try to paginate `/research/playlists` (artist-level).** `offset` is ignored there; the endpoint is a single 100-max snapshot. For bulk playlist data, enumerate `/research/tracks` and then page `/research/track/playlists?id=...&offset=...` per track (that one *does* honor `offset`).
-- **Don't request `limit > 100`.** Both playlist endpoints cap at `limit=100`; `150`+ returns `400`.
-- **Don't treat profile aggregate counts as reachable via detail endpoints.** `num_sp_playlists` (e.g. 3.4M for Drake) is a full-graph count; detail endpoints cap per-call and per-track far below that. Use profile counts for magnitude, detail endpoints for a sample of top placements.
-
----
-
-## Graceful Degradation
+- **"How is [artist] doing?"** → `metrics?source=spotify` + `cities` + `insights`
+- **"Research [artist] for me"** → `profile` → parallel(`metrics`, `audience`, `cities`, `similar`, `playlists`) → `web` or `deep` for narrative → synthesize
+- **"Who should I pitch to?"** → `similar?audience=high&genre=high` → `playlists` on each peer → find playlists peers are on and your artist isn't
+- **"Where should we tour?"** → `cities` + `audience?platform=youtube` + `festivals` + `venues`
+- **"Find me [people]"** → `POST /people` with `{ "query": "A&R reps at Atlantic" }`
+- **"Tell me about [entity]"** → `POST /enrich` for structured data, or `POST /deep` for cited narrative
+- **"What does this page say?"** → `POST /extract` with `{ "urls": [...] }`
+- **"Find emerging artists"** → `discover?country=US&genre=GENRE_ID&sp_monthly_listeners_min=...`
+- **"What's charting?"** → `charts?platform=spotify&country=US`
+- **"Where does this track get played?"** → `track/playlists?id=CM_TRACK_ID`
+
+If none match, start with `POST /web`.
+
+Before researching: check if the artist already has a workspace `context/artist.md` — don't re-research what's known.
+
+## Endpoints (quick reference)
+
+Full curl examples, filter flag rules, latency budgets, and platform source enums live in **[references/endpoints.md](references/endpoints.md)**.
+
+| Endpoint | Returns |
+| -------- | ------- |
+| `GET /research?q=&type=&beta=true` | search → Chartmetric IDs |
+| `GET /research/profile?artist=` | bio, label, genres, aggregate counts |
+| `GET /research/metrics?artist=&source=` | platform time-series |
+| `GET /research/audience?artist=&platform=` | age/gender/country (IG/TT/YT only) |
+| `GET /research/cities?artist=` | top listener cities |
+| `GET /research/similar?artist=&audience=&genre=&mood=&musicality=` | peer artists |
+| `GET /research/playlists?artist=` (filter flags) | placements (single-shot, no offset) |
+| `GET /research/tracks?artist=` | catalog |
+| `GET /research/career?artist=` | career timeline |
+| `GET /research/insights?artist=` | AI observations |
+| `GET /research/milestones?artist=` | activity feed |
+| `GET /research/urls?artist=` | social/streaming URLs |
+| `GET /research/instagram-posts?artist=` | top IG posts |
+| `GET /research/venues?artist=` | venue history |
+| `GET /research/rank?artist=` | global Chartmetric rank (single int) |
+| `GET /research/lookup?url=` | URL → artist (canonical URL entry) |
+| `GET /research/albums?artist_id=` | albums (needs CM artist ID) |
+| `GET /research/track?id=` | track detail (needs CM track ID) |
+| `GET /research/playlist?platform=&id=` | playlist detail (needs CM playlist ID) |
+| `GET /research/curator?platform=&id=` | curator detail (needs CM curator ID) |
+| `GET /research/track/playlists?id=` (filter flags) | playlists featuring a track (5 credits, paginates) |
+| `GET /research/charts?platform=&country=` | global chart positions |
+| `GET /research/discover?country=&genre=&...` | artist discovery by filters |
+| `GET /research/genres` | genre IDs |
+| `GET /research/festivals` | festival list |
+| `GET /research/radio` | radio station list |
+| `POST /research/web` | web search (~seconds) |
+| `POST /research/deep` | comprehensive cited report (~2+ min) |
+| `POST /research/people` | industry people search (~seconds-tens) |
+| `POST /research/extract` | URL → markdown excerpts (~seconds-tens) |
+| `POST /research/enrich` | structured extraction with schema (~60-90s) |
+
+## Critical gotchas
+
+These are the failure modes that will eat your time. Full rationale in [references/endpoints.md](references/endpoints.md) and [references/response-shapes.md](references/response-shapes.md).
+
+- **Playlist filter flags are exclusive when set.** `?editorial=true` alone returns ONLY editorials, excluding the indie / curator / popularIndie defaults. To get editorial *plus* the rest, pass all four: `&editorial=true&indie=true&majorCurator=true&popularIndie=true`.
+- **`/research/playlists` (artist-level) ignores `offset`** — single 100-max snapshot. For bulk, page `/research/track/playlists?id=...&offset=...` per track instead (that one *does* paginate).
+- **Hard cap: `limit=100`** on both playlist endpoints. `150`+ → 400.
+- **`/research/profile` aggregate counts (`num_sp_playlists`, etc.) are NOT reachable via detail endpoints.** Use them for magnitude (and `sp_playlist_total_reach` for true reach), use detail endpoints for sampled top placements.
+- **`/research/profile` returns `null` for many fields on less-covered artists.** Fall back to `/similar`, `/metrics`, `/cities`, `/playlists` — they hit platform data direct.
+- **Empty `/research/milestones` is legit** — `{ status: "success", milestones: [] }` is common even for ranked artists.
+- **Search: `match_strength < 1` = not found.** Real matches score 100s–50,000s; noise is 0.005–0.1. Don't pass sub-1 IDs into detail endpoints — you'll resolve to the wrong entity.
+- **For URLs, route through `/research/lookup?url=` first**, then chain the resolved name. `/profile?artist=<URL>` works for some shapes and 404/406s for others.
+- **ID-based endpoints (`albums`, `track`, `playlist`, `curator`, `track/playlists`) require numeric Chartmetric IDs.** Get them via `GET /research?q=...&type=...&beta=true`.
+- **`/research/metrics` uses `youtube_channel` or `youtube_artist`**, not plain `youtube`. `/research/audience?platform=` accepts only `instagram | tiktok | youtube`.
+- **`/research/enrich` schemas must include `"type":"object"` at the top level.** Endpoint rejects schemas without it.
+- **POST endpoints have real latency.** `/enrich` 60–90s, `/deep` 2+ min, others seconds-to-tens. Set client timeouts to ≥3 min for `/enrich` and `/deep` or you'll falsely abort successful calls.
+- **Don't guess field names.** `recent_momentum` not `trend`; platform counts are top-level (`sp_followers`, `ins_followers`), no `metrics` wrapper. Placements are nested: `placements[].playlist.name`. Full real shapes in [references/response-shapes.md](references/response-shapes.md).
+
+## Graceful degradation
 
 Fall through to web research if **any** of these are true:
 
-- `GET /research?q=...&type=artists&beta=true` returns `{ results: [] }`
-- The top result's `match_strength < 1` (see the match_strength heuristic in the Search section)
-- You tried `/research/lookup?url=` with a streaming URL and got a non-200
+- `GET /research?q=...` returns `{ results: [] }`
+- Top result has `match_strength < 1`
+- `/research/lookup?url=...` returns non-200
 
 Then:
 
-1. `POST /research/web` with the artist's name for ranked web search results
-2. `POST /research/enrich` with a schema to extract structured facts (budget ~60–90s)
-3. `POST /research/deep` for a full cited narrative (budget ~2+ minutes)
+1. `POST /research/web` — ranked results
+2. `POST /research/enrich` — structured facts (~60–90s)
+3. `POST /research/deep` — cited narrative (~2+ min)
 
-For very emerging artists, Chartmetric may not have data yet — web + enrich + deep is the fallback.
+For very emerging artists, Chartmetric may not have data — web + enrich + deep is the fallback.
 
-## More Workflows
+## How to use the data
 
-Read `references/workflows.md` for complete multi-step workflow chains (playlist pitching, competitive analysis, tour routing, A&R discovery, viral autopsies, and more).
+Don't dump raw JSON. Combine endpoints, draw conclusions, save to the artist workspace if there is one. Interpretation rules of thumb (follower:listener ratios, audience-vs-cities mismatches, career stage signals) and end-to-end synthesis patterns (geographic strategy, playlist gap analysis, platform pipeline, etc.) are in **[references/workflows.md](references/workflows.md)**.
+
+## References
+
+- **[references/endpoints.md](references/endpoints.md)** — full curl examples per endpoint, playlist filter / pagination semantics, latency budgets, platform source enums
+- **[references/response-shapes.md](references/response-shapes.md)** — actual JSON shapes for `/similar`, `/playlists`, `/profile`, plus field-name gotchas
+- **[references/workflows.md](references/workflows.md)** — interpretation cheat sheet, synthesis patterns, 11 multi-step workflow chains, and where to save research output
