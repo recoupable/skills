@@ -22,14 +22,14 @@ Start here based on what the user asks:
 - **"Research [artist] for me"** → `profile` → parallel(`metrics`, `audience`, `cities`, `similar`, `playlists`) → `web` or `deep` for narrative → synthesize
 - **"Who should I pitch to?"** → `similar?audience=high&genre=high` → `playlists` on each peer → find playlists peers are on and your artist isn't
 - **"Where should we tour?"** → `cities` + `audience?platform=youtube` + `festivals` + `venues`
-- **"Find me [people]"** → `POST /people` with `{ "query": "A&R reps at Atlantic" }`
-- **"Tell me about [entity]"** → `POST /enrich` for structured data, or `POST /deep` for cited narrative
-- **"What does this page say?"** → `POST /extract` with `{ "urls": [...] }`
+- **"Find me [people]"** → `POST /research/people` with `{ "query": "A&R reps at Atlantic" }`
+- **"Tell me about [entity]"** → `POST /research/enrich` for structured data, or `POST /research/deep` for cited narrative
+- **"What does this page say?"** → `POST /research/extract` with `{ "urls": [...] }`
 - **"Find emerging artists"** → `discover?country=US&genre=GENRE_ID&sp_monthly_listeners_min=...`
 - **"What's charting?"** → `charts?platform=spotify&country=US`
 - **"Where does this track get played?"** → `track/playlists?id=CM_TRACK_ID`
 
-If none match, start with `POST /web`.
+If none match, start with `POST /research/web`.
 
 Before researching: check if the artist already has a workspace `context/artist.md` — don't re-research what's known.
 
