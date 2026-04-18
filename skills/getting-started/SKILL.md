@@ -19,7 +19,7 @@ Two paths depending on who is doing this.
 
 ### Path A: Agent (instant, no verification)
 
-POST to the signup endpoint with an `agent+` email. The key comes back immediately and is exported for the rest of the session.
+POST to the signup endpoint with a fresh `agent+` email. The key comes back immediately and is exported for the rest of the session.
 
 ```bash
 export RECOUP_API_KEY=$(curl -s -X POST "https://recoup-api.vercel.app/api/agents/signup" \
@@ -27,7 +27,9 @@ export RECOUP_API_KEY=$(curl -s -X POST "https://recoup-api.vercel.app/api/agent
   -d '{"email": "agent+'$(date +%s)-$RANDOM'@recoupable.com"}' | jq -r .api_key)
 ```
 
-The `agent+{unique}@recoupable.com` pattern always returns a key with no verification step. Combining `$(date +%s)` with `$RANDOM` guarantees a unique address.
+A new `agent+{unique}@recoupable.com` address skips email verification and returns a key on the first call. Combining `$(date +%s)` with `$RANDOM` guarantees uniqueness so you never collide with an existing account.
+
+> ⚠️ **`agent+` emails create a separate account.** `agent+sid@recoupable.com` is **not** linked to `sid@recoupable.com` — it's a brand-new sandboxed account with no roster, no orgs, and no history. To work on behalf of an existing human, use **Path B** with their real email.
 
 ### Path B: Human (email verification)
 
