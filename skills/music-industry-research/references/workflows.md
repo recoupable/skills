@@ -483,14 +483,20 @@ Optional handoff:
 **User question:** State of the artist + recommended next move.
 
 ```text
-Step 1 — Snapshot (Workflow: metrics + cities + insights)
-  Calls: /research/metrics?source=spotify + /research/cities
-         + /research/insights + /research/milestones
-  Output: trend read (follower/listener divergence, popularity direction)
+Step 1 — Snapshot
+  Calls: /research/profile + /research/metrics?source=spotify
+         + /research/cities + /research/insights + /research/milestones
+  Output:
+    - profile.cm_statistics → aggregate counts
+      (num_sp_editorial_playlists, sp_playlist_total_reach, ranks)
+    - metrics → trend read (follower/listener divergence,
+      popularity direction)
+    - cities → geographic concentration
 
 Step 2 — Diagnose the gap (Workflow 1: playlist pitching)
-  Input: profile.num_sp_editorial_playlists from Step 1
-  If editorials == 0 and total_reach > 500k → editorial gap confirmed
+  Input: profile.cm_statistics from Step 1
+  If num_sp_editorial_playlists == 0
+     and sp_playlist_total_reach > 500k → editorial gap confirmed
   Call: /research/similar (peers) → /research/playlists (each peer)
   Output: playlists peers are on that Artist X isn't → pitch targets
 
