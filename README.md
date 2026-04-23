@@ -29,6 +29,7 @@ git clone https://github.com/recoupable/skills.git
 | [chartmetric](skills/chartmetric) | Query and analyze music data from the Chartmetric API |
 | [content-creation](skills/content-creation) | Create social videos, TikToks, Reels, and visual content using AI primitives |
 | [music-industry-research](skills/music-industry-research) | Music industry research — artist analytics, people search, competitive analysis, web intelligence |
+| [recoup-api](skills/recoup-api) | Call the Recoupable API from the sandbox — artist data, socials, orgs, reports |
 | [release-management](skills/release-management) | Plan and execute release campaigns |
 | [setup-sandbox](skills/setup-sandbox) | Scaffold the workspace for an account's orgs and artists |
 | [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
