@@ -1,13 +1,29 @@
 ---
 name: artist-workspace
-description: How to work in artist directories. Use when adding or updating artist context (identity, brand, voice, audience), adding songs, organizing files inside an artist directory, or figuring out where something belongs. Also use when the user mentions an artist by name and the task involves their files, context, or content — even if they don't say "artist directory." This includes tasks like researching an artist, creating content for an artist, updating an artist's brand, or adding a face guide.
+description: How to work in artist directories and how to enumerate what artists or orgs exist in the sandbox. Use when adding or updating artist context (identity, brand, voice, audience), adding songs, organizing files inside an artist directory, or figuring out where something belongs. Also use when the account asks inventory questions like "what artists do I have", "list my artists", "which orgs am I in", "what's in this sandbox" — the filesystem tree is the authoritative answer. And use when the account mentions an artist by name and the task involves their files, context, or content — even if they don't say "artist directory." This includes tasks like researching an artist, creating content for an artist, updating an artist's brand, or adding a face guide.
 ---
 
 # Artist Workspace
 
 Every artist has a workspace — a directory that holds context, songs, and reference material. The `RECOUP.md` file at the root connects it to the Recoupable platform.
 
-Artist directories live inside the sandbox at `orgs/{org}/artists/{artist-slug}/`.
+Artist directories live inside the sandbox at `artists/{artist-slug}/`.
+
+## Listing what's in the sandbox
+
+When the account asks *"what artists do I have"*, *"list my artists"*, *"which orgs am I in"*, or any other inventory question about the sandbox, **walk the filesystem — it is authoritative for this sandbox.** Do not call the Recoupable API for this: the API answers "what artists does this account have access to across everything", which is a different (and usually larger) set than what the sandbox was opened for.
+
+```bash
+# All artist workspaces in this sandbox
+ls -d artists/*/
+
+# Every artist's identity file — read the frontmatter for name/slug/id
+find artists -type f -name RECOUP.md
+```
+
+Each `RECOUP.md` has frontmatter (`artistName`, `artistSlug`, `artistId`) — read it with `head` or any YAML parser to get the canonical identity.
+
+If `artists/` does not exist, the sandbox has not been set up yet — point the account at the `setup-sandbox` skill rather than inventing data.
 
 ## Entering an Artist Workspace
 

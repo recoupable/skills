@@ -21,6 +21,22 @@ curl -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
 
 If `RECOUP_ACCESS_TOKEN` is empty, the user is not authenticated — tell them to sign in rather than retrying.
 
+## Org scoping (`RECOUP_ORG_ID`)
+
+When running inside a sandbox, the environment also exposes `RECOUP_ORG_ID` — the organization the sandbox was opened for. The access token is account-scoped (it covers every org the account belongs to), so when you use it with unscoped list endpoints like `GET /api/artists` you will get results from **all** of that account's orgs, not just the one this sandbox represents. That mismatch surprises accounts.
+
+When `RECOUP_ORG_ID` is set, scope list/query endpoints to it:
+
+```bash
+# Artists for this sandbox's org only
+curl -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  "https://recoup-api.vercel.app/api/organizations/$RECOUP_ORG_ID/artists"
+```
+
+For the Recoup CLI, pass `--org "$RECOUP_ORG_ID"` on commands that accept it. If `RECOUP_ORG_ID` is unset, you are not in an open-agents sandbox — fall back to account-scoped calls as normal.
+
+**Sandbox-inventory shortcut:** for bare "what artists / orgs do I have" questions, prefer reading the local `artists/*/RECOUP.md` tree instead of calling the API at all — the filesystem is authoritative for this sandbox. See the `artist-workspace` skill for the walkthrough.
+
 ## Docs Map
 
 The full endpoint surface is organized into the sections below. Use this map to pick the right area, then pull the detailed docs for just that area (see [Finding an endpoint](#finding-an-endpoint)) instead of fetching everything.
