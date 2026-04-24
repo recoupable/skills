@@ -23,7 +23,7 @@ If `RECOUP_ACCESS_TOKEN` is empty, the user is not authenticated — tell them t
 
 ## Org scoping (`RECOUP_ORG_ID`)
 
-When running inside an open-agents sandbox, the environment also exposes `RECOUP_ORG_ID` — the organization the sandbox was opened for. The access token is user-scoped (it covers every org the user belongs to), so when you use it with unscoped list endpoints like `GET /api/artists` you will get results from **all** of that user's orgs, not just the one this sandbox represents. That mismatch surprises users.
+When running inside a sandbox, the environment also exposes `RECOUP_ORG_ID` — the organization the sandbox was opened for. The access token is account-scoped (it covers every org the account belongs to), so when you use it with unscoped list endpoints like `GET /api/artists` you will get results from **all** of that account's orgs, not just the one this sandbox represents. That mismatch surprises accounts.
 
 When `RECOUP_ORG_ID` is set, scope list/query endpoints to it:
 
@@ -33,9 +33,9 @@ curl -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   "https://recoup-api.vercel.app/api/organizations/$RECOUP_ORG_ID/artists"
 ```
 
-For the Recoup CLI, pass `--org "$RECOUP_ORG_ID"` on commands that accept it. If `RECOUP_ORG_ID` is unset, you are not in an open-agents sandbox — fall back to user-scoped calls as normal.
+For the Recoup CLI, pass `--org "$RECOUP_ORG_ID"` on commands that accept it. If `RECOUP_ORG_ID` is unset, you are not in an open-agents sandbox — fall back to account-scoped calls as normal.
 
-**Sandbox-inventory shortcut:** for bare "what artists / orgs do I have" questions, prefer reading the local `orgs/*/artists/*/RECOUP.md` tree instead of calling the API at all — the filesystem is authoritative for this sandbox. See the `artist-workspace` skill for the walkthrough.
+**Sandbox-inventory shortcut:** for bare "what artists / orgs do I have" questions, prefer reading the local `artists/*/RECOUP.md` tree instead of calling the API at all — the filesystem is authoritative for this sandbox. See the `artist-workspace` skill for the walkthrough.
 
 ## Docs Map
 
