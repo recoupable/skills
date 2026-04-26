@@ -129,11 +129,13 @@ curl -sS -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
 
 For multi-endpoint sequences that need a specific order, follow the published workflow guides instead of inventing the chain yourself. The guide tells you which endpoint to call at each step, what to capture for the next step, and which steps are intentionally skipped from a sandbox context.
 
-| Workflow | Guide |
-|----------|-------|
-| Create + research a new artist (full enrichment chain — POST artist, Spotify match, profile/socials/knowledges, deep + web research, KB synthesis to `RECOUP.md`) | [https://developers.recoupable.com/workflows/create-artist](https://developers.recoupable.com/workflows/create-artist) |
+| Workflow | Guide | Driver |
+|----------|-------|--------|
+| Create + research a new artist (full enrichment chain — POST artist, Spotify match, profile/socials/knowledges, deep + web research, KB synthesis) | [https://developers.recoupable.com/workflows/create-artist](https://developers.recoupable.com/workflows/create-artist) | `artist-workspace` skill — scaffolds a `RECOUP.md` checklist file, ticks each step on completion |
 
-Trigger to load a workflow guide: any phrase like "create a new artist", "onboard X", "add this artist", or any request that requires more than one endpoint to complete. Fetch the guide page (e.g. `curl -s https://developers.recoupable.com/workflows/create-artist`) before writing the first request — the order matters and skipping steps leaves the artist record partially populated.
+Trigger to load a workflow guide: any phrase like "create a new artist", "onboard X", "add this artist", or any request that requires more than one endpoint to complete.
+
+**For the create-artist chain, invoke the `artist-workspace` skill first** — it scaffolds `orgs/$RECOUP_ORG_ID/artists/{slug}/RECOUP.md` with one checkbox per workflow step, and the agent then drives execution from that file (tick + persist outputs to frontmatter after every step). The workflow guide above is the curl-by-curl reference for each step's request shape, but the checklist is the source of truth for what's done. The chain has 8 sequential calls and skipping any leaves the artist partially populated.
 
 ## Troubleshooting
 
