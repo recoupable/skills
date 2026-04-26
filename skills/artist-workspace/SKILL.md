@@ -1,29 +1,97 @@
 ---
 name: artist-workspace
-description: How to work in artist directories and how to enumerate what artists or orgs exist in the sandbox. Use when adding or updating artist context (identity, brand, voice, audience), adding songs, organizing files inside an artist directory, or figuring out where something belongs. Also use when the account asks inventory questions like "what artists do I have", "list my artists", "which orgs am I in", "what's in this sandbox" — the filesystem tree is the authoritative answer. And use when the account mentions an artist by name and the task involves their files, context, or content — even if they don't say "artist directory." This includes tasks like researching an artist, creating content for an artist, updating an artist's brand, or adding a face guide.
+description: How to work in artist directories — including creating, enumerating, and editing them. Use when creating or onboarding a new artist ("create artist", "onboard X", "add this artist", "set up a new artist") — this skill scaffolds the artist's `RECOUP.md` checklist file and drives the multi-step setup from it. Use when adding or updating artist context (identity, brand, voice, audience), adding songs, organizing files inside an artist directory, or figuring out where something belongs. Also use when the account asks inventory questions like "what artists do I have", "list my artists", "which orgs am I in", "what's in this sandbox" — the filesystem tree is the authoritative answer. And use when the account mentions an artist by name and the task involves their files, context, or content — even if they don't say "artist directory." This includes tasks like researching an artist, creating content for an artist, updating an artist's brand, or adding a face guide.
 ---
 
 # Artist Workspace
 
 Every artist has a workspace — a directory that holds context, songs, and reference material. The `RECOUP.md` file at the root connects it to the Recoupable platform.
 
-Artist directories live inside the sandbox at `artists/{artist-slug}/`.
+Artist directories live inside the sandbox at `artists/{artist-slug}/` (single-org sandboxes) or `orgs/$RECOUP_ORG_ID/artists/{artist-slug}/` (org-scoped sandboxes — the default in open-agents). Use the org-scoped path whenever `$RECOUP_ORG_ID` is set.
 
 ## Listing what's in the sandbox
 
 When the account asks *"what artists do I have"*, *"list my artists"*, *"which orgs am I in"*, or any other inventory question about the sandbox, **walk the filesystem — it is authoritative for this sandbox.** Do not call the Recoupable API for this: the API answers "what artists does this account have access to across everything", which is a different (and usually larger) set than what the sandbox was opened for.
 
 ```bash
-# All artist workspaces in this sandbox
-ls -d artists/*/
+# All artist workspaces in this sandbox (handles both layouts)
+ls -d artists/*/ orgs/*/artists/*/ 2>/dev/null
 
 # Every artist's identity file — read the frontmatter for name/slug/id
-find artists -type f -name RECOUP.md
+find artists orgs -type f -name RECOUP.md 2>/dev/null
 ```
 
 Each `RECOUP.md` has frontmatter (`artistName`, `artistSlug`, `artistId`) — read it with `head` or any YAML parser to get the canonical identity.
 
-If `artists/` does not exist, the sandbox has not been set up yet — point the account at the `setup-sandbox` skill rather than inventing data.
+If neither `artists/` nor `orgs/*/artists/` exists, the sandbox has not been set up yet — point the account at the `setup-sandbox` skill rather than inventing data.
+
+## Creating a new artist
+
+When the user asks to create a new artist (or onboard, add, or set one up), drive the work from a **checklist file** — don't try to run the chain from memory. The setup is 8 sequential API calls and the agent loop loses state between turns; the checklist is what lets you resume cleanly and prove which steps actually ran.
+
+### Step 0: Scaffold the workspace BEFORE any API call
+
+Pick a slug, make the directory, and write the initial `RECOUP.md` template — frontmatter holds the values the chain captures, body holds the unchecked steps:
+
+```bash
+ARTIST_SLUG=$(echo "$ARTIST_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]\+/-/g; s/^-//; s/-$//')
+ARTIST_DIR="orgs/$RECOUP_ORG_ID/artists/$ARTIST_SLUG"
+mkdir -p "$ARTIST_DIR"
+
+cat > "$ARTIST_DIR/RECOUP.md" <<EOF
+---
+artistName: $ARTIST_NAME
+artistSlug: $ARTIST_SLUG
+artistId:
+spotifyArtistId:
+spotifyProfileUrl:
+imageUrl:
+---
+
+# $ARTIST_NAME
+
+## Setup checklist
+
+- [ ] 1. Create the artist (\`POST /api/artists\`) — capture \`account_id\` → \`artistId\`
+- [ ] 2. Find canonical Spotify match (\`GET /api/spotify/search\`) — capture \`id\`, \`external_urls.spotify\`, \`images[0].url\`
+- [ ] 3. PATCH artist with image + Spotify profile URL
+- [ ] 4. Deep research (artist biography + Spotify presence)
+- [ ] 5. Pull Spotify catalog (top tracks + albums)
+- [ ] 6. Web search for additional socials (instagram / tiktok / twitter / youtube)
+- [ ] 7. PATCH artist with discovered socials
+- [ ] 8. Synthesize knowledge base — append it as \`## Knowledge base\` in this file
+
+## Notes
+EOF
+```
+
+If `$RECOUP_ORG_ID` is unset, fall back to `artists/$ARTIST_SLUG/` (single-org layout). Don't proceed to step 1 until the file exists on disk.
+
+The full curl-by-curl playbook for steps 1–8 lives at `https://developers.recoupable.com/workflows/create-artist` and is also linked from the `recoup-api` skill. Fetch it once at scaffold time and follow it in order.
+
+### After every step: tick + persist
+
+Two writes back to `RECOUP.md` after each step completes:
+
+1. **Tick the checkbox** (`- [ ]` → `- [x]`) for the step that just ran.
+2. **Write the captured value** into frontmatter (`artistId:`, `spotifyArtistId:`, `spotifyProfileUrl:`, `imageUrl:`). Later steps read these values from the frontmatter — never re-derive what's already saved.
+
+The file IS the workflow state. If a value isn't on disk, the next turn doesn't know it.
+
+### Resuming a partial setup
+
+If `$ARTIST_DIR/RECOUP.md` already exists, do not re-run completed steps. Read the file, find the first unchecked item, and resume from there using the captured frontmatter values:
+
+```bash
+# Show the next unchecked step
+grep -n '^- \[ \]' "$ARTIST_DIR/RECOUP.md" | head -1
+```
+
+If every item is checked, the artist is fully set up — confirm with the user before doing anything else.
+
+### Why the checklist
+
+Long deterministic chains executed from prose tend to drop steps: the agent reads the doc once, runs a few calls, and forgets the rest. A file-as-state checklist sidesteps that — progress is visible on disk, every step has a write-back side effect, and a fresh turn can resume from the file rather than re-deriving what's already been done.
 
 ## Entering an Artist Workspace
 
