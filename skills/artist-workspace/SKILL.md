@@ -165,21 +165,30 @@ songs/adhd/audio.mp3          ✗  title becomes "audio"
 
 ### Releases
 
-Releases live at `releases/{release-slug}/`. Each release is a folder with a `RELEASE.md` at the root that holds the tracklist, Spotify metadata, and cover art URL — every other release-level artifact (research, copy, assets) goes in the same folder. The slug is `lowercase-kebab-case` of the album / EP / single title; suffix with `-single` or `-ep` to disambiguate when needed.
+Releases live at `releases/{release-slug}/`. Each release is a folder with a `RELEASE.md` at the root — the master release-management document that travels with the release through every lifecycle stage (announcement, release week, sustain). Every other release-level artifact (research, copy, assets, derivative reports) goes in the same folder.
+
+**Slug convention** — `lowercase-kebab-case` of the project title plus a format suffix:
+
+- **Album** → `releases/{title-slug}/` (no suffix — album is the default)
+- **EP** → `releases/{title-slug}-ep/`
+- **Single** → `releases/{title-slug}-single/`
+- **Compilation** → `releases/{title-slug}-compilation/`
 
 ```
-releases/starboy/RELEASE.md
-releases/after-hours/RELEASE.md
+releases/after-hours/RELEASE.md          # album
+releases/adhd-ep/RELEASE.md              # EP
 releases/blinding-lights-single/RELEASE.md
 ```
 
-The `RELEASE.md` references songs by slug — it doesn't duplicate or move them. Read `references/release-template.md` for the section-by-section structure when creating one.
+The `RELEASE.md` is **18 sections** covering project snapshot, identifiers + metadata, narrative, audience, DSP strategy, marketing, social, PR, visuals, physical/merch/touring, team, budget, KPI tracking, and a links hub — plus an Outstanding Deliverables table and a Document History log. Read `references/release-template.md` for the full canonical template, sharing-tag conventions (`[INTERNAL]` / `[SHAREABLE]` / `[OPS]`), and status markers (`✅` / `❌` / `⚠️ TBD` / `N/A`).
+
+It references songs by slug — it doesn't duplicate or move them.
 
 #### Where Spotify catalog data lands
 
 Step 5 of the create-artist chain (Spotify catalog) populates this folder:
 
-- **Each album returned by `GET /api/spotify/artist/albums`** → `releases/{album-slug}/RELEASE.md` filled from the matching `GET /api/spotify/album?id=$ALBUM_ID` response. Use the album's `name` for the slug, `album_type` for `type`, `release_date` for `releaseDate`, `images[0].url` (640px) for `coverArtUrl`, and the `tracks.items[]` array for the tracklist.
+- **Each album returned by `GET /api/spotify/artist/albums`** → `releases/{release-slug}/RELEASE.md` scaffolded from `references/release-template.md`. Step 5 fills the Spotify-derivable fields (Section 1: artist name, project title, release date, format; Section 2.1: Spotify URI; Section 2.2: per-track title + duration + explicit; Section 2.3: cross-reference local `songs/`; Section 18: cover art URL) and leaves everything else as `⚠️ TBD`. ISRC, UPC, writers/producers, label, distributor, and all marketing/PR/budget sections aren't in the public Spotify response — they stay TBD until the user provides them. See `references/release-template.md` for the full mapping.
 - **`GET /api/spotify/artist/topTracks`** → `releases/top-tracks.md` (cross-release snapshot — these aren't a release themselves but live here because it's all Spotify catalog data and pinning it next to releases keeps the catalog in one place). Inline structure:
 
   ```markdown
