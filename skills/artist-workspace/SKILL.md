@@ -56,7 +56,7 @@ imageUrl:
 - [ ] 2. Find canonical Spotify match (\`GET /api/spotify/search\`) — capture \`id\`, \`external_urls.spotify\`, \`images[0].url\`
 - [ ] 3. PATCH artist with image + Spotify profile URL
 - [ ] 4. Deep research (artist biography + Spotify presence)
-- [ ] 5. Pull Spotify catalog (top tracks + albums)
+- [ ] 5. Pull Spotify catalog → write \`releases/{album-slug}/RELEASE.md\` per album + \`releases/top-tracks.md\` (see Releases section)
 - [ ] 6. Web search for additional socials (instagram / tiktok / twitter / youtube)
 - [ ] 7. PATCH artist with discovered socials
 - [ ] 8. Synthesize knowledge base — append it as \`## Knowledge base\` in this file
@@ -118,6 +118,10 @@ A populated artist workspace looks like this. Nothing here is pre-created — ea
 │   ├── audience.md              # who listens and what resonates
 │   └── images/
 │       └── face-guide.png       # face reference for visual content generation
+├── releases/
+│   ├── top-tracks.md            # cross-release Spotify top tracks (snapshot)
+│   └── {release-slug}/          # one folder per album / EP / single
+│       └── RELEASE.md           # tracklist + Spotify metadata + cover art URL
 └── songs/
     └── {song-slug}/
         ├── {song-slug}.mp3
@@ -161,7 +165,45 @@ songs/adhd/audio.mp3          ✗  title becomes "audio"
 
 ### Releases
 
-When songs are grouped into a release (EP, album, single), the release document references them by slug — it doesn't duplicate or move them. If you need to know which songs belong to a release, check the release document.
+Releases live at `releases/{release-slug}/`. Each release is a folder with a `RELEASE.md` at the root — the master release-management document that travels with the release through every lifecycle stage (announcement, release week, sustain). Every other release-level artifact (research, copy, assets, derivative reports) goes in the same folder.
+
+**Slug convention** — `lowercase-kebab-case` of the project title plus a format suffix:
+
+- **Album** → `releases/{title-slug}/` (no suffix — album is the default)
+- **EP** → `releases/{title-slug}-ep/`
+- **Single** → `releases/{title-slug}-single/`
+- **Compilation** → `releases/{title-slug}-compilation/`
+
+```
+releases/after-hours/RELEASE.md          # album
+releases/adhd-ep/RELEASE.md              # EP
+releases/blinding-lights-single/RELEASE.md
+```
+
+The `RELEASE.md` is **18 sections** covering project snapshot, identifiers + metadata, narrative, audience, DSP strategy, marketing, social, PR, visuals, physical/merch/touring, team, budget, KPI tracking, and a links hub — plus an Outstanding Deliverables table and a Document History log. Read `references/release-template.md` for the full canonical template, sharing-tag conventions (`[INTERNAL]` / `[SHAREABLE]` / `[OPS]`), and status markers (`✅` / `❌` / `⚠️ TBD` / `N/A`).
+
+It references songs by slug — it doesn't duplicate or move them.
+
+#### Where Spotify catalog data lands
+
+Step 5 of the create-artist chain (Spotify catalog) populates this folder:
+
+- **Each album returned by `GET /api/spotify/artist/albums`** → `releases/{release-slug}/RELEASE.md` scaffolded from `references/release-template.md`. Step 5 fills the Spotify-derivable fields (Section 1: artist name, project title, release date, format; Section 2.1: Spotify URI; Section 2.2: per-track title + duration + explicit; Section 2.3: cross-reference local `songs/`; Section 18: cover art URL) and leaves everything else as `⚠️ TBD`. ISRC, UPC, writers/producers, label, distributor, and all marketing/PR/budget sections aren't in the public Spotify response — they stay TBD until the user provides them. See `references/release-template.md` for the full mapping.
+- **`GET /api/spotify/artist/topTracks`** → `releases/top-tracks.md` (cross-release snapshot — these aren't a release themselves but live here because it's all Spotify catalog data and pinning it next to releases keeps the catalog in one place). Inline structure:
+
+  ```markdown
+  ---
+  title: Top Tracks
+  source: spotify
+  snapshotDate: {YYYY-MM-DD}
+  ---
+
+  # Top Tracks
+
+  | # | Track | Album | Duration |
+  |---|-------|-------|----------|
+  | 1 | {name} | {album-slug or external} | {mm:ss} |
+  ```
 
 ### Organizing Other Files
 
