@@ -7,23 +7,23 @@ description: How to work in artist directories — including creating, enumerati
 
 Every artist has a workspace — a directory that holds context, songs, and reference material. The `RECOUP.md` file at the root connects it to the Recoupable platform.
 
-Artist directories live inside the sandbox at `artists/{artist-slug}/` (single-org sandboxes) or `orgs/$RECOUP_ORG_ID/artists/{artist-slug}/` (org-scoped sandboxes — the default in open-agents). Use the org-scoped path whenever `$RECOUP_ORG_ID` is set.
+Artist directories live inside the sandbox at `artists/{artist-slug}/`. The sandbox is already scoped to a single Recoupable organization (its repo *is* the org), so artists live at the top level — there is no `orgs/` directory.
 
 ## Listing what's in the sandbox
 
 When the account asks *"what artists do I have"*, *"list my artists"*, *"which orgs am I in"*, or any other inventory question about the sandbox, **walk the filesystem — it is authoritative for this sandbox.** Do not call the Recoupable API for this: the API answers "what artists does this account have access to across everything", which is a different (and usually larger) set than what the sandbox was opened for.
 
 ```bash
-# All artist workspaces in this sandbox (handles both layouts)
-ls -d artists/*/ orgs/*/artists/*/ 2>/dev/null
+# All artist workspaces in this sandbox
+ls -d artists/*/ 2>/dev/null
 
 # Every artist's identity file — read the frontmatter for name/slug/id
-find artists orgs -type f -name RECOUP.md 2>/dev/null
+find artists -type f -name RECOUP.md 2>/dev/null
 ```
 
 Each `RECOUP.md` has frontmatter (`artistName`, `artistSlug`, `artistId`) — read it with `head` or any YAML parser to get the canonical identity.
 
-If neither `artists/` nor `orgs/*/artists/` exists, the sandbox has not been set up yet — point the account at the `setup-sandbox` skill rather than inventing data.
+If `artists/` does not exist, the sandbox has not been set up yet — point the account at the `setup-sandbox` skill rather than inventing data.
 
 ## Creating a new artist
 
@@ -35,7 +35,7 @@ Pick a slug, make the directory, and write the initial `RECOUP.md` template — 
 
 ```bash
 ARTIST_SLUG=$(echo "$ARTIST_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]\+/-/g; s/^-//; s/-$//')
-ARTIST_DIR="orgs/$RECOUP_ORG_ID/artists/$ARTIST_SLUG"
+ARTIST_DIR="artists/$ARTIST_SLUG"
 mkdir -p "$ARTIST_DIR"
 
 cat > "$ARTIST_DIR/RECOUP.md" <<EOF
@@ -65,7 +65,7 @@ imageUrl:
 EOF
 ```
 
-If `$RECOUP_ORG_ID` is unset, fall back to `artists/$ARTIST_SLUG/` (single-org layout). Don't proceed to step 1 until the file exists on disk.
+Don't proceed to step 1 until the file exists on disk.
 
 The full curl-by-curl playbook for steps 1–8 lives at `https://developers.recoupable.com/workflows/create-artist` and is also linked from the `recoup-api` skill. Fetch it once at scaffold time and follow it in order.
 
