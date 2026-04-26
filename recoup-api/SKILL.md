@@ -135,7 +135,7 @@ For multi-endpoint sequences that need a specific order, follow the published wo
 
 Trigger to load a workflow guide: any phrase like "create a new artist", "onboard X", "add this artist", or any request that requires more than one endpoint to complete.
 
-**For the create-artist chain, invoke the `artist-workspace` skill first** — it scaffolds `orgs/$RECOUP_ORG_ID/artists/{slug}/RECOUP.md` with one checkbox per workflow step, and the agent then drives execution from that file (tick + persist outputs to frontmatter after every step). The workflow guide above is the curl-by-curl reference for each step's request shape, but the checklist is the source of truth for what's done. The chain has 8 sequential calls and skipping any leaves the artist partially populated.
+**For the create-artist chain, invoke the `artist-workspace` skill first** — it scaffolds `artists/{slug}/RECOUP.md` with one checkbox per workflow step, and the agent then drives execution from that file (tick + persist outputs to frontmatter after every step). The workflow guide above is the curl-by-curl reference for each step's request shape, but the checklist is the source of truth for what's done. The chain has 8 sequential calls and skipping any leaves the artist partially populated.
 
 ## Troubleshooting
 
