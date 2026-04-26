@@ -56,7 +56,7 @@ imageUrl:
 - [ ] 2. Find canonical Spotify match (\`GET /api/spotify/search\`) — capture \`id\`, \`external_urls.spotify\`, \`images[0].url\`
 - [ ] 3. PATCH artist with image + Spotify profile URL
 - [ ] 4. Deep research (artist biography + Spotify presence)
-- [ ] 5. Pull Spotify catalog (top tracks + albums)
+- [ ] 5. Pull Spotify catalog → write \`releases/{album-slug}/RELEASE.md\` per album + \`releases/top-tracks.md\` (see Releases section)
 - [ ] 6. Web search for additional socials (instagram / tiktok / twitter / youtube)
 - [ ] 7. PATCH artist with discovered socials
 - [ ] 8. Synthesize knowledge base — append it as \`## Knowledge base\` in this file
@@ -118,6 +118,10 @@ A populated artist workspace looks like this. Nothing here is pre-created — ea
 │   ├── audience.md              # who listens and what resonates
 │   └── images/
 │       └── face-guide.png       # face reference for visual content generation
+├── releases/
+│   ├── top-tracks.md            # cross-release Spotify top tracks (snapshot)
+│   └── {release-slug}/          # one folder per album / EP / single
+│       └── RELEASE.md           # tracklist + Spotify metadata + cover art URL
 └── songs/
     └── {song-slug}/
         ├── {song-slug}.mp3
@@ -161,7 +165,36 @@ songs/adhd/audio.mp3          ✗  title becomes "audio"
 
 ### Releases
 
-When songs are grouped into a release (EP, album, single), the release document references them by slug — it doesn't duplicate or move them. If you need to know which songs belong to a release, check the release document.
+Releases live at `releases/{release-slug}/`. Each release is a folder with a `RELEASE.md` at the root that holds the tracklist, Spotify metadata, and cover art URL — every other release-level artifact (research, copy, assets) goes in the same folder. The slug is `lowercase-kebab-case` of the album / EP / single title; suffix with `-single` or `-ep` to disambiguate when needed.
+
+```
+releases/starboy/RELEASE.md
+releases/after-hours/RELEASE.md
+releases/blinding-lights-single/RELEASE.md
+```
+
+The `RELEASE.md` references songs by slug — it doesn't duplicate or move them. Read `references/release-template.md` for the section-by-section structure when creating one.
+
+#### Where Spotify catalog data lands
+
+Step 5 of the create-artist chain (Spotify catalog) populates this folder:
+
+- **Each album returned by `GET /api/spotify/artist/albums`** → `releases/{album-slug}/RELEASE.md` filled from the matching `GET /api/spotify/album?id=$ALBUM_ID` response. Use the album's `name` for the slug, `album_type` for `type`, `release_date` for `releaseDate`, `images[0].url` (640px) for `coverArtUrl`, and the `tracks.items[]` array for the tracklist.
+- **`GET /api/spotify/artist/topTracks`** → `releases/top-tracks.md` (cross-release snapshot — these aren't a release themselves but live here because it's all Spotify catalog data and pinning it next to releases keeps the catalog in one place). Inline structure:
+
+  ```markdown
+  ---
+  title: Top Tracks
+  source: spotify
+  snapshotDate: {YYYY-MM-DD}
+  ---
+
+  # Top Tracks
+
+  | # | Track | Album | Duration |
+  |---|-------|-------|----------|
+  | 1 | {name} | {album-slug or external} | {mm:ss} |
+  ```
 
 ### Organizing Other Files
 
