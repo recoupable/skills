@@ -131,7 +131,7 @@ For multi-endpoint sequences that need a specific order, follow the published wo
 
 | Workflow | Guide | Driver |
 |----------|-------|--------|
-| Create + research a new artist (full enrichment chain — POST artist, Spotify match, profile/socials/knowledges, deep + web research, KB synthesis) | [https://developers.recoupable.com/workflows/create-artist](https://developers.recoupable.com/workflows/create-artist) | `artist-workspace` skill — scaffolds a `RECOUP.md` checklist file, ticks each step on completion |
+| Create + research a new artist (full enrichment chain — POST artist, Spotify match, profile/socials/knowledges, structured research via Chartmetric profile/career/playlists + web, KB synthesis) | [https://developers.recoupable.com/workflows/create-artist](https://developers.recoupable.com/workflows/create-artist) | `artist-workspace` skill — scaffolds a `RECOUP.md` checklist file, ticks each step on completion |
 
 Trigger to load a workflow guide: any phrase like "create a new artist", "onboard X", "add this artist", or any request that requires more than one endpoint to complete.
 

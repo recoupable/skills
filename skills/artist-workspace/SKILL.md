@@ -46,6 +46,7 @@ artistId:
 spotifyArtistId:
 spotifyProfileUrl:
 imageUrl:
+cmArtistId:
 ---
 
 # $ARTIST_NAME
@@ -55,7 +56,7 @@ imageUrl:
 - [ ] 1. Create the artist (\`POST /api/artists\`) — capture \`account_id\` → \`artistId\`
 - [ ] 2. Find canonical Spotify match (\`GET /api/spotify/search\`) — capture \`id\`, \`external_urls.spotify\`, \`images[0].url\`
 - [ ] 3. PATCH artist with image + Spotify profile URL
-- [ ] 4. Deep research (artist biography + Spotify presence)
+- [ ] 4. Structured research — \`/research/lookup\` (capture \`cmArtistId\`) → \`/research/profile\` + \`/research/career\` + \`/research/playlists\` + \`/research/web\`. Save responses under \`## Research\` in this file.
 - [ ] 5. Pull Spotify catalog → write \`releases/{album-slug}/RELEASE.md\` per album + \`releases/top-tracks.md\` (see Releases section)
 - [ ] 6. Web search for additional socials (instagram / tiktok / twitter / youtube)
 - [ ] 7. PATCH artist with discovered socials
@@ -74,7 +75,7 @@ The full curl-by-curl playbook for steps 1–8 lives at `https://developers.reco
 Two writes back to `RECOUP.md` after each step completes:
 
 1. **Tick the checkbox** (`- [ ]` → `- [x]`) for the step that just ran.
-2. **Write the captured value** into frontmatter (`artistId:`, `spotifyArtistId:`, `spotifyProfileUrl:`, `imageUrl:`). Later steps read these values from the frontmatter — never re-derive what's already saved.
+2. **Write the captured value** into frontmatter (`artistId:`, `spotifyArtistId:`, `spotifyProfileUrl:`, `imageUrl:`, `cmArtistId:`). Later steps read these values from the frontmatter — never re-derive what's already saved. Larger payloads (research responses, social URLs) belong under their own headed subsection in the body, not in frontmatter.
 
 The file IS the workflow state. If a value isn't on disk, the next turn doesn't know it.
 
