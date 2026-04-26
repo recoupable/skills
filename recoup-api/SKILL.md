@@ -1,6 +1,6 @@
 ---
 name: recoup-api
-description: Call the Recoupable API from the sandbox to fetch artist data, socials, organizations, research, documents and any other platform resource. Use whenever you're asked for Recoup data or any Recoupable platform resource. Triggers on phrases like "look up artist", "fetch from recoup", "artist data", "artist socials", "organizations", "artist report", "research" or whenever you're prompted to reference a specific artist, org, or campaign that lives in the Recoupable platform. Always load this before writing curl calls against recoup-api.vercel.app.
+description: Call the Recoupable API from the sandbox to fetch artist data, socials, organizations, research, documents and any other platform resource. Use whenever you're asked for Recoup data or any Recoupable platform resource. Triggers on phrases like "look up artist", "fetch from recoup", "artist data", "artist socials", "organizations", "artist report", "research", "create new artist", "create artist", "onboard artist", "add artist" or whenever you're prompted to reference, create, or update a specific artist, org, or campaign that lives in the Recoupable platform. Always load this before writing curl calls against recoup-api.vercel.app.
 ---
 
 # Recoupable API
@@ -124,6 +124,16 @@ curl -sS -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
 ```
 
 `jq` is preinstalled in the sandbox.
+
+## Multi-step workflows
+
+For multi-endpoint sequences that need a specific order, follow the published workflow guides instead of inventing the chain yourself. The guide tells you which endpoint to call at each step, what to capture for the next step, and which steps are intentionally skipped from a sandbox context.
+
+| Workflow | Guide |
+|----------|-------|
+| Create + research a new artist (full enrichment chain — POST artist, Spotify match, profile/socials/knowledges, deep + web research, KB synthesis to `RECOUP.md`) | [https://developers.recoupable.com/workflows/create-artist](https://developers.recoupable.com/workflows/create-artist) |
+
+Trigger to load a workflow guide: any phrase like "create a new artist", "onboard X", "add this artist", or any request that requires more than one endpoint to complete. Fetch the guide page (e.g. `curl -s https://developers.recoupable.com/workflows/create-artist`) before writing the first request — the order matters and skipping steps leaves the artist record partially populated.
 
 ## Troubleshooting
 
