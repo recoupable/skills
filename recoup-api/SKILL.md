@@ -1,6 +1,6 @@
 ---
 name: recoup-api
-description: Call the Recoupable API from the sandbox to fetch artist data, socials, organizations, research, documents and any other platform resource. Use whenever you're asked for Recoup data or any Recoupable platform resource. Triggers on phrases like "look up artist", "fetch from recoup", "artist data", "artist socials", "organizations", "artist report", "research", "create new artist", "create artist", "onboard artist", "add artist" or whenever you're prompted to reference, create, or update a specific artist, org, or campaign that lives in the Recoupable platform. Always load this before writing curl calls against recoup-api.vercel.app.
+description: Call the Recoupable API from the sandbox to fetch artist data, socials, organizations, research, documents and any other platform resource — and to invoke external connector actions (Google Docs / Drive / Sheets edits, Gmail, TikTok, Instagram, etc.) via Recoupable's shared connections. Use whenever you're asked for Recoup data, a Recoupable platform resource, or to read/write something outside Recoup like a Google Doc URL or a spreadsheet. Triggers on phrases like "look up artist", "fetch from recoup", "artist data", "artist socials", "organizations", "artist report", "research", "create new artist", "create artist", "onboard artist", "add artist", "edit this Google Doc", "read this doc", "update the spreadsheet", "send an email", "post on TikTok", "save to Drive", or whenever the user pastes a docs.google.com / drive.google.com / sheets.google.com URL. Always load this before writing curl calls against recoup-api.vercel.app.
 ---
 
 # Recoupable API
@@ -77,6 +77,7 @@ One section covering most music-industry lookup work:
 - **Spotify Integration** — search, artist, artist albums, artist top tracks, album
 - **Twitter/X Integration** — search tweets, get trends
 - **Connectors** — list/authorize/disconnect third-party OAuth integrations
+- **Connector actions** — execute external operations (Google Docs/Sheets/Drive edits, Gmail, TikTok, Instagram) via shared connections. See the section below.
 - **Apify Integration** — scraper run results
 - **Transcription** — Whisper audio transcription
 
@@ -136,6 +137,41 @@ For multi-endpoint sequences that need a specific order, follow the published wo
 Trigger to load a workflow guide: any phrase like "create a new artist", "onboard X", "add this artist", or any request that requires more than one endpoint to complete.
 
 **For the create-artist chain, invoke the `artist-workspace` skill first** — it scaffolds `artists/{slug}/RECOUP.md` with one checkbox per workflow step, and the agent then drives execution from that file (tick + persist outputs to frontmatter after every step). The workflow guide above is the curl-by-curl reference for each step's request shape, but the checklist is the source of truth for what's done. The chain has 8 sequential calls and skipping any leaves the artist partially populated.
+
+## Connector actions (Google Docs/Sheets/Drive, Gmail, TikTok, Instagram)
+
+For reads/writes **outside** Recoup — editing a Google Doc by URL, syncing a sandbox file with Drive, sending an email, posting a TikTok — use the platform's shared third-party connections via two endpoints:
+
+- `GET /api/connectors/actions` — catalog of every available action with its `slug`, `description`, `parameters` JSON Schema, `connectorSlug`, and `isConnected`. See [docs](https://developers.recoupable.com/api-reference/connectors/list-actions).
+- `POST /api/connectors/actions` — execute one by `actionSlug` with `parameters` matching its schema. See [docs](https://developers.recoupable.com/api-reference/connectors/execute-action).
+
+Slugs are always **UPPERCASE_SNAKE_CASE** (e.g. `GOOGLEDOCS_INSERT_TEXT_ACTION`, `GMAIL_FETCH_EMAILS`). Auth is the same `RECOUP_ACCESS_TOKEN` Bearer. **Always pull the parameters schema from the catalog before executing** — Composio's shapes vary per action.
+
+### Worked example: Google Doc ↔ sandbox file sync
+
+When the user pastes a `docs.google.com/document/d/{ID}/edit` URL, extract the ID and pick the right Google Docs action — `GOOGLEDOCS_GET_DOCUMENT_PLAINTEXT` to read, `GOOGLEDOCS_UPDATE_DOCUMENT_MARKDOWN` to replace the whole doc, `GOOGLEDOCS_INSERT_TEXT_ACTION` to insert at an index, `GOOGLEDOCS_REPLACE_ALL_TEXT` for find-replace:
+
+```bash
+DOC_ID=$(echo "$DOC_URL" | sed -nE 's|.*/document/d/([^/]+).*|\1|p')
+EXEC="https://recoup-api.vercel.app/api/connectors/actions"
+AUTH=(-H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" -H "Content-Type: application/json")
+
+# Read the doc into a local file.
+curl -sS -X POST "${AUTH[@]}" "$EXEC" \
+  -d "$(jq -n --arg id "$DOC_ID" '{actionSlug:"GOOGLEDOCS_GET_DOCUMENT_PLAINTEXT", parameters:{document_id:$id}}')" \
+  | jq -r '.result.data.text' > artists/$ARTIST_SLUG/notes.md
+
+# (edit notes.md locally — agent edits, git diff, etc.)
+
+# Push it back, replacing the doc's content.
+curl -sS -X POST "${AUTH[@]}" "$EXEC" \
+  -d "$(jq -n --arg id "$DOC_ID" --rawfile md artists/$ARTIST_SLUG/notes.md \
+        '{actionSlug:"GOOGLEDOCS_UPDATE_DOCUMENT_MARKDOWN", parameters:{document_id:$id, markdown_content:$md}}')"
+```
+
+The Google Doc and the local file are two views of the same content — commit the local copy with the artist's other workspace files.
+
+**Trigger heuristic:** external URLs (`docs.google.com`, `drive.google.com`, `sheets.google.com`), or phrases like "edit this doc", "send an email", "post on TikTok". Internal Recoup resources (artists, socials, research) use the dedicated endpoints in the Docs Map above.
 
 ## Troubleshooting
 
