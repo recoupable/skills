@@ -68,7 +68,7 @@ EOF
 
 Don't proceed to step 1 until the file exists on disk.
 
-The full curl-by-curl playbook for steps 1–8 lives at `https://developers.recoupable.com/workflows/create-artist` and is also linked from the `recoup-api` skill. Fetch it once at scaffold time and follow it in order.
+The full curl-by-curl playbook for steps 1–8 lives in the [`create-artist`](https://github.com/recoupable/skills/tree/main/skills/create-artist) skill and on the docs site at `https://developers.recoupable.com/skills/create-artist`. Load that skill once at scaffold time and follow its 8-step chain.
 
 ### After every step: tick + persist
 
