@@ -1,0 +1,17 @@
+{
+  "skill_name": "rights-diligence",
+  "evals": [
+    {
+      "id": "missing-chain-of-title",
+      "prompt": "The statements show income for 40 songs, but only 23 songs have split sheets or publishing agreements. Review rights support for a buy-side catalog deal.",
+      "expected_output": "The agent keeps unsupported income visible, marks affected assets as low rights confidence, creates missing-file requests, separates financial performance from transferable value, and recommends exclusion, haircut, escrow, or holdback options.",
+      "files": []
+    },
+    {
+      "id": "sample-and-territory-restrictions",
+      "prompt": "Several top tracks include samples and one assignment excludes non-US territories. Review transferability risks before we share the diligence memo.",
+      "expected_output": "The agent identifies sample clearance and territory-limit risks, ties each issue to affected assets and income streams, and recommends disclosure, counsel review, or purchase price protection.",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "pro-bonus-spike",
+  "workflow": "buy-side",
+  "prompt": "A publishing catalog shows $1.2M LTM NPS, but most of the increase came from one ASCAP/BMI performance royalty quarter tied to TV and radio. Build valuation guidance.",
+  "expected_behaviors": [
+    "Challenges flat headline NPS multiple",
+    "Separates base performance income from bonus or premium income",
+    "Normalizes the run-rate",
+    "Shows bridge from reported LTM to underwritable NPS",
+    "Applies scenario or haircut treatment"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "music-catalog-diligence",
+  "version": "0.1.0",
+  "description": "Review royalties, rights, valuation, and deal materials for music catalog transactions.",
+  "author": {
+    "name": "Recoupable",
+    "email": "agent@recoupable.com",
+    "url": "https://recoupable.com"
+  },
+  "homepage": "https://recoupable.com",
+  "repository": "https://github.com/recoupable/music-catalog-diligence",
+  "license": "Apache-2.0",
+  "keywords": [
+    "music",
+    "catalogs",
+    "diligence",
+    "royalties",
+    "music-rights",
+    "data-room",
+    "valuation",
+    "catalog-diligence",
+    "seller-prep",
+    "financing",
+    "chain-of-title",
+    "royalty-audit",
+    "agent-skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Music Catalog Diligence",
+    "shortDescription": "Review royalties, rights, valuation, and deal materials for catalog transactions",
+    "longDescription": "Turn messy catalog data rooms into source-cited deal packages with normalized royalty data, rights exceptions, valuation workpapers, and buyer, seller, or lender-ready memos.",
+    "developerName": "Recoupable",
+    "category": "Music",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://recoupable.com",
+    "brandColor": "#345A5D"
+  }
+}

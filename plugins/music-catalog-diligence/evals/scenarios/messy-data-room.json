@@ -1,0 +1,13 @@
+{
+  "id": "messy-data-room",
+  "workflow": "buy-side",
+  "prompt": "A seller sent a folder with distributor CSVs, PRO PDFs, a publisher admin XLSX, YouTube Content ID exports, a track list, and contracts. Prepare it for valuation.",
+  "expected_behaviors": [
+    "Creates or references a deal workspace",
+    "Preserves source files",
+    "Builds a file manifest",
+    "Profiles files before cleanup",
+    "Creates normalized catalog, royalty, rights, and evidence artifacts",
+    "Does not produce a final valuation before ingest is complete"
+  ]
+}
