@@ -1,0 +1,47 @@
+{
+  "name": "recoup",
+  "owner": {
+    "name": "Recoup",
+    "email": "agent@recoupable.com",
+    "url": "https://recoupable.com"
+  },
+  "metadata": {
+    "description": "Recoup's marketplace of AI agent skills and plugins for the music industry.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "recoup-skills",
+      "description": "Music-industry skills for AI agents — artist management, songwriting, analytics, release campaigns, research, content creation.",
+      "version": "1.0.0",
+      "source": "./",
+      "category": "Music",
+      "keywords": [
+        "music",
+        "artist-management",
+        "songwriting",
+        "music-marketing",
+        "analytics",
+        "release-management",
+        "chartmetric",
+        "content-creation",
+        "agent-skills"
+      ],
+      "strict": false,
+      "skills": [
+        "./skills/artist-workspace",
+        "./skills/chart-metric",
+        "./skills/content-creation",
+        "./skills/create-artist",
+        "./skills/getting-started",
+        "./skills/music-industry-research",
+        "./skills/recoup-api",
+        "./skills/release-management",
+        "./skills/setup-sandbox",
+        "./skills/song-writing",
+        "./skills/streaming-growth",
+        "./skills/trend-to-song"
+      ]
+    }
+  ]
+}

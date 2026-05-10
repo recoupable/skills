@@ -1,43 +1,29 @@
 # Contributing
 
-We welcome contributions — especially new skills for the music industry.
+We welcome new music skills and new vertical plugins.
 
-## Adding a Skill
+## Where things go
 
-1. Create a new directory under `skills/` with a `SKILL.md`:
+| Type | Location |
+|------|----------|
+| Generic music skill | `skills/{name}/` — listed in the `recoup-skills` plugin |
+| Vertical workflow (3+ skills + scripts/agents/commands) | `plugins/{name}/` — self-contained plugin |
+| New skill inside an existing plugin | `plugins/{plugin}/skills/{name}/` |
 
-```
-skills/my-new-skill/
-└── SKILL.md
-```
+When in doubt, start as a skill under `skills/`. Promote to a plugin once it grows past three related skills AND needs scripts, agents, or commands.
 
-2. Fill in the frontmatter:
+## How to add anything
 
-```yaml
----
-name: my-new-skill
-description: What it does and when to use it. Include trigger phrases.
----
-```
-
-3. Write clear instructions in the body. Keep it under 5,000 words — move heavy reference material to a `references/` subdirectory.
-
+1. Read [`AGENTS.md`](./AGENTS.md) — it documents the skill format, plugin layout, and validation rules.
+2. Edit `marketplace.source.json` to register what you added.
+3. Run:
+   ```bash
+   python3 scripts/generate-marketplaces.py
+   python3 scripts/validate-manifests.py
+   ```
 4. Open a pull request.
 
-## Skill Guidelines
-
-- **One skill, one job.** Each skill does one thing well.
-- **Self-contained.** No cross-dependencies between skills.
-- **Description is the trigger.** The `description` field determines when an agent loads the skill. Be specific — include the phrases a user would actually say.
-- **Real instructions, not theory.** Tell the agent exactly what to do, step by step.
-- **No secrets.** Don't include API keys, tokens, or credentials. Reference environment variables instead.
-
-## Skill Size
-
-- `SKILL.md` body: under 5,000 words
-- Put large reference material in `references/`
-- Put executable code in `scripts/`
-- Critical instructions go at the top
+CI runs the validator on every PR.
 
 ## Code of Conduct
 
