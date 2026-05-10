@@ -1,0 +1,2 @@
+ledger_line_id,catalog_asset_id,source_file,provider,period_start,period_end,payment_date,rights_type,income_type,territory,platform_or_licensee,gross_amount,deductions,participant_share,owner_net_amount,currency,fx_rate,pro_use_type,pro_credits,pro_bonus_type,cue_sheet_ref,match_confidence,notes
+RL-000001,isrc:USRC17600003,fixtures/golden/direct-sync/input.csv,Direct Sync,2025-05-01,2025-05-31,,sync,sync,Worldwide,Indie Film LLC,5000.00,0.00,,5000.00,USD,,,,,,medium,
