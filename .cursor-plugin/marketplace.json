@@ -1,0 +1,37 @@
+{
+  "name": "recoupable",
+  "owner": {
+    "name": "Recoupable",
+    "email": "agent@recoupable.com"
+  },
+  "metadata": {
+    "description": "Recoupable's marketplace of AI agent skills and plugins for the music industry."
+  },
+  "plugins": [
+    {
+      "name": "recoupable-skills",
+      "source": ".",
+      "description": "Music-industry skills for AI agents — artist management, songwriting, analytics, release campaigns, research, content creation.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Recoupable",
+        "email": "agent@recoupable.com"
+      },
+      "homepage": "https://recoupable.com",
+      "repository": "https://github.com/recoupable/skills",
+      "license": "Apache-2.0",
+      "category": "Music",
+      "keywords": [
+        "music",
+        "artist-management",
+        "songwriting",
+        "music-marketing",
+        "analytics",
+        "release-management",
+        "chartmetric",
+        "content-creation",
+        "agent-skills"
+      ]
+    }
+  ]
+}

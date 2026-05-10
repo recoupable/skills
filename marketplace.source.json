@@ -1,0 +1,62 @@
+{
+  "$comment": "Single source of truth for Recoupable's marketplace. Run `python3 scripts/generate-marketplaces.py` to regenerate the three platform marketplace files (.claude-plugin/, .agents/plugins/, .cursor-plugin/). Hand-edits to those generated files will be overwritten.",
+  "marketplace": {
+    "name": "recoupable",
+    "version": "1.0.0",
+    "description": "Recoupable's marketplace of AI agent skills and plugins for the music industry.",
+    "owner": {
+      "name": "Recoupable",
+      "email": "agent@recoupable.com",
+      "url": "https://recoupable.com"
+    },
+    "homepage": "https://recoupable.com",
+    "repository": "https://github.com/recoupable/skills",
+    "license": "Apache-2.0",
+    "brandColor": "#345A5D"
+  },
+  "plugins": [
+    {
+      "name": "recoupable-skills",
+      "version": "1.0.0",
+      "description": "Music-industry skills for AI agents — artist management, songwriting, analytics, release campaigns, research, content creation.",
+      "category": "Music",
+      "type": "virtual",
+      "source": "./",
+      "skills": [
+        "./skills/artist-workspace",
+        "./skills/chart-metric",
+        "./skills/content-creation",
+        "./skills/create-artist",
+        "./skills/getting-started",
+        "./skills/music-industry-research",
+        "./skills/recoup-api",
+        "./skills/release-management",
+        "./skills/setup-sandbox",
+        "./skills/song-writing",
+        "./skills/streaming-growth",
+        "./skills/trend-to-song"
+      ],
+      "keywords": [
+        "music",
+        "artist-management",
+        "songwriting",
+        "music-marketing",
+        "analytics",
+        "release-management",
+        "chartmetric",
+        "content-creation",
+        "agent-skills"
+      ],
+      "interface": {
+        "displayName": "Recoupable Skills",
+        "shortDescription": "Music industry skills for AI agents",
+        "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and create content. General skills work for anyone; platform skills integrate with the Recoupable platform.",
+        "developerName": "Recoupable",
+        "category": "Music",
+        "capabilities": ["Read", "Write"],
+        "websiteURL": "https://recoupable.com",
+        "brandColor": "#345A5D"
+      }
+    }
+  ]
+}
