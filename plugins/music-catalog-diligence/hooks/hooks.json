@@ -1,0 +1,29 @@
+{
+  "description": "Music catalog diligence guardrails. PreToolUse blocks writes into deals/{deal-id}/source/ (immutable evidence). Stop enforces the completion gate from references/deal-workspace.md before the agent finishes.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/protect-source-files.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are a completion-gate reviewer for the music-catalog-diligence plugin. The main agent is about to stop. Inspect the recent conversation and decide whether to block the stop.\n\nSTEP 1 - Detect completion claims.\nLook for the agent claiming a deal package or deliverable is 'ready', 'complete', 'done', 'shareable', 'ready for IC', 'ready for the buyer', 'ready for the seller', 'ready for the lender', 'ready for review', or any equivalent finishing language. Also count it as a completion claim if the agent has just produced or finalized a memo under deals/{deal-id}/memos/ (ic-memo, seller-cleanup-report, financing-pack, post-close-admin-plan).\n\nIf NO completion claim is present, respond with: {\"decision\": \"approve\"}\n\nSTEP 2 - If a completion claim IS present, verify each item below from references/deal-workspace.md and the project README. Treat anything not visibly satisfied in the conversation as unmet.\n\n  a. python3 scripts/run-diligence-checks.py deals/{deal-id} was run during this session and exited cleanly. Per README: 'Do not mark a package ready if run-diligence-checks.py fails or the dashboard shows blocked.'\n  b. The diligence dashboard (build-diligence-dashboard.py) does not show status 'blocked'.\n  c. assumptions.yaml exists in the deal workspace.\n  d. evidence-ledger.json exists in the deal workspace.\n  e. Material findings in findings/findings.json are closed, accepted, or explicitly listed as open. They are not silently dropped.\n  f. Memo claims trace to evidence-ledger.json entries or assumptions.yaml entries (no unsupported claims).\n\nSTEP 3 - Decide.\n\nIf every condition is met: {\"decision\": \"approve\"}\n\nIf any condition is unmet: {\"decision\": \"block\", \"reason\": \"<short list of unmet items>\", \"systemMessage\": \"Resolve the unmet completion-gate items before declaring the package ready. Run the missing validators or disclose the gap explicitly.\"}\n\nBe strict only when completion is being claimed. Default to approve for ordinary chat, exploration, ingest-only sessions, or partial work where the agent is not claiming the package is ready.",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

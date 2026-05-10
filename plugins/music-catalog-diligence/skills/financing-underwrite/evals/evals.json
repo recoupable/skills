@@ -1,0 +1,17 @@
+{
+  "skill_name": "financing-underwrite",
+  "evals": [
+    {
+      "id": "lender-collateral-pack",
+      "prompt": "Build a lender-ready collateral package for a royalty-backed financing. The catalog has normalized royalty data, concentration risk, open rights findings, and preliminary valuation workpapers.",
+      "expected_output": "The agent builds a lender-oriented package with cash-flow support, concentration analysis, open rights exceptions, collateral caveats, downside/base/upside scenarios, and required diligence asks before financing proceeds.",
+      "files": []
+    },
+    {
+      "id": "recoupment-cliff-financing",
+      "prompt": "The master catalog has strong gross receipts, but artist accounts are close to recouping and future net label share may fall. Assess financing risk.",
+      "expected_output": "The agent focuses on underwritable NLS, models pre- and post-recoupment cash flows, flags debt-service coverage risk, and avoids treating gross receipts as available collateral cash flow.",
+      "files": []
+    }
+  ]
+}

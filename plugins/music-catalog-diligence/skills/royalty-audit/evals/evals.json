@@ -1,0 +1,17 @@
+{
+  "skill_name": "royalty-audit",
+  "evals": [
+    {
+      "id": "duplicate-statement-imports",
+      "prompt": "The normalized royalty ledger has two distributor statements for the same platform, month, territory, and ISRC. Audit the ledger before we use it in valuation.",
+      "expected_output": "The agent checks for duplicate source imports, flags duplicate ledger rows, quantifies overstated owner net amount, and recommends which source lines need exclusion or reconciliation before valuation.",
+      "files": []
+    },
+    {
+      "id": "pro-bonus-anomaly",
+      "prompt": "ASCAP and BMI income spiked in one quarter because of a bonus or premium category. Audit whether the royalty data supports underwriting this as recurring cash flow.",
+      "expected_output": "The agent separates base performance royalties from bonus or premium amounts, identifies timing and use-type drivers, labels non-recurring income, and recommends normalized NPS treatment.",
+      "files": []
+    }
+  ]
+}
