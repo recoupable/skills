@@ -42,13 +42,21 @@ def main() -> int:
 
     duplicate_ids: set[str] = set()
     seen_ids: set[str] = set()
+    blank_count = 0
     for row in rows:
-        line_id = row.get("ledger_line_id", "")
+        line_id = (row.get("ledger_line_id") or "").strip()
+        if not line_id:
+            # A blank ledger_line_id means a row has no stable identifier,
+            # which breaks downstream joins and traceability. Surface it
+            # rather than silently accepting unidentified rows.
+            blank_count += 1
+            continue
         if line_id in seen_ids:
             duplicate_ids.add(line_id)
-        if line_id:
-            seen_ids.add(line_id)
+        seen_ids.add(line_id)
 
+    if blank_count:
+        errors.append(f"{blank_count} row(s) have a blank ledger_line_id")
     if duplicate_ids:
         errors.append(f"duplicate ledger_line_id values: {', '.join(sorted(duplicate_ids))}")
 

@@ -42,6 +42,34 @@
         "./skills/streaming-growth",
         "./skills/trend-to-song"
       ]
+    },
+    {
+      "name": "music-catalog-diligence",
+      "description": "Review royalties, rights, valuation, and deal materials for music catalog transactions.",
+      "version": "0.1.0",
+      "source": "./plugins/music-catalog-diligence",
+      "category": "Music",
+      "keywords": [
+        "music",
+        "catalogs",
+        "diligence",
+        "royalties",
+        "music-rights",
+        "data-room",
+        "valuation",
+        "catalog-diligence",
+        "seller-prep",
+        "financing",
+        "chain-of-title",
+        "royalty-audit",
+        "agent-skills"
+      ],
+      "tags": [
+        "music-catalog-diligence",
+        "royalty-normalization",
+        "rights-diligence",
+        "valuation"
+      ]
     }
   ]
 }

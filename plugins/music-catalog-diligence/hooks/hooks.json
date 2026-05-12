@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/protect-source-files.sh",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/protect-source-files.sh\"",
             "timeout": 5
           }
         ]

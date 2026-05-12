@@ -700,7 +700,24 @@ def normalize(
     rate = compute_population_rate(normalized_rows)
     warnings: list[dict[str, object]] = []
     status = "ok"
-    if normalized_rows and rate < PARTIAL_THRESHOLD:
+    if not normalized_rows:
+        # Empty output is never `ok`: downstream consumers would silently
+        # ingest a blank ledger. Treat it as `partial` and explain why.
+        status = "partial"
+        warnings.append(
+            {
+                "profile": provider,
+                "field_population_rate": 0.0,
+                "headers_seen": headers,
+                "expected_columns_not_found": expected_columns_not_found(provider, headers),
+                "critical_fields_checked": list(CRITICAL_FIELDS),
+                "hint": (
+                    "No data rows were normalized. Verify the provider profile, the "
+                    "delimiter/sheet, and that the input is not empty or header-only."
+                ),
+            }
+        )
+    elif rate < PARTIAL_THRESHOLD:
         status = "partial"
         missing = expected_columns_not_found(provider, headers)
         warnings.append(
