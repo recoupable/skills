@@ -1,17 +1,17 @@
 {
-  "name": "recoupable",
+  "name": "recoup",
   "owner": {
-    "name": "Recoupable",
+    "name": "Recoup",
     "email": "agent@recoupable.com",
     "url": "https://recoupable.com"
   },
   "metadata": {
-    "description": "Recoupable's marketplace of AI agent skills and plugins for the music industry.",
+    "description": "Recoup's marketplace of AI agent skills and plugins for the music industry.",
     "version": "1.0.0"
   },
   "plugins": [
     {
-      "name": "recoupable-skills",
+      "name": "recoup-skills",
       "description": "Music-industry skills for AI agents — artist management, songwriting, analytics, release campaigns, research, content creation.",
       "version": "1.0.0",
       "source": "./",

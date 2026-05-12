@@ -1,11 +1,11 @@
 {
-  "$comment": "Single source of truth for Recoupable's marketplace. Run `python3 scripts/generate-marketplaces.py` to regenerate the three platform marketplace files (.claude-plugin/, .agents/plugins/, .cursor-plugin/). Hand-edits to those generated files will be overwritten.",
+  "$comment": "Single source of truth for Recoup's marketplace. Run `python3 scripts/generate-marketplaces.py` to regenerate the three platform marketplace files (.claude-plugin/, .agents/plugins/, .cursor-plugin/). Hand-edits to those generated files will be overwritten.",
   "marketplace": {
-    "name": "recoupable",
+    "name": "recoup",
     "version": "1.0.0",
-    "description": "Recoupable's marketplace of AI agent skills and plugins for the music industry.",
+    "description": "Recoup's marketplace of AI agent skills and plugins for the music industry.",
     "owner": {
-      "name": "Recoupable",
+      "name": "Recoup",
       "email": "agent@recoupable.com",
       "url": "https://recoupable.com"
     },
@@ -16,7 +16,7 @@
   },
   "plugins": [
     {
-      "name": "recoupable-skills",
+      "name": "recoup-skills",
       "version": "1.0.0",
       "description": "Music-industry skills for AI agents — artist management, songwriting, analytics, release campaigns, research, content creation.",
       "category": "Music",
@@ -48,10 +48,10 @@
         "agent-skills"
       ],
       "interface": {
-        "displayName": "Recoupable Skills",
+        "displayName": "Recoup Skills",
         "shortDescription": "Music industry skills for AI agents",
-        "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and create content. General skills work for anyone; platform skills integrate with the Recoupable platform.",
-        "developerName": "Recoupable",
+        "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and create content. General skills work for anyone; platform skills integrate with the Recoup platform.",
+        "developerName": "Recoup",
         "category": "Music",
         "capabilities": ["Read", "Write"],
         "websiteURL": "https://recoupable.com",
@@ -90,7 +90,7 @@
         "displayName": "Music Catalog Diligence",
         "shortDescription": "Review royalties, rights, valuation, and deal materials for catalog transactions",
         "longDescription": "Turn messy catalog data rooms into source-cited deal packages with normalized royalty data, rights exceptions, valuation workpapers, and buyer, seller, or lender-ready memos.",
-        "developerName": "Recoupable",
+        "developerName": "Recoup",
         "category": "Music",
         "capabilities": ["Read", "Write"],
         "websiteURL": "https://recoupable.com",

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the Recoupable Skills marketplace are documented here.
+All notable changes to the Recoup Skills marketplace are documented here.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/),
 and the marketplace as a whole uses [Semantic Versioning](https://semver.org/).
@@ -24,7 +24,7 @@ Individual plugins listed in `marketplace.source.json` carry their own versions.
 
 | Plugin | Version | Type | Source |
 | ------ | ------- | ---- | ------ |
-| `recoupable-skills` | 1.0.0 | virtual (over `./skills/*`) | `./` |
+| `recoup-skills` | 1.0.0 | virtual (over `./skills/*`) | `./` |
 | `music-catalog-diligence` | 0.1.0 | self-contained | `./plugins/music-catalog-diligence` |
 
 ### Changed
@@ -34,7 +34,7 @@ Individual plugins listed in `marketplace.source.json` carry their own versions.
 
 ### Removed
 
-- Legacy root `.claude-plugin/plugin.json` — superseded by the `recoupable-skills` virtual plugin entry in the marketplace.
+- Legacy root `.claude-plugin/plugin.json` — superseded by the `recoup-skills` virtual plugin entry in the marketplace.
 - Legacy root `.codex-plugin/plugin.json` — same.
 
 ### Migration notes

@@ -1,4 +1,4 @@
-# Recoupable Skills
+# Recoup Skills
 
 The official marketplace of AI agent **skills** and **plugins** for the music industry.
 
@@ -8,7 +8,7 @@ One repo. Multiple installable plugins. Works with Claude Code, Codex, and Curso
 
 | Plugin | What it is | What you get |
 | ------ | ---------- | ------------ |
-| [`recoupable-skills`](./skills/) | Broad music-industry skills | Artist management, songwriting, analytics, release campaigns, research, content creation, brand |
+| [`recoup-skills`](./skills/) | Broad music-industry skills | Artist management, songwriting, analytics, release campaigns, research, content creation, brand |
 | [`music-catalog-diligence`](./plugins/music-catalog-diligence/) | Vertical bundle for catalog deals | Royalty normalization, rights diligence, valuation workpapers, IC memos — skills + agents + commands + scripts |
 
 ## Install
@@ -17,16 +17,16 @@ One repo. Multiple installable plugins. Works with Claude Code, Codex, and Curso
 
 ```bash
 /plugin marketplace add recoupable/skills
-/plugin install recoupable-skills@recoupable
-/plugin install music-catalog-diligence@recoupable
+/plugin install recoup-skills@recoup
+/plugin install music-catalog-diligence@recoup
 ```
 
 ### Codex
 
 ```bash
 codex plugin marketplace add recoupable/skills
-codex plugin install recoupable-skills@recoupable
-codex plugin install music-catalog-diligence@recoupable
+codex plugin install recoup-skills@recoup
+codex plugin install music-catalog-diligence@recoup
 ```
 
 ### Cursor
@@ -37,12 +37,12 @@ via `.cursor-plugin/marketplace.json` at the repo root.
 ### Manual clone
 
 ```bash
-git clone https://github.com/recoupable/skills.git recoupable-skills
+git clone https://github.com/recoupable/skills.git recoup-skills
 ```
 
 ## Skills (broad, shared pool)
 
-The `recoupable-skills` plugin exposes these skills from `./skills/`:
+The `recoup-skills` plugin exposes these skills from `./skills/`:
 
 | Skill | What it does |
 | ----- | ------------ |
@@ -52,7 +52,7 @@ The `recoupable-skills` plugin exposes these skills from `./skills/`:
 | [create-artist](./skills/create-artist) | 8-step API playbook for onboarding a new artist |
 | [getting-started](./skills/getting-started) | Install CLI, get API key, connect via MCP/REST — start here |
 | [music-industry-research](./skills/music-industry-research) | Artist analytics, people search, competitive analysis, web intelligence |
-| [recoup-api](./skills/recoup-api) | Call the Recoupable API from the sandbox — artist data, socials, orgs, reports |
+| [recoup-api](./skills/recoup-api) | Call the Recoup API from the sandbox — artist data, socials, orgs, reports |
 | [release-management](./skills/release-management) | Plan and execute release campaigns |
 | [setup-sandbox](./skills/setup-sandbox) | Scaffold the workspace for an account's orgs and artists |
 | [song-writing](./skills/song-writing) | Structured songwriting using the 7 C's method |
@@ -75,7 +75,7 @@ recoupable/skills/
 ├── .cursor-plugin/marketplace.json       ← Cursor marketplace
 ├── marketplace.source.json               ← Single source of truth (edit this)
 │
-├── skills/                               ← Broad music skills (recoupable-skills plugin)
+├── skills/                               ← Broad music skills (recoup-skills plugin)
 │   ├── artist-workspace/
 │   ├── chart-metric/
 │   ├── content-creation/
@@ -125,7 +125,7 @@ Both scripts are zero-dependency Python 3.9+ stdlib. CI runs
 See [contributing.md](./contributing.md).
 
 - **Broad music skill?** Add a folder under `skills/` and list it in
-  `marketplace.source.json` under the `recoupable-skills` plugin's `skills`
+  `marketplace.source.json` under the `recoup-skills` plugin's `skills`
   array.
 - **Vertical workflow** (3+ related skills + commands/agents/scripts)? Create
   a new plugin folder under `plugins/{your-plugin}/` and register it as a
@@ -133,7 +133,7 @@ See [contributing.md](./contributing.md).
 
 ## About
 
-[Recoupable](https://recoupable.com) is an AI-powered music management platform.
+[Recoup](https://recoupable.com) is an AI-powered music management platform.
 These skills and plugins power the agents that help artists and labels manage
 their careers.
 

@@ -5,13 +5,13 @@ description: How to work in artist directories — including creating, enumerati
 
 # Artist Workspace
 
-Every artist has a workspace — a directory that holds context, songs, and reference material. The `RECOUP.md` file at the root connects it to the Recoupable platform.
+Every artist has a workspace — a directory that holds context, songs, and reference material. The `RECOUP.md` file at the root connects it to the Recoup platform.
 
-Artist directories live inside the sandbox at `artists/{artist-slug}/`. The sandbox is already scoped to a single Recoupable organization (its repo *is* the org), so artists live at the top level — there is no `orgs/` directory.
+Artist directories live inside the sandbox at `artists/{artist-slug}/`. The sandbox is already scoped to a single Recoup organization (its repo *is* the org), so artists live at the top level — there is no `orgs/` directory.
 
 ## Listing what's in the sandbox
 
-When the account asks *"what artists do I have"*, *"list my artists"*, *"which orgs am I in"*, or any other inventory question about the sandbox, **walk the filesystem — it is authoritative for this sandbox.** Do not call the Recoupable API for this: the API answers "what artists does this account have access to across everything", which is a different (and usually larger) set than what the sandbox was opened for.
+When the account asks *"what artists do I have"*, *"list my artists"*, *"which orgs am I in"*, or any other inventory question about the sandbox, **walk the filesystem — it is authoritative for this sandbox.** Do not call the Recoup API for this: the API answers "what artists does this account have access to across everything", which is a different (and usually larger) set than what the sandbox was opened for.
 
 ```bash
 # All artist workspaces in this sandbox
