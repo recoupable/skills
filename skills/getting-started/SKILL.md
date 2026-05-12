@@ -35,6 +35,13 @@ echo "=== Environment ==="
 [ -n "$RECOUP_ACCOUNT_ID" ]   && echo "RECOUP_ACCOUNT_ID: $RECOUP_ACCOUNT_ID" || echo "RECOUP_ACCOUNT_ID: unset"
 [ -n "$RECOUP_ORG_ID" ]       && echo "RECOUP_ORG_ID: $RECOUP_ORG_ID"       || echo "RECOUP_ORG_ID: unset"
 echo
+echo "=== Cached identity ==="
+if [ -f ~/.config/recoup/account.json ]; then
+  echo "~/.config/recoup/account.json: present ($(jq -r '.email // "unknown email"' ~/.config/recoup/account.json))"
+else
+  echo "~/.config/recoup/account.json: not present"
+fi
+echo
 echo "=== CLI ==="
 command -v recoup >/dev/null 2>&1 && recoup --version || echo "recoup CLI: not installed"
 echo
@@ -72,12 +79,15 @@ Two paths depending on who is doing this.
 For agents bootstrapping their own throwaway account. Use this for demos, exploration, and testing — **never for creating real artist data** (see warning below).
 
 ```bash
-export RECOUP_API_KEY=$(curl -s -X POST "https://recoup-api.vercel.app/api/agents/signup" \
+RECOUP_EMAIL="agent+$(date +%s)-$RANDOM@recoupable.com"
+SIGNUP_RESPONSE=$(curl -s -X POST "https://recoup-api.vercel.app/api/agents/signup" \
   -H "Content-Type: application/json" \
-  -d '{"email": "agent+'$(date +%s)-$RANDOM'@recoupable.com"}' | jq -r .api_key)
+  -d "$(jq -n --arg email "$RECOUP_EMAIL" '{email: $email}')")
+export RECOUP_API_KEY=$(echo "$SIGNUP_RESPONSE" | jq -r .api_key)
+RECOUP_ACCOUNT_ID=$(echo "$SIGNUP_RESPONSE" | jq -r .account_id)
 ```
 
-The `agent+{unique}@recoupable.com` pattern returns a key immediately. The `$(date +%s)-$RANDOM` combination guarantees a unique email.
+The `agent+{unique}@recoupable.com` pattern returns a key immediately. The `$(date +%s)-$RANDOM` combination guarantees a unique email. The signup response also returns `account_id`, which we save to disk in the "Persist the key" step below.
 
 > ⚠️ **`agent+` accounts are throwaway.** Any artists, releases, or notes created against them are permanently isolated to that account and unrecoverable if the API key is lost. Use Path B for any work you want to keep.
 
@@ -94,18 +104,26 @@ Ask the user for the verification code that was emailed:
 
 ```bash
 read -p "Verification code: " RECOUP_CODE
-export RECOUP_API_KEY=$(curl -s -X POST "https://recoup-api.vercel.app/api/agents/verify" \
+VERIFY_RESPONSE=$(curl -s -X POST "https://recoup-api.vercel.app/api/agents/verify" \
   -H "Content-Type: application/json" \
   -d "$(jq -n --arg email "$RECOUP_EMAIL" --arg code "$RECOUP_CODE" \
-        '{email: $email, code: $code}')" | jq -r .api_key)
+        '{email: $email, code: $code}')")
+export RECOUP_API_KEY=$(echo "$VERIFY_RESPONSE" | jq -r .api_key)
+RECOUP_ACCOUNT_ID=$(echo "$VERIFY_RESPONSE" | jq -r .account_id)
 ```
 
-### Persist the key
+### Persist the key + account identity
 
-So future shell sessions inherit it:
+So future shell sessions inherit `RECOUP_API_KEY`, and future runs of this skill can look up the account_id + email without re-signing-up:
 
 ```bash
+# Persist API key into the user's shell init
 echo 'export RECOUP_API_KEY="'$RECOUP_API_KEY'"' >> ~/.zshrc
+
+# Persist account identity for future skill runs
+mkdir -p ~/.config/recoup
+jq -n --arg account_id "$RECOUP_ACCOUNT_ID" --arg email "$RECOUP_EMAIL" \
+   '{account_id: $account_id, email: $email}' > ~/.config/recoup/account.json
 ```
 
 (Use `~/.bashrc` instead of `~/.zshrc` on bash. On Windows / WSL, follow the platform's shell-init convention.)
@@ -114,7 +132,7 @@ echo 'export RECOUP_API_KEY="'$RECOUP_API_KEY'"' >> ~/.zshrc
 
 ## Step 3 — Verify auth + identify the account
 
-This works whether the user is sandbox or BYOA. Use whichever auth header is set.
+This works whether the user is sandbox or BYOA. Use whichever auth header is set, then verify by hitting `/api/organizations` (any 200 response means the key is valid; the response body becomes our first piece of state for Step 4).
 
 ```bash
 AUTH_HEADER=""
@@ -126,42 +144,65 @@ else
   echo "No Recoup auth found. Re-run Step 2."; exit 1
 fi
 
-WHOAMI=$(curl -sS "https://recoup-api.vercel.app/api/whoami" -H "$AUTH_HEADER")
-ACCOUNT_ID=$(echo "$WHOAMI" | jq -r '.account_id // empty')
-EMAIL=$(echo "$WHOAMI" | jq -r '.email // empty')
-echo "Authenticated as $EMAIL (account $ACCOUNT_ID)"
+# Verify auth by calling /organizations — succeeds (200) if the key works.
+# We reuse the response body in Step 4 instead of fetching again.
+HTTP=$(curl -sS -o /tmp/recoup-orgs.json -w "%{http_code}" \
+  "https://recoup-api.vercel.app/api/organizations" -H "$AUTH_HEADER")
+
+if [ "$HTTP" != "200" ]; then
+  echo "Authentication failed (HTTP $HTTP). The API key/token is invalid or expired."
+  echo "BYOA: re-run Step 2. Sandbox: refresh your sandbox session."
+  exit 1
+fi
+echo "Authenticated."
+
+# Recover account identity from local cache (saved in Step 2 for fresh signups,
+# pre-injected by the sandbox for Recoup-hosted, or missing for returning agents).
+RECOUP_ACCOUNT_ID="${RECOUP_ACCOUNT_ID:-}"   # sandbox-injected wins
+RECOUP_EMAIL=""
+if [ -z "$RECOUP_ACCOUNT_ID" ] && [ -f ~/.config/recoup/account.json ]; then
+  RECOUP_ACCOUNT_ID=$(jq -r '.account_id // empty' ~/.config/recoup/account.json)
+  RECOUP_EMAIL=$(jq -r '.email // empty' ~/.config/recoup/account.json)
+fi
+
+if [ -n "$RECOUP_EMAIL" ]; then
+  echo "Account: $RECOUP_EMAIL (id: $RECOUP_ACCOUNT_ID)"
+elif [ -n "$RECOUP_ACCOUNT_ID" ]; then
+  echo "Account id: $RECOUP_ACCOUNT_ID (email unknown — returning agent)"
+else
+  echo "Account identity unknown — returning agent with no cached identity."
+  echo "Proceeding with auth-only checks. /api/whoami would close this gap in the future."
+fi
 ```
 
-If `whoami` fails, the auth is bad — re-run Step 2 (BYOA) or ask the user to refresh their sandbox (Recoup-hosted).
-
-**Throwaway check.** If `$EMAIL` matches `^agent\+.*@recoupable\.com$`, the user is on an agent throwaway account. Warn them once before doing anything that creates real data:
+**Throwaway check.** If we have an email AND it matches `^agent\+.*@recoupable\.com$`, the user is on an agent throwaway account. Warn them once before doing anything that creates real data. **Skips silently when email is unknown** (returning agent without cached identity).
 
 ```bash
-case "$EMAIL" in
-  agent+*@recoupable.com)
-    echo "⚠️  You're on a throwaway agent account ($EMAIL)."
-    echo "    Artist data created here is isolated and unrecoverable if the key is lost."
-    echo "    Run Step 2 Path B with your real email if you want to keep this work."
-    ;;
-esac
+if [ -n "$RECOUP_EMAIL" ]; then
+  case "$RECOUP_EMAIL" in
+    agent+*@recoupable.com)
+      echo "⚠️  You're on a throwaway agent account ($RECOUP_EMAIL)."
+      echo "    Artist data created here is isolated and unrecoverable if the key is lost."
+      echo "    Run Step 2 Path B with your real email if you want to keep this work."
+      ;;
+  esac
+fi
 ```
 
 ---
 
 ## Step 4 — Detect roster + filesystem state
 
-Fetch what the user has on the platform AND what's on disk. Combine the two to choose the next skill.
+Use the orgs response already fetched in Step 3. Enumerate artists per org. Inspect the workspace filesystem.
 
 ```bash
-# Platform side: orgs and artists
-ORGS=$(curl -sS "https://recoup-api.vercel.app/api/organizations" -H "$AUTH_HEADER")
-ORG_COUNT=$(echo "$ORGS" | jq '.organizations | length // 0')
+# Platform side: orgs and artists (reusing the orgs payload from Step 3)
+ORG_COUNT=$(jq '.organizations | length // 0' /tmp/recoup-orgs.json)
 echo "Orgs on platform: $ORG_COUNT"
 
 ARTIST_COUNT=0
 if [ "$ORG_COUNT" -gt 0 ]; then
-  # Sum artist counts across all orgs the account has access to
-  for ORG_ID in $(echo "$ORGS" | jq -r '.organizations[].id'); do
+  for ORG_ID in $(jq -r '.organizations[].id' /tmp/recoup-orgs.json); do
     THIS_ORG_ARTISTS=$(curl -sS "https://recoup-api.vercel.app/api/organizations/$ORG_ID/artists" -H "$AUTH_HEADER" | jq '.artists | length // 0')
     ARTIST_COUNT=$((ARTIST_COUNT + THIS_ORG_ARTISTS))
   done
@@ -176,14 +217,14 @@ fi
 echo "Workspace filesystem: $FS_STATE"
 ```
 
-You now know the four state dimensions:
+You now know the state dimensions Step 5 routes from:
 
 | Variable | Meaning |
 | --- | --- |
-| `$EMAIL` | Real user vs `agent+` throwaway |
-| `$ORG_COUNT` | Does the account belong to any organizations? |
-| `$ARTIST_COUNT` | How many artists exist across those orgs? |
-| `$FS_STATE` | Is the local/sandbox filesystem already scaffolded? |
+| `$RECOUP_EMAIL` | Real user vs `agent+` throwaway vs unknown (returning agent) |
+| `$ORG_COUNT` | How many organizations the account belongs to |
+| `$ARTIST_COUNT` | Artists across all orgs the account can access |
+| `$FS_STATE` | Whether the local/sandbox filesystem is scaffolded yet |
 
 ---
 
@@ -193,8 +234,9 @@ Decide which skill the agent should load next. Match the **first** rule that app
 
 | If… | Then load skill | Why |
 | --- | --- | --- |
-| `$ORG_COUNT = 0` AND `$EMAIL` is a throwaway `agent+` | **`create-artist`** | Brand-new agent demo — create the first artist in the throwaway account. The chain will auto-create a default org. |
-| `$ORG_COUNT = 0` AND `$EMAIL` is a real user | (ask the user) | A real user with no org is unusual. Ask whether they want to (a) create a new org via `https://chat.recoupable.com` or (b) be invited to an existing one. Don't auto-create. |
+| `$ORG_COUNT = 0` AND `$RECOUP_EMAIL` is a throwaway `agent+` | **`create-artist`** | Brand-new agent demo — create the first artist in the throwaway account. The chain will auto-create a default org. |
+| `$ORG_COUNT = 0` AND `$RECOUP_EMAIL` is a real user | (ask the user) | A real user with no org is unusual. Ask: (a) Create an org at `https://chat.recoupable.com`, (b) Be invited to one — paste invite link, (c) Use a throwaway `agent+` account for this session. Don't auto-create. |
+| `$ORG_COUNT = 0` AND `$RECOUP_EMAIL` is unknown (returning agent) | (ask the user) | Email isn't cached. Ask: (a) "Are you a real user? Go to `https://chat.recoupable.com` to create or join an org," (b) "Are you a throwaway agent? Let me create a default artist for you," (c) "Try Step 2 again with your real email to fix this." |
 | `$ORG_COUNT > 0` AND `$ARTIST_COUNT = 0` | **`create-artist`** | They have an org but no artists yet. Walk them through onboarding their first artist. |
 | `$ORG_COUNT > 0` AND `$ARTIST_COUNT > 0` AND `$FS_STATE = empty` AND the cwd looks like a sandbox (`RECOUP_ACCESS_TOKEN` was set, or `$HOME` is `/home/sandbox` or similar) | **`setup-sandbox`** | They have artists on the platform, but the sandbox filesystem isn't scaffolded yet. Build the folder tree from their roster. |
 | `$ORG_COUNT > 0` AND `$ARTIST_COUNT > 0` AND `$FS_STATE = empty` AND BYOA (no sandbox markers) | **`artist-workspace`** | They have artists; the BYOA agent doesn't need a sandbox tree. Tell the user where the agent will read/write artist context. |
@@ -203,7 +245,7 @@ Decide which skill the agent should load next. Match the **first** rule that app
 End your turn with a single-line summary the user can read:
 
 ```text
-Onboarding complete: authenticated as <email>, found <N> orgs and <M> artists, workspace state <FS_STATE>. Next: <skill-name>.
+Onboarding complete: authenticated (<email-or-"identity unknown">), found <N> orgs and <M> artists, workspace state <FS_STATE>. Next: <skill-name>.
 ```
 
 Then load the chosen skill from `recoup-skills` and continue the conversation. Do NOT silently begin doing work — confirm the goal first.
