@@ -115,7 +115,7 @@ Checks performed:
 1. Generated marketplace files match `marketplace.source.json`.
 2. Every plugin's `source` path exists.
 3. Every skill listed in a virtual plugin exists and has valid frontmatter.
-4. Every plugin folder under `plugins/` has `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`.
+4. Every plugin folder under `plugins/` has `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, and `.cursor-plugin/plugin.json`.
 5. Every `SKILL.md` has `name` and `description` frontmatter.
 
 Validation runs on every PR via CI.

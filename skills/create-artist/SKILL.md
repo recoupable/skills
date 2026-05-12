@@ -15,7 +15,7 @@ The chain is **8 sequential API calls**. Long deterministic chains executed from
 
   ```bash
   if [ -n "$RECOUP_ACCESS_TOKEN" ]; then
-    AUTH_HEADER="$AUTH_HEADER"
+    AUTH_HEADER="Authorization: Bearer $RECOUP_ACCESS_TOKEN"
   elif [ -n "$RECOUP_API_KEY" ]; then
     AUTH_HEADER="x-api-key: $RECOUP_API_KEY"
   else

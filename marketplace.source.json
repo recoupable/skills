@@ -1,5 +1,4 @@
 {
-  "$schema": "./scripts/marketplace.source.schema.json",
   "$comment": "Single source of truth for Recoup's marketplace. Run `python3 scripts/generate-marketplaces.py` to regenerate the three platform marketplace files (.claude-plugin/, .agents/plugins/, .cursor-plugin/). Hand-edits to those generated files will be overwritten.",
   "marketplace": {
     "name": "recoup",
