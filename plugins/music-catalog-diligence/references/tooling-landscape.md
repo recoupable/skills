@@ -53,7 +53,7 @@ These companies show the capital workflows the plugin can accelerate.
 
 | Company | Workflow signal |
 | --- | --- |
-| Royalty Exchange | Marketplace underwriting needs standardized royalty history and buyer-facing materials. |
+| Royalty Exchange | Marketplace underwriting requires standardized royalty history and buyer-facing materials. |
 | Duetti | Independent catalog acquisition needs fast master/publishing diligence and post-close operations. |
 | beatBread | Financing workflows need collateral, revenue history, and deal comparison. |
 | Lyric Financial | Advances and credit lines depend on royalty verification and risk controls. |

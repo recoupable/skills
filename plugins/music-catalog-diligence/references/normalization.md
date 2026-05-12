@@ -105,6 +105,10 @@ Golden fixtures live in `fixtures/golden/{provider-scenario}/`:
 - `input.csv` is a small provider-shaped source export.
 - `expected-royalty-ledger.csv` is the exact canonical output expected from the
   normalizer.
+- `expected-status.json` (optional) pins the expected normalizer payload status
+  for fixtures that should resolve to `partial` rather than `ok`. Add this file
+  whenever you build a partial-coverage fixture so the test suite can assert
+  the exact warning shape, not just row content.
 
 The current fixtures are synthetic and documented in
 `fixtures/external-sources.md`. They are based on public schemas and official

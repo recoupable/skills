@@ -124,7 +124,7 @@ Templates and memo structure are in
 - For valuation mechanics, read
   **[references/valuation-framework.md](references/valuation-framework.md)**.
 - For performance royalty traps, read
-  **[references/pro-performance-income.md](references/pro-performance-income.md)**.
+  **[../../references/pro-performance-income.md](../../references/pro-performance-income.md)**.
 - For memo and table formats, read
   **[references/output-templates.md](references/output-templates.md)**.
 - For workspace-level evidence rules, read

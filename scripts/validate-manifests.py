@@ -9,7 +9,8 @@ Checks performed:
   3. Each `skills` entry in a virtual marketplace plugin resolves to a real
      skill folder with a valid SKILL.md (frontmatter: name + description).
   4. Each self-contained plugin folder under `plugins/` exposes the expected
-     manifests (`.claude-plugin/plugin.json` + `.codex-plugin/plugin.json`).
+     manifests (`.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`,
+     and `.cursor-plugin/plugin.json`).
   5. Every SKILL.md under skills/ has `name` and `description` frontmatter.
 
 Zero external dependencies. Python 3.9+ stdlib only.
@@ -59,7 +60,7 @@ def check_generator(errors: list[str]) -> None:
 
 
 def parse_frontmatter(skill_md: Path) -> dict[str, str]:
-    text = skill_md.read_text()
+    text = skill_md.read_text(encoding="utf-8")
     match = FRONTMATTER_RE.match(text)
     if not match:
         raise ValidationError(f"{skill_md.relative_to(REPO_ROOT)}: missing YAML frontmatter")
@@ -99,10 +100,13 @@ def check_plugin_dir(plugin_dir: Path, errors: list[str]) -> None:
     rel = plugin_dir.relative_to(REPO_ROOT)
     claude = plugin_dir / ".claude-plugin" / "plugin.json"
     codex = plugin_dir / ".codex-plugin" / "plugin.json"
+    cursor = plugin_dir / ".cursor-plugin" / "plugin.json"
     if not claude.exists():
         report(errors, f"{rel}: missing .claude-plugin/plugin.json")
     if not codex.exists():
         report(errors, f"{rel}: missing .codex-plugin/plugin.json")
+    if not cursor.exists():
+        report(errors, f"{rel}: missing .cursor-plugin/plugin.json")
     # Walk every SKILL.md inside the plugin's skills folder.
     plugin_skills = plugin_dir / "skills"
     if plugin_skills.exists():

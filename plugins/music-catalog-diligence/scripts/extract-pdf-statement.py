@@ -371,16 +371,27 @@ def row_year(value: str) -> tuple[str, str] | None:
 
 
 def determine_period(template: PDFTemplate, filename: str, row: list[str]) -> tuple[str, str]:
+    # Filename-based templates never index into the row, so they are safe.
     if template.period_format == "filename_quarter":
         return filename_quarter(filename) or filename_year(filename) or ("", "")
     if template.period_format == "filename_year":
         return filename_year(filename) or ("", "")
+
+    # Row-based templates: pull the period cell defensively. Short or malformed
+    # rows would otherwise raise IndexError and drop extraction for that PDF.
+    period_value = ""
+    if (
+        template.period_index is not None
+        and 0 <= template.period_index < len(row)
+    ):
+        period_value = row[template.period_index] or ""
+
     if template.period_format == "row_quarter" and template.period_index is not None:
-        return row_quarter(row[template.period_index] or "") or ("", "")
+        return row_quarter(period_value) or ("", "")
     if template.period_format == "row_year" and template.period_index is not None:
-        return row_year(row[template.period_index] or "") or ("", "")
+        return row_year(period_value) or ("", "")
     if template.period_format == "row_period" and template.period_index is not None:
-        return (row[template.period_index] or "").strip(), ""
+        return period_value.strip(), ""
     return "", ""
 
 
@@ -539,6 +550,7 @@ def main() -> int:
 
     all_rows: list[dict[str, str]] = []
     per_file: list[dict[str, object]] = []
+    had_errors = False
     for pdf in pdfs:
         if workspace_root is not None:
             try:
@@ -551,6 +563,7 @@ def main() -> int:
             rows, info = extract_rows(pdf, rel, forced_template)
         except Exception as exc:  # pragma: no cover - defensive
             per_file.append({"path": rel, "status": "error", "error": str(exc)})
+            had_errors = True
             continue
         if not rows:
             per_file.append({"path": rel, "status": "no_rows", **info})
@@ -573,17 +586,21 @@ def main() -> int:
     output_path = Path(args.output)
     write_ledger(all_rows, output_path)
 
+    # Surface partial-success runs. Returning `ok` when some PDFs failed would
+    # let upstream callers treat a broken ingest as a clean ingest.
+    summary_status = "partial" if had_errors else "ok"
     summary = {
-        "status": "ok",
+        "status": summary_status,
         "input": str(input_path),
         "output": str(output_path),
         "pdfs_scanned": len(pdfs),
         "pdfs_extracted": sum(1 for entry in per_file if entry.get("status") == "ok"),
+        "pdfs_failed": sum(1 for entry in per_file if entry.get("status") == "error"),
         "rows_total": len(all_rows),
         "per_file": per_file,
     }
     print(json.dumps(summary, indent=2))
-    return 0
+    return 1 if had_errors else 0
 
 
 if __name__ == "__main__":

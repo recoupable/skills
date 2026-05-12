@@ -26,11 +26,22 @@ def main() -> int:
 
     path = Path(args.ledger)
     data = json.loads(path.read_text(encoding="utf-8"))
-    entries = data.get("entries")
+
     errors: list[str] = []
-    if not isinstance(entries, list):
-        errors.append("`entries` must be a list")
-        entries = []
+
+    # The top-level shape must be an object before we can call `.get()` on it.
+    # A bare array, string, or null would otherwise crash the validator with
+    # an unhelpful AttributeError.
+    if not isinstance(data, dict):
+        errors.append(
+            f"evidence-ledger.json top level must be an object (got {type(data).__name__})"
+        )
+        entries: list[object] = []
+    else:
+        entries = data.get("entries")
+        if not isinstance(entries, list):
+            errors.append("`entries` must be a list")
+            entries = []
 
     seen: set[str] = set()
     for index, entry in enumerate(entries):
@@ -41,10 +52,18 @@ def main() -> int:
         if missing:
             errors.append(f"entries[{index}] missing fields: {', '.join(missing)}")
         evidence_id = entry.get("evidence_id")
+        # Tracking duplicates only makes sense when the id is a string — and the
+        # field is contractually a string. Flag and skip anything else so
+        # `seen` never holds heterogeneous types.
+        if not isinstance(evidence_id, str):
+            errors.append(
+                f"entries[{index}].evidence_id must be a string "
+                f"(got {type(evidence_id).__name__})"
+            )
+            continue
         if evidence_id in seen:
             errors.append(f"duplicate evidence_id: {evidence_id}")
-        if isinstance(evidence_id, str):
-            seen.add(evidence_id)
+        seen.add(evidence_id)
 
     status = "ok" if not errors else "errors_found"
     print(json.dumps({"status": status, "entries": len(entries), "errors": errors}, indent=2))

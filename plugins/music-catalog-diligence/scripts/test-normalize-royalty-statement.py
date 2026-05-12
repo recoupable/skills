@@ -16,6 +16,8 @@ SCRIPT = Path(__file__).with_name("normalize-royalty-statement.py")
 
 
 def write_csv(path: Path, rows: list[dict[str, str]], delimiter: str = ",") -> None:
+    if not rows:
+        raise ValueError("write_csv requires at least one row to derive column headers")
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()), delimiter=delimiter)
         writer.writeheader()

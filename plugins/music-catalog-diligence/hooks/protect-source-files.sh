@@ -40,8 +40,11 @@ fi
 # The deny rule: any path containing "/source/" inside a deals/ workspace.
 # We require both segments so we do not accidentally block unrelated repos
 # that happen to have a directory called "source" (e.g. a generic src tree).
+# We match relative (`deals/...`), dot-relative (`./deals/...`), and absolute
+# (`/abs/deals/...`) variants so the guard cannot be bypassed by how the agent
+# expresses the path.
 case "$file_path" in
-  */deals/*/source/*)
+  deals/*/source/*|./deals/*/source/*|*/deals/*/source/*)
     reason="Refused write to immutable source file: ${file_path}. "
     reason+="Per references/deal-workspace.md, deals/{deal-id}/source/ holds "
     reason+="raw seller evidence and must not be edited. Write to normalized/, "

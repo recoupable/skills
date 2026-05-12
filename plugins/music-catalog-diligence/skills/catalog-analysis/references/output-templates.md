@@ -33,16 +33,23 @@ Required diligence before final valuation:
 
 ## Quality-of-earnings bridge
 
+This bridge is the canonical adjustment ladder defined in `SKILL.md`. Use every
+line every time so you do not silently understate normalized run-rate by skipping
+an adjustment that does apply.
+
 ```text
-Reported LTM [NPS/NLS]                         $x
-  Less: one-time sync income                   (x)
-  Less: PRO bonus/premium spike                (x)
-  Less: settlement/audit catch-up              (x)
-  Plus/minus: current trend adjustment          x
-  Plus/minus: admin/fee adjustment              x
-  Plus/minus: recoupment/reserve adjustment     x
-  Less: unsupported rights haircut             (x)
-Normalized run-rate [NPS/NLS]                  $x
+Reported LTM [NPS/NLS]                                       $x
+  Less: one-time sync and direct-license spikes              (x)
+  Less: viral, playlist, death-bump, or campaign spikes      (x)
+  Less: settlement, audit recovery, accounting catch-up      (x)
+  Less: non-repeat PRO bonus or premium income               (x)
+  Plus/minus: current run-rate trend adjustment               x
+  Plus/minus: admin, collection, reserve, recoupment,
+              or contract adjustment                          x
+  Plus/minus: undercollection or missing-registration
+              adjustment                                      x
+  Less: unsupported rights haircut                           (x)
+Normalized run-rate [NPS/NLS]                                $x
 ```
 
 Every adjustment needs a source, formula, or note. If an adjustment is judgment,
@@ -69,11 +76,32 @@ label it as judgment.
 
 ## Scenario table
 
+Scenarios bundle several assumption shifts into a single narrative case
+(downside / base / upside). They answer "what is the catalog worth if our whole
+story is right or wrong?"
+
 | Case | Normalized run-rate | Growth/decay | Multiple/DCF note | Value |
 | --- | ---: | ---: | --- | ---: |
 | Downside | `$` | `%` | [assumption] | `$` |
 | Base | `$` | `%` | [assumption] | `$` |
 | Upside | `$` | `%` | [assumption] | `$` |
+
+## Sensitivity table
+
+Sensitivities isolate a single assumption and walk it across a range. They
+answer "how much does value move when this one input moves?" Include at least
+one sensitivity over the multiple (for market-multiple valuations) or the
+discount rate (for DCF), and one over normalized run-rate.
+
+| Input | Range | Resulting value | Notes |
+| --- | --- | ---: | --- |
+| Multiple | `[low]x` / `[base]x` / `[high]x` | `$` / `$` / `$` | Holds normalized run-rate at base. |
+| Discount rate | `[low]%` / `[base]%` / `[high]%` | `$` / `$` / `$` | DCF only. Holds growth/decay at base. |
+| Normalized run-rate | `-[Δ]%` / base / `+[Δ]%` | `$` / `$` / `$` | Holds multiple/discount rate at base. |
+| Decay rate | `[base]%` / `[stress]%` | `$` / `$` | If catalog has clear decay curve. |
+
+Pair the sensitivity table with the scenario table in the deliverable. Scenarios
+without sensitivities hide which assumption is doing the work.
 
 ## Risk register
 

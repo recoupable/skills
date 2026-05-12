@@ -165,6 +165,24 @@ if [ -z "$RECOUP_ACCOUNT_ID" ] && [ -f ~/.config/recoup/account.json ]; then
   RECOUP_EMAIL=$(jq -r '.email // empty' ~/.config/recoup/account.json)
 fi
 
+# Validate the cached/injected account_id against the current auth token.
+# Why: ~/.config/recoup/account.json may have been written by a previous
+# session with a different token. If the current token does not actually
+# control this account, we would misclassify the active account and route
+# onboarding into the wrong workspace. Fall back to "returning agent with no
+# cached identity" when the validation call does not return 200.
+if [ -n "$RECOUP_ACCOUNT_ID" ]; then
+  VHTTP=$(curl -sS -o /dev/null -w "%{http_code}" \
+    "https://recoup-api.vercel.app/api/accounts/$RECOUP_ACCOUNT_ID/subscription" \
+    -H "$AUTH_HEADER")
+  if [ "$VHTTP" != "200" ]; then
+    echo "Cached account_id $RECOUP_ACCOUNT_ID is not readable with the current token (HTTP $VHTTP)."
+    echo "Discarding cached identity to avoid misclassifying the account."
+    RECOUP_ACCOUNT_ID=""
+    RECOUP_EMAIL=""
+  fi
+fi
+
 if [ -n "$RECOUP_EMAIL" ]; then
   echo "Account: $RECOUP_EMAIL (id: $RECOUP_ACCOUNT_ID)"
 elif [ -n "$RECOUP_ACCOUNT_ID" ]; then
