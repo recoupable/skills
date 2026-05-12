@@ -32,6 +32,41 @@
         "content-creation",
         "agent-skills"
       ]
+    },
+    {
+      "name": "music-catalog-diligence",
+      "source": "plugins/music-catalog-diligence",
+      "description": "Review royalties, rights, valuation, and deal materials for music catalog transactions.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Recoup",
+        "email": "agent@recoupable.com"
+      },
+      "homepage": "https://recoupable.com",
+      "repository": "https://github.com/recoupable/skills",
+      "license": "Apache-2.0",
+      "category": "Music",
+      "keywords": [
+        "music",
+        "catalogs",
+        "diligence",
+        "royalties",
+        "music-rights",
+        "data-room",
+        "valuation",
+        "catalog-diligence",
+        "seller-prep",
+        "financing",
+        "chain-of-title",
+        "royalty-audit",
+        "agent-skills"
+      ],
+      "tags": [
+        "music-catalog-diligence",
+        "royalty-normalization",
+        "rights-diligence",
+        "valuation"
+      ]
     }
   ]
 }
