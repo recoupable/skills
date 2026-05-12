@@ -1,0 +1,17 @@
+{
+  "skill_name": "seller-prep",
+  "evals": [
+    {
+      "id": "seller-cleanup-before-market",
+      "prompt": "A seller wants to go to market in two weeks, but the data room has missing split sheets, inconsistent track metadata, and royalty statements from several providers. Build a cleanup plan.",
+      "expected_output": "The agent prioritizes fixes by valuation impact and buyer diligence friction, creates a missing-file request list, separates must-fix items from disclosure items, and avoids over-polishing low-value issues.",
+      "files": []
+    },
+    {
+      "id": "avoidable-discount-risk",
+      "prompt": "Prepare a seller cleanup report that identifies issues likely to cause avoidable price reductions in a catalog sale.",
+      "expected_output": "The agent identifies rights gaps, royalty normalization issues, concentration caveats, and memo-ready remediation steps, while explaining how each issue could affect buyer confidence or valuation.",
+      "files": []
+    }
+  ]
+}

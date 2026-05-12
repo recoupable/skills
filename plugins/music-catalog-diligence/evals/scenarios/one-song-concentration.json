@@ -1,0 +1,12 @@
+{
+  "id": "one-song-concentration",
+  "workflow": "buy-side",
+  "prompt": "The catalog has 500 tracks, but 72% of net income comes from one song and 80% of that song's income comes from Spotify.",
+  "expected_behaviors": [
+    "Treats track count as misleading",
+    "Calculates song and platform concentration",
+    "Separates top-song value from long-tail value",
+    "Applies sensitivity or concentration discount",
+    "Explains platform risk clearly"
+  ]
+}

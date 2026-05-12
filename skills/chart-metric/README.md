@@ -4,8 +4,19 @@ A skill for AI agents to access music industry analytics via the Chartmetric API
 
 ## Install
 
+This skill ships in the [`recoup-skills`](https://github.com/recoupable/skills) plugin. Install via your agent's marketplace:
+
 ```bash
-npx skills add recoupable/chartmetric
+# Claude Code
+/plugin marketplace add recoupable/skills
+/plugin install recoup-skills@recoup
+
+# Codex
+codex plugin marketplace add recoupable/skills
+codex plugin install recoup-skills@recoup
+
+# Vercel skills CLI (works in 18+ agents)
+npx skills add recoupable/skills --skill chart-metric
 ```
 
 ## What It Does

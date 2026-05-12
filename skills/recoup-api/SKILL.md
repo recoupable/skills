@@ -1,11 +1,11 @@
 ---
 name: recoup-api
-description: Call the Recoupable API from the sandbox to fetch artist data, socials, organizations, research, documents and any other platform resource — and to invoke external connector actions (Google Docs / Drive / Sheets edits, Gmail, TikTok, Instagram, etc.) via Recoupable's shared connections. Use whenever you're asked for Recoup data, a Recoupable platform resource, or to read/write something outside Recoup like a Google Doc URL or a spreadsheet. Triggers on phrases like "look up artist", "fetch from recoup", "artist data", "artist socials", "organizations", "artist report", "research", "create new artist", "create artist", "onboard artist", "add artist", "edit this Google Doc", "read this doc", "update the spreadsheet", "send an email", "post on TikTok", "save to Drive", or whenever the user pastes a docs.google.com / drive.google.com / sheets.google.com URL. Always load this before writing curl calls against recoup-api.vercel.app.
+description: Call the Recoup API from the sandbox to fetch artist data, socials, organizations, research, documents and any other platform resource — and to invoke external connector actions (Google Docs / Drive / Sheets edits, Gmail, TikTok, Instagram, etc.) via Recoup's shared connections. Use whenever you're asked for Recoup data, a Recoup platform resource, or to read/write something outside Recoup like a Google Doc URL or a spreadsheet. Triggers on phrases like "look up artist", "fetch from recoup", "artist data", "artist socials", "organizations", "artist report", "research", "create new artist", "create artist", "onboard artist", "add artist", "edit this Google Doc", "read this doc", "update the spreadsheet", "send an email", "post on TikTok", "save to Drive", or whenever the user pastes a docs.google.com / drive.google.com / sheets.google.com URL. Always load this before writing curl calls against recoup-api.vercel.app.
 ---
 
-# Recoupable API
+# Recoup API
 
-Call the Recoupable production API to fetch artist data, social metrics, org context, research, and to trigger platform operations.
+Call the Recoup production API to fetch artist data, social metrics, org context, research, and to trigger platform operations.
 
 - **Base URL:** `https://recoup-api.vercel.app/api`
 - **LLM-readable docs:** `https://developers.recoupable.com` — Mintlify site. Use `/llms.txt` for the endpoint index, `/llms-full.txt` for full content, and the OpenAPI JSONs listed below for machine-readable schemas.

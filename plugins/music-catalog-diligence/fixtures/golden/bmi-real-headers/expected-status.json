@@ -1,0 +1,23 @@
+{
+  "status": "partial",
+  "provider": "BMI",
+  "rows": 3,
+  "field_population_rate": 0.0,
+  "expected_columns_not_found_includes": [
+    "Amount",
+    "Amount Paid",
+    "Gross Amount",
+    "Net",
+    "Period End",
+    "Period Start",
+    "Publisher Net",
+    "Statement Qtr"
+  ],
+  "headers_seen": [
+    "title",
+    "writer",
+    "iswc",
+    "share_pct",
+    "net_royalty_usd"
+  ]
+}

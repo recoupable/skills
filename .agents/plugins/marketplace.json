@@ -1,0 +1,92 @@
+{
+  "name": "recoup",
+  "description": "Recoup's marketplace of AI agent skills and plugins for the music industry.",
+  "owner": {
+    "name": "Recoup",
+    "email": "agent@recoupable.com",
+    "url": "https://recoupable.com"
+  },
+  "interface": {
+    "displayName": "Recoup"
+  },
+  "plugins": [
+    {
+      "name": "recoup-skills",
+      "description": "Music-industry skills for AI agents — artist management, songwriting, analytics, release campaigns, research, content creation.",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Music",
+      "keywords": [
+        "music",
+        "artist-management",
+        "songwriting",
+        "music-marketing",
+        "analytics",
+        "release-management",
+        "chartmetric",
+        "content-creation",
+        "agent-skills"
+      ],
+      "interface": {
+        "displayName": "Recoup Skills",
+        "shortDescription": "Music industry skills for AI agents",
+        "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and create content. General skills work for anyone; platform skills integrate with the Recoup platform.",
+        "developerName": "Recoup",
+        "category": "Music",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://recoupable.com",
+        "brandColor": "#345A5D"
+      }
+    },
+    {
+      "name": "music-catalog-diligence",
+      "description": "Review royalties, rights, valuation, and deal materials for music catalog transactions.",
+      "source": {
+        "source": "local",
+        "path": "./plugins/music-catalog-diligence"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Music",
+      "keywords": [
+        "music",
+        "catalogs",
+        "diligence",
+        "royalties",
+        "music-rights",
+        "data-room",
+        "valuation",
+        "catalog-diligence",
+        "seller-prep",
+        "financing",
+        "chain-of-title",
+        "royalty-audit",
+        "agent-skills"
+      ],
+      "interface": {
+        "displayName": "Music Catalog Diligence",
+        "shortDescription": "Review royalties, rights, valuation, and deal materials for catalog transactions",
+        "longDescription": "Turn messy catalog data rooms into source-cited deal packages with normalized royalty data, rights exceptions, valuation workpapers, and buyer, seller, or lender-ready memos.",
+        "developerName": "Recoup",
+        "category": "Music",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://recoupable.com",
+        "brandColor": "#345A5D"
+      }
+    }
+  ]
+}

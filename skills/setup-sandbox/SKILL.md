@@ -29,7 +29,7 @@ Create the folder structure for the connected account's organizations and artist
 
 ## `RECOUP.md`
 
-Every artist directory has a `RECOUP.md` at its root. This is the **identity file** — it connects the workspace to the Recoupable platform. The existence of this file means the workspace is active.
+Every artist directory has a `RECOUP.md` at its root. This is the **identity file** — it connects the workspace to the Recoup platform. The existence of this file means the workspace is active.
 
 Fill it with data from the CLI response:
 
@@ -37,7 +37,7 @@ Fill it with data from the CLI response:
 ---
 artistName: {Artist Name}
 artistSlug: {artist-slug}
-artistId: {uuid-from-recoupable}
+artistId: {uuid-from-recoup}
 ---
 ```
 

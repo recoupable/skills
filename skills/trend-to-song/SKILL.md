@@ -164,7 +164,7 @@ After each pipeline run, document what happened:
 - Next time:
 ```
 
-## Integration with Recoupable
+## Integration with Recoup
 
 - Use the content agent to generate video edits once the song exists
 - The song can be added to an artist's catalog via the standard song pipeline

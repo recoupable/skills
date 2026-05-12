@@ -1,0 +1,23 @@
+{
+  "skill_name": "catalog-analysis",
+  "evals": [
+    {
+      "id": "pro-bonus-spike",
+      "prompt": "This publishing catalog did $1.2M of LTM NPS, so at a 15x multiple it should be worth $18M. Most of the jump came from ASCAP/BMI performance royalties tied to one big TV/radio quarter. Build the valuation.",
+      "expected_output": "The agent challenges the flat multiple, decomposes performance income, separates base and bonus/premium or one-time income, normalizes run-rate, shows a bridge from raw LTM to sustainable NPS, and gives a risk-adjusted valuation range.",
+      "files": []
+    },
+    {
+      "id": "recoupment-cliff",
+      "prompt": "This master catalog has strong gross streaming revenue, but most artists are currently unrecouped and several accounts are close to recouping. Project the value.",
+      "expected_output": "The agent models NLS rather than gross receipts, identifies recoupment as a timing/cash-flow issue, shows pre- and post-recoupment cash-flow scenarios, and flags post-close artist royalty obligations.",
+      "files": []
+    },
+    {
+      "id": "concentration-risk",
+      "prompt": "The catalog has 500 tracks, but 72% of net income comes from one song and 80% of that song's income comes from Spotify. What is it worth?",
+      "expected_output": "The agent performs concentration analysis, applies caveats or haircuts, uses downside/base/upside scenarios, avoids treating track count as diversification, and explains platform and song-level risk.",
+      "files": []
+    }
+  ]
+}

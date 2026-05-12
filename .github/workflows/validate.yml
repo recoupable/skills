@@ -1,0 +1,22 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check marketplace files are in sync with source
+        run: python3 scripts/generate-marketplaces.py --check
+
+      - name: Validate all manifests + skills
+        run: python3 scripts/validate-manifests.py
