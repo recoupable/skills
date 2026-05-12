@@ -1,10 +1,10 @@
-# Agent Instructions — Recoupable Skills Marketplace
+# Agent Instructions — Recoup Skills Marketplace
 
 This file provides context for any AI agent operating within this repository.
 
 ## Repository Purpose
 
-This is **Recoupable's unified marketplace** of agent skills and plugins for the music industry. It is simultaneously:
+This is **Recoup's unified marketplace** of agent skills and plugins for the music industry. It is simultaneously:
 
 1. A **skill collection** — broad music skills under `skills/`.
 2. A **plugin marketplace** — installable bundles listed in three platform marketplace files at the repo root.
@@ -60,7 +60,7 @@ The `description` field is the trigger. If it's vague, the skill won't activate.
 
 | Location | Owned by | When to add here |
 | -------- | -------- | ---------------- |
-| `skills/{name}/` | the `recoupable-skills` virtual plugin | Generic music skill that any music operator might use |
+| `skills/{name}/` | the `recoup-skills` virtual plugin | Generic music skill that any music operator might use |
 | `plugins/{plugin-name}/skills/{name}/` | that specific plugin | Skill that depends on the plugin's templates, scripts, agents, commands, or workspace |
 
 A new vertical plugin earns its own folder under `plugins/` when it has **at least 3 related skills** AND needs commands, agents, scripts, templates, or MCP integrations.

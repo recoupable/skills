@@ -6,7 +6,7 @@ We welcome contributions — new music-industry skills and new vertical plugins.
 
 | Type of contribution | Where it goes |
 | -------------------- | ------------- |
-| A generic music skill (anyone in the music business might use it) | `skills/{skill-name}/` — listed in the `recoupable-skills` plugin |
+| A generic music skill (anyone in the music business might use it) | `skills/{skill-name}/` — listed in the `recoup-skills` plugin |
 | A vertical workflow with 3+ related skills, commands, agents, or scripts | A new plugin folder under `plugins/{plugin-name}/` |
 | A new skill that belongs to an existing vertical plugin | Inside that plugin: `plugins/{plugin}/skills/{skill-name}/` |
 
@@ -32,7 +32,7 @@ When in doubt, start as a skill under `skills/`. Promote to a plugin when the wo
 
 3. Write clear instructions in the body. Keep `SKILL.md` under 5,000 words — move heavy reference material to `references/`.
 
-4. Add the skill path to `marketplace.source.json` under the `recoupable-skills` plugin's `skills` array:
+4. Add the skill path to `marketplace.source.json` under the `recoup-skills` plugin's `skills` array:
 
    ```jsonc
    "skills": [
@@ -85,7 +85,7 @@ When in doubt, start as a skill under `skills/`. Promote to a plugin when the wo
      "name": "my-plugin",
      "version": "0.1.0",
      "description": "What this plugin does.",
-     "author": { "name": "Recoupable", "email": "agent@recoupable.com" },
+     "author": { "name": "Recoup", "email": "agent@recoupable.com" },
      "license": "Apache-2.0"
    }
    ```

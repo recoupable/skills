@@ -124,5 +124,5 @@ generate a shareable readiness summary.
 
 ## About
 
-[Recoupable](https://recoupable.com) builds AI-powered infrastructure for music
+[Recoup](https://recoupable.com) builds AI-powered infrastructure for music
 operators.

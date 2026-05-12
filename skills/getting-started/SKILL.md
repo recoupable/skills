@@ -1,9 +1,9 @@
 ---
 name: getting-started
-description: Onboard to Recoupable — detect the user's auth + roster state, install the CLI and create an API key only when needed, then route the agent to the right next skill (`setup-sandbox`, `create-artist`, or `artist-workspace`). Use when the user says "set up Recoupable", "install Recoup", "get an API key", "connect to Recoup", "onboard to Recoup", "use Recoupable", "how do I start", "I'm new here", or any time the agent needs to bootstrap itself before doing Recoup work. Also use as the first skill in any conversation that starts from `developers.recoupable.com` or `chat.recoupable.com` and asks the agent to install plugins and skills.
+description: Onboard to Recoup — detect the user's auth + roster state, install the CLI and create an API key only when needed, then route the agent to the right next skill (`setup-sandbox`, `create-artist`, or `artist-workspace`). Use when the user says "set up Recoup", "install Recoup", "get an API key", "connect to Recoup", "onboard to Recoup", "use Recoup", "how do I start", "I'm new here", or any time the agent needs to bootstrap itself before doing Recoup work. Also use as the first skill in any conversation that starts from `developers.recoupable.com` or `chat.recoupable.com` and asks the agent to install plugins and skills.
 ---
 
-# Getting Started with Recoupable
+# Getting Started with Recoup
 
 This skill is the **onboarding orchestrator**. It detects where the user is in their Recoup journey, fills in the missing pieces (CLI install, API key, sandbox setup), and routes the agent to the right next skill for the user's actual work.
 
@@ -206,7 +206,7 @@ End your turn with a single-line summary the user can read:
 Onboarding complete: authenticated as <email>, found <N> orgs and <M> artists, workspace state <FS_STATE>. Next: <skill-name>.
 ```
 
-Then load the chosen skill from `recoupable-skills` and continue the conversation. Do NOT silently begin doing work — confirm the goal first.
+Then load the chosen skill from `recoup-skills` and continue the conversation. Do NOT silently begin doing work — confirm the goal first.
 
 ---
 
@@ -223,22 +223,22 @@ Once the user is set up, these skills handle specific workflows:
 | `chartmetric` | Music analytics — streaming, audience, playlists, charts |
 | `content-creation` | Generate social videos, images, captions, lipsync clips |
 | `music-industry-research` | Artist + people + competitive research via Recoup `/research/*` |
-| `recoup-api` | Reference for calling the Recoupable API directly |
+| `recoup-api` | Reference for calling the Recoup API directly |
 
 For the catalog-diligence vertical (royalty audits, rights diligence, valuation), install the catalog plugin separately:
 
 ```bash
-/plugin install music-catalog-diligence@recoupable
+/plugin install music-catalog-diligence@recoup
 ```
 
 ## Connect via MCP (BYOA only)
 
-If the agent supports MCP (Claude Code, Cursor, Codex), configure the Recoupable MCP server so the agent can call Recoup tools natively:
+If the agent supports MCP (Claude Code, Cursor, Codex), configure the Recoup MCP server so the agent can call Recoup tools natively:
 
 ```json
 {
   "mcpServers": {
-    "recoupable": {
+    "recoup": {
       "url": "https://recoup-api.vercel.app/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_RECOUP_API_KEY"

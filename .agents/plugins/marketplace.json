@@ -1,17 +1,17 @@
 {
-  "name": "recoupable",
-  "description": "Recoupable's marketplace of AI agent skills and plugins for the music industry.",
+  "name": "recoup",
+  "description": "Recoup's marketplace of AI agent skills and plugins for the music industry.",
   "owner": {
-    "name": "Recoupable",
+    "name": "Recoup",
     "email": "agent@recoupable.com",
     "url": "https://recoupable.com"
   },
   "interface": {
-    "displayName": "Recoupable"
+    "displayName": "Recoup"
   },
   "plugins": [
     {
-      "name": "recoupable-skills",
+      "name": "recoup-skills",
       "description": "Music-industry skills for AI agents — artist management, songwriting, analytics, release campaigns, research, content creation.",
       "source": {
         "source": "local",
@@ -34,10 +34,10 @@
         "agent-skills"
       ],
       "interface": {
-        "displayName": "Recoupable Skills",
+        "displayName": "Recoup Skills",
         "shortDescription": "Music industry skills for AI agents",
-        "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and create content. General skills work for anyone; platform skills integrate with the Recoupable platform.",
-        "developerName": "Recoupable",
+        "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and create content. General skills work for anyone; platform skills integrate with the Recoup platform.",
+        "developerName": "Recoup",
         "category": "Music",
         "capabilities": [
           "Read",
@@ -78,7 +78,7 @@
         "displayName": "Music Catalog Diligence",
         "shortDescription": "Review royalties, rights, valuation, and deal materials for catalog transactions",
         "longDescription": "Turn messy catalog data rooms into source-cited deal packages with normalized royalty data, rights exceptions, valuation workpapers, and buyer, seller, or lender-ready memos.",
-        "developerName": "Recoupable",
+        "developerName": "Recoup",
         "category": "Music",
         "capabilities": [
           "Read",

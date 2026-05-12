@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate Recoupable marketplace files for Claude Code, Codex, and Cursor.
+Generate Recoup marketplace files for Claude Code, Codex, and Cursor.
 
 Reads marketplace.source.json (the single source of truth) and writes three
 platform-specific marketplace files:
@@ -79,7 +79,7 @@ def build_codex(source: dict[str, Any]) -> dict[str, Any]:
         "description": mp["description"],
         "owner": mp["owner"],
         "interface": {
-            "displayName": "Recoupable",
+            "displayName": "Recoup",
         },
         "plugins": [],
     }
@@ -105,7 +105,7 @@ def build_codex(source: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_cursor(source: dict[str, Any]) -> dict[str, Any]:
-    """Cursor marketplace.json (matches current Recoupable Cursor pattern)."""
+    """Cursor marketplace.json (matches current Recoup Cursor pattern)."""
     mp = source["marketplace"]
     out: dict[str, Any] = {
         "name": mp["name"],

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Review royalties, rights, valuation, and deal materials for music catalog transactions.",
   "author": {
-    "name": "Recoupable",
+    "name": "Recoup",
     "email": "agent@recoupable.com",
     "url": "https://recoupable.com"
   },
@@ -30,7 +30,7 @@
     "displayName": "Music Catalog Diligence",
     "shortDescription": "Review royalties, rights, valuation, and deal materials for catalog transactions",
     "longDescription": "Turn messy catalog data rooms into source-cited deal packages with normalized royalty data, rights exceptions, valuation workpapers, and buyer, seller, or lender-ready memos.",
-    "developerName": "Recoupable",
+    "developerName": "Recoup",
     "category": "Music",
     "capabilities": ["Read", "Write"],
     "websiteURL": "https://recoupable.com",
