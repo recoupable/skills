@@ -9,6 +9,20 @@ The canonical recipe used internally by Recoup's `create-content` background tas
 
 Two paths are documented below: the **async pipeline** that an LLM agent should use, and the **manual walkthrough** for humans (or for cases where you want to swap a single step).
 
+## Setup (run once, before any curl below)
+
+Set `$AUTH_HEADER` based on whichever auth env var is present. Every curl in this skill uses `-H "$AUTH_HEADER"`.
+
+```bash
+if [ -n "$RECOUP_ACCESS_TOKEN" ]; then
+  AUTH_HEADER="Authorization: Bearer $RECOUP_ACCESS_TOKEN"
+elif [ -n "$RECOUP_API_KEY" ]; then
+  AUTH_HEADER="x-api-key: $RECOUP_API_KEY"
+else
+  echo "No Recoup auth found. Set RECOUP_API_KEY (BYOA — get a key at developers.recoupable.com) or RECOUP_ACCESS_TOKEN (sandbox)."; exit 1
+fi
+```
+
 ## Running as an agent? Use the async pipeline
 
 `POST /api/content/video` is synchronous and routinely takes 60–180s. Most agent shells (Claude Cowork, OpenAI tool calls, etc.) cap a single command at 30–60s and kill background processes when the shell exits. The manual walkthrough below is effectively un-runnable from those environments.
@@ -18,7 +32,7 @@ Use the async path instead. Same five steps, run server-side:
 ```bash
 # Trigger
 RUN_IDS=$(curl -sS -X POST "https://api.recoupable.com/api/content/create" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
+  -H "$AUTH_HEADER" -H "Content-Type: application/json" \
   -d "$(jq -n --arg artist "$ARTIST_ACCOUNT_ID" --arg template "$TEMPLATE" \
         '{artist_account_id: $artist, template: $template}')" \
   | jq -r '.runIds[]')
@@ -26,7 +40,7 @@ RUN_IDS=$(curl -sS -X POST "https://api.recoupable.com/api/content/create" \
 # Poll (every ~10s) until COMPLETED / FAILED / CANCELED / CRASHED
 RUN_ID=$(echo "$RUN_IDS" | head -1)
 until STATUS=$(curl -sS "https://api.recoupable.com/api/tasks/runs?runId=$RUN_ID" \
-                 -H "x-api-key: $RECOUP_API_KEY" \
+                 -H "$AUTH_HEADER" \
                | jq -r '.runs[0].status') && \
       [[ "$STATUS" =~ ^(COMPLETED|FAILED|CANCELED|CRASHED)$ ]]; do
   sleep 10
@@ -34,7 +48,7 @@ done
 
 # Read the output
 curl -sS "https://api.recoupable.com/api/tasks/runs?runId=$RUN_ID" \
-  -H "x-api-key: $RECOUP_API_KEY" \
+  -H "$AUTH_HEADER" \
   | jq '.runs[0].output'
 # -> { videoSourceUrl, imageUrl, captionText, template, lipsync, audio: {...} }
 ```
@@ -47,10 +61,10 @@ Polling fits inside short shell timeouts and survives session restarts. See [Tas
 
 ```bash
 ORG_ID=$(curl -sS "https://api.recoupable.com/api/organizations" \
-  -H "x-api-key: $RECOUP_API_KEY" | jq -r '.organizations[0].id')
+  -H "$AUTH_HEADER" | jq -r '.organizations[0].id')
 
 ARTIST_ACCOUNT_ID=$(curl -sS "https://api.recoupable.com/api/artists?org_id=$ORG_ID" \
-  -H "x-api-key: $RECOUP_API_KEY" \
+  -H "$AUTH_HEADER" \
   | jq -r --arg name "$ARTIST_NAME" '.artists[] | select(.name == $name) | .account_id')
 ```
 
@@ -84,12 +98,9 @@ The rest of this skill walks the same steps you can run by hand or call individu
 
 ### Prerequisites
 
-- An auth credential for `api.recoupable.com`. Two options. Pick one and use it for every call below:
-  - **API key** (`recoup_sk_…`, recommended for sandbox / agent use): pass as `-H "x-api-key: $RECOUP_API_KEY"`.
-    - One-shot agent: `POST /api/agents/signup` with an `agent+{unique}@recoupable.com` email returns the key immediately.
-    - Real-email signup: same endpoint with a real email mails a 6-digit code; complete with `POST /api/agents/verify`. See [Agents](https://developers.recoupable.com/agents).
-  - **Privy access token** (for end-user flows in chat/UI): pass as `-H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"`.
-  - The examples below use `x-api-key`. Substitute `Authorization: Bearer …` if you're using a Privy token.
+- **`$AUTH_HEADER`** — set once via the [Setup](#setup-run-once-before-any-curl-below) block at the top of this skill. Resolves to either `Authorization: Bearer $RECOUP_ACCESS_TOKEN` (sandbox) or `x-api-key: $RECOUP_API_KEY` (BYOA). To get a BYOA key:
+  - One-shot agent signup: `POST /api/agents/signup` with an `agent+{unique}@recoupable.com` email returns a key immediately.
+  - Real-email signup: same endpoint with a real email mails a 6-digit code; complete with `POST /api/agents/verify`. See [Agents](https://developers.recoupable.com/agents).
 - `$ARTIST_NAME`, `$SONG_TITLE`, `$SONG_LYRICS_CLIP` (a 1–2 sentence mood snippet)
 - `$REFERENCE_IMAGE_URL` *(optional)*: an artist photo or album cover to seed the image. If your template's purpose is "show this exact image" (e.g. `album-record-store`), set this and skip image generation in step 2.
 - A `song.mp3` for step 5. **Don't ask the user for a local file.** Fetch from the artist's repo via `/api/sandboxes/file`.
@@ -137,13 +148,13 @@ Templates carry the prompt, reference images, and styling that drive the rest of
 
 ```bash
 curl -sS "https://api.recoupable.com/api/content/templates" \
-  -H "x-api-key: $RECOUP_API_KEY" \
+  -H "$AUTH_HEADER" \
   | jq -r '.templates[] | "\(.id): \(.description)"'
 
 TEMPLATE="album-record-store"   # or artist-caption-{bedroom,outside,stage}
 
 TEMPLATE_DETAIL=$(curl -sS "https://api.recoupable.com/api/content/templates/$TEMPLATE" \
-  -H "x-api-key: $RECOUP_API_KEY")
+  -H "$AUTH_HEADER")
 ```
 
 **Templates that list "Requires: face image"** (e.g. `artist-caption-bedroom`) will fall back to their bundled reference images and produce a generic-likeness subject if you don't supply one. They don't 400. Pass `$REFERENCE_IMAGE_URL` if you want the model to preserve a specific artist's likeness, or omit it for a stock-feeling result.
@@ -162,7 +173,7 @@ REFS=$(echo "$TEMPLATE_DETAIL" | jq -c '[.image.reference_images[]?]')
 # $REFS is 5–15 URLs depending on the template; pass all of them via images[]
 
 IMAGE_URL=$(curl -sS -X POST "https://api.recoupable.com/api/content/image" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
+  -H "$AUTH_HEADER" -H "Content-Type: application/json" \
   -d "$(jq -n --arg prompt "$PROMPT" --argjson refs "$REFS" \
         --arg ref "$REFERENCE_IMAGE_URL" \
         '{prompt: $prompt, images: $refs} + (if $ref == "" then {} else {reference_image_url: $ref} end)')" \
@@ -184,7 +195,7 @@ Same endpoint for both, swap `type`. Skip if you don't need the resolution bump.
 ```bash
 # Image (after step 2)
 IMAGE_URL=$(curl -sS -X POST "https://api.recoupable.com/api/content/upscale" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
+  -H "$AUTH_HEADER" -H "Content-Type: application/json" \
   -d "$(jq -n --arg url "$IMAGE_URL" '{url: $url, type: "image"}')" \
   | jq -r '.url')
 
@@ -201,7 +212,7 @@ Pass the image and a short motion prompt. For lipsync, also pass a presigned `au
 MOTION=$(echo "$TEMPLATE_DETAIL" | jq -r '.video.movements[0] // "Slow camera drift, subtle subject motion"')
 
 VIDEO_URL=$(curl -sS --max-time 360 -X POST "https://api.recoupable.com/api/content/video" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
+  -H "$AUTH_HEADER" -H "Content-Type: application/json" \
   -d "$(jq -n --arg image "$IMAGE_URL" --arg prompt "$MOTION" \
         '{image_url: $image, prompt: $prompt, aspect_ratio: "9:16"}')" \
   | jq -r '.videoUrl')
@@ -219,7 +230,7 @@ See [Generate Video](https://developers.recoupable.com/api-reference/content/gen
 TOPIC="Song: \"$SONG_TITLE\". Lyrics: \"$SONG_LYRICS_CLIP\". Artist: $ARTIST_NAME."
 
 CAPTION_RESPONSE=$(curl -sS -X POST "https://api.recoupable.com/api/content/caption" \
-  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
+  -H "$AUTH_HEADER" -H "Content-Type: application/json" \
   -d "$(jq -n --arg topic "$TOPIC" --arg template "$TEMPLATE" \
         '{topic: $topic, template: $template, length: "short"}')")
 
