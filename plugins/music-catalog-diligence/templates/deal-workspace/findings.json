@@ -1,0 +1,17 @@
+{
+  "deal_id": "",
+  "generated_at": "",
+  "findings": [
+    {
+      "finding_id": "F-001",
+      "severity": "example",
+      "category": "example",
+      "affected_assets": [],
+      "evidence_ids": [],
+      "issue": "Replace this example finding with a real diligence issue.",
+      "valuation_treatment": "",
+      "follow_up": "",
+      "status": "open"
+    }
+  ]
+}

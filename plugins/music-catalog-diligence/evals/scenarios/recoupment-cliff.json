@@ -1,0 +1,12 @@
+{
+  "id": "recoupment-cliff",
+  "workflow": "buy-side",
+  "prompt": "A master catalog has strong gross streaming revenue, but most artist accounts are unrecouped and several are close to recouping. Project value.",
+  "expected_behaviors": [
+    "Models NLS instead of gross revenue",
+    "Identifies current cash flow versus post-recoupment cash flow",
+    "Flags missing recoupment schedules or contract terms",
+    "Shows downside and base cases",
+    "Recommends valuation treatment for near-recouped accounts"
+  ]
+}

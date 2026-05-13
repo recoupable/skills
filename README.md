@@ -9,8 +9,7 @@ One repo. Multiple installable plugins. Works with Claude Code, Codex, and Curso
 | Plugin | What it is | What you get |
 | ------ | ---------- | ------------ |
 | [`recoup-skills`](./skills/) | Broad music-industry skills | Artist management, songwriting, analytics, release campaigns, research, content creation, brand |
-
-> Self-contained vertical plugins (under `plugins/`) ship in follow-up PRs.
+| [`music-catalog-diligence`](./plugins/music-catalog-diligence/) | Vertical bundle for catalog deals | Royalty normalization, rights diligence, valuation workpapers, IC memos — skills + agents + commands + scripts |
 
 ## Install
 
@@ -19,6 +18,7 @@ One repo. Multiple installable plugins. Works with Claude Code, Codex, and Curso
 ```bash
 /plugin marketplace add recoupable/skills
 /plugin install recoup-skills@recoup
+/plugin install music-catalog-diligence@recoup
 ```
 
 ### Codex
@@ -26,6 +26,7 @@ One repo. Multiple installable plugins. Works with Claude Code, Codex, and Curso
 ```bash
 codex plugin marketplace add recoupable/skills
 codex plugin install recoup-skills@recoup
+codex plugin install music-catalog-diligence@recoup
 ```
 
 ### Cursor
@@ -50,6 +51,12 @@ The `recoup-skills` plugin exposes these skills from `./skills/`:
 | [song-writing](./skills/song-writing) | Structured songwriting using the 7 C's method |
 | [streaming-growth](./skills/streaming-growth) | Grow a new artist past streaming milestones |
 | [trend-to-song](./skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
+
+## Plugins (self-contained vertical bundles)
+
+Each plugin under `./plugins/` is a self-contained bundle with its own skills, agents, commands, scripts, and templates.
+
+- [`music-catalog-diligence/`](./plugins/music-catalog-diligence/) — review royalties, rights, valuation, and deal materials for music catalog transactions. 9 skills + 5 agents + 6 commands + scripts + templates + evals + fixtures.
 
 ## Maintenance
 

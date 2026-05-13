@@ -1,0 +1,23 @@
+{
+  "skill_name": "catalog-ingest",
+  "evals": [
+    {
+      "id": "messy-data-room",
+      "prompt": "I just got a music catalog data room from a seller. It has CSV and XLSX royalty statements from a distributor, a publisher admin export, ASCAP/BMI statement PDFs, YouTube Content ID reports, a track list with ISRCs, and a folder of contracts. Clean it up and get it ready for valuation.",
+      "expected_output": "The agent inventories files, classifies source types, profiles and cleans data before transformation, creates a canonical catalog table and royalty ledger with source lineage, flags missing rights/metadata support, and does not jump straight to valuation.",
+      "files": []
+    },
+    {
+      "id": "metadata-conflicts",
+      "prompt": "These two spreadsheets are supposed to be the same catalog, but titles, writers, ISRCs, and splits do not match. Merge them into one clean catalog file.",
+      "expected_output": "The agent detects conflicts, preserves both source values, assigns confidence levels, asks or flags unresolved merge decisions, verifies splits sum to expected totals, and avoids silently picking one value.",
+      "files": []
+    },
+    {
+      "id": "unsupported-income",
+      "prompt": "The royalty statements show income for 40 songs, but the legal folder only has split sheets and publishing agreements for 23 of them. Build the ingest package.",
+      "expected_output": "The agent keeps unsupported income in the ledger, marks rights support as missing or low confidence, creates a missing-file tracker, and separates financial fact from transferability/ownership certainty.",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "missing-chain-of-title",
+  "workflow": "buy-side",
+  "prompt": "The statements show income for 40 songs, but only 23 songs have split sheets or publishing agreements. Review rights support.",
+  "expected_behaviors": [
+    "Keeps unsupported income visible",
+    "Marks unsupported assets with low rights confidence",
+    "Creates missing-file requests",
+    "Separates financial performance from transferable value",
+    "Recommends exclusion, haircut, escrow, or holdback for unsupported assets"
+  ]
+}
