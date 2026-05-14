@@ -11,8 +11,18 @@ The chain is **8 sequential API calls**. Long deterministic chains executed from
 
 ## Prerequisites
 
-- `$RECOUP_ACCESS_TOKEN` — Bearer token for `api.recoupable.com`
-- `$RECOUP_ORG_ID` — the org the artist should belong to (recommended in sandboxes)
+- **Recoup auth** — either `$RECOUP_ACCESS_TOKEN` (sandbox-injected Bearer) OR `$RECOUP_API_KEY` (BYOA, used as `x-api-key`). The chain works with whichever is set. Set `$AUTH_HEADER` once at the top so every curl uses the right auth:
+
+  ```bash
+  if [ -n "$RECOUP_ACCESS_TOKEN" ]; then
+    AUTH_HEADER="Authorization: Bearer $RECOUP_ACCESS_TOKEN"
+  elif [ -n "$RECOUP_API_KEY" ]; then
+    AUTH_HEADER="x-api-key: $RECOUP_API_KEY"
+  else
+    echo "No Recoup auth found. Set RECOUP_API_KEY (BYOA — get a key at developers.recoupable.com) or RECOUP_ACCESS_TOKEN (sandbox)."; exit 1
+  fi
+  ```
+- `$RECOUP_ORG_ID` — the org the artist should belong to (recommended in sandboxes; optional elsewhere)
 - An artist name to create (e.g. `ARTIST_NAME="The Weeknd"`)
 - The artist's `RECOUP.md` already scaffolded (see `artist-workspace` skill, Step 0)
 
@@ -39,7 +49,7 @@ If every item is checked, the artist is fully set up — confirm with the user b
 
 ```bash
 ARTIST_RESPONSE=$(curl -sS -X POST "https://api.recoupable.com/api/artists" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   -H "Content-Type: application/json" \
   -d "$(jq -n --arg name "$ARTIST_NAME" --arg org "$RECOUP_ORG_ID" \
         '{name: $name, organization_id: $org}')")
@@ -57,7 +67,7 @@ Full request/response schema: `https://developers.recoupable.com/api-reference/a
 
 ```bash
 SPOTIFY=$(curl -sS -G "https://api.recoupable.com/api/spotify/search" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   --data-urlencode "q=$ARTIST_NAME" \
   --data-urlencode "type=artist" \
   --data-urlencode "limit=10")
@@ -91,7 +101,7 @@ One `PATCH` covers the image and the Spotify social URL. Use **uppercase** platf
 
 ```bash
 curl -sS -X PATCH "https://api.recoupable.com/api/artists/$ARTIST_ID" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   -H "Content-Type: application/json" \
   -d "$(jq -n --arg image "$SPOTIFY_IMAGE_URL" --arg url "$SPOTIFY_PROFILE_URL" \
         '{image: $image, profileUrls: {SPOTIFY: $url}}')"
@@ -111,7 +121,7 @@ Most of the structured research endpoints take a Chartmetric `artist_id`, not th
 
 ```bash
 LOOKUP=$(curl -sS -G "https://api.recoupable.com/api/research/lookup" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   --data-urlencode "spotifyId=$SPOTIFY_ARTIST_ID")
 
 CM_ARTIST_ID=$(echo "$LOOKUP" | jq -r '.artist.id // empty')
@@ -127,7 +137,7 @@ Returns bio, genres, social URLs, label, career stage, and basic metrics — mos
 
 ```bash
 PROFILE=$(curl -sS -G "https://api.recoupable.com/api/research/profile" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   --data-urlencode "id=$CM_ARTIST_ID")
 ```
 
@@ -139,7 +149,7 @@ Career milestones, trajectory, and career-stage classification — covers the "n
 
 ```bash
 CAREER=$(curl -sS -G "https://api.recoupable.com/api/research/career" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   --data-urlencode "id=$CM_ARTIST_ID")
 ```
 
@@ -151,7 +161,7 @@ Replaces the "playlists / radio rotations / editorial features" portion of the d
 
 ```bash
 PLAYLISTS=$(curl -sS -G "https://api.recoupable.com/api/research/playlists" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   --data-urlencode "id=$CM_ARTIST_ID")
 ```
 
@@ -163,7 +173,7 @@ Structured endpoints don't cover press coverage, cultural narrative, or recent f
 
 ```bash
 RESEARCH_WEB=$(curl -sS -X POST "https://api.recoupable.com/api/research/web" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   -H "Content-Type: application/json" \
   -d "$(jq -n --arg name "$ARTIST_NAME" \
         '{query: ($name + " biography press recent collaborations")}')")
@@ -177,16 +187,16 @@ Full schema: `https://developers.recoupable.com/api-reference/research/web`.
 
 ```bash
 TOP_TRACKS=$(curl -sS -G "https://api.recoupable.com/api/spotify/artist/topTracks" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   --data-urlencode "id=$SPOTIFY_ARTIST_ID")
 
 ALBUMS=$(curl -sS -G "https://api.recoupable.com/api/spotify/artist/albums" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   --data-urlencode "id=$SPOTIFY_ARTIST_ID")
 
 # For each notable album, drill in (ALBUM_ID from $ALBUMS):
 ALBUM_DETAIL=$(curl -sS -G "https://api.recoupable.com/api/spotify/album" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   --data-urlencode "id=$ALBUM_ID")
 ```
 
@@ -200,7 +210,7 @@ Full schemas: top tracks (`/api-reference/spotify/artist-top-tracks`), albums (`
 
 ```bash
 SOCIALS_SEARCH=$(curl -sS -X POST "https://api.recoupable.com/api/research/web" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   -H "Content-Type: application/json" \
   -d "$(jq -n --arg name "$ARTIST_NAME" \
         '{query: ($name + " official instagram tiktok twitter youtube")}')")
@@ -214,7 +224,7 @@ Parse the results to extract any new social URLs whose host matches the platform
 
 ```bash
 curl -sS -X PATCH "https://api.recoupable.com/api/artists/$ARTIST_ID" \
-  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "$AUTH_HEADER" \
   -H "Content-Type: application/json" \
   -d '{
     "profileUrls": {
