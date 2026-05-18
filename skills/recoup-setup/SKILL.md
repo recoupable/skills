@@ -1,11 +1,11 @@
 ---
 name: recoup-setup
-description: First-run setup for Recoup inside Claude Code. Walks a customer through email + PIN verification, issues an API key tied to their real account, persists it locally, looks up their org via the Recoup API, and seeds Claude's memory so future music-industry questions (streaming, campaigns, artists, releases, document syncing) route through the recoup-api skill. Use this skill the first time someone installs the Recoupable skills plugin, or when they say "set up Recoup", "install Recoup in Claude Code", "connect Claude to Recoup", or "I just joined the Recoup enterprise deal".
+description: First-run setup for Recoup inside Claude. Walks a customer through email + PIN verification, issues an API key tied to their real account, persists it locally, looks up their org via the Recoup API, and seeds Claude's memory so future music-industry questions (streaming, campaigns, artists, releases, document syncing) route through the recoup-api skill. Use this skill the first time someone installs the Recoupable skills plugin, or when they say "set up Recoup", "install Recoup", "connect Claude to Recoup", or "I just joined the Recoup enterprise deal".
 ---
 
-# Set up Recoup in Claude Code
+# Set up Recoup in Claude
 
-End-to-end onboarding for a fresh Claude Code install. Run once per machine after `/plugin marketplace add recoupable/skills`. Takes a couple of minutes (an email PIN round-trip) and is idempotent — safe to re-run.
+End-to-end onboarding for a fresh Claude install. Run once per machine after installing the Recoupable plugin. Takes a couple of minutes (an email PIN round-trip) and is idempotent — safe to re-run.
 
 ## What this skill does
 
@@ -15,7 +15,7 @@ End-to-end onboarding for a fresh Claude Code install. Run once per machine afte
 4. Save the key to `~/.claude/recoup.env`.
 5. Verify the key works.
 6. Look up which org(s) the account belongs to via the Recoup API.
-7. Seed `~/.claude/CLAUDE.md` so Claude routes music-industry questions through Recoup.
+7. Print a memory block for the customer to paste into Claude's global instructions, and best-effort write to `~/.claude/CLAUDE.md`.
 8. Print a smoke-test prompt.
 
 Confirm each command before running anything that writes to the home directory or shell profile.
@@ -37,7 +37,7 @@ If the file is missing or the key is invalid, continue.
 
 ## Step 2 — Confirm the customer's email
 
-Look for the customer's email in the current Claude Code session context (e.g. `# userEmail` block in the system prompt, or earlier conversation). If found, confirm it:
+Look for the customer's email in the current Claude session context (e.g. `# userEmail` block in the system prompt, or earlier conversation). If found, confirm it:
 
 > Should I register Recoup under `<email>`? A 6-digit verification code will be emailed there.
 
@@ -93,16 +93,22 @@ EOF
 chmod 600 ~/.claude/recoup.env
 ```
 
-Offer to source it from the shell profile so it's available every session. **Ask before editing dotfiles.** If yes:
+Offer to source it from the shell profile so it's available every session. Only edit a dotfile that actually exists, and **ask before touching it**:
 
 ```bash
-SHELL_RC="$HOME/.zshrc"
-[ -f "$HOME/.bashrc" ] && SHELL_RC="$HOME/.bashrc"
-grep -q "recoup.env" "$SHELL_RC" || \
-  echo '[ -f ~/.claude/recoup.env ] && source ~/.claude/recoup.env' >> "$SHELL_RC"
+SHELL_RC=""
+[ -f "$HOME/.zshrc" ] && SHELL_RC="$HOME/.zshrc"
+[ -z "$SHELL_RC" ] && [ -f "$HOME/.bashrc" ] && SHELL_RC="$HOME/.bashrc"
+
+if [ -n "$SHELL_RC" ]; then
+  grep -q "recoup.env" "$SHELL_RC" || \
+    echo '[ -f ~/.claude/recoup.env ] && source ~/.claude/recoup.env' >> "$SHELL_RC"
+else
+  echo "No shell profile found — skipping. Run 'source ~/.claude/recoup.env' each session."
+fi
 ```
 
-If declined, mention they can `source ~/.claude/recoup.env` per session.
+If the customer declines, or no shell profile exists, mention they can `source ~/.claude/recoup.env` per session.
 
 ## Step 6 — Look up the account's org(s)
 
@@ -111,22 +117,22 @@ Now that the key works, use the **`recoup-api` skill** (already installed as par
 Interpret the result:
 
 - **One org:** that's the account's org. Use it without asking.
-- **Multiple orgs:** ask which one this Claude Code instance is being set up for.
-  > You have access to: <list of org names>. Which should I focus this Claude Code instance on?
+- **Multiple orgs:** ask which one this Claude instance is being set up for.
+  > You have access to: <list of org names>. Which should I focus this Claude instance on?
 - **No orgs:** record `unspecified` and continue.
 
 Export the chosen org name as `$ORG_CONTEXT` (and the id as `$ORG_ID` if returned) so Step 7 can capture it.
 
-## Step 7 — Seed Claude Code memory
+## Step 7 — Seed Claude's memory
 
-Append a Recoup block to `~/.claude/CLAUDE.md` between sentinel markers so re-runs replace cleanly. Do not overwrite other content.
+Claude keeps cross-session memory in **Settings → Global instructions** (the textbox where you give Claude standing rules). The customer must paste the memory block there themselves — there is no API to write to it on their behalf.
+
+Generate the block, best-effort write it to `~/.claude/CLAUDE.md` (a fallback location some Claude surfaces read), and print it verbatim so the customer can copy it.
 
 ```bash
 export ORG_CONTEXT
 python3 - <<'PYEOF'
 import os, pathlib, re, datetime
-path = pathlib.Path.home() / ".claude" / "CLAUDE.md"
-existing = path.read_text() if path.exists() else ""
 block = f"""<!-- recoup-setup:start -->
 ## Recoup is installed
 
@@ -162,15 +168,31 @@ directly via the `recoup-api` skill.
 | Lyrics / song structure | `song-writing`, `trend-to-song` |
 <!-- recoup-setup:end -->
 """
-pattern = re.compile(r"<!-- recoup-setup:start -->.*?<!-- recoup-setup:end -->\n?", re.DOTALL)
-if pattern.search(existing):
-    new = pattern.sub(block, existing)
-else:
-    new = (existing.rstrip() + "\n\n" + block) if existing else block
-path.write_text(new)
-print(f"Wrote {path}")
+
+# Best-effort write to ~/.claude/CLAUDE.md (some surfaces read this).
+try:
+    path = pathlib.Path.home() / ".claude" / "CLAUDE.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    existing = path.read_text() if path.exists() else ""
+    pattern = re.compile(r"<!-- recoup-setup:start -->.*?<!-- recoup-setup:end -->\n?", re.DOTALL)
+    if pattern.search(existing):
+        new = pattern.sub(block, existing)
+    else:
+        new = (existing.rstrip() + "\n\n" + block) if existing else block
+    path.write_text(new)
+    print(f"Also written to {path} as a fallback for surfaces that read it.")
+except Exception as e:
+    print(f"(Could not write fallback file: {e})")
+
+print("\n----- COPY THE BLOCK BETWEEN THE LINES -----\n")
+print(block)
+print("----- END BLOCK -----")
 PYEOF
 ```
+
+Then tell the customer:
+
+> Open Claude → **Settings → Global instructions**, paste the block above (between the dashed lines), and save. That's how Claude will remember to use Recoup for music-industry questions in future sessions.
 
 Pass `ORG_CONTEXT` through the environment so the block records the org name resolved in Step 6.
 
