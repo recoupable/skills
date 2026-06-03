@@ -22,7 +22,8 @@ EMPTY_EVIDENCE_WARN_THRESHOLD = 0.20
 def _read_json(path: Path):
     """Read + parse JSON, raising on any read/parse failure.
 
-    Callers decide whether a failure is fatal (findings) or tolerable (ledger).
+    Callers handle a *missing* file (tolerable for the ledger) before calling
+    this; once a file exists, any read/parse failure is fatal.
     """
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -38,14 +39,12 @@ def load_findings(workspace: Path) -> list[dict]:
 
 def load_evidence_ids(workspace: Path) -> set[str]:
     ledger_path = workspace / "evidence-ledger.json"
+    # A missing ledger is tolerable (no evidence resolved yet). A ledger that
+    # exists but cannot be read/parsed must be fatal — silently treating it as
+    # empty would let validation report "ok" without checking any references.
     if not ledger_path.is_file():
         return set()
-    try:
-        data = _read_json(ledger_path)
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-        # A malformed ledger means no resolvable evidence ids; broken-reference
-        # detection will surface the downstream problem without crashing here.
-        return set()
+    data = _read_json(ledger_path)
     entries = data.get("entries", []) if isinstance(data, dict) else []
     return {
         entry.get("evidence_id")
@@ -89,7 +88,17 @@ def main() -> int:
         print(json.dumps(payload, indent=2))
         return 1
 
-    ledger_ids = load_evidence_ids(workspace)
+    try:
+        ledger_ids = load_evidence_ids(workspace)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        ledger_path = workspace / "evidence-ledger.json"
+        payload = {
+            "status": "invalid_ledger_file",
+            "workspace": str(workspace),
+            "errors": [f"could not parse {ledger_path}: {error}"],
+        }
+        print(json.dumps(payload, indent=2))
+        return 1
 
     high_without_evidence: list[str] = []
     broken_refs: list[dict[str, str]] = []
