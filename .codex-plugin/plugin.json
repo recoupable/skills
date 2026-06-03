@@ -22,7 +22,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Recoupable Skills",
+    "displayName": "Recoup Skills",
     "shortDescription": "Music industry skills for AI agents",
     "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and more. General skills work for anyone — platform skills integrate with the Recoupable platform.",
     "developerName": "Recoupable",

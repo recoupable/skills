@@ -1,4 +1,4 @@
-# Recoupable Skills
+# Recoup Skills
 
 AI agent skills for the music industry. Teach your coding agent how to manage artists, write songs, analyze analytics, plan releases, and more.
 
@@ -49,7 +49,8 @@ skills/
     ├── SKILL.md              ← required
     ├── references/           ← optional — docs loaded on-demand
     ├── scripts/              ← optional — executable code
-    └── assets/               ← optional — templates, fonts, icons
+    ├── templates/            ← optional — scaffold files copied into a workspace
+    └── fixtures/             ← optional — sample / golden data
 ```
 
 See [contributing.md](contributing.md) for guidelines.

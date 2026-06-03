@@ -1,4 +1,4 @@
-# Agent Instructions — Recoupable Skills
+# Agent Instructions — Recoup Skills
 
 This file provides context for any AI agent operating within this repository.
 
