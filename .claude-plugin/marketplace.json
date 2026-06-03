@@ -69,8 +69,8 @@
       ]
     },
     {
-      "name": "recoup-catalogs-plugin",
-      "source": "./plugins/catalog",
+      "name": "recoup-deals-plugin",
+      "source": "./plugins/deals",
       "description": "Music catalog deals: data-room ingestion, royalty normalization, rights checks, and valuation analysis for buy-side, seller-prep, financing, and post-close.",
       "version": "0.3.0",
       "author": {

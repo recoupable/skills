@@ -2,177 +2,161 @@
   "_comment": "Maps each canonical shared file to its vendored copies. Every copy is kept byte-identical by scripts/check_vendored.py. Populated as skills are made self-contained (Phase 2). See AGENTS.md 'Portable Skill Contract'.",
   "groups": [
     {
-      "canonical": "plugins/catalog/references/deal-workflow.md",
+      "canonical": "plugins/deals/references/deal-workflow.md",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-kickoff/references/deal-workflow.md",
-        "plugins/catalog/skills/recoup-deal-kickoff/references/deal-workflow.md"
+        "plugins/deals/skills/recoup-deal-start/references/deal-workflow.md"
       ]
     },
     {
-      "canonical": "plugins/catalog/references/deal-workspace.md",
+      "canonical": "plugins/deals/references/deal-workspace.md",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analysis/references/deal-workspace.md",
-        "plugins/catalog/skills/recoup-catalog-ingest/references/deal-workspace.md",
-        "plugins/catalog/skills/recoup-deal-kickoff/references/deal-workspace.md"
+        "plugins/deals/skills/recoup-deal-analysis/references/deal-workspace.md",
+        "plugins/deals/skills/recoup-deal-ingest/references/deal-workspace.md",
+        "plugins/deals/skills/recoup-deal-start/references/deal-workspace.md"
       ]
     },
     {
-      "canonical": "plugins/catalog/references/normalization.md",
+      "canonical": "plugins/deals/references/normalization.md",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-ingest/references/normalization.md"
+        "plugins/deals/skills/recoup-deal-ingest/references/normalization.md"
       ]
     },
     {
-      "canonical": "plugins/catalog/references/red-flags.md",
+      "canonical": "plugins/deals/references/red-flags.md",
       "copies": [
-        "plugins/catalog/skills/recoup-deal-kickoff/references/red-flags.md",
-        "plugins/catalog/skills/recoup-rights-review/references/red-flags.md"
+        "plugins/deals/skills/recoup-deal-start/references/red-flags.md",
+        "plugins/deals/skills/recoup-deal-analysis/references/red-flags.md"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/_helpers.py",
+      "canonical": "plugins/deals/scripts/_helpers.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/_helpers.py",
-        "plugins/catalog/skills/recoup-catalog-dashboard/scripts/_helpers.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/_helpers.py",
-        "plugins/catalog/skills/recoup-catalog-ingest/scripts/_helpers.py",
-        "plugins/catalog/skills/recoup-catalog-package/scripts/_helpers.py",
-        "plugins/catalog/skills/recoup-catalog-qc/scripts/_helpers.py",
-        "plugins/catalog/skills/recoup-catalog-report/scripts/_helpers.py"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/_helpers.py",
+        "plugins/deals/skills/recoup-deal-dashboard/scripts/_helpers.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/_helpers.py",
+        "plugins/deals/skills/recoup-deal-ingest/scripts/_helpers.py",
+        "plugins/deals/skills/recoup-deal-report/scripts/_helpers.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/auto-column-map.py",
+      "canonical": "plugins/deals/scripts/auto-column-map.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/auto-column-map.py"
+        "plugins/deals/skills/recoup-deal-start/scripts/auto-column-map.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/build-deal-readiness.py",
+      "canonical": "plugins/deals/scripts/build-deal-readiness.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/build-deal-readiness.py",
-        "plugins/catalog/skills/recoup-catalog-package/scripts/build-deal-readiness.py",
-        "plugins/catalog/skills/recoup-catalog-qc/scripts/build-deal-readiness.py"
+        "plugins/deals/skills/recoup-deal-start/scripts/build-deal-readiness.py",
+        "plugins/deals/skills/recoup-deal-report/scripts/build-deal-readiness.py",
+        "plugins/deals/skills/recoup-deal-dashboard/scripts/build-deal-readiness.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/build-file-manifest.py",
+      "canonical": "plugins/deals/scripts/build-file-manifest.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/build-file-manifest.py",
-        "plugins/catalog/skills/recoup-catalog-ingest/scripts/build-file-manifest.py"
+        "plugins/deals/skills/recoup-deal-start/scripts/build-file-manifest.py",
+        "plugins/deals/skills/recoup-deal-ingest/scripts/build-file-manifest.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/build-manual-review-queue.py",
+      "canonical": "plugins/deals/scripts/build-manual-review-queue.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/build-manual-review-queue.py",
-        "plugins/catalog/skills/recoup-catalog-ingest/scripts/build-manual-review-queue.py"
+        "plugins/deals/skills/recoup-deal-start/scripts/build-manual-review-queue.py",
+        "plugins/deals/skills/recoup-deal-ingest/scripts/build-manual-review-queue.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/calculate-concentration.py",
+      "canonical": "plugins/deals/scripts/calculate-concentration.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/calculate-concentration.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/calculate-concentration.py",
-        "plugins/catalog/skills/recoup-catalog-ingest/scripts/calculate-concentration.py"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/calculate-concentration.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/calculate-concentration.py",
+        "plugins/deals/skills/recoup-deal-ingest/scripts/calculate-concentration.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/calculate-nps-nls-bridge.py",
+      "canonical": "plugins/deals/scripts/calculate-nps-nls-bridge.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/calculate-nps-nls-bridge.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/calculate-nps-nls-bridge.py"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/calculate-nps-nls-bridge.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/calculate-nps-nls-bridge.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/dataroom-hygiene-scan.py",
+      "canonical": "plugins/deals/scripts/dataroom-hygiene-scan.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/dataroom-hygiene-scan.py",
-        "plugins/catalog/skills/recoup-catalog-ingest/scripts/dataroom-hygiene-scan.py"
+        "plugins/deals/skills/recoup-deal-start/scripts/dataroom-hygiene-scan.py",
+        "plugins/deals/skills/recoup-deal-ingest/scripts/dataroom-hygiene-scan.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/extract-pdf-statement.py",
-      "copies": []
-    },
-    {
-      "canonical": "plugins/catalog/scripts/normalize-royalty-statement.py",
+      "canonical": "plugins/deals/scripts/normalize-royalty-statement.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/normalize-royalty-statement.py",
-        "plugins/catalog/skills/recoup-catalog-ingest/scripts/normalize-royalty-statement.py"
+        "plugins/deals/skills/recoup-deal-start/scripts/normalize-royalty-statement.py",
+        "plugins/deals/skills/recoup-deal-ingest/scripts/normalize-royalty-statement.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/run-deal-checks.py",
+      "canonical": "plugins/deals/scripts/run-deal-checks.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/run-deal-checks.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/run-deal-checks.py",
-        "plugins/catalog/skills/recoup-catalog-package/scripts/run-deal-checks.py",
-        "plugins/catalog/skills/recoup-catalog-qc/scripts/run-deal-checks.py"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/run-deal-checks.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/run-deal-checks.py",
+        "plugins/deals/skills/recoup-deal-report/scripts/run-deal-checks.py",
+        "plugins/deals/skills/recoup-deal-dashboard/scripts/run-deal-checks.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/validate-dashboard.py",
+      "canonical": "plugins/deals/scripts/validate-dashboard.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/validate-dashboard.py",
-        "plugins/catalog/skills/recoup-catalog-dashboard/scripts/validate-dashboard.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/validate-dashboard.py",
-        "plugins/catalog/skills/recoup-catalog-package/scripts/validate-dashboard.py",
-        "plugins/catalog/skills/recoup-catalog-qc/scripts/validate-dashboard.py",
-        "plugins/catalog/skills/recoup-catalog-report/scripts/validate-dashboard.py"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/validate-dashboard.py",
+        "plugins/deals/skills/recoup-deal-dashboard/scripts/validate-dashboard.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/validate-dashboard.py",
+        "plugins/deals/skills/recoup-deal-report/scripts/validate-dashboard.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/validate-deal-workspace.py",
+      "canonical": "plugins/deals/scripts/validate-deal-workspace.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/validate-deal-workspace.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/validate-deal-workspace.py",
-        "plugins/catalog/skills/recoup-catalog-kickoff/scripts/validate-deal-workspace.py",
-        "plugins/catalog/skills/recoup-catalog-package/scripts/validate-deal-workspace.py",
-        "plugins/catalog/skills/recoup-catalog-qc/scripts/validate-deal-workspace.py"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/validate-deal-workspace.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/validate-deal-workspace.py",
+        "plugins/deals/skills/recoup-deal-report/scripts/validate-deal-workspace.py",
+        "plugins/deals/skills/recoup-deal-dashboard/scripts/validate-deal-workspace.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/validate-evidence-ledger.py",
+      "canonical": "plugins/deals/scripts/validate-evidence-ledger.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/validate-evidence-ledger.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/validate-evidence-ledger.py",
-        "plugins/catalog/skills/recoup-catalog-package/scripts/validate-evidence-ledger.py",
-        "plugins/catalog/skills/recoup-catalog-qc/scripts/validate-evidence-ledger.py"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/validate-evidence-ledger.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/validate-evidence-ledger.py",
+        "plugins/deals/skills/recoup-deal-report/scripts/validate-evidence-ledger.py",
+        "plugins/deals/skills/recoup-deal-dashboard/scripts/validate-evidence-ledger.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/validate-findings-evidence.py",
+      "canonical": "plugins/deals/scripts/validate-findings-evidence.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/validate-findings-evidence.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/validate-findings-evidence.py",
-        "plugins/catalog/skills/recoup-catalog-ingest/scripts/validate-findings-evidence.py",
-        "plugins/catalog/skills/recoup-catalog-package/scripts/validate-findings-evidence.py",
-        "plugins/catalog/skills/recoup-catalog-qc/scripts/validate-findings-evidence.py"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/validate-findings-evidence.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/validate-findings-evidence.py",
+        "plugins/deals/skills/recoup-deal-ingest/scripts/validate-findings-evidence.py",
+        "plugins/deals/skills/recoup-deal-report/scripts/validate-findings-evidence.py",
+        "plugins/deals/skills/recoup-deal-dashboard/scripts/validate-findings-evidence.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/validate-normalized-ledger.py",
+      "canonical": "plugins/deals/scripts/validate-normalized-ledger.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/validate-normalized-ledger.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/validate-normalized-ledger.py",
-        "plugins/catalog/skills/recoup-catalog-package/scripts/validate-normalized-ledger.py",
-        "plugins/catalog/skills/recoup-catalog-qc/scripts/validate-normalized-ledger.py"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/validate-normalized-ledger.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/validate-normalized-ledger.py",
+        "plugins/deals/skills/recoup-deal-report/scripts/validate-normalized-ledger.py",
+        "plugins/deals/skills/recoup-deal-dashboard/scripts/validate-normalized-ledger.py"
       ]
     },
     {
-      "canonical": "plugins/catalog/scripts/validate-workspace-consistency.py",
+      "canonical": "plugins/deals/scripts/validate-workspace-consistency.py",
       "copies": [
-        "plugins/catalog/skills/recoup-catalog-analyze/scripts/validate-workspace-consistency.py",
-        "plugins/catalog/skills/recoup-catalog-deal/scripts/validate-workspace-consistency.py",
-        "plugins/catalog/skills/recoup-catalog-package/scripts/validate-workspace-consistency.py",
-        "plugins/catalog/skills/recoup-catalog-qc/scripts/validate-workspace-consistency.py"
-      ]
-    },
-    {
-      "canonical": "plugins/catalog/skills/recoup-catalog-analysis/references/pro-performance-income.md",
-      "copies": [
-        "plugins/catalog/skills/recoup-royalty-audit/references/pro-performance-income.md"
+        "plugins/deals/skills/recoup-deal-analysis/scripts/validate-workspace-consistency.py",
+        "plugins/deals/skills/recoup-deal-start/scripts/validate-workspace-consistency.py",
+        "plugins/deals/skills/recoup-deal-report/scripts/validate-workspace-consistency.py",
+        "plugins/deals/skills/recoup-deal-dashboard/scripts/validate-workspace-consistency.py"
       ]
     },
     {
@@ -214,19 +198,17 @@
       ]
     },
     {
-      "canonical_dir": "plugins/catalog/fixtures/demo-data-room",
+      "canonical_dir": "plugins/deals/fixtures/demo-data-room",
       "copies_dirs": [
-        "plugins/catalog/skills/recoup-catalog-demo/fixtures/demo-data-room"
+        "plugins/deals/skills/recoup-deal-demo/fixtures/demo-data-room"
       ]
     },
     {
-      "canonical_dir": "plugins/catalog/templates/deal-workspace",
+      "canonical_dir": "plugins/deals/templates/deal-workspace",
       "copies_dirs": [
-        "plugins/catalog/skills/recoup-catalog-deal/templates/deal-workspace",
-        "plugins/catalog/skills/recoup-catalog-demo/templates/deal-workspace",
-        "plugins/catalog/skills/recoup-catalog-kickoff/templates/deal-workspace",
-        "plugins/catalog/skills/recoup-catalog-package/templates/deal-workspace",
-        "plugins/catalog/skills/recoup-ic-memo-package/templates/deal-workspace"
+        "plugins/deals/skills/recoup-deal-start/templates/deal-workspace",
+        "plugins/deals/skills/recoup-deal-demo/templates/deal-workspace",
+        "plugins/deals/skills/recoup-deal-report/templates/deal-workspace"
       ]
     }
   ]
