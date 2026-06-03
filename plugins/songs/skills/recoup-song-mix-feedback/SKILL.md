@@ -1,5 +1,5 @@
 ---
-name: recoup-song-mix-feedback-reviewer
+name: recoup-song-mix-feedback
 description: Give a technical mix critique of a song from its audio using Recoup's audio language model (Music Flamingo). Use when asked to "critique this mix", "what should I fix in the mix", "is the low end muddy", "give me mix notes", or "review this master". Needs a public audio URL. The model is a critique aid, not a replacement for an engineer or metering.
 ---
 

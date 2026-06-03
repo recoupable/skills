@@ -1,5 +1,5 @@
 ---
-name: recoup-song-playlist-pitch-maker
+name: recoup-song-playlist-pitch
 description: Turn a song's audio into playlist and editorial pitch materials using Recoup's audio language model (Music Flamingo). Use when asked to "write a playlist pitch", "pitch this to Spotify", "what playlists does this fit", "make a DSP pitch from this audio", or "give me positioning for this single". Needs a public audio URL.
 ---
 
@@ -17,7 +17,7 @@ gotchas) is in `references/flamingo-api.md`. Read it before calling.
 - "What playlists does this fit?"
 - "Give me positioning for this single"
 
-For a sync/licensing brief instead, use `recoup-song-sync-brief-maker`.
+For a sync/licensing brief instead, use `recoup-song-sync-brief`.
 
 ## Preset chain
 

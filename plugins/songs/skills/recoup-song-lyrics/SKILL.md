@@ -1,5 +1,5 @@
 ---
-name: recoup-song-lyrics-transcriber
+name: recoup-song-lyrics
 description: Transcribe a song's lyrics from its audio into a sectioned lyric sheet using Recoup's audio language model (Music Flamingo). Use when asked to "transcribe the lyrics", "get the lyrics from this song", "make a lyric sheet", "write out the words", "find explicit lines", or "make a clean/radio lyric reference". Needs a public audio URL. Output is a draft for human review.
 ---
 
@@ -17,7 +17,7 @@ gotchas) is in `references/flamingo-api.md`. Read it before calling.
 - "Make a lyric sheet"
 - "Find the explicit lines" / "make a clean/radio reference"
 
-For full catalog metadata, use `recoup-song-metadata-tagger`.
+For full catalog metadata, use `recoup-song-metadata`.
 
 ## Preset chain
 

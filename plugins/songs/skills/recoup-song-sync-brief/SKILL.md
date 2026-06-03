@@ -1,5 +1,5 @@
 ---
-name: recoup-song-sync-brief-maker
+name: recoup-song-sync-brief
 description: Turn a song's audio into a music-supervisor-ready sync brief using Recoup's audio language model (Music Flamingo). Use when asked to "make a sync brief", "where could this song be placed", "is this brand safe for sync", "find scenes this track fits", or "audit this for licensing risks". Needs a public audio URL.
 ---
 
@@ -17,7 +17,7 @@ gotchas) is in `references/flamingo-api.md`. Read it before calling.
 - "Is this brand safe for sync?"
 - "Audit this for licensing/sample risk"
 
-For a DSP/playlist pitch instead, use `recoup-song-playlist-pitch-maker`.
+For a DSP/playlist pitch instead, use `recoup-song-playlist-pitch`.
 
 ## Preset chain
 

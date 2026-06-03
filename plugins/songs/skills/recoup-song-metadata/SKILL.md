@@ -1,5 +1,5 @@
 ---
-name: recoup-song-metadata-tagger
+name: recoup-song-metadata
 description: Turn a song's audio into structured catalog metadata using Recoup's audio language model (Music Flamingo). Use when asked to "tag this song", "generate catalog metadata", "get BPM/key/genre/mood", "create searchable metadata", "fill release metadata from audio", or to enrich a track or small catalog for DSPs, catalog systems, and release docs. Needs a public audio URL.
 ---
 
@@ -18,8 +18,8 @@ gotchas) is in `references/flamingo-api.md`. Read it before calling.
 - "Make searchable metadata for these tracks"
 - "Fill release metadata from the audio"
 
-For lyrics specifically, use `recoup-song-lyrics-transcriber`. For a playlist
-pitch, use `recoup-song-playlist-pitch-maker`.
+For lyrics specifically, use `recoup-song-lyrics`. For a playlist
+pitch, use `recoup-song-playlist-pitch`.
 
 ## Preset chain
 

@@ -21,15 +21,15 @@ Match the user's ask to the smallest useful action:
 - **"What key / BPM / genre / mood is this?"** → single preset `catalog_metadata`
   (add `music_theory` for chords/sections).
 - **"Tag this / catalog metadata / searchable metadata"** → hand off to
-  `recoup-song-metadata-tagger`.
+  `recoup-song-metadata`.
 - **"Transcribe the lyrics / get the words / lyric sheet"** → hand off to
-  `recoup-song-lyrics-transcriber`.
+  `recoup-song-lyrics`.
 - **"Playlist pitch / pitch to Spotify / what playlists fit"** → hand off to
-  `recoup-song-playlist-pitch-maker`.
+  `recoup-song-playlist-pitch`.
 - **"Sync brief / where could this be placed / brand safe for sync"** → hand off
-  to `recoup-song-sync-brief-maker`.
+  to `recoup-song-sync-brief`.
 - **"Critique the mix / mix notes / what should I fix"** → hand off to
-  `recoup-song-mix-feedback-reviewer`.
+  `recoup-song-mix-feedback`.
 
 Each `recoup-song-*` skill is self-contained — if one is installed, prefer it for
 its job. If only this skill is present, run the relevant preset directly.

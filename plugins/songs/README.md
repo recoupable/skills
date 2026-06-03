@@ -37,11 +37,11 @@ claude plugin install https://github.com/recoupable/recoup-songs
 | Skill | What it does |
 |-------|-------------|
 | [recoup-song-analyzer](skills/recoup-song-analyzer) | Entry point — resolves the audio URL, picks the right preset, and routes to the focused workflows below |
-| [recoup-song-metadata-tagger](skills/recoup-song-metadata-tagger) | Structured catalog metadata (BPM, key, genre, mood, instruments) for DSPs and catalog systems |
-| [recoup-song-lyrics-transcriber](skills/recoup-song-lyrics-transcriber) | Sectioned lyric sheet from audio (draft for human review) + optional content advisory |
-| [recoup-song-playlist-pitch-maker](skills/recoup-song-playlist-pitch-maker) | DSP / editorial playlist pitch plus positioning notes |
-| [recoup-song-sync-brief-maker](skills/recoup-song-sync-brief-maker) | Music-supervisor sync brief with scene fit, brand-safety, and sample/clearance risk |
-| [recoup-song-mix-feedback-reviewer](skills/recoup-song-mix-feedback-reviewer) | Technical mix critique by frequency band, with a prioritized fix checklist |
+| [recoup-song-metadata](skills/recoup-song-metadata) | Structured catalog metadata (BPM, key, genre, mood, instruments) for DSPs and catalog systems |
+| [recoup-song-lyrics](skills/recoup-song-lyrics) | Sectioned lyric sheet from audio (draft for human review) + optional content advisory |
+| [recoup-song-playlist-pitch](skills/recoup-song-playlist-pitch) | DSP / editorial playlist pitch plus positioning notes |
+| [recoup-song-sync-brief](skills/recoup-song-sync-brief) | Music-supervisor sync brief with scene fit, brand-safety, and sample/clearance risk |
+| [recoup-song-mix-feedback](skills/recoup-song-mix-feedback) | Technical mix critique by frequency band, with a prioritized fix checklist |
 
 ## How it works
 
