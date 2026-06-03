@@ -69,14 +69,24 @@ We follow **documentation-driven development**: the docs/contract is written and
 - **ISO 8601 dates** (`2026-06-03`), always.
 - **Cross-repo links** by full ref (`recoupable/api#605`) so they resolve from any repo.
 - **Record rationale when you close or supersede a PR**: *"closed #1754 (superseded; chat-side direct-DB approach was wrong layer)."*
+- **Never paste secrets into an issue.** No API keys, tokens, or credentials — issues are often public and always long-lived/indexed. Reference the env var or store instead (*"`SONGSTATS_API_KEY`, set in Vercel"*), not the value. Same for any key handed over in a thread.
 
 ## Maintaining an issue over time
 
 - When you finish a unit of work, **update the issue in the same session** — move the item to Done with its closure note. Don't let the issue drift from reality.
-- When scope changes, edit the relevant section and say why (the credit-spend digest in #1747 is explicitly a re-scope of a dropped notification, and it says so).
 - Keep the lead paragraph's status line current ("fully live on prod").
+- **Keep the title current too.** The title is maintained state, not a fixed label — when scope changes, edit it. (#1777's title carried `+ bring-your-own-key` after that path was dropped; it had to be re-edited to match.)
 - Comment for time-stamped updates or test results; edit the body for the canonical current state. (Manual test results generally go in PR comments, not the issue body.)
 - Close the issue only when **every** item is in Done or has been explicitly moved to a follow-up tracker (link it).
+
+### Decision changes & reversals (supersede, don't erase)
+
+When the plan reverses (e.g. #1777 pivoted from "keep Chartmetric behind a BYO-key router" to "delete all Chartmetric code, SongStats-only" on a YAGNI call), record the change so the *old* reasoning stays auditable — don't silently rewrite history:
+
+- **Add a dated decision callout near the top** (a `>` blockquote under the lead): what changed, **who decided + when**, and the one-line rationale. Attribution + ISO date matter most for decisions that came from a discussion, not from code.
+- **Supersede, don't delete.** Strike through (`~~…~~`) or annotate the now-dead item with *"Dropped — …"* / *"Supersedes the earlier X plan."* rather than removing it. A reader (or a cold agent) should see the prior plan and why it was abandoned, so it isn't re-proposed.
+- **Update every downstream section**: Goal, the affected Open items, Architecture decisions (mark the reversed one *"supersedes the earlier …"*), the title, and Source references (link the decision thread).
+- **Re-anchor in-flight PRs to the new plan.** If an open PR was built for the old approach, say what now has to change before it can merge (e.g. #1777 flags that api#635's Chartmetric branch must be stripped pre-merge, and that verification must re-run after).
 
 ## Smaller / non-tracking issues
 
@@ -109,3 +119,6 @@ gh issue view 1767 --repo recoupable/chat
 - [ ] Architecture decisions captured with rationale (so they aren't re-litigated)
 - [ ] Accepted regressions/tradeoffs listed, not silent
 - [ ] Claims are linked (PR/SHA/file:line); numbers are hard, dates are ISO
+- [ ] Title still matches current scope (no stale/dropped features in it)
+- [ ] Reversals superseded (struck through + dated callout), not silently erased
+- [ ] No secrets/keys in the body — env var / store referenced instead
