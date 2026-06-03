@@ -39,6 +39,26 @@ description: What it does and when to use it. Include trigger phrases.
 - Put executable code in `scripts/`
 - Critical instructions go at the top
 
+## Portability checklist (required — runs in CI)
+
+Every skill must be cross-harness portable. Before opening a PR, confirm:
+
+- [ ] **Self-contained** — references only files inside the skill's own directory (no `../`, no other skill's dir, no plugin-root paths).
+- [ ] **No platform variables** — no `${CLAUDE_PLUGIN_ROOT}` / `$CLAUDE_*` in the body (they don't expand in markdown and don't exist off Claude Code).
+- [ ] **Backtick paths, not markdown links** for `references/`/`scripts/` (`` `references/foo.md` ``, not `[foo](./references/foo.md)`).
+- [ ] **Scripts co-located** in the skill's `scripts/`, invoked as `python3 scripts/foo.py`; sibling/helper imports also co-located.
+- [ ] **Shared files duplicated + registered** in `scripts/vendored.json` (drift-checked byte-for-byte).
+
+Run locally before pushing:
+
+```bash
+python3 scripts/portability_lint.py
+python3 scripts/check_vendored.py
+python3 scripts/validate_manifests.py
+```
+
+See the **Portable Skill Contract** in `AGENTS.md` for the full rules and rationale.
+
 ## Code of Conduct
 
 Be kind, be helpful, build things that help artists.

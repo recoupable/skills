@@ -1,0 +1,36 @@
+name: tiktok-per-song-no-hallucination
+skill: recoup-tiktok-per-song
+input: "TikTok for {artist} per song"
+expected:
+  - "TikTok Per-Song"
+  - "Catalog size"
+  - "Tracks with TikTok signal"
+  - "Tracks without per-song TikTok data"
+  - "Do not assume zero TT activity"
+expected_any_of:
+  no_data_phrasing:
+    - "Tracks without per-song TikTok data"
+    - "no data"
+must_call:
+  - "GET /research/tracks?artist={artist}"
+  - "GET /research/track?id="
+must_not:
+  - "fabricated tt_uses for tracks with null fields"
+  - "estimated TT counts from artist-level tiktok_followers"
+  - "numeric substitutes like ~10K or est. or low signal"
+  - "silent dropping of tracks without data"
+  - "inferred high TT activity from streaming data"
+  - "guessing track names from web search if /research/tracks is empty"
+file_outputs:
+  - "artists/{slug}/research/tiktok-per-song-*.md"
+fixtures:
+  description: Run against 5 artists covering a spread of per-song TikTok data availability. The "no-data" cases are the most important — they prove the skill refuses to fabricate counts.
+  artist_profile_targets:
+    - high_velocity_strong_tt          # known per-song TT signal — tests sort + format
+    - high_velocity_strong_tt_alt_lane # different genre, still strong TT — tests cross-genre handling
+    - moderate_tt                       # mid-tier TT presence — tests typical case
+    - thin_tt_data                      # no per-song TT signal — TESTS the no-data path
+    - thin_tt_data_alt                  # no per-song TT signal — TESTS the no-data path
+hard_assertions:
+  - "For any track where tt_uses, tt_views, tt_velocity, and tiktok_top_videos are ALL null/missing, the track MUST appear in the 'no data' group with no fabricated numbers."
+  - "If /research/tracks returns empty, output MUST surface that honestly. No catalog should be assembled from web search."

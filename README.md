@@ -1,4 +1,4 @@
-# Recoupable Skills
+# Recoup Skills
 
 AI agent skills for the music industry. Teach your coding agent how to manage artists, write songs, analyze analytics, plan releases, and more.
 
@@ -35,6 +35,22 @@ git clone https://github.com/recoupable/skills.git
 | [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
 | [trend-to-song](skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
 
+## Plugins
+
+Beyond the open skills library above, Recoup ships focused **plugins** — bundles of skills, commands, and agents for one workflow. Add the marketplace once, then install the plugins you need:
+
+```bash
+/plugin marketplace add recoupable/skills
+/plugin install recoup-deals@recoup
+```
+
+| Plugin | What it does |
+|--------|-------------|
+| [Recoup Research](plugins/research) | Music industry research — artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection |
+| [Recoup Deals](plugins/deals) | Music catalog deals — data-room ingestion, royalty normalization, rights checks, and valuation for buy-side, seller-prep, financing, and post-close |
+| [Recoup Content](plugins/content) | Content workflows — draft, edit, and publish social-ready content for artists |
+| [Recoup Songs](plugins/songs) | Song audio analysis — catalog metadata, lyrics, playlist pitches, sync briefs, and mix feedback via Music Flamingo |
+
 ## Creating a Skill
 
 Every skill needs:
@@ -49,7 +65,8 @@ skills/
     ├── SKILL.md              ← required
     ├── references/           ← optional — docs loaded on-demand
     ├── scripts/              ← optional — executable code
-    └── assets/               ← optional — templates, fonts, icons
+    ├── templates/            ← optional — scaffold files copied into a workspace
+    └── fixtures/             ← optional — sample / golden data
 ```
 
 See [contributing.md](contributing.md) for guidelines.
