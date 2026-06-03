@@ -117,5 +117,5 @@ is the full alternative path.
 
 ## References
 
-- **[references/endpoints.md](../../references/endpoints.md)** — POST endpoint details
-- **[references/workflows.md](../../references/workflows.md)** — chaining rules, when NOT to chain
+- **`references/endpoints.md`** — POST endpoint details
+- **`references/workflows.md`** — chaining rules, when NOT to chain

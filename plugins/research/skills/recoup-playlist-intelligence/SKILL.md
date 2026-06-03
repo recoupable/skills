@@ -119,6 +119,6 @@ Produce a ranked pitch list:
 
 ## References
 
-- **[references/endpoints.md](../../references/endpoints.md)** — full playlist filter/pagination semantics
-- **[references/response-shapes.md](../../references/response-shapes.md)** — placement JSON structure
-- **[references/workflows.md](../../references/workflows.md)** — Workflow 1 (Playlist Pitching) and Workflow 5 (Catalog Optimization)
+- **`references/endpoints.md`** — full playlist filter/pagination semantics
+- **`references/response-shapes.md`** — placement JSON structure
+- **`references/workflows.md`** — Workflow 1 (Playlist Pitching) and Workflow 5 (Catalog Optimization)

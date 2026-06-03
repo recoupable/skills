@@ -19,7 +19,7 @@ flow. The goal is to find statement issues before they become valuation errors.
 6. Identify duplicate imports, unmatched income, missing sources, and retroactive
    adjustments.
 7. Decompose PRO performance income using
-   `skills/recoup-catalog-analysis/references/pro-performance-income.md`.
+   `references/pro-performance-income.md`.
 8. Write anomalies to `findings/findings.json` and workpapers to `workpapers/`.
 
 ## Output

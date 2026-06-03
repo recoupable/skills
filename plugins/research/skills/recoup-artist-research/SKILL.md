@@ -190,7 +190,7 @@ the research reveals something that should update the static profile, suggest it
 ## Endpoint quick reference
 
 Full curl examples, filter rules, latency budgets, and platform source enums
-are in **[references/endpoints.md](../../references/endpoints.md)**.
+are in **`references/endpoints.md`**.
 
 | Endpoint | Returns |
 | -------- | ------- |
@@ -213,6 +213,6 @@ are in **[references/endpoints.md](../../references/endpoints.md)**.
 
 ## References
 
-- **[references/endpoints.md](../../references/endpoints.md)** — full curl examples, pagination, latency
-- **[references/response-shapes.md](../../references/response-shapes.md)** — actual JSON shapes
-- **[references/workflows.md](../../references/workflows.md)** — multi-step workflow chains
+- **`references/endpoints.md`** — full curl examples, pagination, latency
+- **`references/response-shapes.md`** — actual JSON shapes
+- **`references/workflows.md`** — multi-step workflow chains

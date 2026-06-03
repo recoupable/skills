@@ -35,7 +35,7 @@ Before researching: check if the artist already has a workspace `context/artist.
 
 ## Endpoints (quick reference)
 
-Full curl examples, filter flag rules, latency budgets, and platform source enums live in **[references/endpoints.md](references/endpoints.md)**.
+Full curl examples, filter flag rules, latency budgets, and platform source enums live in **`references/endpoints.md`**.
 
 | Endpoint | Returns |
 | -------- | ------- |
@@ -73,7 +73,7 @@ Full curl examples, filter flag rules, latency budgets, and platform source enum
 
 ## Critical gotchas
 
-These are the failure modes that will eat your time. Full rationale in [references/endpoints.md](references/endpoints.md) and [references/response-shapes.md](references/response-shapes.md).
+These are the failure modes that will eat your time. Full rationale in `references/endpoints.md` and `references/response-shapes.md`.
 
 - **Playlist filter flags are exclusive when set.** `?editorial=true` alone returns ONLY editorials, excluding the indie / curator / popularIndie defaults. To get editorial *plus* the rest, pass all four: `&editorial=true&indie=true&majorCurator=true&popularIndie=true`.
 - **`/research/playlists` (artist-level) ignores `offset`** — single 100-max snapshot. For bulk, page `/research/track/playlists?id=...&offset=...` per track instead (that one *does* paginate).
@@ -87,7 +87,7 @@ These are the failure modes that will eat your time. Full rationale in [referenc
 - **`/research/metrics` uses `youtube_channel` or `youtube_artist`**, not plain `youtube`. `/research/audience?platform=` accepts only `instagram | tiktok | youtube`.
 - **`/research/enrich` schemas must include `"type":"object"` at the top level.** Endpoint rejects schemas without it.
 - **POST endpoints have real latency.** `/enrich` 60–90s, `/deep` 2+ min, others seconds-to-tens. Set client timeouts to ≥3 min for `/enrich` and `/deep` or you'll falsely abort successful calls.
-- **Don't guess field names.** `recent_momentum` not `trend`; platform counts are top-level (`sp_followers`, `ins_followers`), no `metrics` wrapper. Placements are nested: `placements[].playlist.name`. Full real shapes in [references/response-shapes.md](references/response-shapes.md).
+- **Don't guess field names.** `recent_momentum` not `trend`; platform counts are top-level (`sp_followers`, `ins_followers`), no `metrics` wrapper. Placements are nested: `placements[].playlist.name`. Full real shapes in `references/response-shapes.md`.
 
 ## Graceful degradation
 
@@ -107,10 +107,10 @@ For very emerging artists, Chartmetric may not have data — web + enrich + deep
 
 ## How to use the data
 
-Don't dump raw JSON. Combine endpoints, draw conclusions, save to the artist workspace if there is one. Interpretation rules of thumb (follower:listener ratios, audience-vs-cities mismatches, career stage signals) and end-to-end synthesis patterns (geographic strategy, playlist gap analysis, platform pipeline, etc.) are in **[references/workflows.md](references/workflows.md)**.
+Don't dump raw JSON. Combine endpoints, draw conclusions, save to the artist workspace if there is one. Interpretation rules of thumb (follower:listener ratios, audience-vs-cities mismatches, career stage signals) and end-to-end synthesis patterns (geographic strategy, playlist gap analysis, platform pipeline, etc.) are in **`references/workflows.md`**.
 
 ## References
 
-- **[references/endpoints.md](references/endpoints.md)** — full curl examples per endpoint, playlist filter / pagination semantics, latency budgets, platform source enums
-- **[references/response-shapes.md](references/response-shapes.md)** — actual JSON shapes for `/similar`, `/playlists`, `/profile`, plus field-name gotchas
-- **[references/workflows.md](references/workflows.md)** — interpretation cheat sheet, synthesis patterns, 11 multi-step workflow chains, and where to save research output
+- **`references/endpoints.md`** — full curl examples per endpoint, playlist filter / pagination semantics, latency budgets, platform source enums
+- **`references/response-shapes.md`** — actual JSON shapes for `/similar`, `/playlists`, `/profile`, plus field-name gotchas
+- **`references/workflows.md`** — interpretation cheat sheet, synthesis patterns, 11 multi-step workflow chains, and where to save research output

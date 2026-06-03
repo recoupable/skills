@@ -101,8 +101,8 @@ silently dropping the section.
 The PDF goes to people outside the agent's session — IC, lender,
 counsel, broker. Every claim must be defensible.
 
-**The trust rules are identical to the dashboard's.** Re-read
-`skills/recoup-catalog-dashboard/SKILL.md` → "Trust contract" before
+**The trust rules are identical to the dashboard's.** Re-read the
+`recoup-catalog-dashboard` skill's "Trust contract" section before
 authoring fresh PDF content.
 
 In short:
@@ -210,8 +210,8 @@ pip3 install playwright
 python3 -m playwright install chromium
 ```
 
-Then a small Python script (write it inline or as
-`scripts/render-report.py` if the user wants to reuse it):
+Then a small Python script (write it inline, optionally saving it as
+`render-report.py` in this skill's `scripts/` if the user wants to reuse it):
 
 ```python
 from playwright.sync_api import sync_playwright

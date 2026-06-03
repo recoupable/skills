@@ -194,7 +194,7 @@ ALBUM_DETAIL=$(curl -sS -G "https://api.recoupable.com/api/spotify/album" \
 
 Full schemas: top tracks (`/api-reference/spotify/artist-top-tracks`), albums (`/api-reference/spotify/artist-albums`), album detail (`/api-reference/spotify/album`).
 
-**After this step:** populate the artist's `releases/` folder — write one `releases/{release-slug}/RELEASE.md` per album (album slugs are bare, `-ep` / `-single` / `-compilation` suffixes for other types) using the per-album `GET /api/spotify/album?id=$ALBUM_ID` response, and write the top tracks snapshot to `releases/top-tracks.md`. `RELEASE.md` is the 18-section master release-management document — Step 5 fills the Spotify-derivable fields and leaves the rest as `⚠️ TBD`. The full template + the field-by-field Spotify mapping live in the [`artist-workspace`](https://github.com/recoupable/skills/tree/main/skills/artist-workspace) skill at `references/release-template.md`. Tick `- [ ] 5.` → `- [x] 5.`.
+**After this step:** populate the artist's `releases/` folder — write one `releases/{release-slug}/RELEASE.md` per album (album slugs are bare, `-ep` / `-single` / `-compilation` suffixes for other types) using the per-album `GET /api/spotify/album?id=$ALBUM_ID` response, and write the top tracks snapshot to `releases/top-tracks.md`. `RELEASE.md` is the 18-section master release-management document — Step 5 fills the Spotify-derivable fields and leaves the rest as `⚠️ TBD`. The full template + the field-by-field Spotify mapping live in the [`artist-workspace`](https://github.com/recoupable/skills/tree/main/skills/artist-workspace) skill's release-template reference. Tick `- [ ] 5.` → `- [x] 5.`.
 
 ## Step 6: Search the web for additional socials
 

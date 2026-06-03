@@ -144,5 +144,5 @@ anchor-artist approach instead: start from a known artist →
 
 ## References
 
-- **[references/endpoints.md](../../references/endpoints.md)** — discover filters, chart params
-- **[references/workflows.md](../../references/workflows.md)** — Workflows 4 (A&R Discovery), 7 (Viral Autopsy)
+- **`references/endpoints.md`** — discover filters, chart params
+- **`references/workflows.md`** — Workflows 4 (A&R Discovery), 7 (Viral Autopsy)

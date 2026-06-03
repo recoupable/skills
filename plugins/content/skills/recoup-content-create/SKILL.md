@@ -100,6 +100,6 @@ Print both to the user. If status is `FAILED`, `CANCELED`, or `CRASHED`, surface
 
 This async front door is the default. Use the underlying skills directly when:
 
-- The user wants to **swap a single stage** (different caption length, different motion prompt, different reference image), inspect intermediate outputs, or supply their own audio. Use the **`short-video`** skill (Recoupable skills library) — its `references/short-video-manual.md` is the manual five-step recipe, and `references/song-sourcing.md` covers resolving the underlying `song.mp3`.
+- The user wants to **swap a single stage** (different caption length, different motion prompt, different reference image), inspect intermediate outputs, or supply their own audio. Use the **`short-video`** skill (Recoupable skills library) — its bundled manual covers the five-step recipe, and it explains resolving the underlying `song.mp3`.
 - The user wants to **generate one capability in isolation** (just an image, just a caption). Use the **`content-creation`** skill (Recoupable skills library).
 - The artist **doesn't exist yet**. Use the **`create-artist`** skill (Recoupable skills library) first.

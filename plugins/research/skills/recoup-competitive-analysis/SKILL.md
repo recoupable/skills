@@ -144,6 +144,6 @@ cycles, and which platform has the most momentum right now.
 
 ## References
 
-- **[references/endpoints.md](../../references/endpoints.md)** — curl examples, ID-based endpoints
-- **[references/response-shapes.md](../../references/response-shapes.md)** — similar artists JSON shape
-- **[references/workflows.md](../../references/workflows.md)** — Workflows 6 (Roster), 9 (Collab), 10 (Release Timing)
+- **`references/endpoints.md`** — curl examples, ID-based endpoints
+- **`references/response-shapes.md`** — similar artists JSON shape
+- **`references/workflows.md`** — Workflows 6 (Roster), 9 (Collab), 10 (Release Timing)

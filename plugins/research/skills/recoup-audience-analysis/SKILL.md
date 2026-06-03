@@ -141,5 +141,5 @@ with fans but no playlist presence need pitching.
 
 ## References
 
-- **[references/endpoints.md](../../references/endpoints.md)** — curl examples, platform source enums
-- **[references/workflows.md](../../references/workflows.md)** — Workflows 2 (TikTok Pipeline), 3 (Tour Routing), 8 (Market Expansion)
+- **`references/endpoints.md`** — curl examples, platform source enums
+- **`references/workflows.md`** — Workflows 2 (TikTok Pipeline), 3 (Tour Routing), 8 (Market Expansion)

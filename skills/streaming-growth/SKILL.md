@@ -108,7 +108,7 @@ The key insight: getting people to stream from *within* Spotify is dramatically 
 - Social engagement doesn't directly translate to streams without a catalyst
 - YouTube subscribers and TikTok views don't automatically become Spotify listeners
 
-Read `references/content-strategy.md` for specific content tactics and posting cadences that convert social views to streams.
+Focus content on tactics that convert social views into streams: a consistent posting cadence, release-day and pre-save pushes, and short-form clips that link directly to the track.
 
 ### Recommended Approach
 

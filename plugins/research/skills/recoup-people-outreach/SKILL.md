@@ -119,5 +119,5 @@ Produce a ranked outreach list:
 
 ## References
 
-- **[references/endpoints.md](../../references/endpoints.md)** — people, enrich, extract endpoints
-- **[references/workflows.md](../../references/workflows.md)** — Workflow 11 (People Outreach), Example A (Peer Collab Outreach)
+- **`references/endpoints.md`** — people, enrich, extract endpoints
+- **`references/workflows.md`** — Workflow 11 (People Outreach), Example A (Peer Collab Outreach)

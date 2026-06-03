@@ -88,8 +88,8 @@ notes:
 YAML
 ```
 
-After scaffolding, run `/recoup-catalog-deal` end-to-end exactly as
-specified in `skills/recoup-catalog-deal/SKILL.md`. The demo data is
+After scaffolding, run the `recoup-catalog-deal` skill end-to-end exactly
+as that skill specifies. The demo data is
 deliberately shaped to produce these AHA moments without intervention:
 
 - **Ingest coverage line**: roughly "5 of 8 statement files contributed

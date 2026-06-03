@@ -98,7 +98,7 @@ Merge the proposed findings into `findings/findings.json` with real
 `evidence_ids` so they survive the `validate-findings-evidence.py` check.
 
 Detailed schemas are in
-**[references/canonical-schema.md](references/canonical-schema.md)**.
+**`references/canonical-schema.md`**.
 
 ## Critical gotchas
 
@@ -125,12 +125,12 @@ Detailed schemas are in
 ## What to read next
 
 - For expected data-room files, read
-  **[references/data-room-checklist.md](references/data-room-checklist.md)**.
+  **`references/data-room-checklist.md`**.
 - For canonical fields and confidence scoring, read
-  **[references/canonical-schema.md](references/canonical-schema.md)**.
+  **`references/canonical-schema.md`**.
 - For cleanup rules and review tables, read
-  **[references/cleaning-rules.md](references/cleaning-rules.md)**.
+  **`references/cleaning-rules.md`**.
 - For deal workspace structure, read
-  **[../../references/deal-workspace.md](../../references/deal-workspace.md)**.
+  **`references/deal-workspace.md`**.
 - For provider CSV normalization, read
-  **[../../references/normalization.md](../../references/normalization.md)**.
+  **`references/normalization.md`**.

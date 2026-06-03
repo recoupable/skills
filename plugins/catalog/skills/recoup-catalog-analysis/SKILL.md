@@ -117,15 +117,15 @@ Use these outputs for a full analysis:
 - Recommended holdback, escrow, haircut, or follow-up deal-review items.
 
 Templates and memo structure are in
-**[references/output-templates.md](references/output-templates.md)**.
+**`references/output-templates.md`**.
 
 ## What to read next
 
 - For valuation mechanics, read
-  **[references/valuation-framework.md](references/valuation-framework.md)**.
+  **`references/valuation-framework.md`**.
 - For performance royalty traps, read
-  **[references/pro-performance-income.md](references/pro-performance-income.md)**.
+  **`references/pro-performance-income.md`**.
 - For memo and table formats, read
-  **[references/output-templates.md](references/output-templates.md)**.
+  **`references/output-templates.md`**.
 - For workspace-level evidence rules, read
-  **[../../references/deal-workspace.md](../../references/deal-workspace.md)**.
+  **`references/deal-workspace.md`**.
