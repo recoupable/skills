@@ -7,7 +7,7 @@
   },
   "plugins": [
     {
-      "name": "recoupable-skills",
+      "name": "recoup-skills",
       "source": ".",
       "description": "The open skills library — portable music-industry skills (artist management, songwriting, analytics, release campaigns, setup) you can drop into any agent. Also installable directly via `npx skills add recoupable/skills`.",
       "version": "1.0.0",
