@@ -1,4 +1,4 @@
-# Recoup Research Plugin
+# Recoup Research
 
 Music industry research for AI agents. Artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection, and outreach — powered by the [Recoup](https://recoupable.com) research API.
 

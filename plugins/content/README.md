@@ -1,4 +1,4 @@
-# Recoup Content Plugin
+# Recoup Content
 
 Agent plugin for content workflows on the [Recoup](https://recoupable.com) platform. Lets AI agents draft, edit, and publish content for artists — short-form music videos, captions, images, and the supporting building blocks.
 

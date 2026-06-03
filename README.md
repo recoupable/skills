@@ -35,6 +35,21 @@ git clone https://github.com/recoupable/skills.git
 | [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
 | [trend-to-song](skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
 
+## Plugins
+
+Beyond the open skills library above, Recoup ships focused **plugins** — bundles of skills, commands, and agents for one workflow. Add the marketplace once, then install the plugins you need:
+
+```bash
+/plugin marketplace add recoupable/skills
+/plugin install recoup-deals@recoup
+```
+
+| Plugin | What it does |
+|--------|-------------|
+| [Recoup Research](plugins/research) | Music industry research — artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection |
+| [Recoup Deals](plugins/deals) | Music catalog deals — data-room ingestion, royalty normalization, rights checks, and valuation for buy-side, seller-prep, financing, and post-close |
+| [Recoup Content](plugins/content) | Content workflows — draft, edit, and publish social-ready content for artists |
+
 ## Creating a Skill
 
 Every skill needs:
