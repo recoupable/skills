@@ -198,6 +198,16 @@
       ]
     },
     {
+      "canonical": "skills/recoup-song-analyzer/references/flamingo-api.md",
+      "copies": [
+        "skills/recoup-song-metadata-tagger/references/flamingo-api.md",
+        "skills/recoup-song-lyrics-transcriber/references/flamingo-api.md",
+        "skills/recoup-song-playlist-pitch-maker/references/flamingo-api.md",
+        "skills/recoup-song-sync-brief-maker/references/flamingo-api.md",
+        "skills/recoup-song-mix-feedback-reviewer/references/flamingo-api.md"
+      ]
+    },
+    {
       "canonical_dir": "plugins/deals/fixtures/demo-data-room",
       "copies_dirs": [
         "plugins/deals/skills/recoup-deal-demo/fixtures/demo-data-room"
