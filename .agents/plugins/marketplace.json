@@ -147,6 +147,40 @@
         "websiteURL": "https://recoupable.com",
         "brandColor": "#345A5D"
       }
+    },
+    {
+      "name": "recoup-songs",
+      "source": "./plugins/songs",
+      "version": "0.1.0",
+      "description": "Song audio analysis: turn a track's audio into catalog metadata, lyrics, playlist pitches, sync briefs, and mix feedback using Recoup's audio language model (Music Flamingo).",
+      "author": {
+        "name": "Recoup",
+        "email": "agent@recoupable.com",
+        "url": "https://recoupable.com"
+      },
+      "homepage": "https://recoupable.com",
+      "repository": "https://github.com/recoupable/skills",
+      "license": "Apache-2.0",
+      "keywords": [
+        "music",
+        "audio-analysis",
+        "music-flamingo",
+        "lyrics-transcription",
+        "catalog-metadata",
+        "sync-licensing",
+        "mix-feedback",
+        "agent-skills"
+      ],
+      "interface": {
+        "displayName": "Recoup Songs",
+        "shortDescription": "Turn a song's audio into metadata, lyrics, playlist pitches, sync briefs, and mix feedback",
+        "longDescription": "Song audio analysis for AI agents. Point it at a public audio URL and get structured catalog metadata, transcribed lyrics, DSP playlist pitches, music-supervisor sync briefs, and technical mix feedback — powered by Recoup's audio language model (Music Flamingo).",
+        "developerName": "Recoup",
+        "category": "Music",
+        "capabilities": ["Read", "Write"],
+        "websiteURL": "https://recoupable.com",
+        "brandColor": "#345A5D"
+      }
     }
   ]
 }

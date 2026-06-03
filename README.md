@@ -30,7 +30,6 @@ git clone https://github.com/recoupable/skills.git
 | [content-creation](skills/content-creation) | Create social videos, TikToks, Reels, and visual content using AI primitives |
 | [music-industry-research](skills/music-industry-research) | Music industry research — artist analytics, people search, competitive analysis, web intelligence |
 | [recoup-api](skills/recoup-api) | Call the Recoupable API from the sandbox — artist data, socials, orgs, reports |
-| [recoup-song-analyzer](skills/recoup-song-analyzer) | Analyze a song's audio with Music Flamingo — genre, key, BPM, mood, lyrics, mix; routes to focused workflows (metadata, lyrics, playlist pitch, sync brief, mix feedback) |
 | [release-management](skills/release-management) | Plan and execute release campaigns |
 | [setup-sandbox](skills/setup-sandbox) | Scaffold the workspace for an account's orgs and artists |
 | [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
@@ -50,6 +49,7 @@ Beyond the open skills library above, Recoup ships focused **plugins** — bundl
 | [Recoup Research](plugins/research) | Music industry research — artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection |
 | [Recoup Deals](plugins/deals) | Music catalog deals — data-room ingestion, royalty normalization, rights checks, and valuation for buy-side, seller-prep, financing, and post-close |
 | [Recoup Content](plugins/content) | Content workflows — draft, edit, and publish social-ready content for artists |
+| [Recoup Songs](plugins/songs) | Song audio analysis — catalog metadata, lyrics, playlist pitches, sync briefs, and mix feedback via Music Flamingo |
 
 ## Creating a Skill
 
