@@ -1,0 +1,12 @@
+{
+  "id": "financing-collateral-pack",
+  "workflow": "financing",
+  "prompt": "A lender needs a financing pack for a royalty-backed advance against a mixed publishing and master catalog.",
+  "expected_behaviors": [
+    "Separates eligible collateral from unsupported assets",
+    "Uses NPS and NLS rather than gross revenue",
+    "Highlights concentration and rights confidence",
+    "Recommends advance-rate adjustments or holdbacks",
+    "Includes monitoring plan and conditions before funding"
+  ]
+}

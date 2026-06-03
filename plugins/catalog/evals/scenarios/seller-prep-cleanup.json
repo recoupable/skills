@@ -1,0 +1,12 @@
+{
+  "id": "seller-prep-cleanup",
+  "workflow": "seller-prep",
+  "prompt": "An artist wants to sell a catalog in six months. Find what to clean up now to maximize buyer confidence.",
+  "expected_behaviors": [
+    "Creates seller-prep framing instead of buyer bid framing",
+    "Ranks missing docs and metadata issues by value impact",
+    "Identifies quick fixes versus counsel/admin work",
+    "Avoids promising valuation uplift without evidence",
+    "Produces a seller cleanup report outline"
+  ]
+}
