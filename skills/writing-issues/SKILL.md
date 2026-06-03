@@ -11,7 +11,9 @@ Most substantial work gets a **tracking issue**: a long-lived issue that coordin
 
 ## Issues live in a repository
 
-Every issue belongs to one repo (`gh issue create --repo recoupable/<repo>`). There is no org-level issue — cross-repo work lives in one "home" repo's tracking issue that *links out* to PRs/issues in the others. Pick the repo where most of the work or the user-visible outcome lands (e.g. the chat cutover tracker lives in `chat` even though it touches `api`, `database`, and `docs`).
+Every issue belongs to one repo (`gh issue create --repo recoupable/<repo>`). There is no org-level issue — cross-repo work lives in one "home" repo's tracking issue that *links out* to PRs/issues in the others.
+
+**File every issue in `recoupable/chat`** — even when the actual code lands in `api`, `database`, or `docs`. One home repo means devs have a single place to find open work. Do **not** pick the repo by "where the diff lands"; link out to sibling-repo PRs/files by full ref instead (e.g. the chat cutover tracker lives in `chat` even though most commits were in `api`). If an issue gets opened in the wrong repo, move it: `gh issue transfer <n> recoupable/chat --repo <wrong-repo>` (preserves body/comments, leaves a redirect).
 
 ## Anatomy of a tracking issue
 
@@ -55,6 +57,10 @@ An open item is a mini-spec, not a one-liner. For anything non-trivial, include:
 Real example (the model-selector bug from #1767): *Why* — the workflow reads `chats.model_id` but the UI only puts `model` in the request body. *Fix* — on model change, `PATCH .../chats/{chatId}` with `{ modelId }`. *Done when* — pick a non-default model → send → `usage_events.model_id` shows the model you selected, not the default. A reader can pick this up cold and finish it.
 
 Note explicit **blocked-by** relationships inline (*"No blockers — unblocked by #1760"*). If items have a merge order, say "in merge order; pick from the top."
+
+### Merge sequencing (documentation-driven development)
+
+We follow **documentation-driven development**: the docs/contract is written and reviewed first, then implemented against. When a unit of work spans repos, sequence the PRs **docs → database → api/app** — the `docs` OpenAPI/spec change is the contract the rest fulfills, so it leads even though it's usually independent. Within that, still honor hard dependencies (e.g. a `database` migration must land before the `api` code that reads the new table). State the order explicitly in a "Merge sequencing" block and say *why* each step precedes the next (contract-first vs. hard dependency).
 
 ## Linking & evidence rules
 
