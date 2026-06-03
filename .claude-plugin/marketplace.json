@@ -37,7 +37,7 @@
       ]
     },
     {
-      "name": "recoup-research-plugin",
+      "name": "recoup-research",
       "source": "./plugins/research",
       "description": "Music industry research: artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection, and outreach — powered by Recoup's research API.",
       "version": "0.2.0",
@@ -69,7 +69,7 @@
       ]
     },
     {
-      "name": "recoup-deals-plugin",
+      "name": "recoup-deals",
       "source": "./plugins/deals",
       "description": "Music catalog deals: data-room ingestion, royalty normalization, rights checks, and valuation analysis for buy-side, seller-prep, financing, and post-close.",
       "version": "0.3.0",
@@ -104,7 +104,7 @@
       ]
     },
     {
-      "name": "recoup-content-plugin",
+      "name": "recoup-content",
       "source": "./plugins/content",
       "description": "Recoup content workflows: skills and commands for AI agents to draft, edit, and publish content for artists across Recoup's surfaces.",
       "version": "0.3.0",

@@ -1,13 +1,13 @@
 ---
 name: recoup-content-create
-description: End-to-end async run that produces a 9:16 social-ready short-form music video for an artist and song. Use whenever the user types `/recoup-content-create`, says "make a video for [artist]", "create a TikTok for [artist]", "produce a Reel for [artist]", "kick off content for [artist]", or any front-door request to generate finished social-ready content for an existing artist. Resolves the artist's `account_id`, fires `POST /api/content/create`, polls `/api/tasks/runs` until terminal, and lands the user on the final video URL + caption. The default front door for the recoup-content-plugin.
+description: End-to-end async run that produces a 9:16 social-ready short-form music video for an artist and song. Use whenever the user types `/recoup-content-create`, says "make a video for [artist]", "create a TikTok for [artist]", "produce a Reel for [artist]", "kick off content for [artist]", or any front-door request to generate finished social-ready content for an existing artist. Resolves the artist's `account_id`, fires `POST /api/content/create`, polls `/api/tasks/runs` until terminal, and lands the user on the final video URL + caption. The default front door for the recoup-content.
 argument-hint: <artist-name> [--template <template-name>]
 allowed-tools: [Bash, Read, Write, AskUserQuestion]
 ---
 
 # Recoup Content Create
 
-The anchor command for the recoup-content-plugin. Use this on first install to confirm the plugin works end-to-end, and as the default front door for "make a video for [artist]" requests.
+The anchor command for the recoup-content. Use this on first install to confirm the plugin works end-to-end, and as the default front door for "make a video for [artist]" requests.
 
 This skill is **user-invoked** — the user types `/recoup-content-create <artist-name>` and the harness invokes it with `$ARGUMENTS` populated. It is self-contained: the default async path below runs without any other skill. For granular control (swapping a single stage), it points to the `short-video` skill in the Recoupable skills library.
 

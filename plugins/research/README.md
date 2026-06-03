@@ -7,21 +7,21 @@ Music industry research for AI agents. Artist analytics, audience insights, play
 ### Claude Code
 
 ```bash
-claude plugin install https://github.com/recoupable/recoup-research-plugin
+claude plugin install https://github.com/recoupable/recoup-research
 ```
 
 ### Claude Cowork
 
 1. Open the plugin marketplace (puzzle-piece icon in the sidebar).
 2. Click **Add custom plugin** and paste:
-   `https://github.com/recoupable/recoup-research-plugin`
+   `https://github.com/recoupable/recoup-research`
 3. Approve the requested tool permissions.
 4. Restart the Cowork session so manifests load.
 
 ### Codex
 
 ```bash
-codex plugin install https://github.com/recoupable/recoup-research-plugin
+codex plugin install https://github.com/recoupable/recoup-research
 ```
 
 ### Cursor
@@ -35,7 +35,7 @@ codex plugin install https://github.com/recoupable/recoup-research-plugin
 If you've already added the [Recoup marketplace](https://github.com/recoupable/marketplace):
 
 ```bash
-/plugin install recoup-research-plugin@recoup-marketplace
+/plugin install recoup-research@recoup-marketplace
 ```
 
 ## Setup

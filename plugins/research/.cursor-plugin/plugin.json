@@ -1,5 +1,5 @@
 {
-  "name": "recoup-research-plugin",
+  "name": "recoup-research",
   "version": "0.2.0",
   "description": "Music industry research: artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection, and outreach — powered by Recoup's research API.",
   "author": {
@@ -8,7 +8,7 @@
     "url": "https://recoupable.com"
   },
   "homepage": "https://recoupable.com",
-  "repository": "https://github.com/recoupable/recoup-research-plugin",
+  "repository": "https://github.com/recoupable/recoup-research",
   "license": "Apache-2.0",
   "keywords": [
     "music",

@@ -9,14 +9,14 @@ Built around the `/api/content/*` endpoints and the `recoup content` CLI. Driven
 ### Claude Code (CLI)
 
 ```bash
-claude plugin install https://github.com/recoupable/recoup-content-plugin
+claude plugin install https://github.com/recoupable/recoup-content
 ```
 
 ### Claude Cowork
 
 1. Open the plugin marketplace (puzzle-piece icon in the sidebar).
 2. Click **Add custom plugin** and paste:
-   `https://github.com/recoupable/recoup-content-plugin`
+   `https://github.com/recoupable/recoup-content`
 3. Approve the requested tool permissions (`Read`, `Write` — needed to write the workspace and final `.mp4`).
 4. Restart the Cowork session so manifests load.
 

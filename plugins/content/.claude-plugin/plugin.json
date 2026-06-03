@@ -1,5 +1,5 @@
 {
-  "name": "recoup-content-plugin",
+  "name": "recoup-content",
   "version": "0.3.0",
   "description": "Claude Code plugin for Recoup content workflows — generating, editing, and publishing content for artists across Recoup's surfaces.",
   "author": {
@@ -8,7 +8,7 @@
     "url": "https://recoupable.com"
   },
   "homepage": "https://recoupable.com",
-  "repository": "https://github.com/recoupable/recoup-content-plugin",
+  "repository": "https://github.com/recoupable/recoup-content",
   "license": "Apache-2.0",
   "keywords": [
     "recoup",

@@ -1,4 +1,4 @@
-# Optional dependencies for the recoup-deals-plugin plugin.
+# Optional dependencies for the recoup-deals plugin.
 #
 # The core scripts (workspace validation, normalization, hygiene scans, etc.)
 # run on the Python standard library alone. The extractors below require

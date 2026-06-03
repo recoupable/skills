@@ -15,7 +15,7 @@ memos. The whole thing is driven by a single command —
 ### Claude Code (CLI)
 
 ```bash
-claude plugin install https://github.com/recoupable/recoup-deals-plugin
+claude plugin install https://github.com/recoupable/recoup-deals
 ```
 
 Then **restart your Claude Code session** so `hooks/hooks.json` loads.
@@ -24,13 +24,13 @@ Then **restart your Claude Code session** so `hooks/hooks.json` loads.
 
 1. Open the plugin marketplace (puzzle-piece icon in the sidebar).
 2. Click **Add custom plugin** and paste:
-   `https://github.com/recoupable/recoup-deals-plugin`
+   `https://github.com/recoupable/recoup-deals`
 3. Approve the requested tool permissions (`Read`, `Write`, `Bash` —
    needed to run the validator scripts).
 4. **Restart the Cowork session** so the PreToolUse and Stop hooks
    load.
 5. Confirm install: type `/plugin` and check that
-   `recoup-deals-plugin` is listed.
+   `recoup-deals` is listed.
 
 ### Cursor
 
@@ -256,7 +256,7 @@ python3 scripts/validate-dashboard.py deals/{deal-id}        # check agent's DAS
 ## Structure
 
 ```text
-recoup-deals-plugin/
+recoup-deals/
 ├── .claude-plugin/plugin.json
 ├── .codex-plugin/plugin.json
 ├── .cursor-plugin/plugin.json
@@ -284,6 +284,6 @@ recoup-deals-plugin/
 music operators. **Recoup Deals** is one product in the broader
 **Recoup Catalog Intelligence** product line.
 
-- Plugin: `recoup-deals-plugin`
-- Repository: <https://github.com/recoupable/recoup-deals-plugin>
+- Plugin: `recoup-deals`
+- Repository: <https://github.com/recoupable/recoup-deals>
 - Support: <support@recoupable.com>

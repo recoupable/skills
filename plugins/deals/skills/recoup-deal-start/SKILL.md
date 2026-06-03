@@ -1,6 +1,6 @@
 ---
 name: recoup-deal-start
-description: One-command end-to-end music catalog deal review. Use whenever the user types `/recoup-deal-start`, says "review this catalog", "analyze this music catalog deal", "value this catalog", "do diligence on this deal", "underwrite this catalog", or asks for a full catalog acquisition / seller-prep / financing / post-close review. Scaffolds the workspace, normalizes the data room, runs analysis, builds an agent-authored DASHBOARD.html, validates it, and drafts the IC memo without stopping for permission between phases. The default front door for the recoup-deals-plugin.
+description: One-command end-to-end music catalog deal review. Use whenever the user types `/recoup-deal-start`, says "review this catalog", "analyze this music catalog deal", "value this catalog", "do diligence on this deal", "underwrite this catalog", or asks for a full catalog acquisition / seller-prep / financing / post-close review. Scaffolds the workspace, normalizes the data room, runs analysis, builds an agent-authored DASHBOARD.html, validates it, and drafts the IC memo without stopping for permission between phases. The default front door for the recoup-deals.
 argument-hint: [deal-id] [--workflow buy-side|seller-prep|financing|post-close]
 allowed-tools: [Bash, Read, Write, Edit, Glob, Grep, AskUserQuestion, Task]
 ---

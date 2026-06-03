@@ -1,6 +1,6 @@
 # Demo data room — synthetic catalog
 
-This is the synthetic catalog bundled with the recoup-deals-plugin
+This is the synthetic catalog bundled with the recoup-deals
 plugin to demonstrate end-to-end behavior. Every file in this folder
 is fake — invented song titles, invented writers, invented PROs.
 
