@@ -26,6 +26,8 @@ def validate_json_file(path: Path, label: str) -> list[str]:
         json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as error:
         return [f"{label} is not valid JSON: {error.msg}"]
+    except (OSError, UnicodeDecodeError) as error:
+        return [f"{label} could not be read: {error}"]
     return []
 
 

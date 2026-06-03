@@ -42,13 +42,24 @@ def main() -> int:
 
     duplicate_ids: set[str] = set()
     seen_ids: set[str] = set()
-    for row in rows:
-        line_id = row.get("ledger_line_id", "")
+    empty_id_rows: list[int] = []
+    has_id_column = "ledger_line_id" in fieldnames
+    # enumerate from 2: row 1 is the header, so data row N sits on file line N+1
+    for line_no, row in enumerate(rows, start=2):
+        line_id = (row.get("ledger_line_id") or "").strip()
+        if has_id_column and not line_id:
+            empty_id_rows.append(line_no)
+            continue
         if line_id in seen_ids:
             duplicate_ids.add(line_id)
-        if line_id:
-            seen_ids.add(line_id)
+        seen_ids.add(line_id)
 
+    if empty_id_rows:
+        errors.append(
+            f"{len(empty_id_rows)} row(s) have an empty ledger_line_id (lines: "
+            + ", ".join(str(n) for n in empty_id_rows)
+            + ")"
+        )
     if duplicate_ids:
         errors.append(f"duplicate ledger_line_id values: {', '.join(sorted(duplicate_ids))}")
 

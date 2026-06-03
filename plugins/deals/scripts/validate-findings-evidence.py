@@ -19,11 +19,19 @@ HIGH_SEVERITY = {"high", "critical", "p0", "p1"}
 EMPTY_EVIDENCE_WARN_THRESHOLD = 0.20
 
 
+def _read_json(path: Path):
+    """Read + parse JSON, raising on any read/parse failure.
+
+    Callers decide whether a failure is fatal (findings) or tolerable (ledger).
+    """
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def load_findings(workspace: Path) -> list[dict]:
     findings_path = workspace / "findings" / "findings.json"
     if not findings_path.is_file():
         return []
-    data = json.loads(findings_path.read_text(encoding="utf-8"))
+    data = _read_json(findings_path)
     findings = data.get("findings", []) if isinstance(data, dict) else []
     return [item for item in findings if isinstance(item, dict)]
 
@@ -32,7 +40,12 @@ def load_evidence_ids(workspace: Path) -> set[str]:
     ledger_path = workspace / "evidence-ledger.json"
     if not ledger_path.is_file():
         return set()
-    data = json.loads(ledger_path.read_text(encoding="utf-8"))
+    try:
+        data = _read_json(ledger_path)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        # A malformed ledger means no resolvable evidence ids; broken-reference
+        # detection will surface the downstream problem without crashing here.
+        return set()
     entries = data.get("entries", []) if isinstance(data, dict) else []
     return {
         entry.get("evidence_id")
@@ -65,7 +78,17 @@ def main() -> int:
         print(json.dumps(payload, indent=2))
         return 1
 
-    findings = load_findings(workspace)
+    try:
+        findings = load_findings(workspace)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        payload = {
+            "status": "invalid_findings_file",
+            "workspace": str(workspace),
+            "errors": [f"could not parse {findings_path}: {error}"],
+        }
+        print(json.dumps(payload, indent=2))
+        return 1
+
     ledger_ids = load_evidence_ids(workspace)
 
     high_without_evidence: list[str] = []

@@ -29,7 +29,7 @@ Skills use progressive disclosure:
 
 1. **Frontmatter** (`name` + `description`) — always in context. This is how you decide whether to load a skill.
 2. **SKILL.md body** — loaded when you determine the skill is relevant.
-3. **Linked files** (`references/`, `scripts/`, `assets/`) — loaded on-demand as needed.
+3. **Linked files** (`references/`, `scripts/`, `templates/`, `fixtures/`) — loaded on-demand as needed.
 
 The `description` field is the trigger. If it's vague, the skill won't activate.
 
@@ -51,7 +51,8 @@ my-skill/
 ├── SKILL.md          ← required — instructions + YAML frontmatter
 ├── references/       ← optional — docs loaded on-demand
 ├── scripts/          ← optional — executable code
-└── assets/           ← optional — templates, fonts, icons
+├── templates/        ← optional — scaffold files copied into a workspace
+└── fixtures/         ← optional — sample / golden data
 ```
 
 ### Frontmatter

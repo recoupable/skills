@@ -40,8 +40,11 @@ fi
 # The deny rule: any path containing "/source/" inside a deals/ workspace.
 # We require both segments so we do not accidentally block unrelated repos
 # that happen to have a directory called "source" (e.g. a generic src tree).
+# Match both absolute/nested paths (".../deals/{id}/source/...") and paths
+# given relative to the repo root ("deals/{id}/source/...") — Write/Edit tools
+# often pass the latter, and the leading-segment glob alone would miss them.
 case "$file_path" in
-  */deals/*/source/*)
+  */deals/*/source/* | deals/*/source/*)
     reason="Refused write to immutable source file: ${file_path}. "
     reason+="Per references/deal-workspace.md, deals/{deal-id}/source/ holds "
     reason+="raw seller evidence and must not be edited. Write to normalized/, "

@@ -51,9 +51,10 @@ Store calculations and intermediate analysis.
 
 Common files:
 
-- `nps-nls-bridge.json`
+- `nps-bridge.json`
+- `nls-bridge.json`
 - `concentration-analysis.json`
-- `valuation-scenarios.md`
+- `valuation-summary.json`
 - `recoupment-analysis.md`
 - `pro-performance-analysis.md`
 

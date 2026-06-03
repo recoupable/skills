@@ -26,8 +26,12 @@ def main() -> int:
 
     path = Path(args.ledger)
     data = json.loads(path.read_text(encoding="utf-8"))
-    entries = data.get("entries")
     errors: list[str] = []
+    if not isinstance(data, dict):
+        errors.append("top-level value must be a JSON object")
+        entries = []
+    else:
+        entries = data.get("entries")
     if not isinstance(entries, list):
         errors.append("`entries` must be a list")
         entries = []
