@@ -10,7 +10,7 @@
       "name": "recoup-skills",
       "source": ".",
       "version": "1.0.0",
-      "description": "The open skills library — portable music-industry skills (artist management, songwriting, analytics, release campaigns, setup) you can drop into any agent. Also installable directly via `npx skills add recoupable/skills`.",
+      "description": "The open skills library \u2014 portable music-industry skills (artist management, songwriting, analytics, release campaigns, setup) you can drop into any agent. Also installable directly via `npx skills add recoupable/skills`.",
       "author": {
         "name": "Recoupable",
         "email": "agent@recoupable.com",
@@ -32,19 +32,60 @@
       "interface": {
         "displayName": "Recoup Skills",
         "shortDescription": "Music industry skills for AI agents",
-        "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and more. General skills work for anyone — platform skills integrate with the Recoupable platform.",
+        "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and more. General skills work for anyone \u2014 platform skills integrate with the Recoupable platform.",
         "developerName": "Recoupable",
         "category": "Music",
-        "capabilities": ["Read", "Write"],
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://recoupable.com",
+        "brandColor": "#345A5D"
+      }
+    },
+    {
+      "name": "recoup-essentials",
+      "source": "./plugins/recoup-essentials",
+      "version": "0.1.0",
+      "description": "Get onto the Recoup platform: first-run setup, API key issuance, sandbox scaffolding, artist creation and enrichment, artist workspace conventions, and direct Recoup API + connector access.",
+      "author": {
+        "name": "Recoup",
+        "email": "agent@recoupable.com",
+        "url": "https://recoupable.com"
+      },
+      "homepage": "https://recoupable.com",
+      "repository": "https://github.com/recoupable/skills",
+      "license": "Apache-2.0",
+      "keywords": [
+        "recoup",
+        "recoup-essentials",
+        "music",
+        "onboarding",
+        "setup",
+        "recoup-api",
+        "artist-management",
+        "ai-agents",
+        "agent-skills"
+      ],
+      "interface": {
+        "displayName": "Recoup Essentials",
+        "shortDescription": "Setup, API access, and artist onboarding for the Recoup platform",
+        "longDescription": "The starting-point plugin for Recoupable. Bundles the skills an agent needs to get onto the platform and stay productive: first-run setup and API key issuance, sandbox scaffolding, artist creation and enrichment, artist workspace file conventions, and direct Recoup API + connector access.",
+        "developerName": "Recoup",
+        "category": "Music",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
         "websiteURL": "https://recoupable.com",
         "brandColor": "#345A5D"
       }
     },
     {
       "name": "recoup-research",
-      "source": "./plugins/research",
+      "source": "./plugins/recoup-research",
       "version": "0.2.0",
-      "description": "Music industry research: artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection, and outreach — powered by Recoup's research API.",
+      "description": "Music industry research: artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection, and outreach \u2014 powered by Recoup's research API.",
       "author": {
         "name": "Recoup",
         "email": "agent@recoupable.com",
@@ -67,18 +108,21 @@
       ],
       "interface": {
         "displayName": "Recoup Research",
-        "shortDescription": "Music industry research — artist analytics, audience insights, playlist intelligence, and more",
-        "longDescription": "Full-stack music industry research for AI agents. Run artist research sweeps, discover emerging talent, find playlist pitch targets, compare competitive positions, and draft outreach — all powered by Recoup's research API with 30+ endpoints covering Chartmetric data, web intelligence, and people search.",
+        "shortDescription": "Music industry research \u2014 artist analytics, audience insights, playlist intelligence, and more",
+        "longDescription": "Full-stack music industry research for AI agents. Run artist research sweeps, discover emerging talent, find playlist pitch targets, compare competitive positions, and draft outreach \u2014 all powered by Recoup's research API with 30+ endpoints covering Chartmetric data, web intelligence, and people search.",
         "developerName": "Recoup",
         "category": "Music",
-        "capabilities": ["Read", "Write"],
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
         "websiteURL": "https://recoupable.com",
         "brandColor": "#345A5D"
       }
     },
     {
       "name": "recoup-deals",
-      "source": "./plugins/deals",
+      "source": "./plugins/recoup-deals",
       "version": "0.3.0",
       "description": "Music catalog deals: data-room ingestion, royalty normalization, rights checks, and valuation analysis for buy-side, seller-prep, financing, and post-close.",
       "author": {
@@ -110,15 +154,18 @@
         "longDescription": "Turn messy catalog data rooms into source-cited deal packages with normalized royalty data, rights exceptions, valuation workpapers, and buyer, seller, or lender-ready memos.",
         "developerName": "Recoup",
         "category": "Music",
-        "capabilities": ["Read", "Write"],
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
         "websiteURL": "https://recoupable.com",
         "brandColor": "#345A5D"
       }
     },
     {
       "name": "recoup-content",
-      "source": "./plugins/content",
-      "version": "0.3.0",
+      "source": "./plugins/recoup-content",
+      "version": "0.8.0",
       "description": "Recoup content workflows: skills and commands for AI agents to draft, edit, and publish content for artists across Recoup's surfaces.",
       "author": {
         "name": "Recoup",
@@ -140,18 +187,21 @@
       "interface": {
         "displayName": "Recoup Content",
         "shortDescription": "Generate, edit, and publish artist content for Recoup",
-        "longDescription": "A content workflows plugin for Recoup. Bundles skills and commands that help AI agents draft, edit, and publish content for artists across Recoup's surfaces — captions, blurbs, release copy, social posts, and more.",
+        "longDescription": "A content workflows plugin for Recoup. Bundles skills and commands that help AI agents draft, edit, and publish content for artists across Recoup's surfaces \u2014 captions, blurbs, release copy, social posts, and more.",
         "developerName": "Recoup",
         "category": "Music",
-        "capabilities": ["Read", "Write"],
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
         "websiteURL": "https://recoupable.com",
         "brandColor": "#345A5D"
       }
     },
     {
-      "name": "recoup-songs",
-      "source": "./plugins/songs",
-      "version": "0.1.0",
+      "name": "recoup-song-analysis",
+      "source": "./plugins/recoup-song-analysis",
+      "version": "0.2.0",
       "description": "Song audio analysis: turn a track's audio into catalog metadata, lyrics, playlist pitches, sync briefs, and mix feedback using Recoup's audio language model (Music Flamingo).",
       "author": {
         "name": "Recoup",
@@ -172,12 +222,15 @@
         "agent-skills"
       ],
       "interface": {
-        "displayName": "Recoup Songs",
+        "displayName": "Recoup Song Analysis",
         "shortDescription": "Turn a song's audio into metadata, lyrics, playlist pitches, sync briefs, and mix feedback",
-        "longDescription": "Song audio analysis for AI agents. Point it at a public audio URL and get structured catalog metadata, transcribed lyrics, DSP playlist pitches, music-supervisor sync briefs, and technical mix feedback — powered by Recoup's audio language model (Music Flamingo).",
+        "longDescription": "Song audio analysis for AI agents. Point it at a public audio URL and get structured catalog metadata, transcribed lyrics, DSP playlist pitches, music-supervisor sync briefs, and technical mix feedback \u2014 powered by Recoup's audio language model (Music Flamingo).",
         "developerName": "Recoup",
         "category": "Music",
-        "capabilities": ["Read", "Write"],
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
         "websiteURL": "https://recoupable.com",
         "brandColor": "#345A5D"
       }

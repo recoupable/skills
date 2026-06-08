@@ -1,12 +1,20 @@
 # Research workflows, interpretation, and synthesis
 
-Multi-step workflows that chain `/api/research/*` endpoints to answer strategic questions, plus the interpretation rules of thumb and cross-cutting synthesis patterns to apply once you have the data.
+Multi-step workflows that chain `/api/research/*` endpoints to answer strategic
+questions, plus the interpretation rules of thumb and cross-cutting synthesis
+patterns to apply once you have the data.
+
+The research API is backed by **Songstats** — IDs are short alphanumeric
+strings, and several endpoints from older versions (`cities`, `charts`,
+`discover`, `genres`, `festivals`, `radio`, `venues`, `rank`,
+`instagram-posts`, `playlist`/`curator` detail) **no longer exist**. The
+workflows below only use endpoints that are live in production.
 
 All examples assume:
 
 ```bash
 export RECOUP_API_KEY="recoup_sk_..."
-export RECOUP_API="https://recoup-api.vercel.app/api"
+export RECOUP_API="https://api.recoupable.com/api"
 AUTH="x-api-key: $RECOUP_API_KEY"
 ```
 
@@ -16,43 +24,51 @@ AUTH="x-api-key: $RECOUP_API_KEY"
 
 Raw numbers are noise without interpretation. Heuristics for each data type:
 
-**Metrics:**
+**Metrics** (`/research/metrics?source=spotify` → `stats[0].data`):
 
-- Follower-to-listener ratio above 20% = dedicated fan base (they follow, not just stream)
-- Save-to-listener ratio above 3% = strong catalog stickiness
-- Week-over-week listener growth above 5% = momentum
-- Popularity score trending up = algorithmic favor
+- `followers_total ÷ monthly_listeners_current` above ~20% = dedicated fan base
+  (they follow, not just stream)
+- `popularity_current` near 100 = strong algorithmic favor
+- `playlists_editorial_current` low relative to `monthly_listeners_current` =
+  under-playlisted (editorial pitch opportunity)
+- Compare `*_current` vs `*_total` (e.g. `playlists_current` vs
+  `playlists_total`) to see what's active now vs all-time
+- These are **current snapshots**, not time series — to track change over time,
+  store today's snapshot and diff against a prior one (persist daily snapshots
+  to the artist workspace and compare)
 
-**Cities:**
+**Similar artists** (`/research/similar` → `artists[]`):
 
-- Top cities international but playlists US-only = untapped international opportunity
-- High listeners in a city the artist has never toured = tour opportunity
-- Compare with similar artists' cities to find geographic white space
+- It's a flat, ranked list of artist references — **no scores, no career stage,
+  no momentum**. To size up a peer, call `/research/metrics` on them.
+- Weight the match with `audience` / `genre` / `mood` / `musicality`
+  (`high|medium|low`). `audience=high` for shared-fanbase peers; `musicality=high`
+  for sonic look-alikes (better for discovery of smaller artists).
+- Peers with playlists you're NOT on = pitch targets.
 
-**Similar artists:**
+**Playlists** (`/research/playlists` → `placements[]`):
 
-- `career_stage`: undiscovered → developing → mid-level → mainstream → superstar → legendary
-- `recent_momentum`: decline → gradual decline → steady → growth → explosive growth
-- Peers all "mainstream" but artist is "mid-level" = breakout potential
-- Peers with playlists you're NOT on = pitch targets
+- `followers_total` is a formatted string (`"34.3M"`), not an integer — parse it
+  if you need to sort numerically.
+- Artist-level placements have **no editorial flag**; for editorial-only
+  filtering use `/research/track/playlists?...&editorial=true` per track, or read
+  `playlists_editorial_current` from `/research/metrics`.
+- `status=past` placements that dropped off = re-pitch opportunities.
 
-**Playlists:**
+**Audience** (`/research/audience?platform=` → `audience[]`):
 
-- 2 editorial playlists for 5M+ listeners = severely under-playlisted (pitch immediately)
-- `placements[].playlist.followers` is often `0` — use `peak_position` or `/research/playlist?platform=spotify&id=` for true reach
-- Past placements (`status=past`) that dropped off = re-pitch opportunities
+- The only geographic/demographic source now (Spotify city data was removed).
+  Country breakdown here is your geography signal.
+- Gender skew → content strategy (visual style, messaging).
+- Age concentration → platform priority (Gen Z = TikTok, 25–34 = Instagram).
+- Often `[]` for smaller artists — fall back to another platform or web research.
 
-**Audience:**
+**Activity feeds** (`/research/career`, `/research/insights`, `/research/milestones`):
 
-- Gender skew tells you content strategy (visual style, messaging)
-- Age concentration tells you platform priority (Gen Z = TikTok, 25–34 = Instagram)
-- Country mismatch between audience and cities = content localization opportunity
-
-**Charts / rank / milestones:**
-
-- `/research/rank` is one number — useful for before/after deltas over time
-- `/research/milestones` is the activity feed — filter for high star ratings when summarizing
-- `/research/charts` is platform-wide, not artist-scoped — find what's hot on a market/platform, then cross-reference with `/similar`
+- Each entry has `activity_tier` (integer, **lower = more significant**) — sort
+  ascending to surface the biggest events. There is no star rating.
+- Empty arrays are legitimate; don't retry. Cross-read the three feeds for
+  narrative.
 
 ---
 
@@ -60,11 +76,19 @@ Raw numbers are noise without interpretation. Heuristics for each data type:
 
 Don't dump raw JSON. Combine endpoints and draw conclusions:
 
-- **Geographic strategy:** `cities` + `audience?platform=instagram` → "Sao Paulo is #1 (135K listeners) but IG audience is 80% US. Massive Brazilian fan base isn't being served with localized content."
-- **Playlist gap analysis:** `similar` → `playlists` on each peer → "5 of your 10 peers are on 'R&B Rotation' (450K followers), you're not. Top pitch target."
-- **Platform pipeline:** `metrics?source=tiktok` + `metrics?source=spotify` → "TikTok followers up 40% last month, Spotify listeners flat. Virality isn't converting. Add Spotify-specific CTAs to TikTok content."
-- **Career positioning:** `similar` → compare career stages → "You're the only 'mainstream' artist in your peer group — everyone else is 'mid-level'. Leverage for brand deals and festival slots."
-- **Chart → catalog:** `charts?platform=tiktok&country=US` + `tracks` → identify sound trends the artist's catalog could slot into.
+- **Geographic strategy:** `audience?platform=instagram` + `audience?platform=tiktok`
+  → "IG audience is 80% US but TikTok is 35% Brazil — the Brazilian fan base
+  isn't being served with localized content."
+- **Playlist gap analysis:** `similar` → `playlists` on each peer → "5 of your 10
+  peers are on 'RapCaviar', you're not. Top pitch target."
+- **Platform pipeline:** `metrics?source=tiktok` + `metrics?source=spotify` →
+  "TikTok followers far ahead of Spotify conversion. Virality isn't translating.
+  Add Spotify-specific CTAs to TikTok content."
+- **Editorial gap:** `metrics?source=spotify` (`playlists_editorial_current`) +
+  `playlists` → "568 editorial placements for 99M listeners is healthy; the gap is
+  algorithmic, not editorial."
+- **Catalog momentum:** `tracks` + `milestones` → identify recent playlist/chart
+  events tied to specific tracks the artist could amplify.
 
 ---
 
@@ -76,33 +100,37 @@ If working in an artist workspace, save research results to `research/` with tim
 research/artist-intel-2026-04-17.md
 ```
 
-Don't overwrite `context/artist.md` with research data. Static context (who the artist IS) is separate from dynamic research (how they're performing NOW). If the research reveals something that should update the static profile, suggest it — don't auto-update.
+Don't overwrite `context/artist.md` with research data. Static context (who the
+artist IS) is separate from dynamic research (how they're performing NOW). If
+the research reveals something that should update the static profile, suggest it
+— don't auto-update.
 
 ---
 
 ## 1. Playlist Pitching Intelligence
 
-**Question:** "Which playlist curators should I pitch to?"
+**Question:** "Which playlists should I pitch to?"
 
 ```bash
 # 1. Find similar artists slightly bigger than yours (good benchmarks)
 curl -s "$RECOUP_API/research/similar?artist={ARTIST}&audience=high&genre=high&limit=50" -H "$AUTH"
 
-# 2. For each similar artist, get their editorial playlist placements
-curl -s "$RECOUP_API/research/playlists?artist={similar_artist}&editorial=true" -H "$AUTH"
+# 2. For each similar artist, get their current playlist placements
+curl -s "$RECOUP_API/research/playlists?artist={similar_artist}&platform=spotify&status=current" -H "$AUTH"
 
-# 3. Look for curator overlap — playlists adding multiple similar artists
+# 3. Look for overlap — playlists hosting multiple similar artists that yours isn't on
 
-# 4. For promising playlists, resolve Chartmetric IDs via search, then load detail
-curl -s "$RECOUP_API/research?q={PLAYLIST_NAME}&type=playlists&beta=true" -H "$AUTH"
-curl -s "$RECOUP_API/research/playlist?platform=spotify&id={cm_playlist_id}" -H "$AUTH"
-curl -s "$RECOUP_API/research/curator?platform=spotify&id={cm_curator_id}" -H "$AUTH"
+# 4. For per-track editorial detail, resolve a track id then page the track-level endpoint
+curl -s "$RECOUP_API/research?q={TRACK_NAME}&type=tracks" -H "$AUTH"            # get track id
+curl -s "$RECOUP_API/research/track/playlists?id={track_id}&editorial=true&indie=true&majorCurator=true&popularIndie=true" -H "$AUTH"
 
 # 5. Check if the target artist was ever on these playlists before
 curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&status=past" -H "$AUTH"
 ```
 
-**What to synthesize:** Curators who already playlist similar artists but haven't added yours yet. Prioritize curators who've added 2+ similar artists — they're the warmest targets.
+**What to synthesize:** Playlists that already host similar artists but haven't
+added yours yet. Prioritize playlists hosting 2+ similar artists — they're the
+warmest targets.
 
 ---
 
@@ -111,52 +139,58 @@ curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&status=past" -H "$AUTH"
 **Question:** "Is TikTok virality translating to Spotify growth?"
 
 ```bash
-# 1. TikTok metrics over time
+# 1. TikTok metrics snapshot
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=tiktok" -H "$AUTH"
 
-# 2. Spotify metrics over the same period
+# 2. Spotify metrics snapshot
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=spotify" -H "$AUTH"
 
 # 3. TikTok audience demographics
 curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=tiktok" -H "$AUTH"
 
-# 4. Spotify listener cities
-curl -s "$RECOUP_API/research/cities?artist={ARTIST}" -H "$AUTH"
+# 4. Instagram audience for geographic cross-check
+curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=instagram" -H "$AUTH"
 
-# 5. Top Instagram posts (often cross-posted from TikTok)
-curl -s "$RECOUP_API/research/instagram-posts?artist={ARTIST}" -H "$AUTH"
+# 5. Narrative context for any spike
+curl -s -X POST "$RECOUP_API/research/web" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{"query":"{ARTIST} viral TikTok moment 2026","max_results":10}'
 ```
 
-**What to synthesize:** Correlation between TikTok follower spikes and Spotify listener growth. Geographic mismatch = opportunity (e.g. TikTok viral in Brazil but Spotify listeners mostly in US → Brazil is untapped).
+**What to synthesize:** Compare TikTok scale against Spotify conversion.
+Geographic mismatch between TikTok audience and Spotify audience = opportunity
+(e.g. TikTok skews Brazil but Spotify skews US → Brazil is untapped). Because
+metrics are snapshots, store today's reading to measure change next time.
 
 ---
 
-## 3. Tour Routing Intelligence
+## 3. Geographic & Tour Strategy
 
-**Question:** "Where should this artist tour next?"
+**Question:** "Where is this artist strong, and where should they tour?"
+
+> The dedicated `cities`, `venues`, and `festivals` endpoints were removed.
+> Geography now comes from `/research/audience` country breakdowns plus web
+> research for venues/festivals.
 
 ```bash
-# 1. Top listener cities
-curl -s "$RECOUP_API/research/cities?artist={ARTIST}" -H "$AUTH"
+# 1. Audience geography across platforms (country breakdown lives here now)
+curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=instagram" -H "$AUTH"
+curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=tiktok" -H "$AUTH"
+curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=youtube" -H "$AUTH"
 
-# 2. Festivals
-curl -s "$RECOUP_API/research/festivals" -H "$AUTH"
-
-# 3. Past venues (capacity history for routing anchors)
-curl -s "$RECOUP_API/research/venues?artist={ARTIST}" -H "$AUTH"
-
-# 4. Similar artists and their cities (for co-headlining)
+# 2. Similar artists (for co-headlining / routing comps)
 curl -s "$RECOUP_API/research/similar?artist={ARTIST}&audience=high&limit=20" -H "$AUTH"
 
-# 5. Audience breakdown by platform
-curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=youtube" -H "$AUTH"
-curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=instagram" -H "$AUTH"
-
-# 6. Playlist reach sorted by followers (as proxy for regional strength via curator markets)
-curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&sort=followers" -H "$AUTH"
+# 3. Venue history, festival fit, recent touring — web/deep research
+curl -s -X POST "$RECOUP_API/research/web" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{"query":"{ARTIST} tour dates venues capacity 2025 2026","max_results":10}'
+curl -s -X POST "$RECOUP_API/research/deep" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{"query":"{ARTIST} touring history, venue sizes, and festival appearances over the last two years"}'
 ```
 
-**What to synthesize:** Ranked cities by streaming engagement, cross-referenced with festival opportunities and historical venue capacity. Cities where similar artists tour successfully but this artist hasn't been = expansion opportunities.
+**What to synthesize:** Ranked markets by audience concentration, cross-checked
+with where similar artists tour successfully (from web research) and the
+artist's own venue history. Markets with audience but no recent touring =
+expansion opportunities.
 
 ---
 
@@ -164,30 +198,37 @@ curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&sort=followers" -H "$AUT
 
 **Question:** "Find emerging artists in [genre] before they blow up"
 
+> The `discover` (filter-based) and `genres` endpoints were removed. Discovery
+> now starts from a known **anchor artist** and fans out through `/similar`,
+> validated with `/metrics`. Use web/deep research to find anchors or scan a
+> scene.
+
 ```bash
-# 0. (Optional) list genre IDs once
-curl -s "$RECOUP_API/research/genres" -H "$AUTH"
+# 1. Pick an anchor — a known artist in the target sound. Find them, or scout via web.
+curl -s "$RECOUP_API/research?q={ANCHOR_ARTIST}&type=artists" -H "$AUTH"
+# (or) discover candidate names from the web:
+curl -s -X POST "$RECOUP_API/research/web" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{"query":"emerging {GENRE} artists to watch 2026","max_results":15}'
 
-# 1. Either discover by filters, or start from a breakout anchor artist
-curl -s "$RECOUP_API/research/discover?genre=86&country=US&sp_monthly_listeners_min=50000&sp_monthly_listeners_max=200000&sort=weekly_diff.sp_monthly_listeners&limit=50" -H "$AUTH"
-# or
-curl -s "$RECOUP_API/research?q={ANCHOR_ARTIST}&type=artists&beta=true" -H "$AUTH"
-
-# 2. Find artists similar by musicality (we want undiscovered, not audience overlap)
+# 2. Fan out to sonic look-alikes (musicality=high surfaces smaller, undiscovered acts)
 curl -s "$RECOUP_API/research/similar?artist={ANCHOR_ARTIST}&musicality=high&genre=high&limit=50" -H "$AUTH"
 
-# 3. For promising candidates, check trajectory on two platforms
+# 3. For each candidate, validate trajectory on two platforms (size them — similar has no metrics)
 curl -s "$RECOUP_API/research/metrics?artist={candidate}&source=spotify" -H "$AUTH"
 curl -s "$RECOUP_API/research/metrics?artist={candidate}&source=tiktok" -H "$AUTH"
 
-# 4. Editorial placements = label interest signal
-curl -s "$RECOUP_API/research/playlists?artist={candidate}&editorial=true" -H "$AUTH"
+# 4. Editorial pickup = label interest signal
+curl -s "$RECOUP_API/research/metrics?artist={candidate}&source=spotify" -H "$AUTH"   # playlists_editorial_current
+curl -s "$RECOUP_API/research/playlists?artist={candidate}&status=current" -H "$AUTH"
 
-# 5. AI-generated insights
+# 5. AI-generated insights for context
 curl -s "$RECOUP_API/research/insights?artist={candidate}" -H "$AUTH"
 ```
 
-**What to synthesize:** Emerging artists with similar sound but smaller audience, sorted by growth velocity. Filter for `career_stage` = "undiscovered" or "developing" in the `/research/similar` response.
+**What to synthesize:** Emerging artists with a similar sound but a smaller
+audience. Since `/similar` gives no stage/score, rank candidates yourself by the
+`/metrics` snapshot (lower `monthly_listeners_current` with rising editorial
+pickup = the breakout window).
 
 ---
 
@@ -199,27 +240,30 @@ curl -s "$RECOUP_API/research/insights?artist={candidate}" -H "$AUTH"
 # 1. All tracks (artist-scoped)
 curl -s "$RECOUP_API/research/tracks?artist={ARTIST}" -H "$AUTH"
 
-# 2. Playlist placements (which songs are playlisted today?)
-curl -s "$RECOUP_API/research/playlists?artist={ARTIST}" -H "$AUTH"
+# 2. Albums (needs the provider artist id — get it from search)
+curl -s "$RECOUP_API/research?q={ARTIST}&type=artists" -H "$AUTH"                 # get id
+curl -s "$RECOUP_API/research/albums?artist_id={artist_id}" -H "$AUTH"
 
-# 3. For deep per-track playlist coverage, resolve a Chartmetric track id first
-curl -s "$RECOUP_API/research?q={TRACK_NAME}&type=tracks&beta=true" -H "$AUTH"
-curl -s "$RECOUP_API/research/track/playlists?id={cm_track_id}&editorial=true" -H "$AUTH"
+# 3. Current playlist placements (which songs are playlisted today?)
+curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&status=current" -H "$AUTH"
 
-# 4. Albums (needs the Chartmetric artist id)
-curl -s "$RECOUP_API/research?q={ARTIST}&type=artists&beta=true" -H "$AUTH"   # get id
-curl -s "$RECOUP_API/research/albums?artist_id={cm_artist_id}" -H "$AUTH"
+# 4. For deep per-track playlist coverage, resolve a track id first
+curl -s "$RECOUP_API/research?q={TRACK_NAME}&type=tracks" -H "$AUTH"              # get track id
+curl -s "$RECOUP_API/research/track/playlists?id={track_id}&editorial=true&indie=true&majorCurator=true&popularIndie=true" -H "$AUTH"
 
-# 5. Metrics to compare against release dates
+# 5. Track detail (genres, audio analysis, collaborators) for sound fit
+curl -s "$RECOUP_API/research/track?id={track_id}" -H "$AUTH"
+
+# 6. Artist metrics for context
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=spotify" -H "$AUTH"
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=tiktok" -H "$AUTH"
 ```
 
-**What to synthesize:** Track-by-track analysis. Look for:
+**What to synthesize:** Track-by-track. Look for:
 
-- High playlist reach but low streams = discovery issue (content isn't converting)
-- Low playlist but high TikTok = pitch opportunity (organic momentum, needs editorial support)
-- Old songs suddenly getting playlisted = catalog momentum (amplify it)
+- Tracks on many playlists but not converting to streams = discovery issue
+- Tracks with strong audio-analysis fit for a target playlist = pitch candidates
+- Old songs suddenly getting playlisted (from `/milestones`) = catalog momentum
 
 ---
 
@@ -237,24 +281,21 @@ curl -s "$RECOUP_API/research/metrics?artist={your_artist}&source=spotify" -H "$
 # 2. Similar artists (to infer competitor roster)
 curl -s "$RECOUP_API/research/similar?artist={your_artist}&audience=high&genre=high" -H "$AUTH"
 
-# 3. Playlist reach
-curl -s "$RECOUP_API/research/playlists?artist={your_artist}&sort=followers" -H "$AUTH"
-curl -s "$RECOUP_API/research/playlists?artist={competitor_artist}&sort=followers" -H "$AUTH"
+# 3. Playlist placements
+curl -s "$RECOUP_API/research/playlists?artist={your_artist}&status=current" -H "$AUTH"
+curl -s "$RECOUP_API/research/playlists?artist={competitor_artist}&status=current" -H "$AUTH"
 
-# 4. Audience demographics
+# 4. Audience demographics + geography
 curl -s "$RECOUP_API/research/audience?artist={your_artist}&platform=instagram" -H "$AUTH"
 curl -s "$RECOUP_API/research/audience?artist={competitor_artist}&platform=instagram" -H "$AUTH"
 
-# 5. Where fans listen
-curl -s "$RECOUP_API/research/cities?artist={your_artist}" -H "$AUTH"
-curl -s "$RECOUP_API/research/cities?artist={competitor_artist}" -H "$AUTH"
-
-# 6. Single-number global rank for headline deltas
-curl -s "$RECOUP_API/research/rank?artist={your_artist}" -H "$AUTH"
-curl -s "$RECOUP_API/research/rank?artist={competitor_artist}" -H "$AUTH"
+# 5. Headline numbers come from /metrics (there is no /rank endpoint)
+curl -s "$RECOUP_API/research/metrics?artist={competitor_artist}&source=spotify" -H "$AUTH"
 ```
 
-**What to synthesize:** Side-by-side comparison. Identify where your roster under-indexes vs competitors on specific metrics — those are the gaps to close.
+**What to synthesize:** Side-by-side comparison of `/metrics` snapshots
+(monthly listeners, followers, editorial playlists, playlist reach). Identify
+where your roster under-indexes vs competitors — those are the gaps to close.
 
 ---
 
@@ -263,33 +304,33 @@ curl -s "$RECOUP_API/research/rank?artist={competitor_artist}" -H "$AUTH"
 **Question:** "Why did this song go viral? Can we replicate it?"
 
 ```bash
-# 1. Resolve + fetch track details
-curl -s "$RECOUP_API/research?q={TRACK_NAME}&type=tracks&beta=true" -H "$AUTH"
-curl -s "$RECOUP_API/research/track?id={cm_track_id}" -H "$AUTH"
+# 1. Resolve + fetch track details (genres, audio analysis, collaborators)
+curl -s "$RECOUP_API/research?q={TRACK_NAME}&type=tracks" -H "$AUTH"             # get track id
+curl -s "$RECOUP_API/research/track?id={track_id}" -H "$AUTH"
 
-# 2. Metrics around release date
+# 2. Artist metrics snapshots
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=spotify" -H "$AUTH"
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=tiktok" -H "$AUTH"
 
 # 3. Playlist timeline for this track specifically (5 credits)
-curl -s "$RECOUP_API/research/track/playlists?id={cm_track_id}&status=current" -H "$AUTH"
-curl -s "$RECOUP_API/research/track/playlists?id={cm_track_id}&status=past&since=2025-01-01" -H "$AUTH"
+curl -s "$RECOUP_API/research/track/playlists?id={track_id}&status=current" -H "$AUTH"
+curl -s "$RECOUP_API/research/track/playlists?id={track_id}&status=past&since=2025-01-01" -H "$AUTH"
 
-# 4. Artist-level milestone feed — chart entries, big playlist adds, rating stars
+# 4. Artist-level activity feed — chart entries, big playlist adds
 curl -s "$RECOUP_API/research/milestones?artist={ARTIST}" -H "$AUTH"
 
 # 5. AI insights (often mention the viral moment)
 curl -s "$RECOUP_API/research/insights?artist={ARTIST}" -H "$AUTH"
 
-# 6. Check if similar artists had a similar trajectory
-curl -s "$RECOUP_API/research/similar?artist={ARTIST}&musicality=high" -H "$AUTH"
-
-# 7. Narrative context for press / cultural framing
+# 6. Narrative context for press / cultural framing
 curl -s -X POST "$RECOUP_API/research/web" -H "$AUTH" -H "Content-Type: application/json" \
-  -d "{\"query\":\"{TRACK_NAME} {ARTIST} viral TikTok moment\",\"max_results\":10}"
+  -d '{"query":"{TRACK_NAME} {ARTIST} viral TikTok moment","max_results":10}'
 ```
 
-**What to synthesize:** Timeline of the viral moment — what platform it started on, which playlists amplified it, which audience demographics drove sharing. Compare with similar artists' trajectories to judge replicability.
+**What to synthesize:** Timeline of the viral moment — which playlists amplified
+it (from `track/playlists`), what the audio analysis suggests about its hook,
+which audience drove sharing. The per-song TikTok *counts* aren't in the API —
+get that narrative from web/deep research, not fabricated numbers.
 
 ---
 
@@ -298,27 +339,27 @@ curl -s -X POST "$RECOUP_API/research/web" -H "$AUTH" -H "Content-Type: applicat
 **Question:** "Which new markets should we focus on?"
 
 ```bash
-# 1. Current listener geography
-curl -s "$RECOUP_API/research/cities?artist={ARTIST}" -H "$AUTH"
-
-# 2. Platform-specific audience breakdown
+# 1. Platform-specific audience country breakdown (the geography source)
 curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=instagram" -H "$AUTH"
 curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=tiktok" -H "$AUTH"
 curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=youtube" -H "$AUTH"
 
-# 3. Similar artists and their top cities
+# 2. Similar artists and their audience geography
 curl -s "$RECOUP_API/research/similar?artist={ARTIST}&genre=high&limit=10" -H "$AUTH"
 # For each similar artist:
-curl -s "$RECOUP_API/research/cities?artist={similar_artist}" -H "$AUTH"
+curl -s "$RECOUP_API/research/audience?artist={similar_artist}&platform=instagram" -H "$AUTH"
 
-# 4. Playlist coverage by geography (via curator regions)
-curl -s "$RECOUP_API/research/playlists?artist={ARTIST}" -H "$AUTH"
+# 3. Playlist coverage (curator markets as a soft regional proxy)
+curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&status=current" -H "$AUTH"
 
-# 5. Regional chart context for a candidate market
-curl -s "$RECOUP_API/research/charts?platform=spotify&country=BR&interval=weekly" -H "$AUTH"
+# 4. Regional/scene context for a candidate market
+curl -s -X POST "$RECOUP_API/research/web" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{"query":"{GENRE} scene streaming growth Brazil 2026","max_results":10,"country":"BR"}'
 ```
 
-**What to synthesize:** Cities where similar artists thrive but the target artist is weak = expansion opportunities. Cross-reference with playlist coverage — markets with fans but no playlist presence need pitching.
+**What to synthesize:** Markets where similar artists over-index but the target
+artist is weak = expansion opportunities. Cross-reference with playlist coverage
+— markets with fans but no playlist presence need pitching.
 
 ---
 
@@ -333,20 +374,22 @@ curl -s "$RECOUP_API/research/similar?artist={ARTIST}&audience=high&limit=30" -H
 # 2. Genre/sound overlap
 curl -s "$RECOUP_API/research/similar?artist={ARTIST}&genre=high&musicality=high" -H "$AUTH"
 
-# 3. Playlist synergy (shared playlists = easy collab pitch)
-curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&editorial=true" -H "$AUTH"
-curl -s "$RECOUP_API/research/playlists?artist={collab_target}&editorial=true" -H "$AUTH"
+# 3. Size each candidate (similar has no metrics) + playlist synergy
+curl -s "$RECOUP_API/research/metrics?artist={collab_target}&source=spotify" -H "$AUTH"
+curl -s "$RECOUP_API/research/playlists?artist={collab_target}&status=current" -H "$AUTH"
 
-# 4. Geographic overlap (shared cities = tour collab opportunity)
-curl -s "$RECOUP_API/research/cities?artist={ARTIST}" -H "$AUTH"
-curl -s "$RECOUP_API/research/cities?artist={collab_target}" -H "$AUTH"
+# 4. Geographic overlap (shared markets = tour collab opportunity)
+curl -s "$RECOUP_API/research/audience?artist={ARTIST}&platform=instagram" -H "$AUTH"
+curl -s "$RECOUP_API/research/audience?artist={collab_target}&platform=instagram" -H "$AUTH"
 
 # 5. Enrich collaborator with structured facts (label, management) if needed
 curl -s -X POST "$RECOUP_API/research/enrich" -H "$AUTH" -H "Content-Type: application/json" \
   -d '{"input":"{collab_target} musician","schema":{"type":"object","properties":{"label":{"type":"string"},"manager":{"type":"string"}}}}'
 ```
 
-**What to synthesize:** Ranked collaboration targets by audience overlap, career stage (slightly bigger = ideal), and playlist synergy. Shared playlists + shared cities = strongest collab case.
+**What to synthesize:** Ranked collaboration targets by audience overlap, size
+(slightly bigger via `/metrics` = ideal exposure uplift), and playlist synergy.
+Shared playlists + shared audience markets = strongest collab case.
 
 ---
 
@@ -355,30 +398,30 @@ curl -s -X POST "$RECOUP_API/research/enrich" -H "$AUTH" -H "Content-Type: appli
 **Question:** "When should we release, and how should we roll it out?"
 
 ```bash
-# 1. Analyze past releases (albums requires CM artist_id)
-curl -s "$RECOUP_API/research?q={ARTIST}&type=artists&beta=true" -H "$AUTH"   # get id
-curl -s "$RECOUP_API/research/albums?artist_id={cm_artist_id}" -H "$AUTH"
+# 1. Analyze past releases (albums needs provider artist_id)
+curl -s "$RECOUP_API/research?q={ARTIST}&type=artists" -H "$AUTH"                 # get id
+curl -s "$RECOUP_API/research/albums?artist_id={artist_id}" -H "$AUTH"
 curl -s "$RECOUP_API/research/career?artist={ARTIST}" -H "$AUTH"
 
 # 2. What worked — past playlist adds after previous releases
-curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&status=past&since=2024-01-01" -H "$AUTH"
+curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&status=past" -H "$AUTH"
 
-# 3. Similar artists' successful releases
+# 3. Similar artists' release cadence
 curl -s "$RECOUP_API/research/similar?artist={ARTIST}&audience=high&limit=10" -H "$AUTH"
-# For each similar artist:
-curl -s "$RECOUP_API/research/albums?artist_id={similar_cm_artist_id}" -H "$AUTH"
+# For each peer:
+curl -s "$RECOUP_API/research?q={similar_artist}&type=artists" -H "$AUTH"         # get peer id
+curl -s "$RECOUP_API/research/albums?artist_id={peer_artist_id}" -H "$AUTH"
 curl -s "$RECOUP_API/research/career?artist={similar_artist}" -H "$AUTH"
 
-# 4. Current playlist momentum
-curl -s "$RECOUP_API/research/playlists?artist={ARTIST}&editorial=true" -H "$AUTH"
-
-# 5. Which platforms are hottest right now
+# 4. Which platforms are hottest right now
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=spotify" -H "$AUTH"
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=tiktok" -H "$AUTH"
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=youtube_channel" -H "$AUTH"
 ```
 
-**What to synthesize:** Release timing recommendation grounded in historical patterns (when did past releases get the most playlist adds?), similar artists' release cycles, and which platform has the most momentum right now.
+**What to synthesize:** Release timing grounded in historical patterns (when did
+past releases get the most playlist adds, from `career`/`milestones`?), peer
+release cycles, and which platform has the most momentum right now.
 
 ---
 
@@ -400,13 +443,17 @@ curl -s -X POST "$RECOUP_API/research/enrich" -H "$AUTH" -H "Content-Type: appli
   -d '{"input":"Jane Doe A&R at Atlantic Records","schema":{"type":"object","properties":{"title":{"type":"string"},"recent_signings":{"type":"array","items":{"type":"string"}},"contact":{"type":"string"}}},"processor":"core"}'
 ```
 
-**What to synthesize:** A ranked outreach list with title, recent relevant work, and a suggested angle for the pitch.
+**What to synthesize:** A ranked outreach list with title, recent relevant work,
+and a suggested angle for the pitch.
 
 ---
 
 ## Chaining workflows and tools
 
-The 11 workflows above are **building blocks, not complete answers**. Almost no real user question maps cleanly onto exactly one workflow — the real deliverable is usually a chain: `Workflow A` → `Workflow B` → external tool call → hand off to another skill.
+The 11 workflows above are **building blocks, not complete answers**. Almost no
+real user question maps cleanly onto exactly one workflow — the real deliverable
+is usually a chain: `Workflow A` → `Workflow B` → external tool call → hand off
+to another skill.
 
 This section teaches you how to compose.
 
@@ -420,23 +467,42 @@ Every chain you'll ever build is one of three shapes:
 | **Data → Draft** | Research output becomes a deliverable the user can act on | Peer research (W9) + people search (W11) → drafted outreach email the user reviews and sends themselves |
 | **Skill → Skill** | Finish with this skill, hand off to another | Research sweep (W4) → hand off to `content-creation` skill for press one-sheet; or to `release-management` for timing; or to `streaming-growth` for ads strategy |
 
-Most real deliverables are all three stacked: compose several workflows (Data → Data), turn the result into a draft (Data → Draft), then hand off whatever remains to another skill (Skill → Skill).
+Most real deliverables are all three stacked: compose several workflows (Data →
+Data), turn the result into a draft (Data → Draft), then hand off whatever
+remains to another skill (Skill → Skill).
 
 ### What this skill produces
 
 Beyond the `/research/*` endpoints, the agent running this skill typically produces:
 
-- **Written drafts** for the user to act on — outreach emails, pitch copy, press blurbs, DSP pitches. This skill drafts; the user sends. It does not execute external-facing actions (no email sending, no social posting, no contacting managers).
-- **Artist workspace writes** — save synthesized research to `context/artist.md`, `research/{date}.md`, `releases/{slug}/RELEASE.md`. See "Saving research" above.
-- **Handoffs to other skills** — `content-creation` (promo content, captions, one-sheets), `release-management` (RELEASE.md lifecycle), `streaming-growth` (Spotify Showcase/Marquee, DSP ads), `artist-workspace` (workspace setup/lookup), `trend-to-song` (reverse from cultural moment to song).
+- **Written drafts** for the user to act on — outreach emails, pitch copy, press
+  blurbs, DSP pitches. This skill drafts; the user sends. It does not execute
+  external-facing actions (no email sending, no social posting, no contacting
+  managers).
+- **Artist workspace writes** — save synthesized research to `context/artist.md`,
+  `research/{date}.md`, `releases/{slug}/RELEASE.md`. See "Saving research" above.
+- **Handoffs to other skills** — `content-creation` (promo content, captions,
+  one-sheets), `release-management` (RELEASE.md lifecycle), `streaming-growth`
+  (Spotify Showcase/Marquee, DSP ads), `recoup-artist-workspace` (workspace
+  setup/lookup), `trend-to-song` (reverse from cultural moment to song).
 
 ### Chaining rules (read before composing)
 
-1. **Don't re-fetch what you already have.** If `/similar` already returned `cities` for a peer, reuse it — don't call `/research/cities` on the peer again.
-2. **Preserve artist context through the chain.** Every downstream step should reference the user's specific artist data (cities, audience, playlist reach), not generic templates. That's what makes the final output feel researched instead of auto-generated.
-3. **Draft, don't execute, for external-facing actions.** Anything that touches a real human (cold outreach to managers/A&R, social posts, press contacts) should be drafted and presented for the user to send themselves. This skill composes research and produces drafts — it does not send email, post content, or contact anyone.
-4. **Save once, reference many.** Write synthesized research to the artist workspace once; subsequent chains read from there instead of re-running the whole fan-out. Check `context/artist.md` before starting a new research pass.
-5. **Stop when the question is answered.** Chains can loop forever if ungated. Finish when the user's original ask is satisfied, not when you run out of endpoints to call.
+1. **Don't re-fetch what you already have.** If `/metrics` already gave you the
+   peer's snapshot, reuse it — don't call it again.
+2. **Preserve artist context through the chain.** Every downstream step should
+   reference the user's specific artist data (audience geography, playlist reach,
+   metrics), not generic templates. That's what makes the final output feel
+   researched instead of auto-generated.
+3. **Draft, don't execute, for external-facing actions.** Anything that touches a
+   real human (cold outreach to managers/A&R, social posts, press contacts)
+   should be drafted and presented for the user to send themselves.
+4. **Save once, reference many.** Write synthesized research to the artist
+   workspace once; subsequent chains read from there instead of re-running the
+   whole fan-out. Check `context/artist.md` before starting a new research pass.
+5. **Stop when the question is answered.** Chains can loop forever if ungated.
+   Finish when the user's original ask is satisfied, not when you run out of
+   endpoints to call.
 
 ---
 
@@ -446,15 +512,15 @@ Beyond the `/research/*` endpoints, the agent running this skill typically produ
 
 ```text
 Step 1 — Research the artist (full sweep per SKILL.md decision tree)
-  Calls: /research/profile + /research/metrics + /research/cities
+  Calls: /research/profile + /research/metrics?source=spotify
          + /research/audience + /research/similar
   Writes: context/artist.md (if workspace exists)
-  Output: full artist context — cities, audience demos, network strength
+  Output: full artist context — audience geography, metrics, peer set
 
 Step 2 — Narrow to realistic collab targets (Workflow 9)
   Input: similar[] from Step 1
-  Filters: career_stage == "developing" (tier match),
-           audience_match high, shared-city overlap >= 2
+  Filters: size each peer via /metrics (slightly bigger = ideal),
+           audience overlap, shared-market overlap >= 2
   Output: 3-5 ranked peer candidates
 
 Step 3 — Find each target's manager / A&R (Workflow 11)
@@ -465,7 +531,7 @@ Step 3 — Find each target's manager / A&R (Workflow 11)
 
 Step 4 — Draft outreach (LLM, no tool call)
   Reference:
-    - Artist X specifics from Step 1 (cities, listeners, reach)
+    - Artist X specifics from Step 1 (markets, listeners, reach)
     - Peer specifics from Step 3 (recent signings, stylistic fit)
   Output: personalized drafts — NOT generic "love your music" copy.
   Present drafts to the user with recipient, subject, and body.
@@ -485,26 +551,24 @@ Optional handoff:
 ```text
 Step 1 — Snapshot
   Calls: /research/profile + /research/metrics?source=spotify
-         + /research/cities + /research/insights + /research/milestones
+         + /research/audience + /research/insights + /research/milestones
   Output:
-    - profile.cm_statistics → aggregate counts
-      (num_sp_editorial_playlists, sp_playlist_total_reach, ranks)
-    - metrics → trend read (follower/listener divergence,
-      popularity direction)
-    - cities → geographic concentration
+    - metrics.stats[0].data → monthly listeners, followers, popularity,
+      playlists_editorial_current, playlist_reach_current
+    - audience → geographic / demographic concentration
+    - milestones (sorted by activity_tier) → recent notable events
 
 Step 2 — Diagnose the gap (Workflow 1: playlist pitching)
-  Input: profile.cm_statistics from Step 1
-  If num_sp_editorial_playlists == 0
-     and sp_playlist_total_reach > 500k → editorial gap confirmed
+  Input: metrics snapshot from Step 1
+  If playlists_editorial_current is low relative to monthly_listeners_current
+     → editorial gap confirmed
   Call: /research/similar (peers) → /research/playlists (each peer)
   Output: playlists peers are on that Artist X isn't → pitch targets
 
 Step 3 — HANDOFF to streaming-growth skill
   Context to pass:
-    - Current monthly listeners + trend from Step 1
+    - Current monthly listeners + recent milestones from Step 1
     - Editorial gap from Step 2
-    - Nearest milestone (1k MLs for Showcase, 5k for Marquee)
   streaming-growth skill owns: which lever to pull first
   (playlist push vs social-to-DSP ads vs organic content)
 
@@ -523,19 +587,18 @@ Human-approval gate: none (internal reasoning only, no external contacts).
 **User question:** "Find tracks that are blowing up on TikTok and the indie artists driving them."
 
 ```text
-Step 1 — Find trending music (Workflow: charts + discover)
-  Calls: /research/charts?platform=tiktok&country=US
-         /research/discover?country=US&genre={GENRE_ID}
-                            &sp_monthly_listeners_min=10000
-                            &sp_monthly_listeners_max=100000
+Step 1 — Find candidates (no charts/discover endpoints — start from web + anchors)
+  Calls: POST /research/web {query: "songs blowing up on TikTok {GENRE} 2026"}
+         /research?q={ANCHOR_ARTIST}&type=artists
+         /research/similar?artist={ANCHOR}&musicality=high&genre=high
   Output: candidate track + artist list
 
 Step 2 — Validate TikTok-to-Spotify pipeline (Workflow 2)
   For each candidate:
-    /research/metrics?source=tiktok (track posts trend)
+    /research/metrics?source=tiktok  (TikTok scale)
     /research/metrics?source=spotify (listener response)
     /research/track/playlists?id={track_id} (editorial pickup?)
-  Output: ranked by TikTok velocity + Spotify conversion
+  Output: ranked by TikTok scale + Spotify conversion + editorial pickup
 
 Step 3 — Enrich (optional, deep context)
   POST /research/deep {query: "why is {track} going viral?"}
@@ -543,7 +606,7 @@ Step 3 — Enrich (optional, deep context)
 
 Step 4 — Write to artist workspace
   If any candidate warrants ongoing tracking:
-    Create context/artist.md scaffold via artist-workspace skill
+    Create context/artist.md scaffold via recoup-artist-workspace skill
     Save Step 1-3 synthesis to research/{date}-tiktok-scout.md
 
 Step 5 — HANDOFF to trend-to-song skill
@@ -558,13 +621,18 @@ Human-approval gate: none for research; required if Step 5 triggers an ad spend.
 
 ### When NOT to chain
 
-Chaining has a cost — every step is latency, credits, and a place for the agent to lose context. Don't chain when:
+Chaining has a cost — every step is latency, credits, and a place for the agent
+to lose context. Don't chain when:
 
-- The user asked a single-fact question ("how many Spotify followers does Artist X have?"). Just answer it.
-- The next workflow depends on data the previous one already surfaced well enough. Reuse the data; don't re-query.
-- You're about to write to the artist workspace or kick off a long chain without clear user intent. Confirm first.
+- The user asked a single-fact question ("how many Spotify followers does Artist
+  X have?"). Just answer it.
+- The next workflow depends on data the previous one already surfaced well
+  enough. Reuse the data; don't re-query.
+- You're about to write to the artist workspace or kick off a long chain without
+  clear user intent. Confirm first.
 
-A three-step chain that answers the real question beats an eleven-step chain that shows off every endpoint.
+A three-step chain that answers the real question beats an eleven-step chain that
+shows off every endpoint.
 
 ---
 
@@ -575,10 +643,15 @@ The power is in combining data types:
 | What You Need | Endpoint | Use For |
 |---------------|----------|---------|
 | **Who** — peers, competitors, collaborators | `/research/similar` | Benchmarks, pitch targets, collabs |
-| **Where** — geography | `/research/cities`, `/research/audience`, `/research/venues` | Tour routing, market expansion |
-| **What** — content and catalog | `/research/playlists`, `/research/tracks`, `/research/albums`, `/research/track/playlists` | Content strategy, playlist pitching |
-| **When** — timing and trajectory | `/research/metrics`, `/research/career`, `/research/milestones` | Release timing, growth analysis |
-| **Rank** — single-number deltas | `/research/rank` | Headline progress metrics |
-| **Market** — platform-wide charts | `/research/charts`, `/research/discover`, `/research/festivals`, `/research/radio`, `/research/genres` | Market scouting, trend detection |
+| **Where** — geography | `/research/audience` (country breakdown) | Tour routing, market expansion |
+| **What** — content and catalog | `/research/playlists`, `/research/tracks`, `/research/albums`, `/research/track`, `/research/track/playlists` | Content strategy, playlist pitching |
+| **How big / how hot** — metrics | `/research/metrics` (snapshot per source) | Sizing artists, release timing, growth analysis |
+| **When** — timeline & events | `/research/career`, `/research/milestones` | Release timing, activity feeds |
 | **Why** — narrative + context | `/research/insights`, `/research/web`, `/research/deep` | Cultural positioning, press strategy, brand partnerships |
 | **People** — industry contacts | `/research/people`, `/research/enrich`, `/research/extract` | Outreach, CRM enrichment |
+
+Endpoints that no longer exist (don't reach for them): `cities`, `charts`,
+`discover`, `genres`, `festivals`, `radio`, `venues`, `rank`, `instagram-posts`,
+`playlist` (singular), `curator`. Geography → `/research/audience`; discovery →
+anchor artist + `/research/similar` + `/research/web`; headline rank → compare
+`/research/metrics` snapshots.

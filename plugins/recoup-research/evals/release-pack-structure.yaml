@@ -1,0 +1,45 @@
+name: release-pack-structure
+skill: recoup-release-pack
+input: "Build a release pack for {artist}'s upcoming {release-type} '{release-name}' dropping {date}. Vibe: {one-line creative direction}."
+expected:
+  - "Release Pack"
+  - "Creative direction (from user)"
+  - "Narrative thread"
+  - "3 visualizer concept directions"
+  - "5 content angles"
+  - "Platform hooks"
+  - "Playlist targets"
+  - "Geographic rollout"
+  - "Open creative decisions"
+expected_any_of:
+  visualizer_directions:
+    - "Direction A"
+    - "Direction B"
+    - "Direction C"
+must_call:
+  - "GET /research/audience?artist={artist}&platform=tiktok"
+  - "GET /research/audience?artist={artist}&platform=instagram"
+  - "GET /research/similar?artist={artist}"
+  - "GET /research/playlists?artist={artist}"
+must_not:
+  - "GET /research/cities?artist={artist}"   # removed endpoint — geography from /research/audience
+  - finished marketing copy
+  - cover art descriptions presented as approved
+  - hallucinated playlist names not from /research/playlists or /research/similar
+  - hooks without an audience data anchor
+  - proceeding when user gave no creative direction
+file_outputs:
+  - "artists/{slug}/releases/{release-slug}/pack-*.md"
+hard_assertions:
+  - "If the user provides NO creative direction, the skill must STOP and ask — not invent one."
+  - "Every platform hook MUST cite a concrete audience data point or a similar-artist precedent. No vibes-only hooks."
+  - "Playlist targets MUST be derived from API endpoints, not invented."
+fixtures:
+  description: Run against an upcoming release in your own workspace where you know the creative direction and the artist has provider coverage.
+  required_inputs:
+    - artist             # workspace slug or name
+    - release_name
+    - release_date_or_tbd
+    - release_type       # single | EP | album | deluxe | remix | collab | soundtrack
+    - creative_direction # one-line vibe / themes / inspirations
+    - asset_gaps         # what's missing (e.g., "no music video yet")

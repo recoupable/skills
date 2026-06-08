@@ -8,20 +8,37 @@ Public skills for AI agents working in the music industry. Skills teach agents h
 
 ## Structure
 
+This repo holds **two kinds of thing**: standalone skills and richer plugins. Both are authored here once and install across every harness.
+
 ```text
 recoupable/skills/
-├── .claude-plugin/           ← plugin manifest for Claude Code
-├── .codex-plugin/            ← plugin manifest for OpenAI Codex
-├── skills/                   ← all skills live here
+├── skills/                   ← portable, standalone skills (drop into any agent)
 │   ├── chart-metric/
-│   ├── content-creation/
-│   ├── music-industry-research/
 │   ├── song-writing/
 │   └── ...
+├── plugins/                  ← rich bundles: skills + commands/hooks + shared references
+│   ├── recoup-essentials/
+│   ├── recoup-deals/
+│   ├── recoup-research/
+│   ├── recoup-song-analysis/
+│   └── recoup-content/
+├── scripts/                  ← validation gates + vendored.json (shared-file registry)
+├── .claude-plugin/           ← repo-as-plugin manifest + marketplace.json (Claude registry)
+├── .codex-plugin/            ← repo-as-plugin manifest (Codex)
+├── .agents/plugins/          ← marketplace.json (Cursor / agents registry)
 ├── README.md
 ├── contributing.md
 └── AGENTS.md                 ← this file
 ```
+
+## Glossary
+
+- **Skill** — a `SKILL.md` folder that teaches one task. Portable; runs on any agent.
+- **Plugin** — a bundle in `plugins/{name}/` that ships skills **plus** commands, hooks, and shared references, installed through a runtime's plugin system. A skill is a subset of a plugin.
+- **Harness** — a runtime that loads skills/plugins: Claude Code, Codex, Cursor, or bare `npx skills`.
+- **Marketplace registry** — the list of installable plugins, written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
+- **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json`.
+- **Router skill** — a domain's single entry-point skill that routes to focused sub-skills (e.g. `recoup-song-analyzer`).
 
 ## How Skills Load
 
@@ -70,6 +87,44 @@ description: What it does and when to use it
 - Include **when** to use it — mention trigger phrases users would say
 - Be specific — vague descriptions won't trigger
 
+## Plugins
+
+A plugin lives in `plugins/{name}/` and bundles skills with shared references and per-harness manifests:
+
+```text
+plugins/my-plugin/
+├── .claude-plugin/plugin.json   ← manifest for Claude Code
+├── .cursor-plugin/plugin.json   ← manifest for Cursor
+├── .codex-plugin/plugin.json    ← manifest for Codex
+├── skills/                      ← the plugin's skills (same SKILL.md format)
+├── references/                  ← shared docs, vendored into each skill that needs them
+├── README.md
+└── LICENSE
+```
+
+- **Author a plugin by copying an existing one** (e.g. `plugins/recoup-content/`), then edit the manifests, README, and skills. Don't hand-write manifests from scratch.
+- **Ship all three per-plugin manifests** (`.claude-plugin`, `.cursor-plugin`, `.codex-plugin`). They mostly match; only harness-specific fields differ (e.g. Cursor lists a `skills` path).
+- **Promote skills into a plugin when they share a canonical reference.** If one skill owns a doc that sibling skills depend on, that cross-dependency breaks the self-contained rule — move them under a plugin and put the shared doc in `plugins/{name}/references/`, vendored into each skill (Portable Skill Contract rule 5).
+- Plugin skills follow the **same Portable Skill Contract** as top-level skills.
+
+## The marketplace registry
+
+Installable plugins are listed in **two files that must stay identical in content**:
+
+- `.claude-plugin/marketplace.json` (Claude)
+- `.agents/plugins/marketplace.json` (Cursor / agents)
+
+`scripts/validate_manifests.py` enforces this "dual-manifest parity" — **edit one, edit the other**. When you add a plugin, add its entry to both.
+
+**Author email must match across layers:** a plugin's email in the marketplace entry must equal the email in that plugin's own `plugin.json`. Use `agent@recoupable.com` everywhere (the support email documented in `CLAUDE.md`).
+
+## Naming & branding
+
+- Slugs are **plain-English, lowercase, hyphenated** — no filler suffixes: `recoup-song-metadata`, not `recoup-song-metadata-tagger`.
+- **Plugin names drop any `-plugin` suffix**: `recoup-deals`, not `recoup-deals-plugin`.
+- Pattern: `recoup-{domain}-{noun}`; give each domain one **router skill** as the entry point.
+- Preserve history on renames/moves with `git mv`, then update the `name:` frontmatter, cross-references, README tables, and `scripts/vendored.json` paths.
+
 ## Portable Skill Contract (cross-harness)
 
 Every skill must run on **any** harness (Claude Code, Codex, Cursor, bare `npx skills`) — not just as a Claude marketplace plugin. To guarantee this, each skill follows these rules. They are enforced by `scripts/portability_lint.py` in CI.
@@ -81,3 +136,31 @@ Every skill must run on **any** harness (Claude Code, Codex, Cursor, bare `npx s
 5. **Duplicate shared material; drift-check it.** If two skills need the same reference/script, **copy it into each** (do not centralize). Register every copy in `scripts/vendored.json` so `scripts/check_vendored.py` keeps them byte-identical. Vendoring is allowed; silent divergence is not.
 
 > Why: `${CLAUDE_PLUGIN_ROOT}` is Claude-Code-only and doesn't expand in markdown (anthropics/claude-code#9354); runtime CWD is the user's project, not the skill dir. Self-containment with relative/backtick paths is the only pattern that travels across harnesses.
+
+## Validation gates (run before every PR)
+
+Three scripts gate the repo. **All three must exit 0** — don't track the counts, track the exit code:
+
+```bash
+python3 scripts/portability_lint.py    # every skill is cross-harness portable
+python3 scripts/check_vendored.py      # vendored copies are byte-identical to canonical
+python3 scripts/validate_manifests.py  # manifests valid + marketplace parity
+```
+
+**Editing a shared (vendored) file:** change the *canonical* copy only, then re-sync every copy listed in `scripts/vendored.json` (there is no `--sync` flag — copy them yourself), then re-check. Groups come in two shapes: single files (`canonical`/`copies`) and whole directories (`canonical_dir`/`copies_dirs`):
+
+```bash
+python3 - <<'PY'
+import json, shutil
+for group in json.load(open("scripts/vendored.json"))["groups"]:
+    if "canonical" in group:                       # single-file group
+        for copy in group["copies"]:
+            shutil.copyfile(group["canonical"], copy)
+    else:                                           # directory group
+        for dest in group["copies_dirs"]:
+            shutil.copytree(group["canonical_dir"], dest, dirs_exist_ok=True)
+PY
+python3 scripts/check_vendored.py
+```
+
+Never hand-edit a vendored copy — `check_vendored.py` fails on any drift.

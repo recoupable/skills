@@ -1,0 +1,35 @@
+name: weekly-brief
+skill: recoup-weekly-brief
+input: "Run a weekly brief for {artist}"
+expected:
+  - "Weekly Brief"
+  - "Week of"
+  - "TL;DR"
+  - "What changed this week"
+  - "Spotify monthly listeners"
+  - "TikTok followers"
+  - '"Spotify popularity" or "Editorial playlists"'
+  - "AI insights"
+  - "Watch next week"
+  - delta column or "first reading"
+must_call:
+  - "GET /research/metrics?artist={artist}&source=spotify"
+  - "GET /research/metrics?artist={artist}&source=tiktok"
+  - "GET /research/metrics?artist={artist}&source=instagram"
+  - "GET /research/milestones?artist={artist}"
+  - "GET /research/insights?artist={artist}"
+must_not:
+  - raw JSON dump without synthesis
+  - "GET /research/rank?artist={artist}"   # removed endpoint
+  - fabricated numbers when /research/metrics returns empty stats
+  - same-day clobber of an existing brief file
+  - "I don't have access"
+  - filler observations when nothing changed
+file_outputs:
+  - "artists/{slug}/research/brief-*.md"
+fixtures:
+  description: Run against 3 artists in your workspace covering a spread of data velocities.
+  artist_profile_targets:
+    - high_velocity_full_coverage  # active artist with full provider data — tests delta math
+    - mid_velocity                 # moderate activity — tests typical case
+    - emerging_thin_data           # newer/smaller artist — tests "—" handling for null fields

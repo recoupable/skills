@@ -1,3 +1,6 @@
 .env.local
 __pycache__/
 *.pyc
+
+# Local E2E test sandbox (not for commit)
+e2e-review/

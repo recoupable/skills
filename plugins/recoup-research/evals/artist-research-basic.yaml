@@ -1,0 +1,21 @@
+name: artist-research-basic
+skill: recoup-artist-research
+input: "Research Drake for me"
+expected:
+  - "monthly listeners"
+  - "followers"
+  - '"popularity" or "playlist reach"'
+  - '"playlist" or "playlisted"'
+  - audience or geographic data (from /research/audience)
+  - recommendations or "what to do next"
+must_call:
+  - "GET /research?q=Drake"
+  - "GET /research/profile"
+  - "GET /research/metrics"
+  - "GET /research/audience"
+  - "GET /research/similar"
+must_not:
+  - raw JSON dump without synthesis
+  - "I don't have access"
+  - "GET /research/cities"   # removed endpoint — geography comes from /research/audience
+  - guessed field names like "career_stage", "cm_statistics", or "metrics.followers"
