@@ -59,6 +59,8 @@ curl -s -X POST "https://api.recoupable.com/api/agents/signup" \
 | Skill | What it does |
 |-------|-------------|
 | [recoup-weekly-brief](skills/recoup-weekly-brief) | **Customer-facing.** Dated, delta-focused weekly artist brief. Fires 5 endpoints in parallel, diffs vs the prior brief, writes a markdown file the customer opens every Monday. |
+| [recoup-new-release-monitor](skills/recoup-new-release-monitor) | Confirms a release went live and builds a launch-day alert — what dropped, where it's landing, first streaming signal. |
+| [recoup-streaming-check](skills/recoup-streaming-check) | Streaming-health spot-check — diffs the current snapshot vs the last check, flags spikes/drops, names the likely driver. |
 | [recoup-tiktok-per-song](skills/recoup-tiktok-per-song) | **Customer-facing.** Per-song TikTok signal view. The API has no per-song TikTok counts, so this builds signal from activity feeds + cited web research and refuses to fabricate numbers. Targets the #1 customer ask. |
 | [recoup-release-pack](skills/recoup-release-pack) | **Customer-facing.** Structured pre-release marketing brief: 3 visualizer directions, 5 content angles, ranked playlist targets, platform hooks, narrative thread. Grounded input for downstream creative work, not finished assets. |
 | [recoup-artist-research](skills/recoup-artist-research) | Full artist research sweep — profile, metrics, audience, playlists, competitive position. The default one-shot entry point. |
@@ -112,6 +114,9 @@ skills/
 ├── recoup-competitive-analysis/ # Comparison & positioning
 ├── recoup-trend-detection/     # Discovery & viral autopsy
 ├── recoup-people-outreach/     # People search & outreach
+├── recoup-weekly-brief/        # Recurring dated artist brief
+├── recoup-new-release-monitor/ # Launch-day drop confirmation + alert
+├── recoup-streaming-check/     # Streaming spike/drop spot-check
 └── recoup-web-intelligence/    # Web research fallback
 commands/
 ├── recoup-research.md          # /recoup-research

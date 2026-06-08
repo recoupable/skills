@@ -243,7 +243,9 @@
         "plugins/recoup-research/skills/recoup-tiktok-per-song/references/endpoints.md",
         "plugins/recoup-research/skills/recoup-trend-detection/references/endpoints.md",
         "plugins/recoup-research/skills/recoup-web-intelligence/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-weekly-brief/references/endpoints.md"
+        "plugins/recoup-research/skills/recoup-weekly-brief/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-new-release-monitor/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-streaming-check/references/endpoints.md"
       ]
     },
     {
@@ -254,7 +256,9 @@
         "plugins/recoup-research/skills/recoup-playlist-intelligence/references/response-shapes.md",
         "plugins/recoup-research/skills/recoup-release-pack/references/response-shapes.md",
         "plugins/recoup-research/skills/recoup-tiktok-per-song/references/response-shapes.md",
-        "plugins/recoup-research/skills/recoup-weekly-brief/references/response-shapes.md"
+        "plugins/recoup-research/skills/recoup-weekly-brief/references/response-shapes.md",
+        "plugins/recoup-research/skills/recoup-new-release-monitor/references/response-shapes.md",
+        "plugins/recoup-research/skills/recoup-streaming-check/references/response-shapes.md"
       ]
     },
     {
@@ -279,6 +283,19 @@
         "plugins/recoup-song-analysis/skills/recoup-song-sync-brief/references/flamingo-api.md",
         "plugins/recoup-song-analysis/skills/recoup-song-mix-feedback/references/flamingo-api.md",
         "plugins/recoup-song-analysis/skills/recoup-song-hook/references/flamingo-api.md"
+      ]
+    },
+    {
+      "canonical": "plugins/recoup-releases/scripts/build_campaign_timeline.py",
+      "copies": [
+        "plugins/recoup-releases/skills/recoup-release-campaign/scripts/build_campaign_timeline.py",
+        "plugins/recoup-releases/skills/recoup-release-start/scripts/build_campaign_timeline.py"
+      ]
+    },
+    {
+      "canonical": "plugins/recoup-releases/scripts/validate_release.py",
+      "copies": [
+        "plugins/recoup-releases/skills/recoup-release-start/scripts/validate_release.py"
       ]
     },
     {
