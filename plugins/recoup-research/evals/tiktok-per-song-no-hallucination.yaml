@@ -1,0 +1,43 @@
+name: tiktok-per-song-no-hallucination
+skill: recoup-tiktok-per-song
+input: "TikTok for {artist} per song"
+expected:
+  - "TikTok Per-Song"
+  - "Catalog size"
+  - "does not expose per-song TikTok"   # honest disclosure that counts aren't in the API
+  - "Songs with TikTok signal"
+  - "Songs with no TikTok signal"
+  - "Unknown"                            # unknown, not zero
+expected_any_of:
+  no_data_phrasing:
+    - "Songs with no TikTok signal"
+    - "no TikTok signal"
+    - "Unknown"
+must_call:
+  - "GET /research/tracks?artist={artist}"
+  - "GET /research/milestones?artist={artist} OR /research/career OR /research/insights"
+  - "POST /research/web (cited per-song trend research)"
+must_not:
+  - "fabricated per-song tt_uses / tt_views counts"
+  - "estimated TT counts from artist-level TikTok followers"
+  - "numeric substitutes like ~10K or est. or low signal"
+  - "reporting a web-sourced number without its citation link"
+  - "silent dropping of songs without signal"
+  - "inferred high TT activity from streaming data"
+  - "guessing track names from web search if /research/tracks is empty"
+  - "looking for tt_uses/tt_views fields on /research/track (they do not exist)"
+file_outputs:
+  - "artists/{slug}/research/tiktok-per-song-*.md"
+fixtures:
+  description: Run against 5 artists covering a spread of TikTok-signal availability. The "no-signal" cases are the most important — they prove the skill refuses to fabricate counts now that the API has no per-song TikTok fields at all.
+  artist_profile_targets:
+    - active_with_cited_tt_trend   # a song with a real, web-citable TikTok trend — tests cited-signal path
+    - active_alt_lane              # different genre, also has a cited trend — tests cross-genre handling
+    - moderate_activity            # some milestone/insight activity — tests activity-feed signal
+    - thin_tt_data                 # no signal anywhere — TESTS the no-signal path
+    - thin_tt_data_alt             # no signal anywhere — TESTS the no-signal path
+hard_assertions:
+  - "The output MUST state that the structured API does not expose per-song TikTok counts. It must NEVER print a per-song uses/views number that lacks a citation."
+  - "Any TikTok number shown MUST carry an inline source citation (from /research/web or /research/deep)."
+  - "Songs with no activity-feed event and no cited web result MUST appear in the 'no signal' group, described as Unknown (not zero)."
+  - "If /research/tracks returns empty, output MUST surface that honestly. No catalog should be assembled from web search."

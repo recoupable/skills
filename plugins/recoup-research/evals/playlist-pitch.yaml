@@ -1,0 +1,15 @@
+name: playlist-pitch
+skill: recoup-playlist-intelligence
+input: "Find playlist pitch targets for Joy Crookes"
+expected:
+  - ranked list of playlists
+  - peer/similar artist analysis
+  - editorial vs algorithmic distinction
+  - priority ranking
+must_call:
+  - "GET /research/similar"
+  - "GET /research/playlists"
+must_not:
+  - "editorial=true on /research/track/playlists without also passing indie/majorCurator/popularIndie when the default mix is wanted"
+  - "editorial/indie filter flags on the artist-level /research/playlists endpoint (track-level only)"
+  - "treating placements[].followers_total as an integer (it is a formatted string like 34.3M)"

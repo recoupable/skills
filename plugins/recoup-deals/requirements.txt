@@ -1,0 +1,34 @@
+# Optional dependencies for the recoup-deals plugin.
+#
+# The core scripts (workspace validation, normalization, hygiene scans, etc.)
+# run on the Python standard library alone. The extractors below require
+# external libraries to read PDF and XLSX files. Install with:
+#
+#     pip3 install -r requirements.txt
+#
+# scripts/extract-pdf-statement.py — pdfplumber for PDF royalty statements.
+# scripts/extract-catalog-spreadsheet.py — openpyxl for XLSX catalogs.
+
+pdfplumber>=0.11
+openpyxl>=3.1
+
+# Test-only — reportlab builds a sample PDF for test-extract-pdf-statement.py.
+# Not needed at runtime; the test skips cleanly if it is absent.
+# reportlab>=4.0
+
+# Optional — only needed for the recoup-deal-report skill (HTML → PDF export).
+# Two viable paths; install whichever fits your environment:
+#
+#   Path A (recommended) — headless Chrome / Chromium / Edge.
+#       No pip install needed if Chrome is already on the machine.
+#       The skill calls it via --headless --print-to-pdf.
+#
+#   Path B — Playwright. Most reliable cross-platform.
+#       pip3 install playwright
+#       python3 -m playwright install chromium
+#
+#   Path C — WeasyPrint. Pure-Python print typography (no JS execution,
+#       so charts must be pre-rendered as SVG / PNG before conversion).
+#       pip3 install weasyprint
+#
+# Pick one; the skill explains when to reach for which.

@@ -1,0 +1,17 @@
+name: emerging-discovery
+skill: recoup-trend-detection
+input: "Find emerging indie R&B artists in the US with 50K-200K listeners"
+expected:
+  - ranked list of emerging artists
+  - cross-platform validation (Spotify + TikTok metrics snapshots)
+  - client-side filtering by monthly_listeners_current (no discover endpoint)
+  - rationale for each candidate (sound fit + trajectory)
+must_call:
+  - "GET /research/similar (musicality/genre weighted) OR POST /research/web for candidate sourcing"
+  - '"GET /research/metrics" (at least 2 sources per candidate)'
+must_not:
+  - "GET /research/discover"   # removed endpoint — must not be called
+  - "GET /research/charts"     # removed endpoint
+  - "GET /research/genres"     # removed endpoint
+  - filtering on a career_stage field (no longer exists)
+  - more than 50 unvalidated candidates

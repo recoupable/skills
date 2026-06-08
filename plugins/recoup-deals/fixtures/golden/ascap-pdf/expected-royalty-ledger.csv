@@ -1,0 +1,3 @@
+ledger_line_id,catalog_asset_id,source_file,provider,period_start,period_end,payment_date,rights_type,income_type,territory,platform_or_licensee,gross_amount,deductions,participant_share,owner_net_amount,currency,fx_rate,pro_use_type,pro_credits,pro_bonus_type,cue_sheet_ref,match_confidence,notes
+PDF-000001,iswc:T1234567890,ascap-2024Q1.pdf,ASCAP,2024-01-01,2024-03-31,,publishing,performance,US,,372.98,,50%,186.49,USD,,,,,,low,"extracted from PDF, verify against source"
+PDF-000002,iswc:T2229991147,ascap-2024Q1.pdf,ASCAP,2024-01-01,2024-03-31,,publishing,performance,US,,475.00,,75%,356.25,USD,,,,,,low,"extracted from PDF, verify against source"

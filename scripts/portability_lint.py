@@ -14,7 +14,7 @@ Rules (see AGENTS.md "Portable Skill Contract"):
 
 Usage:
   python3 scripts/portability_lint.py            # lint whole repo
-  python3 scripts/portability_lint.py plugins/research   # limit to a subtree
+  python3 scripts/portability_lint.py plugins/recoup-research   # limit to a subtree
 
 Exit code 0 = all skills portable; 1 = violations found (printed file:line).
 Standard library only.

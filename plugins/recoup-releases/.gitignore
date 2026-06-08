@@ -1,0 +1,36 @@
+# macOS
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# OneDrive / SharePoint
+~$*
+.~lock.*
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*~
+.obsidian/
+
+# Node / Python tooling
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
