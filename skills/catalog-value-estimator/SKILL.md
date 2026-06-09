@@ -61,7 +61,7 @@ to calibrate (see "Verification loop").
    - Have a Spotify album → `scripts/fetch_album_tracks.py --album <id|url>`
      prints the track IDs.
    - Have only an artist/label name → resolve the catalog first (see
-     `references/recoup-api.md`: `lookup`, `tracks`, `spotify/artist-albums`),
+     `references/recoup-api.md`: `lookup`, `tracks`),
      then feed the IDs in.
 2. **Measure streams.** For every track, pull all-time per-platform counts
    (`/research/track/stats`) and the trailing-12-month delta
