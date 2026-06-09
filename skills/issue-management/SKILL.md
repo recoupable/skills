@@ -121,14 +121,9 @@ gh issue view 1767 --repo recoupable/chat
 
 ## Checklist before you post / update
 
-- [ ] Lead paragraph states what's tracked + current live status + parent link
-- [ ] Goal names concrete files/endpoints/tables and the end state
-- [ ] Every Done item has: PR link, ✅ ISO date, merge path, what changed, **Verified** clause
-- [ ] Every non-trivial Open item has **Why / Fix / Done when**
-- [ ] Blocked-by and merge-order relationships are explicit
-- [ ] Architecture decisions captured with rationale (so they aren't re-litigated)
-- [ ] Accepted regressions/tradeoffs listed, not silent
-- [ ] Claims are linked (PR/SHA/file:line); numbers are hard, dates are ISO
-- [ ] Title still matches current scope (no stale/dropped features in it)
-- [ ] Reversals superseded (struck through + dated callout), not silently erased
-- [ ] No secrets/keys in the body — env var / store referenced instead
+The non-negotiables — structure/format is covered by the sections above; these are the things most often gotten wrong:
+
+- [ ] Shipped items are **closure notes under `## Done`** (PR link, ✅ ISO date, merge path, what changed, **Verified**) — never a bare `[x]`.
+- [ ] Every claim is **linked** (PR/SHA/file:line); numbers are **hard**, dates **ISO**; **no secrets** (env-var name, never a value).
+- [ ] **Title + lead reflect current reality** (scope + live status); reversals superseded, not erased.
+- [ ] **Scoped to the change** — cross-layer/business context stated once; every Done-when verifiable in scope.
