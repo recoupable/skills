@@ -92,6 +92,16 @@ When the plan reverses (e.g. #1777 pivoted from "keep Chartmetric behind a BYO-k
 
 Not every issue is a tracker. A bug report or single-task issue still earns its keep with: a one-line **summary**, **steps to reproduce** (or the trigger), **expected vs actual**, and **Done when** acceptance criteria. Link the suspected code with file:line. Skip the Goal/Architecture/Phase scaffolding — that's for multi-PR efforts only. Match the weight of the issue to the weight of the work.
 
+## Scope to the change, not the outcome
+
+An issue tracks the **work to be done**, not the business goal that consumes it. Scope it to one layer/change and keep downstream logic that runs *after* the issue is solved **out of scope** — it bloats the issue and muddies what "done" means.
+
+- **Title names the deliverable, not the outcome** — "Add `GET /api/research/track/historic-stats`", not "annualize catalog → dashboard value". (Sharper version of keeping the title current.)
+- **Business context gets exactly one perspective line** — in the lead, flagged out-of-scope: enough to know who needs this and why, never repeated through Goal / steps / Done when.
+- **Every Done-when item must be verifiable within scope** by whoever implements it — not a downstream outcome (a dashboard number, a calibration to a comp, a revenue figure) the implementer can't check.
+
+The smell: domain terms from a *different* layer (e.g. a business metric in an API/docs issue) showing up in the Goal, the steps, and the acceptance criteria. State the cross-layer context once, then stay in your layer.
+
 ## gh quick reference
 
 ```bash
