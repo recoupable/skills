@@ -66,7 +66,17 @@ to calibrate (see "Verification loop").
 2. **Measure streams.** For every track, pull all-time per-platform counts
    (`/research/track/stats`) and the trailing-12-month delta
    (`/research/track/historic-stats`, diff the cumulative `streams_total` at the
-   window endpoints). `scripts/estimate.py` does both.
+   window endpoints). `scripts/estimate.py` does both. Spotify counts are
+   served from Recoup's measurement store (Apify-first; every entry carries
+   `data_source` + `captured_at` provenance) — they are platform-displayed
+   play counts, quota-free and refreshed within ~24h.
+   - **Portfolio scale (hundreds–thousands of tracks):** snapshot first —
+     `POST /research/snapshots` captures every track of every album in one
+     async job (~$0.003/album, cost estimate returned before spend), then read
+     `GET /research/playcounts?spotify_album_id=…` per album. Two snapshots
+     ≥7 days apart give per-track run-rates via
+     `GET /research/track/playcount-deltas` — a TTM proxy that needs no
+     Songstats history. See `references/recoup-api.md`.
 3. **Model gross → NLS → value.** Apply public per-stream rates, the deduction
    stack, and the multiple band from `references/methodology.md`. Keep
    *measured* platforms separate from *approximated* ones and carry a band, not
@@ -119,9 +129,13 @@ overclaiming a value you derived from public rates costs credibility.
 - **Master-side only by default.** This values recordings (NLS). Publishing
   (NPS — mechanical + performance) is separate and additive; only model it if
   the owner controls the compositions.
-- **History depth.** Day-level streaming history typically starts ~2021, so
-  annual trajectories may be ~5 years even for older catalogs. The all-time
-  cumulative still reflects the full life.
+- **History depth.** Spotify history is a stitched series from Recoup's
+  measurement store: snapshot captures (2026-06 onward) plus backfilled
+  Songstats points (day-level, typically from ~2021), each point labeled with
+  `data_source`. Tracks not yet backfilled return their snapshot-only series
+  and are auto-enqueued for backfill — re-query later for the deeper series,
+  or use snapshot deltas for the run-rate meanwhile. The all-time cumulative
+  always reflects the full life.
 - **Every rate, deduction, and multiple is an assumption** (see methodology).
   The multiple is the single biggest swing — concentration and a flat run-rate
   argue for the low end.

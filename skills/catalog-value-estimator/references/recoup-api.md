@@ -1,7 +1,8 @@
 # Recoup Research API — endpoints used by this skill
 
-All streaming data is pulled from the Recoup Research API (Songstats-backed).
-Base URL: `https://api.recoupable.com/api`.
+All streaming data is pulled from the Recoup Research API. Spotify play counts
+come from Recoup's own measurement store (Apify-first, provenance-labeled);
+other sources are Songstats-backed. Base URL: `https://api.recoupable.com/api`.
 
 ## Authentication
 
@@ -24,7 +25,10 @@ Send one of:
 ### `GET /research/track/stats` — per-track current stats
 Resolve by `isrc`, `songstats_track_id`, `spotify_track_id`, or
 `apple_music_track_id`. `source` (required) is a comma list or `all`.
-Returns `stats: [{ source, data }]` + `track_info`. The per-source `data`
+Returns `stats: [{ source, data, data_source, captured_at? }]` + `track_info`.
+Spotify entries are served from the measurement store when an `isrc` is given
+(`data_source: "apify_spotify_playcount"`, ~24h freshness, no Songstats quota);
+other sources are Songstats (`data_source: "songstats"`). The per-source `data`
 includes the absolute play count:
 - spotify: `streams_total`
 - youtube: `video_views_total`, `short_views_total`
@@ -41,9 +45,12 @@ Note: `streams_total` may be returned as a numeric string (e.g. `"296422273.0"`)
 
 ### `GET /research/track/historic-stats` — per-track time series (annualization)
 Same identifiers + `source` (required) + `start_date` / `end_date` (ISO).
-Returns `stats[].data.history[]` of `{date, streams_total, ...}` where
+Returns `stats[].data.history[]` of `{date, streams_total, data_source}` where
 `streams_total` is cumulative as of that date. Trailing-12-month streams =
-last − first over a 365-day window.
+last − first over a 365-day window. Spotify history is a stitched store series
+(snapshot captures + backfilled Songstats points, labeled per point); tracks
+without backfilled history return their snapshot-only series and are
+auto-enqueued for backfill — re-query later, or use playcount-deltas below.
 
 ```bash
 curl -sS -H "x-api-key: $RECOUP_API_KEY" \
@@ -69,9 +76,43 @@ MusicBrainz id) — useful for cross-referencing/ownership.
 roster/portfolio context snapshot, not for per-asset valuation (it's the whole
 catalog, not one recording).
 
+### `POST /research/snapshots` — portfolio-scale capture (async)
+Body: exactly one of `catalog_id` / `album_ids[]` (Spotify album ids) /
+`isrcs[]`; optional `schedule: "once" | "monthly"`. Returns **202** with
+`snapshot_id`, `album_count`, and `estimated_cost_usd` (~$0.003/album) before
+any scraper spend; **429** at the per-org monthly cap. One album captures all
+of its tracks. Counts land in the measurement store within minutes.
+
+```bash
+curl -sS -X POST -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
+ -d '{"album_ids":["70Zkfb99ladZ3q0JVg97co"]}' \
+ "https://api.recoupable.com/api/research/snapshots"
+```
+
+### `GET /research/playcounts` — latest per-track counts for an album
+`?spotify_album_id=<id>`. Returns `playcounts[]` of `{isrc, spotify_track_id,
+name, platform_displayed_play_count, captured_at, data_source}` from the most
+recent capture. 404 (with a pointer to `POST /snapshots`) when the album has
+never been captured. Only tracks with identifier mappings are returned.
+
+### `GET /research/track/playcount-deltas` — run-rate from snapshot diffs
+`?isrc=<isrc>&since=YYYY-MM-DD[&until=YYYY-MM-DD]`. Returns `deltas[]` of
+`{platform, metric, since, until, delta, days, run_rate_annualized}` between
+the nearest captures — a TTM proxy once two snapshots ≥7 days apart exist.
+Empty `deltas` (not an error) when history is insufficient.
+
 ## Rate-limit / robustness notes
 
+- Spotify reads never spend Songstats quota (store-served). The Songstats
+  rolling quota (~1,000 hits/30d) applies only to non-Spotify sources; for
+  portfolio-scale work, snapshot first instead of per-track polling.
 - Historic calls return a full daily series; for many tracks, request only the
   sources you need and run sequentially with a per-call timeout (`curl
   --max-time`). `estimate.py` does this and batches to avoid long single calls.
 - Always handle `streams_total` as a possibly-stringified float.
+- Every read endpoint charges 5 credits and may return **402** with a
+  `checkoutUrl` when the account is out of credits; snapshots are uncharged
+  but capped per org per month.
+- Calibration: snapshot-derived counts agreed with Songstats `streams_total`
+  to ±0.1–1.7% on the 679-track Rostrum calibration set (2026-06-09) — label
+  them platform-displayed play counts, not royalty-bearing streams.
