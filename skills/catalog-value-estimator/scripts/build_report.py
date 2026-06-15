@@ -107,8 +107,8 @@ for title,pth in charts:
     story+=[Paragraph(title,h2) if title in ("Concentration",) else Spacer(1,6), Image(pth,width=6.6*inch,height=h*inch)]
     if title=="Concentration":
         story+=[Paragraph(f"The catalog is concentrated: top track <b>“{conc['top_track']}” is {conc['top_track_share']*100:.0f}%</b> of "
-            f"trailing-12-month streams; the top three are {conc['top3_share']*100:.0f}%. Single-track dependency is underwritten at a "
-            "discount and shows where growth work should focus.",small)]
+            f"trailing-12-month streams; the top three are {conc['top3_share']*100:.0f}%. Single-track dependency is typically "
+            "underwritten at a discount and is one of the drivers of the multiple.",small)]
 
 g=R['annual_gross']['central']; nls=R['annual_nls']['central']; df=cfg['distribution_fee']; roy=cfg['artist_producer_royalty']; m=cfg['multiple']['central']
 flow=[["Annual gross receipts (all platforms, est.)",Dm(g)],

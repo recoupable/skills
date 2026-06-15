@@ -60,6 +60,23 @@ approximate YouTube/SoundCloud TTM at their all-time share of Spotify gross to
 avoid extra calls (small contributors). Day-level history generally begins
 ~2021, so trajectories may be ~5 years even for older catalogs.
 
+**TTM derivation labels.** Every track's TTM carries a `ttm_source`:
+
+- `measured_365d` — true 365-day diff from the stitched historic series. The
+  gold standard; use whenever backfilled history spans the window.
+- `runrate_<N>d` — annualized from snapshot deltas over an N-day capture
+  window (`track/playcount-deltas`). A **proxy**, accepted only when
+  N ≥ `min_delta_days` (default 28): short windows embed release spikes,
+  viral noise, display-count update lag, and uncorrected seasonality (Q4
+  typically runs +20–30% vs January). Expect ±misstatement vs measured TTM
+  that shrinks as windows lengthen; do not mix derivations silently — the
+  estimate reports the mix and TTM coverage in `provenance`.
+- `insufficient_window` / `none` — no accepted TTM; the track contributes
+  all-time presence but $0 to the TTM-based value (state the coverage %).
+
+When a material share of value rides on `runrate_*`, say so next to the
+headline and prefer re-running after a longer capture window or backfill.
+
 ## 4. NLS → value (the multiple)
 
 `value = annual NLS × multiple`. Master catalogs have traded broadly **8×–16×**
@@ -78,7 +95,8 @@ multiple's drivers.
 
 - **Concentration.** Top-track and top-3 share of trailing-12-month streams. A
   catalog where one track is the majority of streams is underwritten at a
-  discount and is where growth work should focus.
+  discount and sits lower in the multiple band. Report the share as a neutral
+  observation; do not turn it into a growth recommendation in the baseline.
 - **Trajectory.** YoY change in annual streams: growing vs plateaued vs
   declining. Plateau/decline ⇒ mid/low multiple.
 - **Rights flags.** Sample-driven hits (a share of income may flow to the

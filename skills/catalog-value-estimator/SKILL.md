@@ -33,6 +33,28 @@ convert them to annual NLS through a labeled, auditable assumption stack, apply
 a multiple, and surface the risks (concentration, rights flags) that move the
 multiple — all while being honest about what is *measured* vs *assumed*.
 
+## Scope: a factual baseline, nothing more
+
+This skill produces a **baseline** — a frozen, defensible snapshot of what a
+catalog *is and currently earns*, built so the owner can audit every number.
+Everything it outputs is either **measured** (streams pulled live) or a
+**labeled, auditable assumption** (per-stream rates, the deduction stack, the
+multiple). That is the whole deliverable.
+
+**It deliberately does not:**
+
+- project uplift, growth, or "ΔV" from any intervention;
+- estimate recoverable or "found" income, or quantify leakage in dollars;
+- recommend actions, name opportunities, or describe what Recoup *would do* to
+  improve the catalog.
+
+Those are intervention-phase claims. Until they can be measured against a frozen
+baseline (and, ideally, calibrated against a real royalty statement), they are
+not verifiable — and an unverifiable claim in a baseline costs the trust the
+baseline exists to build. Risk factors are reported as **neutral observations**
+of what they are, never as a to-do list. Keep forward-looking work out of this
+artifact entirely; it belongs in a separate, later deliverable.
+
 ## When to use this
 
 Reach for this skill for any of: valuing a catalog/album/track, projecting
@@ -81,10 +103,13 @@ to calibrate (see "Verification loop").
    stack, and the multiple band from `references/methodology.md`. Keep
    *measured* platforms separate from *approximated* ones and carry a band, not
    a point.
-4. **Surface risk.** Compute concentration (top-track and top-3 share of
-   streams) and flag anything that moves the multiple — single-track
-   dependency, plateauing run-rate, sample-driven hits, registration gaps.
-   These are as important as the dollar figure.
+4. **Observe risk (neutrally).** Compute concentration (top-track and top-3
+   share of streams) and note the factors that move the multiple —
+   single-track dependency, plateauing run-rate, sample-driven hits,
+   registration gaps. Report each as a *neutral observation of what it is*
+   (e.g. "top track is 70% of TTM streams"), not as an opportunity, a
+   remediation step, or a dollar of upside. These observations are as
+   important as the dollar figure.
 5. **Report.** Emit the structured results, and — if the user wants something
    shareable — a branded executive PDF via `scripts/build_report.py`.
 
