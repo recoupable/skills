@@ -197,6 +197,26 @@ def portfolio_tracks(album_ids, asof, cfg, snapshot=True, wait_mins=6, skip_ttm=
         with ThreadPoolExecutor(max_workers=workers) as ex: list(ex.map(fill, tracks))
     return tracks, missing
 
+# ---------------- historical backfill seeding ----------------
+def seed_backfill(album_ids):
+    """Portfolio mode: enqueue the whole catalog for deep Songstats historical
+    backfill so future runs earn a `measured_365d` TTM instead of a short-window
+    run-rate. Mirrors POST /research/snapshots — the endpoint resolves albums ->
+    tracks, ranks the queue by all-time streams, and dedupes server-side (songs
+    that already carry `songstats` history are skipped, so no track is ever
+    fetched twice). Best-effort: a missing endpoint or any error is logged and
+    never fails the estimate. Snapshot/portfolio reads do NOT auto-enqueue (only
+    a per-track historic-stats read does), which is why this seed is explicit."""
+    if not album_ids:
+        return {"note": "no album ids to seed"}
+    j = api("research/backfill", body={"album_ids": album_ids, "schedule": "once"}, timeout=30)
+    if not j or (isinstance(j, dict) and j.get("error")):
+        return {"note": "POST /research/backfill unavailable — pending api (chat#1791); "
+                        "re-run once it ships to seed deep history"}
+    return {"enqueued": j.get("enqueued"), "skipped_already_backfilled": j.get("skipped"),
+            "snapshot_id": j.get("snapshot_id")}
+
+
 # ---------------- main ----------------
 def main():
     ap = argparse.ArgumentParser()
@@ -211,6 +231,8 @@ def main():
     ap.add_argument("--no-trajectory", action="store_true")
     ap.add_argument("--no-snapshot", action="store_true", help="portfolio mode: don't auto-trigger snapshots")
     ap.add_argument("--skip-ttm", action="store_true", help="portfolio mode: all-time only (no delta calls)")
+    ap.add_argument("--no-backfill-seed", action="store_true",
+                    help="portfolio mode: don't seed deep Songstats historical backfill")
     ap.add_argument("--wait-mins", type=int, default=6)
     a = ap.parse_args()
 
@@ -230,8 +252,12 @@ def main():
         for i, t in enumerate(tracks):
             print(f"  [{i+1}/{len(tracks)}] {t['title'][:34]:34}  all-time {t['sp']:>13,.0f}  "
                   f"TTM {t['sp_ttm']:>12,.0f} ({t['ttm_source']})", file=sys.stderr)
+        backfill_seed = ({"note": "skipped (--no-backfill-seed)"} if a.no_backfill_seed
+                         else seed_backfill(album_ids))
+        print(f"  [backfill] seed -> {backfill_seed}", file=sys.stderr)
         years = 0
     else:
+        backfill_seed = {"note": "track mode: per-track historic-stats reads enqueue backfill lazily"}
         if a.ids: idents = [x for x in a.ids.split(",") if x.strip()]
         elif a.isrcs: idents = [x for x in a.isrcs.split(",") if x.strip()]
         else: idents = [x.strip() for x in open(a.ids_file) if x.strip()]
@@ -291,6 +317,8 @@ def main():
         "captured_at_min": min(caps) if caps else None,
         "captured_at_max": max(caps) if caps else None,
         "ttm_coverage_share": (sum(1 for t in tracks if t["sp_ttm"] > 0) / len(tracks)) if tracks else 0,
+        "deep_history_share": (sum(1 for t in tracks if t.get("ttm_source") == "measured_365d") / len(tracks)) if tracks else 0,
+        "backfill_seed": backfill_seed,
         "uncaptured_albums": uncaptured,
         "notes": "runrate_* TTM is a short-window annualization (>=%dd accepted) — noisier than measured_365d; "
                  "seasonality uncorrected. Portfolio mode measures Spotify only (yt/sc enter via gross-up)."
@@ -334,6 +362,8 @@ def main():
         "", "## Provenance", "",
         f"- **Counts:** {src_mix} (captured {str(provenance['captured_at_min'])[:10]} → {str(provenance['captured_at_max'])[:10]})",
         f"- **TTM derivation:** {ttm_mix} · TTM coverage {provenance['ttm_coverage_share']*100:.0f}% of tracks",
+        f"- **Deep history (measured_365d):** {provenance['deep_history_share']*100:.0f}% of tracks · "
+        f"backfill seed: {provenance['backfill_seed']}",
         ""]
     if result["distributors"]:
         lines.append(f"- **Distributor(s):** {', '.join(result['distributors'])}")

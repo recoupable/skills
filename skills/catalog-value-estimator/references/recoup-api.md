@@ -101,6 +101,27 @@ never been captured. Only tracks with identifier mappings are returned.
 the nearest captures — a TTM proxy once two snapshots ≥7 days apart exist.
 Empty `deltas` (not an error) when history is insufficient.
 
+### `POST /research/backfill` — seed deep Songstats historical backfill (async)
+> **Contract-first / pending api (chat#1791).** Documented here as the contract
+> the seed step targets; until the api ships it, `estimate.py` logs the seed as
+> unavailable and proceeds. Don't assume it returns 200 yet.
+
+Body: exactly one of `catalog_id` / `album_ids[]` / `isrcs[]` (same shape as
+`POST /research/snapshots`). Enqueues each resolved recording into the Songstats
+backfill queue (`status=pending`, ranked by all-time streams) so the daily
+worker fills in its full daily history. **Idempotent and free:** songs that
+already carry `songstats` history are skipped, and no row is ever fetched from
+Songstats twice. Returns **202** with `{ enqueued, skipped, snapshot_id? }`.
+This is the **only** way to backfill at portfolio scale — the snapshot read path
+does not enqueue anything (only a per-track `GET /research/track/historic-stats`
+read does).
+
+```bash
+curl -sS -X POST -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
+ -d '{"album_ids":["70Zkfb99ladZ3q0JVg97co"]}' \
+ "https://api.recoupable.com/api/research/backfill"
+```
+
 ## Rate-limit / robustness notes
 
 - Spotify reads never spend Songstats quota (store-served). The Songstats

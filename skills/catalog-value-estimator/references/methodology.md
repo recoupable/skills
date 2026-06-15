@@ -77,6 +77,24 @@ avoid extra calls (small contributors). Day-level history generally begins
 When a material share of value rides on `runrate_*`, say so next to the
 headline and prefer re-running after a longer capture window or backfill.
 
+**Seeding the backfill (how `runrate_*` becomes `measured_365d`).** A
+`measured_365d` TTM requires a full year of daily history, which only the
+Songstats backfill worker supplies. That worker drains a queue, and **the
+snapshot/portfolio read path never fills it** — so `estimate.py` in portfolio
+mode seeds the catalog explicitly via `POST /research/backfill`. Two rules:
+
+- **Prioritize head-first.** The queue is ranked by all-time streams, and so is
+  the seed. The value-bearing head dominates — for a multi-thousand-track
+  catalog the top several hundred tracks carry essentially all the NLS — so seed
+  (and judge "enough coverage") by value, not by raw track count.
+- **Respect the quota ceiling.** One Songstats hit backfills one track's entire
+  history, permanently (it is never re-fetched). The plan allows ~1,000 hits per
+  rolling 30 days, ~100 reserved, so ≈900 tracks/30d. Backfilling the
+  value-bearing head (hundreds of tracks) is ~1 month; a full several-thousand
+  track catalog is several months and consumes nearly the whole research quota
+  for the duration. Seed the head, report `deep_history_share`, and let coverage
+  climb across cron runs rather than claiming full measured coverage on day one.
+
 ## 4. NLS → value (the multiple)
 
 `value = annual NLS × multiple`. Master catalogs have traded broadly **8×–16×**
