@@ -38,7 +38,7 @@ obvious.
 - `recoup-artist-scout` — primary tool
 - `recoup-artist-research` — deep dive on top candidates
 - `recoup-artist-audience` — market opportunity sizing
-- `recoup-web-research` — cultural context
+- `recoup-web-intelligence` — cultural context
 
 ## Output standards
 

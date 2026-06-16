@@ -19,7 +19,8 @@
 {"intent": "what playlists should this artist's catalog target and where are the gaps", "expected": "recoup-artist-playlists", "not": ["recoup-song-pitch-kit"]}
 {"intent": "find me A&R reps and press contacts and draft outreach", "expected": "recoup-artist-outreach"}
 {"intent": "which of this artist's songs are blowing up on tiktok", "expected": "recoup-artist-tiktok"}
-{"intent": "there's no structured data, dig up narrative context from the web", "expected": "recoup-web-research", "not": ["recoup-artist-research"]}
+{"intent": "there's no structured data, dig up narrative context from the web", "expected": "recoup-web-intelligence", "not": ["recoup-artist-research"]}
+{"intent": "enrich this record label with structured facts and recent news", "expected": "recoup-web-intelligence", "not": ["recoup-artist-research"]}
 
 # --- Domain 3: monitors (scheduled) ---
 {"intent": "give me the weekly brief on what's new with this artist", "expected": "recoup-artist-brief", "not": ["recoup-release-brief"]}

@@ -38,7 +38,7 @@ the Recoup research API into clear, actionable briefs.
 - `recoup-artist-competition` — peer comparison
 - `recoup-artist-scout` — discovery and charts
 - `recoup-artist-outreach` — contacts and outreach
-- `recoup-web-research` — fallback web research
+- `recoup-web-intelligence` — fallback web research
 
 ## Output standards
 

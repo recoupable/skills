@@ -51,13 +51,14 @@
 | Catalog-wide playlist strategy — targets, gaps, editorial vs algorithmic coverage | `recoup-artist-playlists` |
 | Find managers / A&R / press contacts; draft outreach; enrich CRM | `recoup-artist-outreach` |
 | Per-song **TikTok signal** view for one artist ("which songs are blowing up") | `recoup-artist-tiktok` |
-| Web/deep research, URL extraction, entity enrichment when structured data is thin | `recoup-web-research` |
+| Web/deep research, URL extraction, or enrich ANY entity (label/manager/venue/brand/person), incl. the fallback when structured data is thin | `recoup-web-intelligence` |
 
 - `recoup-artist-research` is the **broad sweep**; the others are **focused
   lenses** on one facet. Start broad only when the ask is broad; otherwise route
   straight to the lens.
 - Structured (Songstats-backed) data → the `recoup-artist-*` skills. No structured
-  data / need narrative from the open web → `recoup-web-research`.
+  data / need narrative from the open web, or enriching a non-artist entity
+  (label, manager, venue, brand) → `recoup-web-intelligence`.
 - Playlist **strategy across a catalog** → `recoup-artist-playlists`. Playlist
   **pitch for one song from its audio** → `recoup-song-pitch-kit` (Domain 4).
 

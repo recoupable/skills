@@ -177,7 +177,7 @@ If structured data is unavailable (search returns empty `results`, or
 3. `POST /research/deep` — cited narrative (~2+ min)
 
 For very emerging artists, Songstats may not have data — web + enrich + deep is
-the fallback. See `recoup-web-research` skill for details.
+the fallback. See `recoup-web-intelligence` skill for details.
 
 ## Saving research
 
