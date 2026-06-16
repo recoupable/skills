@@ -49,10 +49,11 @@ composition side with its own splits — do not merge NPS and NLS into one "net"
 ## 3. Annualization (the run-rate that gets the multiple)
 
 Value is built on **sustainable annual** NLS, not lifetime totals. Get the
-annual run-rate from `track/historic-stats`: `streams_total` is cumulative as of
-each date, so
+annual run-rate from the **`measurements`** series
+(`GET /research/tracks/{id}/measurements?granularity=daily` → `[{date, value, …}]`,
+`value` cumulative as of `date`), so
 
-> **trailing-12-month streams = streams_total(end_date) − streams_total(end_date − 365d)**
+> **trailing-12-month streams = value(end_date) − value(end_date − 365d)**
 
 Use the cumulative values at the two window endpoints (robust to flat/duplicate
 snapshot days); don't sum daily deltas. Spotify TTM is measured precisely;
@@ -64,9 +65,10 @@ avoid extra calls (small contributors). Day-level history generally begins
 
 - `measured_365d` — true 365-day diff from the stitched historic series. The
   gold standard; use whenever backfilled history spans the window.
-- `runrate_<N>d` — annualized from snapshot deltas over an N-day capture
-  window (`track/playcount-deltas`). A **proxy**, accepted only when
-  N ≥ `min_delta_days` (default 28): short windows embed release spikes,
+- `runrate_<N>d` — annualized from the available span of the same
+  `measurements` series (computed client-side; no separate deltas call). A
+  **proxy**, accepted only when N ≥ `min_delta_days` (default 28): short windows
+  embed release spikes,
   viral noise, display-count update lag, and uncorrected seasonality (Q4
   typically runs +20–30% vs January). Expect ±misstatement vs measured TTM
   that shrinks as windows lengthen; do not mix derivations silently — the
@@ -75,7 +77,9 @@ avoid extra calls (small contributors). Day-level history generally begins
   all-time presence but $0 to the TTM-based value (state the coverage %).
 
 When a material share of value rides on `runrate_*`, say so next to the
-headline and prefer re-running after a longer capture window or backfill.
+headline. The historical backfill drain now fires on seed, so `--wait-backfill`
+lets a single run upgrade reached tracks to `measured_365d` instead of re-running
+later.
 
 **Seeding the backfill (how `runrate_*` becomes `measured_365d`).** A
 `measured_365d` TTM requires a full year of daily history, which only the
