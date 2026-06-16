@@ -1,5 +1,13 @@
 # Recoup — Record Label in a Box
 
+> ⚗️ **EXPERIMENT BRANCH (`experiment/rolled-up-skills`).** This variant folds the
+> 41 focused skills into **12** — five fat, mode-dispatching skills
+> (`recoup-research`, `recoup-content`, `recoup-release`, `recoup-catalog`,
+> `recoup-song`) + seven standalone foundation/utility skills. It exists to A/B
+> the fat-skill style against the focused style on the main branch. See
+> `docs/experiment-rolled-up-skills.md`.
+
+
 > **First-class, hand-maintained plugin.** This is the flagship "everything in
 > one install" bundle and is now maintained directly (it was originally generated
 > from the focused plugins; that generation model is retired for it — see
