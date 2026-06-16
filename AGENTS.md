@@ -170,16 +170,17 @@ Every skill must run on **any** harness (Claude Code, Codex, Cursor, bare `npx s
 
 ## Validation gates (run before every PR)
 
-Four scripts gate the repo. **All four must exit 0** — don't track the counts, track the exit code:
+Five scripts gate the repo. **All five must exit 0** — don't track the counts, track the exit code:
 
 ```bash
 python3 scripts/portability_lint.py        # every skill is cross-harness portable
 python3 scripts/check_vendored.py          # vendored copies are byte-identical to canonical
 python3 scripts/validate_manifests.py      # manifests valid + marketplace parity
-python3 scripts/build_records_plugin.py --check  # recoup-records bundle matches its sources
+python3 scripts/check_resolvable.py        # every skill reachable from RESOLVER.md (no dark skills)
+python3 scripts/run_resolver_eval.py       # routing fixtures valid + full coverage
 ```
 
-**The `recoup-records` bundle is generated, never hand-edited.** It's "a record label in a box" — one plugin (`plugins/recoup-records/`) that copies every focused plugin's skills, agents, hooks, references, scripts, templates, and fixtures so a user can install one thing instead of six. To change it, edit the *source* plugin under `plugins/`, then re-run `python3 scripts/build_records_plugin.py`. (We copy rather than symlink because symlinks check out as broken text files on Windows.)
+**`recoup-records` is a first-class, hand-maintained plugin** — "a record label in a box" (`plugins/recoup-records/`) that ships every focused plugin's skills, agents, hooks, references, scripts, templates, and fixtures so a user can install one thing instead of six. The old generator (`scripts/build_records_plugin.py`) still exists for a one-off reseed from the focused plugins, but it **no longer gates CI** and will overwrite hand edits — use it only deliberately.
 
 **Editing a shared (vendored) file:** change the *canonical* copy only, then re-sync every copy listed in `scripts/vendored.json` (there is no `--sync` flag — copy them yourself), then re-check. Groups come in two shapes: single files (`canonical`/`copies`) and whole directories (`canonical_dir`/`copies_dirs`):
 

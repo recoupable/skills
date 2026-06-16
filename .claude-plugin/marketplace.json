@@ -250,6 +250,36 @@
         "release-campaign",
         "playlist-pitching"
       ]
+    },
+    {
+      "name": "recoup-engineering",
+      "source": "./plugins/recoup-engineering",
+      "description": "Engineering workflows for AI agents — write and maintain high-signal GitHub tracking issues, deliver them docs-first and test-driven end-to-end, and benchmark any plugin or skills folder against the frontier of skill design.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Recoup",
+        "email": "agent@recoupable.com",
+        "url": "https://recoupable.com"
+      },
+      "homepage": "https://recoupable.com",
+      "repository": "https://github.com/recoupable/skills",
+      "license": "Apache-2.0",
+      "keywords": [
+        "recoup",
+        "engineering",
+        "github-issues",
+        "issue-tracking",
+        "test-driven-development",
+        "skill-design",
+        "plugin-benchmark",
+        "agent-skills"
+      ],
+      "category": "Developer Tools",
+      "tags": [
+        "github-issues",
+        "test-driven-development",
+        "skill-design"
+      ]
     }
   ]
 }

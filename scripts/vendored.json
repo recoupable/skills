@@ -323,7 +323,26 @@
         "plugins/recoup-deals/assets/recoup-icon.png",
         "plugins/recoup-content/assets/recoup-icon.png",
         "plugins/recoup-song-analysis/assets/recoup-icon.png",
-        "plugins/recoup-releases/assets/recoup-icon.png"
+        "plugins/recoup-releases/assets/recoup-icon.png",
+        "plugins/recoup-engineering/assets/recoup-icon.png"
+      ]
+    },
+    {
+      "canonical_dir": "skills/skill-pack-benchmark",
+      "copies_dirs": [
+        "plugins/recoup-engineering/skills/skill-pack-benchmark"
+      ]
+    },
+    {
+      "canonical_dir": "skills/issue-management",
+      "copies_dirs": [
+        "plugins/recoup-engineering/skills/issue-management"
+      ]
+    },
+    {
+      "canonical_dir": "skills/issue-implementation",
+      "copies_dirs": [
+        "plugins/recoup-engineering/skills/issue-implementation"
       ]
     }
   ]

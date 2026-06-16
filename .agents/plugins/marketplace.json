@@ -307,6 +307,43 @@
         "websiteURL": "https://recoupable.com",
         "brandColor": "#345A5D"
       }
+    },
+    {
+      "name": "recoup-engineering",
+      "source": "./plugins/recoup-engineering",
+      "version": "0.1.0",
+      "description": "Engineering workflows for AI agents \u2014 write and maintain high-signal GitHub tracking issues, deliver them docs-first and test-driven end-to-end, and benchmark any plugin or skills folder against the frontier of skill design.",
+      "author": {
+        "name": "Recoup",
+        "email": "agent@recoupable.com",
+        "url": "https://recoupable.com"
+      },
+      "homepage": "https://recoupable.com",
+      "repository": "https://github.com/recoupable/skills",
+      "license": "Apache-2.0",
+      "keywords": [
+        "recoup",
+        "engineering",
+        "github-issues",
+        "issue-tracking",
+        "test-driven-development",
+        "skill-design",
+        "plugin-benchmark",
+        "agent-skills"
+      ],
+      "interface": {
+        "displayName": "Recoup Engineering",
+        "shortDescription": "Write and ship GitHub tracking issues, and benchmark skill packs against the frontier",
+        "longDescription": "Engineering workflow skills for AI agents. Write and maintain high-signal GitHub tracking issues in the Recoupable house style, deliver them docs-first and test-driven from open to shipped with preview verification, and benchmark any plugin or skills folder against the frontier of skill/plugin design.",
+        "developerName": "Recoup",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://recoupable.com",
+        "brandColor": "#345A5D"
+      }
     }
   ]
 }
