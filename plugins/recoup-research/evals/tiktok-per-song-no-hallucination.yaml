@@ -1,5 +1,5 @@
 name: tiktok-per-song-no-hallucination
-skill: recoup-tiktok-per-song
+skill: recoup-artist-tiktok
 input: "TikTok for {artist} per song"
 expected:
   - "TikTok Per-Song"

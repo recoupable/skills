@@ -10,7 +10,7 @@
     {
       "canonical": "plugins/recoup-deals/references/deal-workspace.md",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/references/deal-workspace.md",
+        "plugins/recoup-deals/skills/recoup-deal-value/references/deal-workspace.md",
         "plugins/recoup-deals/skills/recoup-deal-ingest/references/deal-workspace.md",
         "plugins/recoup-deals/skills/recoup-deal-start/references/deal-workspace.md"
       ]
@@ -25,13 +25,13 @@
       "canonical": "plugins/recoup-deals/references/red-flags.md",
       "copies": [
         "plugins/recoup-deals/skills/recoup-deal-start/references/red-flags.md",
-        "plugins/recoup-deals/skills/recoup-deal-analysis/references/red-flags.md"
+        "plugins/recoup-deals/skills/recoup-deal-value/references/red-flags.md"
       ]
     },
     {
       "canonical": "plugins/recoup-deals/scripts/_helpers.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/_helpers.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/_helpers.py",
         "plugins/recoup-deals/skills/recoup-deal-dashboard/scripts/_helpers.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/_helpers.py",
         "plugins/recoup-deals/skills/recoup-deal-ingest/scripts/_helpers.py",
@@ -69,7 +69,7 @@
     {
       "canonical": "plugins/recoup-deals/scripts/calculate-concentration.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/calculate-concentration.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/calculate-concentration.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/calculate-concentration.py",
         "plugins/recoup-deals/skills/recoup-deal-ingest/scripts/calculate-concentration.py"
       ]
@@ -77,7 +77,7 @@
     {
       "canonical": "plugins/recoup-deals/scripts/calculate-nps-nls-bridge.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/calculate-nps-nls-bridge.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/calculate-nps-nls-bridge.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/calculate-nps-nls-bridge.py"
       ]
     },
@@ -104,7 +104,7 @@
     {
       "canonical": "plugins/recoup-deals/scripts/run-deal-checks.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/run-deal-checks.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/run-deal-checks.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/run-deal-checks.py",
         "plugins/recoup-deals/skills/recoup-deal-report/scripts/run-deal-checks.py",
         "plugins/recoup-deals/skills/recoup-deal-dashboard/scripts/run-deal-checks.py"
@@ -113,7 +113,7 @@
     {
       "canonical": "plugins/recoup-deals/scripts/validate-dashboard.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/validate-dashboard.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/validate-dashboard.py",
         "plugins/recoup-deals/skills/recoup-deal-dashboard/scripts/validate-dashboard.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/validate-dashboard.py",
         "plugins/recoup-deals/skills/recoup-deal-report/scripts/validate-dashboard.py"
@@ -122,7 +122,7 @@
     {
       "canonical": "plugins/recoup-deals/scripts/validate-deal-workspace.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/validate-deal-workspace.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/validate-deal-workspace.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/validate-deal-workspace.py",
         "plugins/recoup-deals/skills/recoup-deal-report/scripts/validate-deal-workspace.py",
         "plugins/recoup-deals/skills/recoup-deal-dashboard/scripts/validate-deal-workspace.py"
@@ -131,7 +131,7 @@
     {
       "canonical": "plugins/recoup-deals/scripts/validate-evidence-ledger.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/validate-evidence-ledger.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/validate-evidence-ledger.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/validate-evidence-ledger.py",
         "plugins/recoup-deals/skills/recoup-deal-report/scripts/validate-evidence-ledger.py",
         "plugins/recoup-deals/skills/recoup-deal-dashboard/scripts/validate-evidence-ledger.py"
@@ -140,7 +140,7 @@
     {
       "canonical": "plugins/recoup-deals/scripts/validate-findings-evidence.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/validate-findings-evidence.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/validate-findings-evidence.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/validate-findings-evidence.py",
         "plugins/recoup-deals/skills/recoup-deal-ingest/scripts/validate-findings-evidence.py",
         "plugins/recoup-deals/skills/recoup-deal-report/scripts/validate-findings-evidence.py",
@@ -150,7 +150,7 @@
     {
       "canonical": "plugins/recoup-deals/scripts/validate-normalized-ledger.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/validate-normalized-ledger.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/validate-normalized-ledger.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/validate-normalized-ledger.py",
         "plugins/recoup-deals/skills/recoup-deal-report/scripts/validate-normalized-ledger.py",
         "plugins/recoup-deals/skills/recoup-deal-dashboard/scripts/validate-normalized-ledger.py"
@@ -159,7 +159,7 @@
     {
       "canonical": "plugins/recoup-deals/scripts/validate-workspace-consistency.py",
       "copies": [
-        "plugins/recoup-deals/skills/recoup-deal-analysis/scripts/validate-workspace-consistency.py",
+        "plugins/recoup-deals/skills/recoup-deal-value/scripts/validate-workspace-consistency.py",
         "plugins/recoup-deals/skills/recoup-deal-start/scripts/validate-workspace-consistency.py",
         "plugins/recoup-deals/skills/recoup-deal-report/scripts/validate-workspace-consistency.py",
         "plugins/recoup-deals/skills/recoup-deal-dashboard/scripts/validate-workspace-consistency.py"
@@ -168,121 +168,109 @@
     {
       "canonical": "plugins/recoup-content/references/content-api.md",
       "copies": [
-        "plugins/recoup-content/skills/recoup-short-video/references/content-api.md",
+        "plugins/recoup-content/skills/recoup-content-video/references/content-api.md",
         "plugins/recoup-content/skills/recoup-content-reformat/references/content-api.md",
         "plugins/recoup-content/skills/recoup-content-pack/references/content-api.md",
-        "plugins/recoup-content/skills/recoup-carousel/references/content-api.md",
-        "plugins/recoup-content/skills/recoup-promo-graphic/references/content-api.md",
-        "plugins/recoup-content/skills/recoup-quote-cards/references/content-api.md",
-        "plugins/recoup-content/skills/recoup-thumbnail/references/content-api.md",
-        "plugins/recoup-content/skills/recoup-cover-art/references/content-api.md",
-        "plugins/recoup-content/skills/recoup-visualizer/references/content-api.md",
-        "plugins/recoup-content/skills/recoup-lyric-video/references/content-api.md",
-        "plugins/recoup-content/skills/recoup-trend-jack/references/content-api.md"
+        "plugins/recoup-content/skills/recoup-content-graphic/references/content-api.md",
+        "plugins/recoup-content/skills/recoup-content-thumbnail/references/content-api.md",
+        "plugins/recoup-content/skills/recoup-content-cover-art/references/content-api.md",
+        "plugins/recoup-content/skills/recoup-content-visualizer/references/content-api.md",
+        "plugins/recoup-content/skills/recoup-content-lyric-video/references/content-api.md",
+        "plugins/recoup-content/skills/recoup-content-trend/references/content-api.md"
       ]
     },
     {
       "canonical": "plugins/recoup-content/references/analyze-gate.md",
       "copies": [
-        "plugins/recoup-content/skills/recoup-short-video/references/analyze-gate.md",
+        "plugins/recoup-content/skills/recoup-content-video/references/analyze-gate.md",
         "plugins/recoup-content/skills/recoup-content-reformat/references/analyze-gate.md",
         "plugins/recoup-content/skills/recoup-content-pack/references/analyze-gate.md",
-        "plugins/recoup-content/skills/recoup-carousel/references/analyze-gate.md",
-        "plugins/recoup-content/skills/recoup-promo-graphic/references/analyze-gate.md",
-        "plugins/recoup-content/skills/recoup-quote-cards/references/analyze-gate.md",
-        "plugins/recoup-content/skills/recoup-thumbnail/references/analyze-gate.md",
-        "plugins/recoup-content/skills/recoup-cover-art/references/analyze-gate.md",
-        "plugins/recoup-content/skills/recoup-visualizer/references/analyze-gate.md",
-        "plugins/recoup-content/skills/recoup-lyric-video/references/analyze-gate.md",
-        "plugins/recoup-content/skills/recoup-trend-jack/references/analyze-gate.md"
+        "plugins/recoup-content/skills/recoup-content-graphic/references/analyze-gate.md",
+        "plugins/recoup-content/skills/recoup-content-thumbnail/references/analyze-gate.md",
+        "plugins/recoup-content/skills/recoup-content-cover-art/references/analyze-gate.md",
+        "plugins/recoup-content/skills/recoup-content-visualizer/references/analyze-gate.md",
+        "plugins/recoup-content/skills/recoup-content-lyric-video/references/analyze-gate.md",
+        "plugins/recoup-content/skills/recoup-content-trend/references/analyze-gate.md"
       ]
     },
     {
       "canonical": "plugins/recoup-content/references/song-sourcing.md",
       "copies": [
-        "plugins/recoup-content/skills/recoup-short-video/references/song-sourcing.md",
-        "plugins/recoup-content/skills/recoup-visualizer/references/song-sourcing.md",
-        "plugins/recoup-content/skills/recoup-lyric-video/references/song-sourcing.md"
+        "plugins/recoup-content/skills/recoup-content-video/references/song-sourcing.md",
+        "plugins/recoup-content/skills/recoup-content-visualizer/references/song-sourcing.md",
+        "plugins/recoup-content/skills/recoup-content-lyric-video/references/song-sourcing.md"
       ]
     },
     {
       "canonical": "plugins/recoup-content/references/workspace-context.md",
       "copies": [
-        "plugins/recoup-content/skills/recoup-brand-voice-caption/references/workspace-context.md",
-        "plugins/recoup-content/skills/recoup-short-video/references/workspace-context.md",
+        "plugins/recoup-content/skills/recoup-content-caption/references/workspace-context.md",
+        "plugins/recoup-content/skills/recoup-content-video/references/workspace-context.md",
         "plugins/recoup-content/skills/recoup-content-reformat/references/workspace-context.md",
         "plugins/recoup-content/skills/recoup-content-pack/references/workspace-context.md",
-        "plugins/recoup-content/skills/recoup-carousel/references/workspace-context.md",
-        "plugins/recoup-content/skills/recoup-promo-graphic/references/workspace-context.md",
-        "plugins/recoup-content/skills/recoup-quote-cards/references/workspace-context.md",
-        "plugins/recoup-content/skills/recoup-thumbnail/references/workspace-context.md",
-        "plugins/recoup-content/skills/recoup-cover-art/references/workspace-context.md",
-        "plugins/recoup-content/skills/recoup-visualizer/references/workspace-context.md",
-        "plugins/recoup-content/skills/recoup-lyric-video/references/workspace-context.md",
-        "plugins/recoup-content/skills/recoup-trend-jack/references/workspace-context.md"
+        "plugins/recoup-content/skills/recoup-content-graphic/references/workspace-context.md",
+        "plugins/recoup-content/skills/recoup-content-thumbnail/references/workspace-context.md",
+        "plugins/recoup-content/skills/recoup-content-cover-art/references/workspace-context.md",
+        "plugins/recoup-content/skills/recoup-content-visualizer/references/workspace-context.md",
+        "plugins/recoup-content/skills/recoup-content-lyric-video/references/workspace-context.md",
+        "plugins/recoup-content/skills/recoup-content-trend/references/workspace-context.md"
       ]
     },
     {
       "canonical": "plugins/recoup-content/references/account-resolver.md",
       "copies": [
-        "plugins/recoup-content/skills/recoup-brand-voice-caption/references/account-resolver.md",
-        "plugins/recoup-content/skills/recoup-short-video/references/account-resolver.md",
+        "plugins/recoup-content/skills/recoup-content-caption/references/account-resolver.md",
+        "plugins/recoup-content/skills/recoup-content-video/references/account-resolver.md",
         "plugins/recoup-content/skills/recoup-content-pack/references/account-resolver.md",
-        "plugins/recoup-content/skills/recoup-trend-jack/references/account-resolver.md"
+        "plugins/recoup-content/skills/recoup-content-trend/references/account-resolver.md"
       ]
     },
     {
       "canonical": "plugins/recoup-research/references/endpoints.md",
       "copies": [
         "plugins/recoup-research/skills/recoup-artist-research/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-audience-analysis/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-competitive-analysis/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-people-outreach/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-playlist-intelligence/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-release-pack/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-tiktok-per-song/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-trend-detection/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-web-intelligence/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-weekly-brief/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-new-release-monitor/references/endpoints.md",
-        "plugins/recoup-research/skills/recoup-streaming-check/references/endpoints.md"
+        "plugins/recoup-research/skills/recoup-artist-audience/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-artist-competition/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-artist-outreach/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-artist-playlists/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-artist-tiktok/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-artist-scout/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-web-research/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-artist-brief/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-release-monitor/references/endpoints.md",
+        "plugins/recoup-research/skills/recoup-artist-streaming/references/endpoints.md"
       ]
     },
     {
       "canonical": "plugins/recoup-research/references/response-shapes.md",
       "copies": [
         "plugins/recoup-research/skills/recoup-artist-research/references/response-shapes.md",
-        "plugins/recoup-research/skills/recoup-competitive-analysis/references/response-shapes.md",
-        "plugins/recoup-research/skills/recoup-playlist-intelligence/references/response-shapes.md",
-        "plugins/recoup-research/skills/recoup-release-pack/references/response-shapes.md",
-        "plugins/recoup-research/skills/recoup-tiktok-per-song/references/response-shapes.md",
-        "plugins/recoup-research/skills/recoup-weekly-brief/references/response-shapes.md",
-        "plugins/recoup-research/skills/recoup-new-release-monitor/references/response-shapes.md",
-        "plugins/recoup-research/skills/recoup-streaming-check/references/response-shapes.md"
+        "plugins/recoup-research/skills/recoup-artist-competition/references/response-shapes.md",
+        "plugins/recoup-research/skills/recoup-artist-playlists/references/response-shapes.md",
+        "plugins/recoup-research/skills/recoup-artist-tiktok/references/response-shapes.md",
+        "plugins/recoup-research/skills/recoup-artist-brief/references/response-shapes.md",
+        "plugins/recoup-research/skills/recoup-release-monitor/references/response-shapes.md",
+        "plugins/recoup-research/skills/recoup-artist-streaming/references/response-shapes.md"
       ]
     },
     {
       "canonical": "plugins/recoup-research/references/workflows.md",
       "copies": [
         "plugins/recoup-research/skills/recoup-artist-research/references/workflows.md",
-        "plugins/recoup-research/skills/recoup-audience-analysis/references/workflows.md",
-        "plugins/recoup-research/skills/recoup-competitive-analysis/references/workflows.md",
-        "plugins/recoup-research/skills/recoup-people-outreach/references/workflows.md",
-        "plugins/recoup-research/skills/recoup-playlist-intelligence/references/workflows.md",
-        "plugins/recoup-research/skills/recoup-trend-detection/references/workflows.md",
-        "plugins/recoup-research/skills/recoup-web-intelligence/references/workflows.md"
+        "plugins/recoup-research/skills/recoup-artist-audience/references/workflows.md",
+        "plugins/recoup-research/skills/recoup-artist-competition/references/workflows.md",
+        "plugins/recoup-research/skills/recoup-artist-outreach/references/workflows.md",
+        "plugins/recoup-research/skills/recoup-artist-playlists/references/workflows.md",
+        "plugins/recoup-research/skills/recoup-artist-scout/references/workflows.md",
+        "plugins/recoup-research/skills/recoup-web-research/references/workflows.md"
       ]
     },
     {
       "canonical": "plugins/recoup-song-analysis/references/flamingo-api.md",
       "copies": [
-        "plugins/recoup-song-analysis/skills/recoup-song-analyzer/references/flamingo-api.md",
-        "plugins/recoup-song-analysis/skills/recoup-song-metadata/references/flamingo-api.md",
-        "plugins/recoup-song-analysis/skills/recoup-song-lyrics/references/flamingo-api.md",
-        "plugins/recoup-song-analysis/skills/recoup-song-playlist-pitch/references/flamingo-api.md",
-        "plugins/recoup-song-analysis/skills/recoup-song-sync-brief/references/flamingo-api.md",
-        "plugins/recoup-song-analysis/skills/recoup-song-mix-feedback/references/flamingo-api.md",
-        "plugins/recoup-song-analysis/skills/recoup-song-hook/references/flamingo-api.md"
+        "plugins/recoup-song-analysis/skills/recoup-song-analyze/references/flamingo-api.md",
+        "plugins/recoup-song-analysis/skills/recoup-song-hook/references/flamingo-api.md",
+        "plugins/recoup-song-analysis/skills/recoup-song-pitch-kit/references/flamingo-api.md"
       ]
     },
     {
@@ -315,18 +303,27 @@
     {
       "canonical": "plugins/recoup-content/references/research-context.md",
       "copies": [
-        "plugins/recoup-content/skills/recoup-brand-voice-caption/references/research-context.md",
-        "plugins/recoup-content/skills/recoup-short-video/references/research-context.md",
+        "plugins/recoup-content/skills/recoup-content-caption/references/research-context.md",
+        "plugins/recoup-content/skills/recoup-content-video/references/research-context.md",
         "plugins/recoup-content/skills/recoup-content-reformat/references/research-context.md",
         "plugins/recoup-content/skills/recoup-content-pack/references/research-context.md",
-        "plugins/recoup-content/skills/recoup-carousel/references/research-context.md",
-        "plugins/recoup-content/skills/recoup-promo-graphic/references/research-context.md",
-        "plugins/recoup-content/skills/recoup-quote-cards/references/research-context.md",
-        "plugins/recoup-content/skills/recoup-thumbnail/references/research-context.md",
-        "plugins/recoup-content/skills/recoup-cover-art/references/research-context.md",
-        "plugins/recoup-content/skills/recoup-visualizer/references/research-context.md",
-        "plugins/recoup-content/skills/recoup-lyric-video/references/research-context.md",
-        "plugins/recoup-content/skills/recoup-trend-jack/references/research-context.md"
+        "plugins/recoup-content/skills/recoup-content-graphic/references/research-context.md",
+        "plugins/recoup-content/skills/recoup-content-thumbnail/references/research-context.md",
+        "plugins/recoup-content/skills/recoup-content-cover-art/references/research-context.md",
+        "plugins/recoup-content/skills/recoup-content-visualizer/references/research-context.md",
+        "plugins/recoup-content/skills/recoup-content-lyric-video/references/research-context.md",
+        "plugins/recoup-content/skills/recoup-content-trend/references/research-context.md"
+      ]
+    },
+    {
+      "canonical": "assets/recoup-icon.png",
+      "copies": [
+        "plugins/recoup-essentials/assets/recoup-icon.png",
+        "plugins/recoup-research/assets/recoup-icon.png",
+        "plugins/recoup-deals/assets/recoup-icon.png",
+        "plugins/recoup-content/assets/recoup-icon.png",
+        "plugins/recoup-song-analysis/assets/recoup-icon.png",
+        "plugins/recoup-releases/assets/recoup-icon.png"
       ]
     }
   ]

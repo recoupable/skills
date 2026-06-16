@@ -1,5 +1,5 @@
 name: weekly-brief
-skill: recoup-weekly-brief
+skill: recoup-artist-brief
 input: "Run a weekly brief for {artist}"
 expected:
   - "Weekly Brief"

@@ -1,5 +1,5 @@
 name: emerging-discovery
-skill: recoup-trend-detection
+skill: recoup-artist-scout
 input: "Find emerging indie R&B artists in the US with 50K-200K listeners"
 expected:
   - ranked list of emerging artists

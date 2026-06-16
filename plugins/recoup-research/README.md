@@ -58,27 +58,17 @@ curl -s -X POST "https://api.recoupable.com/api/agents/signup" \
 
 | Skill | What it does |
 |-------|-------------|
-| [recoup-weekly-brief](skills/recoup-weekly-brief) | **Customer-facing.** Dated, delta-focused weekly artist brief. Fires 5 endpoints in parallel, diffs vs the prior brief, writes a markdown file the customer opens every Monday. |
-| [recoup-new-release-monitor](skills/recoup-new-release-monitor) | Confirms a release went live and builds a launch-day alert — what dropped, where it's landing, first streaming signal. |
-| [recoup-streaming-check](skills/recoup-streaming-check) | Streaming-health spot-check — diffs the current snapshot vs the last check, flags spikes/drops, names the likely driver. |
-| [recoup-tiktok-per-song](skills/recoup-tiktok-per-song) | **Customer-facing.** Per-song TikTok signal view. The API has no per-song TikTok counts, so this builds signal from activity feeds + cited web research and refuses to fabricate numbers. Targets the #1 customer ask. |
-| [recoup-release-pack](skills/recoup-release-pack) | **Customer-facing.** Structured pre-release marketing brief: 3 visualizer directions, 5 content angles, ranked playlist targets, platform hooks, narrative thread. Grounded input for downstream creative work, not finished assets. |
+| [recoup-artist-brief](skills/recoup-artist-brief) | **Customer-facing.** Dated, delta-focused weekly artist brief. Fires 5 endpoints in parallel, diffs vs the prior brief, writes a markdown file the customer opens every Monday. |
+| [recoup-release-monitor](skills/recoup-release-monitor) | Confirms a release went live and builds a launch-day alert — what dropped, where it's landing, first streaming signal. |
+| [recoup-artist-streaming](skills/recoup-artist-streaming) | Streaming-health spot-check — diffs the current snapshot vs the last check, flags spikes/drops, names the likely driver. |
+| [recoup-artist-tiktok](skills/recoup-artist-tiktok) | **Customer-facing.** Per-song TikTok signal view. The API has no per-song TikTok counts, so this builds signal from activity feeds + cited web research and refuses to fabricate numbers. Targets the #1 customer ask. |
 | [recoup-artist-research](skills/recoup-artist-research) | Full artist research sweep — profile, metrics, audience, playlists, competitive position. The default one-shot entry point. |
-| [recoup-playlist-intelligence](skills/recoup-playlist-intelligence) | Playlist pitching targets, gap analysis, catalog optimization. Find which playlists peers are on that you aren't. |
-| [recoup-audience-analysis](skills/recoup-audience-analysis) | Audience demographics, geographic strategy, TikTok-to-Spotify pipeline, tour routing, market expansion. |
-| [recoup-competitive-analysis](skills/recoup-competitive-analysis) | Head-to-head comparison, roster benchmarking, collaboration targets, release timing strategy. |
-| [recoup-trend-detection](skills/recoup-trend-detection) | A&R discovery (anchor + similar + web), viral song autopsy. Find emerging artists before they blow up. |
-| [recoup-people-outreach](skills/recoup-people-outreach) | Industry people search, contact enrichment, outreach draft generation, CRM enrichment. |
-| [recoup-web-intelligence](skills/recoup-web-intelligence) | Web search, deep research, URL extraction, entity enrichment. Also the graceful degradation fallback. |
-
-## Commands
-
-| Command | What it does |
-|---------|-------------|
-| `/recoup-research [artist]` | Full research sweep → executive brief |
-| `/recoup-scout [genre]` | A&R discovery → ranked scouting report |
-| `/recoup-pitch [artist]` | Playlist pitch targets → ranked pitch list |
-| `/recoup-compare [A] vs [B]` | Head-to-head comparison → gap analysis |
+| [recoup-artist-playlists](skills/recoup-artist-playlists) | Playlist pitching targets, gap analysis, catalog optimization. Find which playlists peers are on that you aren't. |
+| [recoup-artist-audience](skills/recoup-artist-audience) | Audience demographics, geographic strategy, TikTok-to-Spotify pipeline, tour routing, market expansion. |
+| [recoup-artist-competition](skills/recoup-artist-competition) | Head-to-head comparison, roster benchmarking, collaboration targets, release timing strategy. |
+| [recoup-artist-scout](skills/recoup-artist-scout) | A&R discovery (anchor + similar + web), viral song autopsy. Find emerging artists before they blow up. |
+| [recoup-artist-outreach](skills/recoup-artist-outreach) | Industry people search, contact enrichment, outreach draft generation, CRM enrichment. |
+| [recoup-web-research](skills/recoup-web-research) | Web search, deep research, URL extraction, entity enrichment. Also the graceful degradation fallback. |
 
 ## Agents
 
@@ -109,20 +99,15 @@ Full endpoint documentation: [developers.recoupable.com](https://developers.reco
 ```
 skills/
 ├── recoup-artist-research/     # Full artist research sweep
-├── recoup-playlist-intelligence/ # Playlist pitching & gaps
-├── recoup-audience-analysis/   # Demographics & geography
-├── recoup-competitive-analysis/ # Comparison & positioning
-├── recoup-trend-detection/     # Discovery & viral autopsy
-├── recoup-people-outreach/     # People search & outreach
-├── recoup-weekly-brief/        # Recurring dated artist brief
-├── recoup-new-release-monitor/ # Launch-day drop confirmation + alert
-├── recoup-streaming-check/     # Streaming spike/drop spot-check
-└── recoup-web-intelligence/    # Web research fallback
-commands/
-├── recoup-research.md          # /recoup-research
-├── recoup-scout.md             # /recoup-scout
-├── recoup-pitch.md             # /recoup-pitch
-└── recoup-compare.md           # /recoup-compare
+├── recoup-artist-playlists/ # Playlist pitching & gaps
+├── recoup-artist-audience/   # Demographics & geography
+├── recoup-artist-competition/ # Comparison & positioning
+├── recoup-artist-scout/     # Discovery & viral autopsy
+├── recoup-artist-outreach/     # People search & outreach
+├── recoup-artist-brief/        # Recurring dated artist brief
+├── recoup-release-monitor/ # Launch-day drop confirmation + alert
+├── recoup-artist-streaming/     # Streaming spike/drop spot-check
+└── recoup-web-research/    # Web research fallback
 agents/
 ├── research-analyst.md         # Deep synthesis persona
 └── market-scout.md             # Discovery persona

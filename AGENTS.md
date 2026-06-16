@@ -16,7 +16,7 @@ recoupable/skills/
 │   ├── chart-metric/
 │   ├── song-writing/
 │   └── ...
-├── plugins/                  ← rich bundles: skills + commands/hooks + shared references
+├── plugins/                  ← rich bundles: skills + hooks + shared references
 │   ├── recoup-essentials/
 │   ├── recoup-deals/
 │   ├── recoup-research/
@@ -34,7 +34,7 @@ recoupable/skills/
 ## Glossary
 
 - **Skill** — a `SKILL.md` folder that teaches one task. Portable; runs on any agent.
-- **Plugin** — a bundle in `plugins/{name}/` that ships skills **plus** commands, hooks, and shared references, installed through a runtime's plugin system. A skill is a subset of a plugin.
+- **Plugin** — a bundle in `plugins/{name}/` that ships skills **plus** hooks and shared references, installed through a runtime's plugin system. A skill is a subset of a plugin. (No slash-`commands/` — skills only; see "No slash-commands".)
 - **Harness** — a runtime that loads skills/plugins: Claude Code, Codex, Cursor, or bare `npx skills`.
 - **Marketplace registry** — the list of installable plugins, written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
 - **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json`.
@@ -107,6 +107,37 @@ plugins/my-plugin/
 - **Promote skills into a plugin when they share a canonical reference.** If one skill owns a doc that sibling skills depend on, that cross-dependency breaks the self-contained rule — move them under a plugin and put the shared doc in `plugins/{name}/references/`, vendored into each skill (Portable Skill Contract rule 5).
 - Plugin skills follow the **same Portable Skill Contract** as top-level skills.
 
+## No slash-commands — skills only
+
+**Do not author `commands/` (slash-command files) in any plugin.** This repo
+standardizes on **skills** as the single authoring primitive across every harness.
+
+Why:
+
+- **A skill already gives you a `/slash` entry for free.** Every harness
+  auto-registers `/skill-name` when it loads a `SKILL.md` — you don't need a
+  command file to get a typed entry point.
+- **Commands are redundant or gone on the harnesses we ship to.** Claude Code
+  *merged* custom commands into skills (a command file is just the old format).
+  Codex *deprecated and removed* standalone prompts/commands in favor of skills.
+  Only Cursor still treats commands as a distinct primitive — not enough to
+  justify a layer that's dead weight everywhere else.
+- **One primitive, no drift.** A command that wraps a single skill is pure
+  duplication to keep in sync. Skills also do everything commands did *plus*
+  supporting files, invocation control, and auto-invocation.
+
+What to do instead:
+
+- **Need a branded/orchestrating entry point** (e.g. "run research + audience +
+  playlists, then synthesize")? Write a **skill** that names and chains the other
+  skills. Make it manual-only with `disable-model-invocation: true` if it must
+  not auto-fire.
+- **Never** add a `commands` path to any `plugin.json`, and never add a
+  `commands/` component to `scripts/build_records_plugin.py`.
+
+> Exception: hook **commands** in `hooks/hooks.json` (`"type": "command"`) are a
+> different thing — shell commands run on lifecycle events. Those are fine.
+
 ## The marketplace registry
 
 Installable plugins are listed in **two files that must stay identical in content**:
@@ -139,13 +170,16 @@ Every skill must run on **any** harness (Claude Code, Codex, Cursor, bare `npx s
 
 ## Validation gates (run before every PR)
 
-Three scripts gate the repo. **All three must exit 0** — don't track the counts, track the exit code:
+Four scripts gate the repo. **All four must exit 0** — don't track the counts, track the exit code:
 
 ```bash
-python3 scripts/portability_lint.py    # every skill is cross-harness portable
-python3 scripts/check_vendored.py      # vendored copies are byte-identical to canonical
-python3 scripts/validate_manifests.py  # manifests valid + marketplace parity
+python3 scripts/portability_lint.py        # every skill is cross-harness portable
+python3 scripts/check_vendored.py          # vendored copies are byte-identical to canonical
+python3 scripts/validate_manifests.py      # manifests valid + marketplace parity
+python3 scripts/build_records_plugin.py --check  # recoup-records bundle matches its sources
 ```
+
+**The `recoup-records` bundle is generated, never hand-edited.** It's "a record label in a box" — one plugin (`plugins/recoup-records/`) that copies every focused plugin's skills, agents, hooks, references, scripts, templates, and fixtures so a user can install one thing instead of six. To change it, edit the *source* plugin under `plugins/`, then re-run `python3 scripts/build_records_plugin.py`. (We copy rather than symlink because symlinks check out as broken text files on Windows.)
 
 **Editing a shared (vendored) file:** change the *canonical* copy only, then re-sync every copy listed in `scripts/vendored.json` (there is no `--sync` flag — copy them yourself), then re-check. Groups come in two shapes: single files (`canonical`/`copies`) and whole directories (`canonical_dir`/`copies_dirs`):
 

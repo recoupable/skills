@@ -35,12 +35,23 @@ git clone https://github.com/recoupable/skills.git
 
 ## Plugins
 
-Beyond the open skills library above, Recoup ships focused **plugins** — bundles of skills, commands, and agents for one workflow. Add the marketplace once, then install the plugins you need:
+Beyond the open skills library above, Recoup ships focused **plugins** — bundles of skills and agents for one workflow. Add the marketplace once, then install the plugins you need:
 
 ```bash
 /plugin marketplace add recoupable/skills
 /plugin install recoup-essentials@recoup
 ```
+
+### Everything in one install
+
+Want the whole platform without managing six plugins? Install **Recoup Records** — a record label in a box — a single bundle of every plugin's skills, agents, and hooks:
+
+```bash
+/plugin marketplace add recoupable/skills
+/plugin install recoup-records@recoup
+```
+
+> Pick **one or the other** — install `recoup-records` for everything, *or* the focused plugins below for a smaller surface. Installing both would register the same skills twice. The bundle is generated from the focused plugins by `scripts/build_records_plugin.py`, so it never drifts.
 
 | Plugin | What it does |
 |--------|-------------|

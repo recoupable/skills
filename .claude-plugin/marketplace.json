@@ -37,6 +37,37 @@
       ]
     },
     {
+      "name": "recoup-records",
+      "source": "./plugins/recoup-records",
+      "description": "A record label in a box \u2014 one install that bundles every Recoup plugin: setup, research, deals, content, song analysis, and releases. Install this instead of picking individual plugins.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Recoup",
+        "email": "agent@recoupable.com",
+        "url": "https://recoupable.com"
+      },
+      "homepage": "https://recoupable.com",
+      "repository": "https://github.com/recoupable/skills",
+      "license": "Apache-2.0",
+      "keywords": [
+        "music",
+        "recoup",
+        "record-label",
+        "artist-management",
+        "music-research",
+        "catalog-deals",
+        "content-creation",
+        "release-management",
+        "agent-skills"
+      ],
+      "category": "Music",
+      "tags": [
+        "record-label",
+        "all-in-one",
+        "bundle"
+      ]
+    },
+    {
       "name": "recoup-essentials",
       "source": "./plugins/recoup-essentials",
       "description": "Get onto the Recoup platform: first-run setup, API key issuance, sandbox scaffolding, artist creation and enrichment, artist workspace conventions, and direct Recoup API + connector access.",
@@ -137,7 +168,7 @@
     {
       "name": "recoup-content",
       "source": "./plugins/recoup-content",
-      "description": "Recoup content workflows: skills and commands for AI agents to draft, edit, and publish content for artists across Recoup's surfaces.",
+      "description": "Recoup content workflows: skills for AI agents to draft, edit, and publish content for artists across Recoup's surfaces.",
       "version": "0.8.0",
       "author": {
         "name": "Recoup",

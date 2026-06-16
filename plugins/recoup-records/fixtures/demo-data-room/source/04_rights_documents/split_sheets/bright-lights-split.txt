@@ -1,0 +1,24 @@
+SPLIT SHEET — "Bright Lights" (DEMO PLACEHOLDER)
+
+Composition title:  Bright Lights
+ISWC:               T-300100001-1
+Recording ISRC:     USRC18000001
+Date created:       2017-11-04
+Recording session:  Studio at Echo Mountain, Asheville NC
+
+Writers and writer-share splits (writer side, totaling 100%):
+
+  Mari Vega          75%   (signed 2017-11-04)
+  Jordan Key         25%   (signed 2017-11-04)
+
+Publisher-side designations:
+
+  Mari Vega's 75% writer share -> publisher controlled by Lane Music Publishing
+  Jordan Key's 25% writer share -> Jordan Key, self-published, no admin
+
+KNOWN CONFLICT FOR DILIGENCE:
+  The seller's composition list (02_compositions/composition-list.csv)
+  describes the publisher splits as "Lane Music Publishing 75; Atlas
+  Songs 25". This split sheet says Jordan Key controls his own 25%
+  writer-share publishing. Reconcile before close — could shrink the
+  catalog's publisher-share scope on the top track by 25%.

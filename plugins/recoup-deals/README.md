@@ -36,8 +36,8 @@ Then **restart your Claude Code session** so `hooks/hooks.json` loads.
 
 1. Cursor → Settings → Plugins → **Add custom plugin**.
 2. Paste the GitHub URL above.
-3. Restart Cursor so `.cursor-plugin/plugin.json` loads commands,
-   skills, and agents.
+3. Restart Cursor so `.cursor-plugin/plugin.json` loads the skills
+   and agents.
 
 ### Optional dependencies
 
@@ -90,21 +90,22 @@ To see what the plugin produces before pointing it at a real deal — or
 to show a teammate — run `/recoup-deal-demo`. It runs the full
 workflow against a bundled synthetic catalog.
 
-## Commands
+## Slash entry points
 
-The plugin is **six skills, one per workflow stage**. Most of the time
+The plugin is **six skills, one per workflow stage** — each auto-registers its
+own `/skill-name` slash entry (no separate command files). Most of the time
 you only run the first one.
 
-| Command | When to use it |
+| Skill | When to use it |
 | ------- | -------------- |
 | `/recoup-deal-start` | **Default.** End-to-end run — scaffolds the workspace, ingests, analyzes, builds the dashboard, and drafts the memo, with no stops between phases. |
 | `/recoup-deal-ingest` | Power-user: re-normalize after dropping new files into `source/`. Auto-recovers when seller headers don't match a provider profile. |
-| `/recoup-deal-analysis` | Power-user: refresh diligence + valuation workpapers (rights, royalty audit, NPS/NLS bridge, valuation summary). |
+| `/recoup-deal-value` | Power-user: refresh diligence + valuation workpapers (rights, royalty audit, NPS/NLS bridge, valuation summary). |
 | `/recoup-deal-dashboard` | Power-user: rebuild `DASHBOARD.html` after editing workpapers, then run the pre-share QC gate. |
 | `/recoup-deal-report` | Power-user: assemble the IC memo / financing pack / seller cleanup report and export a shareable PDF (`deals/{deal-id}/REPORT.pdf`). |
 | `/recoup-deal-demo` | Runs the full workflow on a bundled synthetic catalog. Useful for showing a teammate what the plugin produces. |
 
-If you're new to the plugin, ignore the power-user commands and start
+If you're new to the plugin, ignore the power-user skills and start
 with `/recoup-deal-start`. Try `/recoup-deal-demo` only if
 you want to see the output before pointing it at a real deal.
 
@@ -117,7 +118,7 @@ the task:
 | ----- | ------------ |
 | `recoup-deal-start` | Orchestrator. Scaffolds the workspace, then drives ingest → analysis → dashboard → memo end-to-end. Carries the deal-type modes (buy-side / seller-prep / financing / post-close). |
 | `recoup-deal-ingest` | Normalizes data rooms, royalty statements, metadata, and rights files into auditable hand-off artifacts. |
-| `recoup-deal-analysis` | The full diligence + valuation surface: rights review, royalty audit, financing underwrite, seller-prep, and post-close playbooks bundled as references; analyzes normalized cash flows and projects value. |
+| `recoup-deal-value` | The full diligence + valuation surface: rights review, royalty audit, financing underwrite, seller-prep, and post-close playbooks bundled as references; analyzes normalized cash flows and projects value. |
 | `recoup-deal-dashboard` | Authors the customer-facing HTML dashboard (agent picks layout, charts, narrative) **and** runs the pre-share QC gate that validates the whole workspace. |
 | `recoup-deal-report` | Assembles the IC memo / seller cleanup report / financing pack and packages the validated dashboard + memo + workpapers as a single shareable PDF (`deals/{deal-id}/REPORT.pdf`). |
 | `recoup-deal-demo` | Runs the full `/recoup-deal-start` workflow against a bundled synthetic catalog. |
@@ -272,7 +273,7 @@ recoup-deals/
 ├── skills/                     # Six workflow-stage skills, loaded by description-matching
 │   ├── recoup-deal-start/          # Orchestrator + workspace setup + deal-type modes
 │   ├── recoup-deal-ingest/         # Data-room normalization
-│   ├── recoup-deal-analysis/       # Rights, royalty, valuation diligence (+ deep-dive references)
+│   ├── recoup-deal-value/       # Rights, royalty, valuation diligence (+ deep-dive references)
 │   ├── recoup-deal-dashboard/      # Authors DASHBOARD.html + pre-share QC gate
 │   ├── recoup-deal-report/         # IC memo / packages + shareable PDF
 │   └── recoup-deal-demo/           # End-to-end run on bundled synthetic data

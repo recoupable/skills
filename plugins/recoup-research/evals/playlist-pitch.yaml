@@ -1,5 +1,5 @@
 name: playlist-pitch
-skill: recoup-playlist-intelligence
+skill: recoup-artist-playlists
 input: "Find playlist pitch targets for Joy Crookes"
 expected:
   - ranked list of playlists

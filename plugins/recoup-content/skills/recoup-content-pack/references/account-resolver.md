@@ -88,7 +88,7 @@ throwaway / agent key, not the user's real account. Stop and ask for the right k
 fabricate an artist. (See the `recoup-api` skill's "Stop rule — never invent a roster".)
 
 If a real account simply has no row for a named artist, the artist doesn't exist yet — run the
-`recoup-create-artist` skill (Recoupable skills library) before continuing. Do not invent an ID.
+`recoup-artist-create` skill (Recoupable skills library) before continuing. Do not invent an ID.
 
 ## 5. Quick reference — which ID goes where
 

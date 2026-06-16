@@ -1,6 +1,6 @@
 # Evaluation Fixtures
 
-Test fixtures for validating research plugin skills and commands.
+Test fixtures for validating research plugin skills.
 
 ## Structure
 

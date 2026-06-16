@@ -2,7 +2,7 @@
 
 Agent plugin for content workflows on the [Recoup](https://recoupable.com) platform. Lets AI agents draft, edit, and publish content for artists — short-form music videos, captions, images, and the supporting building blocks.
 
-Built around the `/api/content/*` endpoints and the `recoup content` CLI. Driven by a single front-door command — `/recoup-short-video` — that produces a finished 9:16 social-ready clip from an artist + song.
+Built around the `/api/content/*` endpoints and the `recoup content` CLI. Driven by a single front-door skill — `recoup-content-video` (invoke with `/recoup-content-video`) — that produces a finished 9:16 social-ready clip from an artist + song.
 
 ## Install
 
@@ -24,7 +24,7 @@ claude plugin install https://github.com/recoupable/recoup-content
 
 1. Cursor → Settings → Plugins → **Add custom plugin**.
 2. Paste the GitHub URL above.
-3. Restart Cursor so `.cursor-plugin/plugin.json` loads commands and skills.
+3. Restart Cursor so `.cursor-plugin/plugin.json` loads the skills.
 
 ## Getting started
 
@@ -41,20 +41,15 @@ Then in a new chat:
 Or invoke the anchor command directly:
 
 ```text
-/recoup-short-video
+/recoup-content-video
 ```
 
-The agent picks up the `recoup-short-video` skill, resolves the artist's `account_id`, fires the async pipeline, polls until the render finishes, and lands you on the final video URL + caption.
+The agent picks up the `recoup-content-video` skill, resolves the artist's `account_id`, fires the async pipeline, polls until the render finishes, and lands you on the final video URL + caption.
 
-## Commands
-
-| Command | When to use it |
-| ------- | -------------- |
-| `/recoup-short-video` | **Default.** End-to-end async run from artist name to finished video + caption. The front door for first installs and "make me a video" requests. |
-
-> **Skills-not-commands:** the canonical implementation is `skills/recoup-short-video/SKILL.md`, per Anthropic's newer convention (the official `claude-plugins-official` example-plugin declares the `commands/*.md` layout legacy). A back-compat `commands/recoup-short-video.md` still ships and will be removed in a future version.
-
-More command coverage (templates browse, single-step overrides, demo workspace) is on the roadmap.
+> **Skills, not commands.** This plugin ships **skills only** — no `commands/`
+> files. Each skill auto-registers its own `/skill-name` slash entry, so
+> `/recoup-content-video` is the skill itself. (See the repo's AGENTS.md
+> "No slash-commands".)
 
 ## Skills
 
@@ -65,19 +60,17 @@ the router, which dispatches to the right job:
 | ----- | --- |
 | `recoup-content` | **Router / entry point.** Disambiguates "make content for [artist]" and hands off to the right skill below. |
 | **Video / motion** | |
-| `recoup-short-video` | Featuring-artist short-form video (TikTok/Reel/Short) + caption. Looks (studio / stage / bedroom / album-record-store) are **templates**, not separate skills. Async create→poll. |
-| `recoup-lyric-video` | Lyrics on screen, timed to the audio, over a visual. |
-| `recoup-visualizer` | Seamless looping visualizer / Spotify Canvas (8s, 9:16, no text). |
+| `recoup-content-video` | Featuring-artist short-form video (TikTok/Reel/Short) + caption. Looks (studio / stage / bedroom / album-record-store) are **templates**, not separate skills. Async create→poll. |
+| `recoup-content-lyric-video` | Lyrics on screen, timed to the audio, over a visual. |
+| `recoup-content-visualizer` | Seamless looping visualizer / Spotify Canvas (8s, 9:16, no text). |
 | **Static graphics** | |
-| `recoup-cover-art` | Square DSP release artwork (single / EP / album). |
-| `recoup-thumbnail` | 16:9 YouTube/video thumbnail (focal face + hook text). |
-| `recoup-quote-cards` | Lyric/quote typography cards (feed + story sizes). |
-| `recoup-promo-graphic` | Release-date / pre-save / out-now / tour / show graphics. |
-| `recoup-carousel` | Multi-image IG carousel / photo dump. |
+| `recoup-content-cover-art` | Square DSP release artwork (single / EP / album). |
+| `recoup-content-thumbnail` | 16:9 YouTube/video thumbnail (focal face + hook text). |
+| `recoup-content-graphic` | Still-image posts — carousel/photo dump, date/announcement promo (release-date / pre-save / out-now / tour poster), and lyric/quote cards. Three modes in one skill. |
 | **Text** | |
-| `recoup-brand-voice-caption` | Captions that sound like *this* artist (voice from the workspace, fallback to real posts). |
+| `recoup-content-caption` | Captions that sound like *this* artist (voice from the workspace, fallback to real posts). |
 | **Reactive / timely** | |
-| `recoup-trend-jack` | Turn a *real* trigger — a fresh milestone, sync, chart entry, or current trend from the research feed — into content, then route the asset to the right skill below. |
+| `recoup-content-trend` | Turn a *real* trigger — a fresh milestone, sync, chart entry, or current trend from the research feed — into content, then route the asset to the right skill below. |
 | **Workflow / high-value** | |
 | `recoup-content-pack` | Batch 15–30-asset "clip family" for a release; audience-themed; cost-gated. |
 | `recoup-content-reformat` | One master → distinct per-platform cuts; polish the artist's own footage. |
@@ -109,7 +102,7 @@ For granular control, this plugin's skill points at two skills in the **Recoupab
 - `short-video` — the per-stage recipe. Two paths: async pipeline (preferred for agents) and a manual five-step recipe in its bundled `references/short-video-manual.md`.
 - `content-creation` — atomic `/api/content/*` primitives (image, video with 6 modes including lipsync, caption, transcribe, edit, upscale, analyze) for one capability in isolation.
 
-`recoup-short-video` (this plugin) is the **front door**; the library's `short-video` is the **recipe**; `content-creation` is the **building blocks**. The recipe and building blocks live in the library so they stay valuable independently of this plugin.
+`recoup-content-video` (this plugin) is the **front door**; the library's `short-video` is the **recipe**; `content-creation` is the **building blocks**. The recipe and building blocks live in the library so they stay valuable independently of this plugin.
 
 ## Required environment
 
@@ -123,8 +116,6 @@ plugins/recoup-content/
 ├── .claude-plugin/plugin.json
 ├── .codex-plugin/plugin.json
 ├── .cursor-plugin/plugin.json
-├── commands/
-│   └── recoup-short-video.md             # legacy front-door command (back-compat)
 ├── hooks/                                # SessionStart env check + Stop analyze-gate
 │   ├── hooks.json
 │   └── check-env.sh
@@ -137,16 +128,14 @@ plugins/recoup-content/
 │   └── analyze-gate.md
 ├── skills/                               # each carries its own vendored references/
 │   ├── recoup-content/                   # router / entry point
-│   ├── recoup-short-video/               # featuring-artist short-form video (template looks)
-│   ├── recoup-lyric-video/
-│   ├── recoup-visualizer/                # visualizer / Spotify Canvas
-│   ├── recoup-cover-art/
-│   ├── recoup-thumbnail/
-│   ├── recoup-quote-cards/
-│   ├── recoup-promo-graphic/
-│   ├── recoup-carousel/
-│   ├── recoup-brand-voice-caption/
-│   ├── recoup-trend-jack/                # reactive content from a real milestone/trend
+│   ├── recoup-content-video/             # featuring-artist short-form video (template looks)
+│   ├── recoup-content-lyric-video/
+│   ├── recoup-content-visualizer/        # visualizer / Spotify Canvas
+│   ├── recoup-content-cover-art/
+│   ├── recoup-content-thumbnail/
+│   ├── recoup-content-graphic/           # carousel + promo + quote modes
+│   ├── recoup-content-caption/
+│   ├── recoup-content-trend/             # reactive content from a real milestone/trend
 │   ├── recoup-content-pack/
 │   └── recoup-content-reformat/
 ├── LICENSE
@@ -165,7 +154,7 @@ The per-stage `short-video` and atomic `content-creation` skills live in the Rec
 ### Shipped recently
 
 - `hooks/` — a `SessionStart` hook that advises on missing `RECOUP_API_KEY`/`ffmpeg`, and a `Stop` hook that enforces the analyze gate (no "asset ready" claim without an analyze-gate pass).
-- `recoup-trend-jack` — reactive content from a real milestone/trend in the research feed.
+- `recoup-content-trend` — reactive content from a real milestone/trend in the research feed.
 - `references/research-context.md` — live research signals (audio analysis → edit, placements, milestones, the performance loop) wired into every artist-grounded skill's backbone.
 
 ## Support

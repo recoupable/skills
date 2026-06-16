@@ -12,7 +12,7 @@ the whole thing.
 ```text
 /recoup-release-start
   → intake (release facts) + scaffold releases/{artist}/{release}/
-  → brief      (recoup-release-marketing-brief)   → brief/
+  → brief      (recoup-release-brief)   → brief/
   → campaign   (recoup-release-campaign)           → campaign/
   → master doc (recoup-release-doc)                → RELEASE.md + reports/
   → targeting  (playlist-intelligence → people-outreach, research)  → targeting/
@@ -24,7 +24,7 @@ the whole thing.
 | Skill | What it does |
 | --- | --- |
 | `recoup-release-start` | **Orchestrator / front door.** Scaffolds the workspace and runs every stage end-to-end. |
-| `recoup-release-marketing-brief` | Creative brief — visualizer directions, content angles, hooks, playlist targets, grounded in audience data. |
+| `recoup-release-brief` | Creative brief — visualizer directions, content angles, hooks, playlist targets, grounded in audience data. |
 | `recoup-release-campaign` | The dated rollout timeline (pre / release-week / post) with channels, assets, owners. |
 | `recoup-release-doc` | The master `RELEASE.md` source of truth + generated DSP pitch / press one-sheet. |
 | `recoup-release-demo` | Runs the full workflow on a synthetic artist + release to show what it produces. |
@@ -50,10 +50,10 @@ The workspace contract is in `recoup-release-start`'s
 The targeting and monitoring stages **call** general-purpose skills that live in
 their own plugins — they're not duplicated here:
 
-- `recoup-playlist-intelligence`, `recoup-people-outreach`,
-  `recoup-audience-analysis` (recoup-research) — targeting
-- `recoup-new-release-monitor`, `recoup-streaming-check`,
-  `recoup-weekly-brief` (recoup-research) — post-release monitoring
+- `recoup-artist-playlists`, `recoup-artist-outreach`,
+  `recoup-artist-audience` (recoup-research) — targeting
+- `recoup-release-monitor`, `recoup-artist-streaming`,
+  `recoup-artist-brief` (recoup-research) — post-release monitoring
 
 The shared `releases/{slug}/` workspace is the hand-off surface that keeps a
 chained-in skill's output coherent with the bundle.

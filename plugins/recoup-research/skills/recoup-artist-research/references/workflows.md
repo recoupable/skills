@@ -35,7 +35,7 @@ Raw numbers are noise without interpretation. Heuristics for each data type:
   `playlists_total`) to see what's active now vs all-time
 - These are **current snapshots**, not time series — to track change over time,
   store today's snapshot and diff against a prior one (this is what
-  `recoup-weekly-brief` does)
+  `recoup-artist-brief` does)
 
 **Similar artists** (`/research/similar` → `artists[]`):
 

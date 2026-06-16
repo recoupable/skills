@@ -44,6 +44,44 @@
       }
     },
     {
+      "name": "recoup-records",
+      "source": "./plugins/recoup-records",
+      "version": "0.1.0",
+      "description": "A record label in a box \u2014 one install that bundles every Recoup plugin: setup, research, deals, content, song analysis, and releases. Install this instead of picking individual plugins.",
+      "author": {
+        "name": "Recoup",
+        "email": "agent@recoupable.com",
+        "url": "https://recoupable.com"
+      },
+      "homepage": "https://recoupable.com",
+      "repository": "https://github.com/recoupable/skills",
+      "license": "Apache-2.0",
+      "keywords": [
+        "music",
+        "recoup",
+        "record-label",
+        "artist-management",
+        "music-research",
+        "catalog-deals",
+        "content-creation",
+        "release-management",
+        "agent-skills"
+      ],
+      "interface": {
+        "displayName": "Recoup Records",
+        "shortDescription": "A record label in a box",
+        "longDescription": "The whole Recoup platform as a single plugin: artist setup and API access, music-industry research, catalog deal review, content creation, song audio analysis, and end-to-end release workflows \u2014 every skill, agent, and hook from the focused plugins, bundled together.",
+        "developerName": "Recoup",
+        "category": "Music",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://recoupable.com",
+        "brandColor": "#345A5D"
+      }
+    },
+    {
       "name": "recoup-essentials",
       "source": "./plugins/recoup-essentials",
       "version": "0.1.0",
@@ -166,7 +204,7 @@
       "name": "recoup-content",
       "source": "./plugins/recoup-content",
       "version": "0.8.0",
-      "description": "Recoup content workflows: skills and commands for AI agents to draft, edit, and publish content for artists across Recoup's surfaces.",
+      "description": "Recoup content workflows: skills for AI agents to draft, edit, and publish content for artists across Recoup's surfaces.",
       "author": {
         "name": "Recoup",
         "email": "agent@recoupable.com",
@@ -187,7 +225,7 @@
       "interface": {
         "displayName": "Recoup Content",
         "shortDescription": "Generate, edit, and publish artist content for Recoup",
-        "longDescription": "A content workflows plugin for Recoup. Bundles skills and commands that help AI agents draft, edit, and publish content for artists across Recoup's surfaces \u2014 captions, blurbs, release copy, social posts, and more.",
+        "longDescription": "A content workflows plugin for Recoup. Bundles skills that help AI agents draft, edit, and publish content for artists across Recoup's surfaces \u2014 captions, blurbs, release copy, social posts, and more.",
         "developerName": "Recoup",
         "category": "Music",
         "capabilities": [

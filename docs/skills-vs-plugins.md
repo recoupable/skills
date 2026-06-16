@@ -25,7 +25,7 @@ shape of plugin* to build **once you've decided you need one**.
   surprisingly fat: a skill can run a 10-step procedure, call its own scripts, and
   produce a finished artifact — all on its own.
 - **A plugin** is a **multi-component bundle**: one or more skills *plus*
-  optionally commands, subagents, hooks, an MCP/connector, evals, fixtures, and a
+  optionally subagents, hooks, an MCP/connector, evals, fixtures, and a
   marketplace entry — installed and versioned as a unit. (Per the cross-lab plugin
   spec, those are the components a plugin can carry.)
 
@@ -52,7 +52,7 @@ A single skill suffices when **all** of these hold:
   (rule of thumb: keep the body well under ~500 lines), with detail pushed into
   the skill's own `references/` via progressive disclosure.
 - **No components beyond skill + its own files.** No need for parallel specialist
-  subagents, completion/guardrail hooks, its own slash-commands, or an MCP server.
+  subagents, completion/guardrail hooks, or an MCP server.
 - **The deterministic work is a thin, co-located layer.** Any exact computation
   lives in the skill's own `scripts/` — not a large shared toolchain several
   skills depend on.
@@ -85,7 +85,6 @@ can't carry. Any single trigger is enough:
    - **Subagents** dispatched (often in parallel) for specialist review.
    - **Hooks** — guardrails that protect inputs or *gate completion* (don't let
      the agent quit until the artifact exists and validates).
-   - **Slash-commands** the user types to run stages.
    - An **MCP server / connector** the capability depends on.
    - **Evals / golden fixtures / a demo** shipped with the capability.
 4. **A shared deterministic toolchain.** Several stages depend on the same
@@ -117,7 +116,7 @@ fits one skill; it's a plugin (specifically a *workflow bundle* — see
 ```text
 Is the whole process one callable capability with one primary artifact,
 completable in a single invocation, with no independently-useful stages
-and no need for subagents / hooks / commands / MCP / a shared toolchain?
+and no need for subagents / hooks / MCP / a shared toolchain?
         │
         ├── YES → ONE SKILL (fat skill + its own references/scripts). Stop here.
         │

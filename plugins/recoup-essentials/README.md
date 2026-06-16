@@ -36,7 +36,7 @@ Loaded automatically by description-matching when the agent recognizes the task:
 | `recoup-setup` | **Start here.** First-run setup inside Claude Code — email + PIN verification, API key issuance, org lookup, and memory seeding. |
 | `recoup-setup-sandbox` | Scaffold the initial file system (orgs + artists) for a brand-new sandbox. |
 | `recoup-artist-workspace` | Work inside artist directories — create them, enumerate them, and edit context, songs, brand, and audience. |
-| `recoup-create-artist` | End-to-end 8-call chain to create, identify, and enrich a new artist account from a name. |
+| `recoup-artist-create` | End-to-end 8-call chain to create, identify, and enrich a new artist account from a name. |
 | `recoup-api` | Call the Recoupable API for artist data, socials, orgs, research, and documents — plus connector actions (Google Docs / Drive / Sheets, Gmail, TikTok, Instagram). |
 
 These five skills cross-reference each other heavily (setup → sandbox → workspace → artist creation → API), which is why they ship as one plugin rather than standalone skills.
@@ -56,7 +56,7 @@ plugins/recoup-essentials/
 │   ├── recoup-setup/SKILL.md
 │   ├── recoup-setup-sandbox/SKILL.md
 │   ├── recoup-artist-workspace/SKILL.md
-│   ├── recoup-create-artist/SKILL.md
+│   ├── recoup-artist-create/SKILL.md
 │   └── recoup-api/SKILL.md
 ├── LICENSE
 └── README.md

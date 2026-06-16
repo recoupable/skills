@@ -7,8 +7,9 @@ Flamingo). Built by [Recoup](https://recoupable.com).
 
 Point it at a public audio URL and it resolves the right analysis preset,
 calls the endpoint, and hands back something a label, supervisor, or producer
-can act on. Start with `recoup-song-analyzer` — it routes to the focused
-workflow skills below.
+can act on. Three skills cover it: `recoup-song-analyze` to understand the audio,
+`recoup-song-hook` to find the clip-worthy moment, and `recoup-song-pitch-kit`
+for playlist and sync placement materials.
 
 ## Install
 
@@ -36,13 +37,9 @@ claude plugin install https://github.com/recoupable/recoup-song-analysis
 
 | Skill | What it does |
 |-------|-------------|
-| [recoup-song-analyzer](skills/recoup-song-analyzer) | Entry point — resolves the audio URL, picks the right preset, and routes to the focused workflows below |
-| [recoup-song-metadata](skills/recoup-song-metadata) | Structured catalog metadata (BPM, key, genre, mood, instruments) for DSPs and catalog systems |
-| [recoup-song-lyrics](skills/recoup-song-lyrics) | Sectioned lyric sheet from audio (draft for human review) + optional content advisory |
-| [recoup-song-playlist-pitch](skills/recoup-song-playlist-pitch) | DSP / editorial playlist pitch plus positioning notes |
-| [recoup-song-sync-brief](skills/recoup-song-sync-brief) | Music-supervisor sync brief with scene fit, brand-safety, and sample/clearance risk |
-| [recoup-song-mix-feedback](skills/recoup-song-mix-feedback) | Technical mix critique by frequency band, with a prioritized fix checklist |
-| [recoup-song-hook](skills/recoup-song-hook) | Ranked 5–15s clip-worthy moments (the hook/drop) with timestamps, for short-form video |
+| [recoup-song-analyze](skills/recoup-song-analyze) | Understand the audio — full report, catalog metadata (BPM/key/genre/mood), lyric sheet, or mix critique |
+| [recoup-song-hook](skills/recoup-song-hook) | Find the clip-worthy 5–15s moment (the hook/drop) with timestamps, for short-form video |
+| [recoup-song-pitch-kit](skills/recoup-song-pitch-kit) | Placement materials — a playlist/editorial pitch and a music-supervisor sync brief |
 
 ## How it works
 

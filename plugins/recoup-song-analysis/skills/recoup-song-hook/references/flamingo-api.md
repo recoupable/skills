@@ -5,7 +5,7 @@ these skills depend on: Recoup's audio language model ("Music Flamingo").
 
 > This file is **vendored**: a byte-identical copy lives in each `recoup-song-*`
 > skill so every skill stays self-contained. The canonical copy is in
-> `recoup-song-analyzer`. Do not edit one copy without re-syncing the others
+> `recoup-song-analyze`. Do not edit one copy without re-syncing the others
 > (`scripts/vendored.json` + `scripts/check_vendored.py` enforce this).
 
 ## Entry points

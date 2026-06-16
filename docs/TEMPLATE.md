@@ -16,7 +16,7 @@ A **monorepo** that packages reusable AI **skills** (instructions following the 
 The repo ships skills through **two distribution layers**:
 
 1. **Standalone skills** — a top-level `skills/` directory of portable, self-contained skills that drop into *any* agent. These install via `npx skills add <org>/<repo>` **and** as a single "library" plugin (the repo root is itself registered as a plugin whose `skills` path is `./skills/`).
-2. **Plugins** — rich bundles in `plugins/<name>/` that ship skills **plus** commands, agents, hooks, shared references, evals, and fixtures, installed through each runtime's plugin system. A skill is a subset of a plugin.
+2. **Plugins** — rich bundles in `plugins/<name>/` that ship skills **plus** agents, hooks, shared references, evals, and fixtures, installed through each runtime's plugin system. A skill is a subset of a plugin. (No `commands/` — this repo is skills-only; see AGENTS.md "No slash-commands".)
 
 Both layers are authored once and install across every harness. Every plugin carries parallel per-harness manifests, and the repo carries parallel marketplace catalogs.
 
@@ -49,7 +49,6 @@ repo root
     ├── README.md, LICENSE, .gitignore
     ├── skills/<prefix>-<capability>/SKILL.md   # one folder per skill (prefixed)
     ├── references/               # optional: shared docs, VENDORED byte-identical into each skill that uses them
-    ├── commands/                 # optional: slash commands
     ├── agents/                   # optional: subagents
     ├── hooks/                    # optional: hooks.json + scripts
     ├── evals/                    # optional: eval scenarios
@@ -134,7 +133,7 @@ Accept reasonable defaults; confirm the derived names once before writing files.
 ### Mapping departments → plugins; standalone vs plugin
 
 - **Standalone (top-level `skills/`)** = generally useful, single-job, fully self-contained, no enterprise dependency. **[PUBLIC]** repos lean on this layer heavily.
-- **Plugin (`plugins/<prefix>-<group>/`)** = a cluster of related skills for one audience, or anything needing commands/agents/hooks/evals/shared references. Each department/audience cluster → one `{{PREFIX}}-<group>` plugin. Pick `group` by **install audience**, not org-chart title.
+- **Plugin (`plugins/<prefix>-<group>/`)** = a cluster of related skills for one audience, or anything needing agents/hooks/evals/shared references. Each department/audience cluster → one `{{PREFIX}}-<group>` plugin. Pick `group` by **install audience**, not org-chart title.
 - A skill lives in exactly one place. For multi-team usefulness, leave it with the primary owner and let other teams cross-install — **never duplicate a whole skill across plugins.** (Shared *reference/script files* are vendored — see §8.)
 - **Promote standalone skills into a plugin when they share a canonical reference** (cross-dependency breaks self-containment — move them under a plugin and vendor the shared doc into each, §8).
 - If a skill fits no plugin and isn't a clean standalone, **stop and ask** before inventing a new plugin (new plugins are high-bar: owner, three manifests, catalog registration in both catalogs).
@@ -637,7 +636,6 @@ metadata:
 - **Markdown hygiene:** language-tag every code fence (use ```text for plain command/spec blocks); spaced table pipes (`| --- |`) so files pass markdownlint.
 
 ### Optional plugin assets
-- `commands/<name>.md` — slash commands that invoke the plugin's skills.
 - `agents/<name>.md` — subagents (focused reviewers/analysts the skills can dispatch).
 - `hooks/hooks.json` (+ scripts) — event automation. Hooks JSON **may** use `${CLAUDE_PLUGIN_ROOT}` (it expands in JSON on Claude Code) — a SKILL.md body never may (§8 rule 2).
 - `evals/` — scenarios that assert the skill fires and produces correctly.

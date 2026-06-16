@@ -150,7 +150,9 @@ in its team plugin and chain to it.
 7. **(Hardening)** Add deterministic scripts + tests for exact work, a completion
    hook, an evidence/trust validator for the artifact, and specialist review
    subagents.
-8. **Add power-user commands** for running a single stage.
+8. **Expose each stage as its own skill** so power users can run a single stage
+   directly (skills auto-register a `/skill-name` entry — no separate command
+   files; see AGENTS.md "No slash-commands").
 
 ---
 

@@ -1,0 +1,61 @@
+{
+  "description": "[recoup-deals] Music catalog deal-review guardrails. PreToolUse blocks writes into deals/{deal-id}/source/ (immutable evidence). Stop enforces (a) the completion gate from references/deal-workspace.md before the agent claims a package is ready, AND (b) a mid-workflow gate so /recoup-deal-start cannot quit before producing the validated DASHBOARD.html. [recoup-content] Recoup content guardrails. SessionStart advises on missing credentials (RECOUP_API_KEY) and tools (ffmpeg) without blocking startup. Stop enforces the analyze gate: the agent may not claim a visual/video asset is 'ready' unless an analyze-gate pass for that asset appears in the conversation. [recoup-releases] Release workflow completion gate (Claude Code). The Stop hook prevents the agent from claiming a release is 'ready' until the deterministic validator (scripts/validate_release.py) has passed for the release workspace and gaps are disclosed honestly. Other harnesses rely on the orchestrator's own validator gate.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/protect-source-files.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are a completion-gate reviewer for the recoup-deals plugin. The main agent is about to stop. Decide whether to block the stop.\n\nGATE A — COMPLETION CLAIMS\n\nLook for the agent claiming a deal package or deliverable is 'ready', 'complete', 'done', 'shareable', 'ready for IC', 'ready for the buyer', 'ready for the seller', 'ready for the lender', 'ready for review', or any equivalent finishing language. Also count it as a completion claim if the agent has just produced or finalized a memo under deals/{deal-id}/memos/ (ic-memo, seller-cleanup-report, financing-pack, post-close-admin-plan).\n\nIf a completion claim IS present, verify each item below. Treat anything not visibly satisfied in the conversation as unmet.\n\n  a. python3 scripts/run-deal-checks.py deals/{deal-id} was run during this session and exited cleanly. Per README: 'Do not mark a package ready if run-deal-checks.py fails or readiness-check shows blocked.'\n  b. The internal readiness check (build-deal-readiness.py) does not show status 'blocked'. The output file lives at workpapers/readiness-check.md and is NOT customer-facing.\n  c. assumptions.yaml exists in the deal workspace.\n  d. evidence-ledger.json exists in the deal workspace.\n  e. Material findings in findings/findings.json are closed, accepted, or explicitly listed as open. They are not silently dropped.\n  f. Memo claims trace to evidence-ledger.json entries or assumptions.yaml entries (no unsupported claims).\n\nIf any GATE A condition is unmet, block:\n{\"decision\": \"block\", \"reason\": \"<short list of unmet completion-gate items>\", \"systemMessage\": \"Resolve the unmet completion-gate items before declaring the package ready. Run the missing validators or disclose the gap explicitly.\"}\n\nGATE B — MID-WORKFLOW PROGRESS\n\nIf no completion claim is present, check for an active end-to-end workflow run.\n\nThe most recent user message launches an end-to-end workflow when it contains '/recoup-deal-start', '/recoup-deals:recoup-deal-start', '/recoup-deal-demo', or '/recoup-deals:recoup-deal-demo'. Single-phase commands like /recoup-deal-ingest, /recoup-deal-value, /recoup-deal-dashboard, and /recoup-deal-report do NOT trigger Gate B — those are scoped runs and are allowed to stop after their own phase.\n\nWhen an end-to-end workflow is active, the agent must produce a customer-facing dashboard before stopping. Specifically:\n\n  1. deals/{deal-id}/DASHBOARD.html must have been written during this session (look for the agent invoking the recoup-deal-dashboard skill or writing the HTML file directly).\n  2. python3 scripts/validate-dashboard.py deals/{deal-id} must have been run and returned status 'ok' (look for the JSON output with status=ok in the conversation).\n\nIf an end-to-end workflow is active AND either condition above is unmet AND the agent is not stopping because of a hard blocker (no source files, missing rights scope, repeated validator failures the agent could not auto-cure), block:\n{\"decision\": \"block\", \"reason\": \"end-to-end workflow active but DASHBOARD.html not produced or not validated\", \"systemMessage\": \"Don't stop here. /recoup-deal-start (and /recoup-deal-demo) expect deals/{deal-id}/DASHBOARD.html to exist AND to pass scripts/validate-dashboard.py. Run the recoup-deal-dashboard skill to write the HTML, then run the validator. If the validator returns errors, fix the dashboard and re-run before stopping. If a hard blocker prevents proceeding, surface the specific blocker before stopping.\"}\n\nSTEP — DECIDE\n\nIf both gates pass, approve:\n{\"decision\": \"approve\"}\n\nDefault to approve for ordinary chat, exploration, scoped single-phase commands, partial work where the agent is not claiming the package is ready, or end-to-end runs that did produce and validate the dashboard. Be strict only when (a) completion is being claimed without backing or (b) an end-to-end workflow is mid-flight without a validated dashboard.",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are the analyze-gate reviewer for the recoup-content plugin. The main agent is about to stop. Decide whether to block.\n\nThe rule: the agent must NOT claim a visual or video asset is finished — 'ready', 'done', 'here's your video/image/thumbnail/clip', 'final', 'good to go', or any equivalent — unless an analyze-gate result for THAT asset appears in the conversation. The analyze gate is a POST to /api/content/analyze (or an equivalent visual inspection of the rendered output) whose result the agent reviewed. A render returning the right size/format/duration is NOT evidence the content is good; the agent cannot see pixels without analyzing.\n\nDecide:\n\n1. If the agent produced or is presenting a generated IMAGE or VIDEO asset AND is claiming it is finished/ready AND there is no analyze-gate pass (or explicit visual inspection) for that asset in the conversation, block:\n{\"decision\": \"block\", \"reason\": \"visual/video asset presented as ready without an analyze-gate pass\", \"systemMessage\": \"Run POST /api/content/analyze on the rendered asset (see the analyze-gate reference) and review the result before claiming it's ready. If it fails, regenerate and re-analyze; if borderline, surface the analysis to the user instead of asserting success.\"}\n\n2. Otherwise approve:\n{\"decision\": \"approve\"}\n\nDefault to approve for: text-only output (captions, copy, plans), generic chat or exploration, partial work where the agent is not claiming an asset is finished, jobs that produced no rendered pixels, and cases where an analyze-gate pass IS present. Be strict only when a generated image/video is being handed off as done with no verification.",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are the completion-gate reviewer for the recoup-releases plugin. The main agent is about to stop. Decide whether to block.\n\nLook for a COMPLETION CLAIM: the agent saying a release is 'ready', 'done', 'complete', 'set', 'good to go', 'ready to ship', or presenting a final release recap / landing card for a release workspace under releases/{artist-slug}/{release-slug}/.\n\nIf NO completion claim is present, approve: {\"decision\": \"approve\"}. Ordinary chat, exploration, partial work, and single-stage runs (just the brief, just the campaign, just the doc) are all fine to stop on.\n\nIf a completion claim IS present, verify each item. Treat anything not visibly satisfied in the conversation as unmet:\n  a. python3 scripts/validate_release.py releases/{artist-slug}/{release-slug} was run during this session and returned status \"ok\" (look for the JSON with status=ok). Per the release-workspace contract, a release is not ready while the validator reports missing items.\n  b. assumptions.yaml, RELEASE.md, a brief/ file, and a campaign/ file all exist in the workspace (this is what the validator checks).\n  c. No fabricated numbers: any streaming counts, chart positions, playlist placements, or press are sourced or labeled as assumptions — not invented. Open gaps are listed in RELEASE.md section 8, not hidden.\n\nIf any item is unmet, block:\n{\"decision\": \"block\", \"reason\": \"<short list of unmet items>\", \"systemMessage\": \"Don't call the release ready yet. Run python3 scripts/validate_release.py on the workspace and resolve its missing[] items, dispatch the release-readiness-reviewer agent, and disclose any gaps in RELEASE.md section 8 before declaring ready.\"}\n\nIf all items are satisfied, approve: {\"decision\": \"approve\"}.",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/check-env.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
