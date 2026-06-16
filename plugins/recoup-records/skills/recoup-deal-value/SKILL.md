@@ -1,6 +1,6 @@
 ---
 name: recoup-deal-value
-description: Use when analyzing or valuing a music catalog for acquisition, financing, sale, or investment deal review, or when refreshing the analysis after editing ingest output or assumptions. Triggers include "catalog valuation", "music catalog analysis", "project catalog value", "what is this catalog worth", "NPS multiple", "NLS multiple", "quality of earnings", "royalty cash flows", "catalog acquisition", "recoupment cliff", "PRO bonus", "normalize royalties", "refresh the analysis", "rerun the valuation", "update the workpapers", or "build an investment memo" for publishing or master rights.
+description: Use when analyzing or valuing a music catalog for acquisition, financing, sale, or investment deal review, or when refreshing the analysis after editing ingest output or assumptions. Triggers include "catalog valuation", "music catalog analysis", "project catalog value", "NPS multiple", "NLS multiple", "quality of earnings", "royalty cash flows", "catalog acquisition", "recoupment cliff", "PRO bonus", "normalize royalties", "refresh the analysis", "rerun the valuation", "update the workpapers", or "build an investment memo" for publishing or master rights. Works from an INGESTED data room (seller royalty statements + rights files); for a quick estimate from public/streaming data alone with no seller files, use recoup-catalog-value.
 ---
 
 # Deal Valuation Analysis

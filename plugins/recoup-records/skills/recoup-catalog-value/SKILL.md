@@ -1,5 +1,5 @@
 ---
-name: catalog-value-estimator
+name: recoup-catalog-value
 description: >-
   Estimate the value and performance of a music catalog, album, or individual
   recording from public/streaming data alone — no seller files, no royalty

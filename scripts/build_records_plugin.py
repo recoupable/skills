@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import filecmp
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -63,6 +64,14 @@ TARGET_KEYWORDS = [
     "release-management",
     "agent-skills",
 ]
+
+# Curated standalone skills (from top-level skills/) pulled into the bundle and
+# renamed to the recoup-{domain} convention. These have no plugin home yet; if the
+# repo later collapses into one master plugin, they move into it directly.
+EXTRA_SKILLS = {
+    "song-writing": "recoup-songwriting",
+    "catalog-value-estimator": "recoup-catalog-value",
+}
 
 # Source plugins, in install order (essentials first — it's the on-ramp).
 SOURCE_PLUGINS = [
@@ -257,6 +266,19 @@ def build(target: Path) -> None:
             raise SystemExit(f"source plugin not found: {plugin.relative_to(REPO_ROOT)}")
         for component in COMPONENT_DIRS:
             merge_component(plugin, component, target)
+
+    # Pull in the curated standalone skills, renaming each to its bundle name.
+    for src_name, bundle_name in EXTRA_SKILLS.items():
+        src = REPO_ROOT / "skills" / src_name
+        if not src.is_dir():
+            raise SystemExit(f"extra skill not found: skills/{src_name}")
+        dest = target / "skills" / bundle_name
+        shutil.copytree(src, dest)
+        sk = dest / "SKILL.md"
+        sk.write_text(
+            re.sub(r"(?m)^name:\s*.+$", f"name: {bundle_name}", sk.read_text(encoding="utf-8"), count=1),
+            encoding="utf-8",
+        )
 
     merge_hooks(src_plugins, target)
     merge_requirements(src_plugins, target)

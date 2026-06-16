@@ -107,8 +107,13 @@ request. For every pair on the same topic:
 
 ## Migration map (current → proposed)
 
-**As built: 48 → 41 skills** (no capability lost). Reductions: song −4 (7→3), graphics
-−2 (3→1), release-pack duplicate −1.
+**As built: 43 skills.** From the 6 plugins: 48 → 41 (song −4 (7→3), graphics −2 (3→1),
+release-pack duplicate −1). Plus 2 curated standalone skills pulled into the bundle by the
+generator's `EXTRA_SKILLS` map: `recoup-songwriting` (from `skills/song-writing`) and
+`recoup-catalog-value` (from `skills/catalog-value-estimator`, input-gated vs
+`recoup-deal-value`). `chart-metric`, `issue-implementation`, `issue-management`, and the 4
+plugin-duplicated standalones (music-industry-research, content-creation, short-video,
+release-management) were deliberately left out.
 
 The `setup-sandbox`, `artist-workspace`, and 3-monitor merges in the table below were
 **not** applied — per the granularity rule *"when unsure, keep it visible"*, each is a

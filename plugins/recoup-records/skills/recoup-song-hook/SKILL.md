@@ -1,6 +1,6 @@
 ---
 name: recoup-song-hook
-description: Find a song's most clip-worthy 5–15s moments — the hook to lead short-form video with — from its audio using Recoup's audio language model (Music Flamingo). Use when asked to "find the hook", "best 15 seconds", "what part should I clip", "where's the drop", "which moment for TikTok/Reels", or "what section will go viral". Returns ranked timestamps to clip; it does NOT produce a finished video (hand the timestamps to recoup-content-video for that). Needs a public audio URL.
+description: Find a song's most clip-worthy 5–15s moments — the hook to lead short-form video with — from its audio using Recoup's audio language model (Music Flamingo). Use when asked to "find the hook", "best 15 seconds", "what part should I clip", "where's the drop", "which moment for TikTok/Reels", or "what section will go viral". Finds the clip-worthy moment in a finished recording (not writing a hook — for that use recoup-songwriting); returns ranked timestamps to clip, and does NOT produce a finished video (hand the timestamps to recoup-content-video). Needs a public audio URL.
 ---
 
 # Song Hook Finder (Music Flamingo)
