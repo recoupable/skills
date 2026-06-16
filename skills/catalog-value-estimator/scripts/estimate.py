@@ -208,13 +208,13 @@ def seed_backfill(album_ids):
     carrying `songstats` history are skipped — no track is fetched twice).
     Best-effort: a missing endpoint or any error is logged and never fails the
     estimate. The snapshot/portfolio read path does NOT enqueue backfill, which
-    is why this seed is explicit. Resource model: chat#1791."""
+    is why this seed is explicit. Resource model: chat#1796."""
     if not album_ids:
         return {"note": "no album ids to seed"}
     j = api("research/measurement-jobs",
             body={"scope": {"album_ids": album_ids}, "source": "historical"}, timeout=30)
     if not j or (isinstance(j, dict) and j.get("error")):
-        return {"note": "POST /research/measurement-jobs unavailable — pending api (chat#1791); "
+        return {"note": "POST /research/measurement-jobs unavailable — pending api (chat#1796); "
                         "re-run once it ships to seed deep history"}
     return {"job_id": j.get("id"), "state": j.get("state"),
             "enqueued": j.get("enqueued"), "skipped_already_backfilled": j.get("skipped")}

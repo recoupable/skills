@@ -102,7 +102,7 @@ the nearest captures — a TTM proxy once two snapshots ≥7 days apart exist.
 Empty `deltas` (not an error) when history is insufficient.
 
 ### `POST /research/measurement-jobs` — ingest current or historical counts (async)
-> **Contract-first / pending api (chat#1791).** This is the target REST ingest
+> **Contract-first / pending api (chat#1796).** This is the target REST ingest
 > resource; until the api ships it, `estimate.py` logs the seed as unavailable
 > and proceeds. Don't assume it returns 202 yet.
 
@@ -127,7 +127,7 @@ curl -sS -X POST -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/j
  "https://api.recoupable.com/api/research/measurement-jobs"
 ```
 
-## Target resource model (chat#1791) — current paths are deprecated aliases
+## Target resource model (chat#1796) — current paths are deprecated aliases
 
 The read endpoints above are RPC-style and consolidate into one `measurements`
 collection; the writes consolidate into `measurement-jobs`. `estimate.py` still

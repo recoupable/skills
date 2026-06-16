@@ -111,7 +111,7 @@ to calibrate (see "Verification loop").
      `measured_365d`. Disable with `--no-backfill-seed`. Quota is the ceiling
      (~900 hits / 30 days, one per track) — see `references/methodology.md` for
      the head-first prioritization, and `references/recoup-api.md` for the
-     `measurement-jobs` + `measurements` resource model (chat#1791) that the
+     `measurement-jobs` + `measurements` resource model (chat#1796) that the
      legacy per-track endpoints consolidate into.
 3. **Model gross → NLS → value.** Apply public per-stream rates, the deduction
    stack, and the multiple band from `references/methodology.md`. Keep
