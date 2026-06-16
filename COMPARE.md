@@ -1,1 +1,0 @@
-# COMPARE.md — placeholder

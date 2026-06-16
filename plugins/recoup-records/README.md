@@ -1,8 +1,17 @@
 # Recoup — Record Label in a Box
 
-> **Generated bundle. Do not edit by hand.** This plugin is built from the
-> individual Recoup plugins by `scripts/build_records_plugin.py`. Edit the source
-> plugin, then re-run the generator.
+> **First-class, hand-maintained plugin.** This is the flagship "everything in
+> one install" bundle and is now maintained directly (it was originally generated
+> from the focused plugins; that generation model is retired for it — see
+> `docs/fat-skills-benchmark.md`). Edit skills here directly. The source plugins
+> may drift from this bundle; that is expected and accepted.
+>
+> **Routing is governed by `RESOLVER.md`** (the skill dispatcher) and enforced by
+> two CI gates: `scripts/check_resolvable.py` (every skill is reachable; no dark
+> skills) and `scripts/run_resolver_eval.py` (routing fixtures in
+> `resolver-eval.jsonl` at the plugin root, with coverage enforced — every skill
+> needs a positive fixture). Add a `RESOLVER.md` row **and** a fixture whenever
+> you add a skill.
 
 The whole Recoup platform as a single plugin: artist setup and API access, music-industry research, catalog deal review, content creation, song audio analysis, and end-to-end release workflows — every skill, agent, and hook from the focused plugins, bundled together.
 
@@ -25,9 +34,16 @@ individual plugin instead — same skills, smaller surface.
 /plugin install recoup-records@recoup
 ```
 
-## Regenerate
+## Maintain
+
+Edit skills in `skills/` directly. After any change to the skill set, run the
+routing gates (also run in CI):
 
 ```bash
-python3 scripts/build_records_plugin.py          # rebuild
-python3 scripts/build_records_plugin.py --check   # verify no drift (CI)
+python3 scripts/check_resolvable.py     # every skill reachable from RESOLVER.md
+python3 scripts/run_resolver_eval.py     # routing fixtures valid + full coverage
 ```
+
+The old generator (`scripts/build_records_plugin.py`) still exists for a one-off
+reseed from the focused plugins, but it no longer gates CI and will overwrite
+hand edits — use it only deliberately.

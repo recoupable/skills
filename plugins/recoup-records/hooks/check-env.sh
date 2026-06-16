@@ -1,42 +1,48 @@
 #!/bin/bash
 #
-# check-env.sh
+# check-env.sh — SessionStart directive for the recoup-records bundle.
 #
-# SessionStart hook for the recoup-content plugin. Non-blocking: it inspects the
-# environment for the credentials and tools the content skills need and prints a
-# short status line that Claude Code adds to session context. It NEVER fails the
-# session (always exit 0) — a missing key should warn, not break startup.
+# Emits ONE imperative, position-pinned directive (not passive context the model
+# silently absorbs and then ignores). Per docs/fat-skills-benchmark.md P6
+# (the session-start-directive pattern): a session-start hook must DIRECT, not
+# merely describe. It arbitrates to a single directive:
 #
-# Contract (Claude Code hooks):
-#   - stdin:  JSON describing the session (ignored here)
-#   - stdout: plain text, added to the session context
-#   - exit 0 always (this hook only advises)
+#   - No Recoup credential  -> the directive is "run /recoup-setup first" (a hard
+#     blocker; nothing else can succeed, so it wins arbitration).
+#   - Configured            -> the directive is "route through RESOLVER.md before
+#     acting" (the bundle has 43 skills; picking the right one is the whole game).
+#
+# Non-blocking by contract: always exit 0. stdin (session JSON) is ignored;
+# stdout is added to session context.
 
 set -uo pipefail
+cat >/dev/null 2>&1 || true   # drain stdin
 
-cat >/dev/null 2>&1 || true   # drain stdin; we don't need it
-
-notes=()
-
-# Auth: at least one Recoup credential must be present for any /api/content/* or
-# /api/research/* call. Prefer the API key (recoup_sk_…); the Bearer token works too.
-if [ -n "${RECOUP_API_KEY:-}" ]; then
-  notes+=("RECOUP_API_KEY set — content + research APIs available.")
-elif [ -n "${RECOUP_ACCESS_TOKEN:-}" ]; then
-  notes+=("RECOUP_ACCESS_TOKEN set (no API key) — content + research APIs available.")
-else
-  notes+=("No Recoup credential found. Set RECOUP_API_KEY (recoup_sk_…) before generating content or pulling research. See https://developers.recoupable.com/agents — do not retry calls blindly.")
+have_cred="no"
+if [ -n "${RECOUP_API_KEY:-}" ] || [ -n "${RECOUP_ACCESS_TOKEN:-}" ]; then
+  have_cred="yes"
 fi
 
-# ffmpeg: only the short-video skill's manual compose/mux step needs it. The async
-# pipeline does not, so a miss is a soft warning, not a blocker.
-if command -v ffmpeg >/dev/null 2>&1; then
-  notes+=("ffmpeg present — manual compose/mux step available.")
-else
-  notes+=("ffmpeg not on PATH — the async content pipeline still works; only short-video's manual compose step needs it.")
+ffmpeg_note=""
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  ffmpeg_note=" (note: ffmpeg not on PATH — the async content pipeline still works; only the short-video manual compose/mux step needs it.)"
 fi
 
-echo "[recoup-content] environment check:"
-for n in "${notes[@]}"; do echo "  - $n"; done
+echo "[SESSION-START DIRECTIVE — recoup-records]"
+
+if [ "$have_cred" = "no" ]; then
+  # Single directive: nothing else works without a credential, so this wins.
+  echo "DIRECTIVE: No Recoup credential is set (RECOUP_API_KEY / RECOUP_ACCESS_TOKEN)."
+  echo "Run /recoup-setup now. Do NOT attempt artist, research, content, deal, or"
+  echo "release work until a credential is set — those skills will fail. After setup,"
+  echo "route every request through the bundle's RESOLVER.md.${ffmpeg_note}"
+else
+  # Single directive: routing. With 43 skills, picking the right one is the job.
+  echo "DIRECTIVE: Before acting on any request, consult the recoup-records"
+  echo "RESOLVER.md (the skill dispatcher at the plugin root): match the request to"
+  echo "one skill, then READ that skill's SKILL.md before doing the work. If two"
+  echo "skills could match, read both and pick the narrower. Do not improvise a"
+  echo "job a skill already owns.${ffmpeg_note}"
+fi
 
 exit 0

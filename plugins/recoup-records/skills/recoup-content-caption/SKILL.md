@@ -5,34 +5,44 @@ description: Write social captions that sound like a specific artist — not gen
 
 # Brand-Voice Caption
 
-Anyone can ask a model for "a caption." The value here is **voice fidelity**: a caption
-that sounds like *this* artist, drawn from how they actually talk and what their fans
-respond to. The whole job is (1) gather the real voice, (2) draft in it, (3) hand back
-post-ready options.
+Anyone can ask a model for "a caption." The value here is **voice fidelity**: a
+caption that sounds like *this* artist, drawn from how they actually talk and
+what their fans respond to — not the beige "music marketing" register a bare
+model defaults to. The job is a loop, not a one-shot: **diarize the voice →
+draft in it → verify it actually sounds like them → hand back post-ready
+options.** A draft that doesn't pass the voice check is not done.
 
-This skill is artist-workspace-native. Read `references/workspace-context.md` for the
-read-context-first / write-back rules and `references/account-resolver.md` for auth and
-the `account_id`-vs-`id` distinction. (Both files ship alongside this skill.)
+This skill is artist-workspace-native. Read `references/workspace-context.md` for
+the read-context-first / write-back rules, `references/account-resolver.md` for
+auth and the `account_id`-vs-`id` distinction, and `references/research-context.md`
+for the live signals that ground a caption in what's actually happening. (All
+three ship alongside this skill.)
 
 ## Inputs
 
 - **Artist** (required) — name or workspace slug.
-- **Subject** (required) — what the caption is about: a single/release, a song, a photo
-  dump, a tour date, an announcement. If the user didn't say, ask — a caption with no
-  subject is just filler.
-- **Platform** (optional) — Instagram / TikTok / X / YouTube. Defaults to Instagram;
-  affects length and hashtag conventions.
-- **Count** (optional) — how many options. Default 3.
+- **Subject** (required) — what the caption is about: a single/release, a song, a
+  photo dump, a tour date, an announcement. If the user didn't say, **ask** (see
+  the decision brief in Phase 3) — a caption with no subject is filler.
+- **Platform** (optional) — Instagram / TikTok / X / YouTube. Default Instagram;
+  affects length, line breaks, and hashtag convention.
+- **Count** (optional) — how many options. Default 3, each a *distinct angle*.
 
-## Steps
+## The procedure
 
-### 1. Resolve the artist and workspace
+### Phase 0 — Resolve the artist and workspace
 
-Find `artists/{slug}/`, read `RECOUP.md` for IDs. See `references/account-resolver.md`.
-If the artist has no record at all, run `recoup-artist-create` (Recoupable skills library)
-first.
+Find `artists/{slug}/`, read `RECOUP.md` for IDs. See
+`references/account-resolver.md`. If the artist has no record at all, run
+`recoup-artist-create` first. If there's a workspace but no voice context yet,
+note it — Phase 1 will fall back to real posts.
 
-### 2. Gather the voice (the moat — do this before drafting)
+### Phase 1 — Diarize the voice (the moat; do this before drafting)
+
+Do **not** just "read artist.md." Build a **voice fingerprint**: a short,
+explicit distillation of *how this artist writes*, the way an analyst writes a
+one-page dossier rather than dumping raw files. This fingerprint is what every
+draft is checked against in Phase 5, so make it concrete and falsifiable.
 
 **Primary — workspace context (source of truth):**
 
@@ -41,12 +51,8 @@ cat "$ARTIST_DIR/context/artist.md"   2>/dev/null   # voice, tone, aesthetic, do
 cat "$ARTIST_DIR/context/audience.md" 2>/dev/null   # who fans are, how THEY talk
 ```
 
-Pull out concrete voice signals: sentence length, capitalization habits, emoji/no-emoji,
-slang, recurring themes, punctuation tics, and anything in an explicit "voice" or "tone"
-section.
-
-**Fallback — real past captions (when there's no `artist.md`):** learn the voice from what
-the artist has actually posted. Use the row `id` here (not `account_id`):
+**Fallback — real past captions (when there's no `artist.md`):** learn the voice
+from what the artist has actually posted. Use the row `id` (not `account_id`):
 
 ```bash
 curl -sS "${AUTH[@]}" \
@@ -54,33 +60,76 @@ curl -sS "${AUTH[@]}" \
   | jq -r '.posts[].caption // empty' | head -30
 ```
 
-Treat 10–30 real captions as **few-shot examples** of the voice. If neither workspace
-context nor posts exist, stop and ask the user for voice guidance — do **not** invent a
-persona.
+Treat 10–30 real captions as **few-shot voice anchors**. If neither workspace
+context nor posts exist, **stop and ask** the user for voice guidance — do not
+invent a persona.
 
-### 3. Gather the subject context
+**Write the fingerprint down** (in working notes, not a committed file) with
+concrete, checkable signals:
+
+```
+VOICE FINGERPRINT — {artist}
+- Length/shape: e.g. "1–2 short lines, hard line breaks, no paragraphs"
+- Capitalization: e.g. "all-lowercase except brand/song titles"
+- Emoji: e.g. "0–1 emoji, only 🖤 or 🌀; never strings of them"
+- Punctuation tics: e.g. "no end punctuation; em-dashes for asides"
+- Slang / lexicon: e.g. "says 'we' not 'I'; calls fans 'the swarm'"
+- Recurring themes: e.g. "night driving, faith, the city"
+- Do NOT: e.g. "no hashtags in-caption; no 'link in bio'; no exclamation hype"
+```
+
+If the artist file has an explicit "voice"/"tone" section, that overrides
+inference.
+
+### Phase 2 — Gather the subject + live signals
 
 Pull the facts the caption should reference, from the workspace where possible:
 
 ```bash
-cat "$ARTIST_DIR/releases/$RELEASE_SLUG/RELEASE.md" 2>/dev/null   # release narrative, date, title
+cat "$ARTIST_DIR/releases/$RELEASE_SLUG/RELEASE.md" 2>/dev/null   # narrative, date, title
 ```
 
-For a song's mood/lyrics, the `recoup-song-analysis` skills (Recoupable skills library)
-can supply a hook or lyric line — but never paste third-party copyrighted lyrics wholesale;
-reference or paraphrase.
+For a song's mood/lyric, the `recoup-song-analysis` skills can supply a hook or
+lyric line — but **never paste third-party copyrighted lyrics wholesale**;
+reference or paraphrase. For *what's true right now* (a milestone, a chart entry,
+a playlist add worth nodding to), see `references/research-context.md` and layer
+it in **only if it sharpens the caption** — don't shoehorn a stat into a vibe post.
 
-### 4. Draft in-voice
+### Phase 3 — Decision brief (only when a choice changes the output)
 
-Write `Count` distinct caption options, each grounded in the voice signals from step 2 and
-the subject from step 3. The model doing the drafting is *you* — use the real captions as
-few-shot anchors so the output matches their register, not a generic "music marketing"
-tone. For each option vary the angle (e.g. direct/hype, intimate/personal, witty), and
-include platform-appropriate hashtags/CTA from `context/audience.md`.
+If the subject, angle, or platform is genuinely ambiguous **and** the choice
+changes the caption materially, ask **one** decision-brief question (not a vague
+"what do you want?"). Otherwise pick the reasonable default and note it. Format:
 
-**Optional API assist (on-screen / video overlay text):** when the caption is burned-in
-text for a video rather than a post caption, generate it via the endpoint and reuse its
-styling hints. Encode the voice + subject into `topic`:
+```
+D1 — <one-line question>
+Context: <artist + what we're captioning, 1 sentence>
+ELI10: <plain-English stakes a non-marketer follows, 2–3 sentences>
+Recommendation: <option> because <one-line reason>
+A) <option> (recommended)
+   ✅ <concrete pro>
+   ❌ <honest con>
+B) <option>
+   ✅ <pro>
+   ❌ <con>
+Net: <the actual tradeoff in one line>
+```
+
+Use this for real forks only (e.g. "drop the release date in the caption, or
+keep it mysterious?"). Don't interrogate the user about things you can default.
+
+### Phase 4 — Draft in-voice
+
+Write `Count` options, each a **distinct angle** (e.g. direct/hype,
+intimate/personal, witty/dry, fan-to-fan). Every option must be generated
+*through* the Phase 1 fingerprint — use the real captions as few-shot anchors so
+the register matches. Platform shaping: respect the fingerprint's length/line-break
+habits and the platform norm (IG: caption + grouped hashtags or none per the
+artist; X: tighter, no hashtag walls; TikTok: hook-first).
+
+**Optional API assist (on-screen / burned-in video text only):** when the caption
+is overlay text for a video rather than a post caption, generate via the endpoint
+and reuse its styling hints:
 
 ```bash
 TOPIC="In ${ARTIST_NAME}'s voice (${VOICE_SUMMARY}). Post is about: ${SUBJECT}."
@@ -90,14 +139,38 @@ curl -sS -X POST "https://api.recoupable.com/api/content/caption" \
 # -> { content, font, color, borderColor, maxFontSize }
 ```
 
-`length` is `short` (default) | `medium` | `long` | `none`. The styling fields matter only
-for burned-in video text (hand them to the video/edit step); for a plain post caption,
-just use `content` as one more option.
+`length` is `short` (default) | `medium` | `long` | `none`. The styling fields
+matter only for burned-in video text; for a plain post caption use `content` as
+one more candidate (still run it through Phase 5).
 
-### 5. Present, then persist
+### Phase 5 — Verify against the fingerprint (the loop; do not skip)
 
-Show the options to the user, labeled by angle, with the platform noted. On approval, write
-them back into the workspace and commit:
+A bare model drifts to generic on the first try. Before presenting, **score every
+draft against the voice fingerprint and the anti-slop checklist**. This is the
+text analog of the content analyze-gate: you cannot trust a draft you haven't
+checked.
+
+For each draft, check:
+
+- [ ] **Matches the fingerprint** — length/shape, capitalization, emoji habit,
+      punctuation tics, lexicon. Quote the signal it hits.
+- [ ] **Avoids every "Do NOT"** in the fingerprint.
+- [ ] **Not AI-slop** — no "Get ready to…", "Mark your calendars", "We can't wait
+      for you to hear…", "🔥 OUT NOW 🔥", em-dash-stuffed hype, or empty
+      superlatives the artist would never say.
+- [ ] **Says something** — references the real subject/signal, not a generic vibe
+      that fits any artist on any day.
+- [ ] **Benchmarked** (when posts were available) — would it sit naturally next to
+      the artist's real top captions? If it stands out as "an AI wrote this," cut it.
+
+Any draft that fails → **redraft or drop it**, don't present it. Voice over
+volume: three captions that nail the voice beat ten that miss.
+
+### Phase 6 — Present, then persist
+
+Show the surviving options to the user, **labeled by angle**, with the platform
+noted and a one-line note on which fingerprint signals each leans on. On approval,
+write them back into the workspace and commit:
 
 ```bash
 mkdir -p "$ARTIST_DIR/content/captions"
@@ -106,18 +179,28 @@ git add "$ARTIST_DIR/content/captions" && \
   git commit -m "content: brand-voice captions for ${SUBJECT}"
 ```
 
-If there's no workspace, just return the options in the conversation.
+If there's no workspace, return the options in the conversation.
 
 ## Guardrails
 
 - **Never fabricate the voice.** No `artist.md` and no posts → ask, don't invent.
-- **Don't overwrite static context.** `context/artist.md` is the maintained source of
-  truth; this skill *reads* it and writes captions elsewhere (`content/captions/`).
-- **Lyrics.** Reference or paraphrase the artist's own lyrics; never reproduce third-party
-  copyrighted lyrics wholesale.
-- **Voice over volume.** Three captions that nail the voice beat ten generic ones.
+- **Verification is mandatory.** Presenting an unchecked draft is the failure mode
+  this skill exists to prevent — run Phase 5 every time.
+- **Don't overwrite static context.** `context/artist.md` is the maintained source
+  of truth; this skill *reads* it and writes captions to `content/captions/`.
+- **Lyrics.** Reference or paraphrase the artist's own lyrics; never reproduce
+  third-party copyrighted lyrics wholesale.
+- **Stop at the asset.** This skill writes captions; it does not post or schedule.
 
-## Reference
+## Anti-slop quick reference (the Phase 5 rubric, inline)
+
+Reject on sight: "Get ready", "Mark your calendars", "You won't want to miss",
+"link in bio" (unless the artist actually says it), exclamation-hype stacks,
+emoji strings, and any line that would fit any artist. Keep: their real tics,
+their lexicon, their restraint.
+
+## References
 
 - `references/workspace-context.md` — read-context-first, the context files, write-back.
 - `references/account-resolver.md` — auth modes + `account_id` vs row `id`.
+- `references/research-context.md` — live signals to ground the caption in what's true now.
