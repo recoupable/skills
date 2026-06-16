@@ -43,18 +43,25 @@ curl -sS -H "x-api-key: $RECOUP_API_KEY" \
 Note: `streams_total` may be returned as a numeric string (e.g. `"296422273.0"`)
 — parse as float.
 
-### `GET /research/track/historic-stats` — per-track time series (annualization)
-Same identifiers + `source` (required) + `start_date` / `end_date` (ISO).
-Returns `stats[].data.history[]` of `{date, streams_total, data_source}` where
-`streams_total` is cumulative as of that date. Trailing-12-month streams =
-last − first over a 365-day window. Spotify history is a stitched store series
-(snapshot captures + backfilled Songstats points, labeled per point); tracks
-without backfilled history return their snapshot-only series and are
-auto-enqueued for backfill — re-query later, or use playcount-deltas below.
+### `GET /research/tracks/{id}/measurements` — per-track measured series + run-rate
+The consolidated read for a track's history (replaces `track/historic-stats` **and**
+`track/playcount-deltas`). `{id}` is provider-neutral (ISRC or Spotify track id,
+resolved server-side).
+- default / `?granularity=daily` → `series[]` of `{date, value, data_source}`
+  (`value` is cumulative as of `date`). Trailing-12-month = last − first over a
+  365-day window. The stitched store series (Apify snapshots + Songstats backfill,
+  labeled per point) carries both the measured year and the recent run-rate.
+- `?aggregate=run_rate&window=365d` → `aggregate: {kind, window_days, delta,
+  run_rate_annualized}` — a server-computed run-rate projection.
+
+`estimate.py` reads the series and derives `measured_365d` (full-year span) vs
+`runrate_<N>d` (short span) itself — one read, no legacy endpoints, no client-side
+delta calls. Reads no longer auto-enqueue backfill; seed it explicitly (see
+`measurement-jobs`).
 
 ```bash
 curl -sS -H "x-api-key: $RECOUP_API_KEY" \
- "https://api.recoupable.com/api/research/track/historic-stats?spotify_track_id=6RmGzvvqPlVwPqiI11vqT3&source=spotify&start_date=2025-06-09&end_date=2026-06-09"
+ "https://api.recoupable.com/api/research/tracks/USA2P2015959/measurements?granularity=daily"
 ```
 
 ### `GET /spotify/album` — enumerate an album's tracks
@@ -76,30 +83,53 @@ MusicBrainz id) — useful for cross-referencing/ownership.
 roster/portfolio context snapshot, not for per-asset valuation (it's the whole
 catalog, not one recording).
 
-### `POST /research/snapshots` — portfolio-scale capture (async)
-Body: exactly one of `catalog_id` / `album_ids[]` (Spotify album ids) /
-`isrcs[]`; optional `schedule: "once" | "monthly"`. Returns **202** with
-`snapshot_id`, `album_count`, and `estimated_cost_usd` (~$0.003/album) before
-any scraper spend; **429** at the per-org monthly cap. One album captures all
-of its tracks. Counts land in the measurement store within minutes.
+### `GET /research/albums/{id}/measurements` — latest per-track counts for an album
+`{id}` = Spotify album id; `?latest=true`. Returns `measurements[]` of
+`{isrc, spotify_track_id, name, value, captured_at, data_source}` from the most
+recent capture (replaces `GET /research/playcounts`). 404 when the album has never
+been captured — create a `current` measurement-job (below). Only mapped tracks
+are returned.
+
+```bash
+curl -sS -H "x-api-key: $RECOUP_API_KEY" \
+ "https://api.recoupable.com/api/research/albums/70Zkfb99ladZ3q0JVg97co/measurements?latest=true"
+```
+
+### `POST /research/measurement-jobs` — ingest current or historical counts (async)
+
+One async ingest resource for both capture modes (chat#1796). Body:
+`{ scope: {album_ids[] | isrcs[] | catalog_id}, source: "current" | "historical" }`.
+
+- `source:"current"` — Apify capture of present counts (**absorbs `POST /research/snapshots`**).
+  Returns **202** `{ status, source:"current", id, state:"queued", album_count, estimated_cost_usd }`
+  (`id` is the snapshot job).
+- `source:"historical"` — enqueue each resolved recording for Songstats deep
+  backfill (`rank_score` = all-time streams) so the daily worker fills its full
+  daily history. **Idempotent:** songs already carrying `songstats` history are
+  skipped; no track is fetched from Songstats twice. Returns **202**
+  `{ status, source:"historical", id:null, enqueued, skipped }`.
+  **Requires a card on file** — Songstats is metered, so a cardless account gets
+  **402** with a Stripe `checkoutUrl` (free tier) instead of a job;
+  `estimate.py`'s seed surfaces that link rather than aborting the run.
+
+A `historical` job is the **only** way to backfill at portfolio scale — the
+snapshot/portfolio read path enqueues nothing. There is no per-resource status
+endpoint; read run status from the generic `GET /api/tasks/runs?runId=`.
 
 ```bash
 curl -sS -X POST -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
- -d '{"album_ids":["70Zkfb99ladZ3q0JVg97co"]}' \
- "https://api.recoupable.com/api/research/snapshots"
+ -d '{"scope":{"album_ids":["70Zkfb99ladZ3q0JVg97co"]},"source":"historical"}' \
+ "https://api.recoupable.com/api/research/measurement-jobs"
 ```
 
-### `GET /research/playcounts` — latest per-track counts for an album
-`?spotify_album_id=<id>`. Returns `playcounts[]` of `{isrc, spotify_track_id,
-name, platform_displayed_play_count, captured_at, data_source}` from the most
-recent capture. 404 (with a pointer to `POST /snapshots`) when the album has
-never been captured. Only tracks with identifier mappings are returned.
+## Resource model (chat#1796, live in prod)
 
-### `GET /research/track/playcount-deltas` — run-rate from snapshot diffs
-`?isrc=<isrc>&since=YYYY-MM-DD[&until=YYYY-MM-DD]`. Returns `deltas[]` of
-`{platform, metric, since, until, delta, days, run_rate_annualized}` between
-the nearest captures — a TTM proxy once two snapshots ≥7 days apart exist.
-Empty `deltas` (not an error) when history is insufficient.
+Reads are one `measurements` collection (track series + `aggregate=run_rate` +
+album `latest`); writes are one `measurement-jobs` resource (`source:current` for
+Apify capture, `source:historical` for Songstats backfill). The old RPC paths —
+`track/historic-stats`, `track/playcount-deltas`, `playcounts`, `snapshots` — are
+deprecated and removed from the docs; `estimate.py` uses only the consolidated
+resources above plus `track/stats`.
 
 ## Rate-limit / robustness notes
 
