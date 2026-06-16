@@ -199,22 +199,25 @@ def portfolio_tracks(album_ids, asof, cfg, snapshot=True, wait_mins=6, skip_ttm=
 
 # ---------------- historical backfill seeding ----------------
 def seed_backfill(album_ids):
-    """Portfolio mode: enqueue the whole catalog for deep Songstats historical
-    backfill so future runs earn a `measured_365d` TTM instead of a short-window
-    run-rate. Mirrors POST /research/snapshots — the endpoint resolves albums ->
-    tracks, ranks the queue by all-time streams, and dedupes server-side (songs
-    that already carry `songstats` history are skipped, so no track is ever
-    fetched twice). Best-effort: a missing endpoint or any error is logged and
-    never fails the estimate. Snapshot/portfolio reads do NOT auto-enqueue (only
-    a per-track historic-stats read does), which is why this seed is explicit."""
+    """Portfolio mode: create a *historical* measurement-job so the Songstats
+    backfill worker fills in each track's deep daily history — future runs then
+    earn a `measured_365d` TTM instead of a short-window run-rate. Ingest is one
+    resource: `source:"current"` captures fresh counts (was POST /snapshots),
+    `source:"historical"` is the backfill seed. The job resolves albums ->
+    tracks, ranks by all-time streams, and dedupes server-side (songs already
+    carrying `songstats` history are skipped — no track is fetched twice).
+    Best-effort: a missing endpoint or any error is logged and never fails the
+    estimate. The snapshot/portfolio read path does NOT enqueue backfill, which
+    is why this seed is explicit. Resource model: chat#1791."""
     if not album_ids:
         return {"note": "no album ids to seed"}
-    j = api("research/backfill", body={"album_ids": album_ids, "schedule": "once"}, timeout=30)
+    j = api("research/measurement-jobs",
+            body={"scope": {"album_ids": album_ids}, "source": "historical"}, timeout=30)
     if not j or (isinstance(j, dict) and j.get("error")):
-        return {"note": "POST /research/backfill unavailable — pending api (chat#1791); "
+        return {"note": "POST /research/measurement-jobs unavailable — pending api (chat#1791); "
                         "re-run once it ships to seed deep history"}
-    return {"enqueued": j.get("enqueued"), "skipped_already_backfilled": j.get("skipped"),
-            "snapshot_id": j.get("snapshot_id")}
+    return {"job_id": j.get("id"), "state": j.get("state"),
+            "enqueued": j.get("enqueued"), "skipped_already_backfilled": j.get("skipped")}
 
 
 # ---------------- main ----------------

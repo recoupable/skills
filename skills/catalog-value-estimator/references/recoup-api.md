@@ -101,26 +101,45 @@ never been captured. Only tracks with identifier mappings are returned.
 the nearest captures — a TTM proxy once two snapshots ≥7 days apart exist.
 Empty `deltas` (not an error) when history is insufficient.
 
-### `POST /research/backfill` — seed deep Songstats historical backfill (async)
-> **Contract-first / pending api (chat#1791).** Documented here as the contract
-> the seed step targets; until the api ships it, `estimate.py` logs the seed as
-> unavailable and proceeds. Don't assume it returns 200 yet.
+### `POST /research/measurement-jobs` — ingest current or historical counts (async)
+> **Contract-first / pending api (chat#1791).** This is the target REST ingest
+> resource; until the api ships it, `estimate.py` logs the seed as unavailable
+> and proceeds. Don't assume it returns 202 yet.
 
-Body: exactly one of `catalog_id` / `album_ids[]` / `isrcs[]` (same shape as
-`POST /research/snapshots`). Enqueues each resolved recording into the Songstats
-backfill queue (`status=pending`, ranked by all-time streams) so the daily
-worker fills in its full daily history. **Idempotent and free:** songs that
-already carry `songstats` history are skipped, and no row is ever fetched from
-Songstats twice. Returns **202** with `{ enqueued, skipped, snapshot_id? }`.
-This is the **only** way to backfill at portfolio scale — the snapshot read path
-does not enqueue anything (only a per-track `GET /research/track/historic-stats`
-read does).
+One async ingest resource for both capture modes. Body:
+`{ scope: {album_ids[] | isrcs[] | catalog_id}, source: "current" | "historical" }`.
+
+- `source:"current"` — Apify capture of present counts (**absorbs `POST /research/snapshots`**).
+- `source:"historical"` — enqueue each resolved recording for Songstats deep
+  backfill (`rank_score` = all-time streams) so the daily worker fills its full
+  daily history. **Idempotent and free:** songs already carrying `songstats`
+  history are skipped; no track is fetched from Songstats twice.
+
+Returns **202** + `Location: /research/measurement-jobs/{id}` and
+`{ id, state, enqueued, skipped }`. Poll `GET /research/measurement-jobs/{id}` →
+`{ state, enqueued, skipped, cost_usd }`. A `historical` job is the **only** way
+to backfill at portfolio scale — the snapshot/portfolio read path enqueues
+nothing (only a per-track historic-stats read does).
 
 ```bash
 curl -sS -X POST -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
- -d '{"album_ids":["70Zkfb99ladZ3q0JVg97co"]}' \
- "https://api.recoupable.com/api/research/backfill"
+ -d '{"scope":{"album_ids":["70Zkfb99ladZ3q0JVg97co"]},"source":"historical"}' \
+ "https://api.recoupable.com/api/research/measurement-jobs"
 ```
+
+## Target resource model (chat#1791) — current paths are deprecated aliases
+
+The read endpoints above are RPC-style and consolidate into one `measurements`
+collection; the writes consolidate into `measurement-jobs`. `estimate.py` still
+calls the legacy paths until the api migration lands, then repoints:
+
+| Legacy path (in use today) | Target |
+|---|---|
+| `GET /research/track/historic-stats` | `GET /research/tracks/{id}/measurements?granularity=daily` |
+| `GET /research/track/playcount-deltas` | `GET /research/tracks/{id}/measurements?aggregate=run_rate&window=365d` |
+| `GET /research/playcounts` | `GET /research/albums/{id}/measurements?latest=true` |
+| `POST /research/snapshots` | `POST /research/measurement-jobs {source:"current"}` |
+| *(dropped `POST /research/backfill`)* | `POST /research/measurement-jobs {source:"historical"}` |
 
 ## Rate-limit / robustness notes
 

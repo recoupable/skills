@@ -81,7 +81,8 @@ headline and prefer re-running after a longer capture window or backfill.
 `measured_365d` TTM requires a full year of daily history, which only the
 Songstats backfill worker supplies. That worker drains a queue, and **the
 snapshot/portfolio read path never fills it** — so `estimate.py` in portfolio
-mode seeds the catalog explicitly via `POST /research/backfill`. Two rules:
+mode seeds the catalog explicitly by creating a historical ingest job
+(`POST /research/measurement-jobs {source:"historical"}`). Two rules:
 
 - **Prioritize head-first.** The queue is ranked by all-time streams, and so is
   the seed. The value-bearing head dominates — for a multi-thousand-track

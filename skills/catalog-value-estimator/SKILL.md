@@ -103,13 +103,16 @@ to calibrate (see "Verification loop").
      A real `measured_365d` TTM needs a full year of daily history, which only
      the Songstats backfill worker can supply. That worker drains a queue — and
      **the snapshot/portfolio path never fills it** (only a per-track
-     `historic-stats` read enqueues a track). So `estimate.py` in `--album-ids`
-     mode explicitly seeds the whole catalog via `POST /research/backfill`
-     (ranked by all-time streams, deduped server-side, free). The daily cron
-     then drains it within quota; re-run the estimate later and run-rate TTMs
-     upgrade to `measured_365d`. Disable with `--no-backfill-seed`. Quota is the
-     ceiling (~900 hits / 30 days, one per track) — see
-     `references/methodology.md` for the head-first prioritization.
+     historic-stats read enqueues a track). So `estimate.py` in `--album-ids`
+     mode explicitly creates a *historical ingest job* —
+     `POST /research/measurement-jobs {scope, source:"historical"}` (ranked by
+     all-time streams, deduped server-side, free). The daily cron then drains it
+     within quota; re-run the estimate later and run-rate TTMs upgrade to
+     `measured_365d`. Disable with `--no-backfill-seed`. Quota is the ceiling
+     (~900 hits / 30 days, one per track) — see `references/methodology.md` for
+     the head-first prioritization, and `references/recoup-api.md` for the
+     `measurement-jobs` + `measurements` resource model (chat#1791) that the
+     legacy per-track endpoints consolidate into.
 3. **Model gross → NLS → value.** Apply public per-stream rates, the deduction
    stack, and the multiple band from `references/methodology.md`. Keep
    *measured* platforms separate from *approximated* ones and carry a band, not
