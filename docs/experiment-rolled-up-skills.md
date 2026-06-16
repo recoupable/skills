@@ -9,13 +9,14 @@
 | | Focused (control) | Rolled-up (treatment) |
 |---|---|---|
 | **Branch** | `recoup-label-in-a-box` | `experiment/rolled-up-skills` |
-| **Skill count** | 41 | **12** |
-| **Shape** | many narrow skills; the resolver picks the skill | few fat skills; the resolver picks the skill, then the **skill body picks the mode** |
-| **Routing burden** | on the resolver (41-way) | split: resolver (12-way) + in-skill mode dispatch |
+| **Skill count** | 41 | **6** |
+| **Shape** | many narrow skills; the resolver picks the skill | a handful of fat skills; the resolver picks the skill, then the **skill body picks the mode** |
+| **Routing burden** | on the resolver (41-way) | split: resolver (6-way) + in-skill mode dispatch |
 
 ## What rolled up into what
 
-Five fat, mode-dispatching skills absorb 34 focused skills:
+Six fat, mode-dispatching skills absorb the entire plugin (songwriting was
+removed):
 
 - **`recoup-research`** ← artist-research, audience, competition, scout, playlists,
   outreach, tiktok, brief, web-intelligence (9) · modes: overview · audience ·
@@ -29,10 +30,11 @@ Five fat, mode-dispatching skills absorb 34 focused skills:
   catalog-value (7) · modes: review · ingest · value · dashboard · report ·
   estimate · demo
 - **`recoup-song`** ← song analyze, hook, pitch-kit (3) · modes: analyze · hook · pitch
+- **`recoup-platform`** ← setup, setup-sandbox, api, artist-create, artist-workspace,
+  learn (6) · modes: setup · sandbox · api · create-artist · workspace · learn
 
-Seven skills stayed standalone (foundation/utility, no natural cluster):
-`recoup-setup`, `recoup-setup-sandbox`, `recoup-api`, `recoup-artist-create`,
-`recoup-artist-workspace`, `recoup-songwriting`, `recoup-learn`.
+**`recoup-songwriting` was removed** (capability dropped, not folded). Nothing else
+stayed standalone — the plugin is now 6 fat skills, end to end.
 
 All references/scripts/templates each cluster needed were carried into the fat
 skill (union, deduped), so capability is preserved — only the packaging changed.

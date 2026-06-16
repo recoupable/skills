@@ -4,12 +4,14 @@
 # Goal of this set: prove ONE fat description fires for ALL its sub-intents (many intra-cluster
 # intents map to the same fat skill), and that cross-skill forks still route correctly.
 
-# --- Foundation / setup (standalone) ---
-{"intent": "set me up, verify my email and give me an api key", "expected": "recoup-setup"}
-{"intent": "scaffold the sandbox folders from my orgs and artists", "expected": "recoup-setup-sandbox"}
-{"intent": "call the recoup api to fetch this artist's socials", "expected": "recoup-api"}
-{"intent": "create a new artist account for Mvney", "expected": "recoup-artist-create", "not": ["recoup-artist-workspace"]}
-{"intent": "organize the files inside this existing artist's folder", "expected": "recoup-artist-workspace", "not": ["recoup-artist-create"]}
+# --- recoup-platform: every mode must fire it ---
+{"intent": "set me up, verify my email and give me an api key", "expected": "recoup-platform"}
+{"intent": "scaffold the sandbox folders from my orgs and artists", "expected": "recoup-platform"}
+{"intent": "call the recoup api to fetch this artist's socials", "expected": "recoup-platform"}
+{"intent": "edit this google doc and sync it to a sandbox file", "expected": "recoup-platform"}
+{"intent": "create a new artist account for Mvney", "expected": "recoup-platform"}
+{"intent": "what artists do I have, organize this artist's files", "expected": "recoup-platform"}
+{"intent": "that worked, remember this so we don't redo it next time", "expected": "recoup-platform"}
 
 # --- recoup-research: many sub-intents must all fire it ---
 {"intent": "research Drake and give me an overview", "expected": "recoup-research"}
@@ -57,6 +59,4 @@
 {"intent": "find the best 15 seconds of this song to clip", "expected": "recoup-song", "not": ["recoup-content"]}
 {"intent": "write a playlist pitch and sync brief for this single from the audio", "expected": "recoup-song", "not": ["recoup-research"]}
 
-# --- standalone utility ---
-{"intent": "help me write lyrics and sharpen the hook for this unfinished song", "expected": "recoup-songwriting", "not": ["recoup-song"]}
-{"intent": "that worked, remember this so we don't redo it next time", "expected": "recoup-learn"}
+# (songwriting capability removed; learnings folded into recoup-platform)
