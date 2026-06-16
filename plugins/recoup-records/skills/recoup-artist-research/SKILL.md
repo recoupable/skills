@@ -1,6 +1,6 @@
 ---
 name: recoup-artist-research
-description: One-time comprehensive artist research sweep via the Recoup research API — profile, metrics, audience, playlists, similar artists, and insights synthesized into one overview. Use when asked to "research [artist]", "tell me about [artist]", "artist overview", or "how is [artist] doing" as a one-shot look. The default entry point for artist research. For a recurring, dated weekly check-in use recoup-artist-brief; for one specific dimension use the focused skills (recoup-artist-audience, recoup-artist-competition, recoup-artist-playlists, recoup-artist-streaming).
+description: One-time comprehensive artist research sweep via the Recoup research API — profile, metrics, audience, playlists, similar artists, and insights synthesized into one overview. Use when asked to "research [artist]", "tell me about [artist]", "artist overview", or "how is [artist] doing" as a one-shot look. The default entry point for artist research. For a recurring, dated weekly check-in use recoup-artist-brief; for one specific dimension use the focused skills (recoup-artist-audience, recoup-artist-competition, recoup-artist-playlists); for a recurring streaming spike/drop check use recoup-artist-brief (streaming scope).
 ---
 
 # Artist Research

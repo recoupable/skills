@@ -28,7 +28,7 @@ Use lowercase-kebab-case for both slugs (`gatsby-grace`, `blue-slide-park`).
 | Schedule | `recoup-release-campaign` | `campaign/` |
 | Master doc + deliverables | `recoup-release-doc` | `RELEASE.md`, `reports/` |
 | Targeting | `recoup-artist-playlists` → `recoup-artist-outreach` (research) | `targeting/` |
-| Post-release | `recoup-release-monitor`, `recoup-artist-streaming`, `recoup-artist-brief` | `tracking/` |
+| Post-release | `recoup-release-monitor`, `recoup-artist-brief` (streaming or full scope) | `tracking/` |
 
 ## Rules
 

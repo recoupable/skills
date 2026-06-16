@@ -1,6 +1,6 @@
 ---
 name: recoup-content-lyric-video
-description: Make a lyric video — the whole song's words animated on screen, timed to the audio, over a visual background (a motion video, not a still card). Use when the user says "lyric video", "make a video with the lyrics", "put the words on screen", "kinetic typography for [song]", or "animated lyrics for [song]". Transcribes the song to get word timings, generates or uses a background visual, and burns in the synced lyrics. For a single static lyric on one image, use recoup-content-graphic. Works with or without artist context.
+description: Make a lyric video — the whole song's words animated on screen, timed to the audio, over a visual background (a motion video, not a still card). Use when the user says "lyric video", "make a video with the lyrics", "put the words on screen", "kinetic typography for [song]", or "animated lyrics for [song]". Transcribes the song to get word timings, generates or uses a background visual, and burns in the synced lyrics. For a single static lyric on one image, use recoup-content-image (quote mode). Works with or without artist context.
 ---
 
 # Lyric Video

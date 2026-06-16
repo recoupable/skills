@@ -30,10 +30,12 @@ Match the user's ask to the one skill that does that job:
 - **"Lyric video / words on screen / kinetic typography"** → `recoup-content-lyric-video`.
 - **"Visualizer / Spotify Canvas / looping background"** → `recoup-content-visualizer`.
 
-**Static graphics**
-- **"Album art / cover art / single artwork"** (square, DSP) → `recoup-content-cover-art`.
-- **"YouTube thumbnail / clickable video cover"** (16:9, hook text) → `recoup-content-thumbnail`.
-- **"Quote card / lyric card, carousel / photo dump, or announcement / release-date / pre-save / tour poster"** → `recoup-content-graphic` (it has carousel, promo, and quote modes).
+**Static images** (one skill, five modes — it picks the mode from the ask)
+- **Any still image** — "album art / cover art / single artwork" (square DSP),
+  "YouTube thumbnail / clickable video cover" (16:9 hook), "carousel / photo dump",
+  "announcement / release-date / pre-save / tour poster", or "quote / lyric card" →
+  `recoup-content-image`. It dispatches to the right mode (cover / thumbnail /
+  carousel / promo / quote); you don't pick the sub-skill.
 
 **Text**
 - **"Caption / post copy in the artist's voice"** → `recoup-content-caption`.

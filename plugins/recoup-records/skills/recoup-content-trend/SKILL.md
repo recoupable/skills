@@ -66,8 +66,8 @@ Match the trigger to the asset that carries it best:
 
 | Trigger | Best format → skill |
 | --- | --- |
-| Streams / followers milestone, playlist add, chart entry | `recoup-content-graphic` (a "the numbers" graphic) |
-| Sync / press / co-sign, or a story to tell | `recoup-content-caption` (+ a graphic) |
+| Streams / followers milestone, playlist add, chart entry | `recoup-content-image` (promo mode — a "the numbers" graphic) |
+| Sync / press / co-sign, or a story to tell | `recoup-content-caption` (+ an image) |
 | A sound/format trend, "make it move" | `recoup-content-video` (let the song's audio drive the edit) |
 
 Write a one-line angle in the artist's voice ("2,000,000,000 streams. thank you 🤍") drawn

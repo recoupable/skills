@@ -86,7 +86,7 @@ If the artist's audience picture is thin, also run
 Set up the standing watches so the release keeps producing value after drop day:
 
 - **`recoup-release-monitor`** — confirms the drop and builds a launch alert.
-- **`recoup-artist-streaming`** — watches for streaming spikes.
+- **`recoup-artist-brief`** (streaming scope) — watches for streaming spikes.
 - **`recoup-artist-brief`** — the recurring tracker.
 
 Note these in the workspace so the team knows what's running.

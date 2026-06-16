@@ -65,14 +65,16 @@
 
 | Intent | Skill |
 |---|---|
-| Recurring **dated weekly brief** that diffs against last week and writes a file | `recoup-artist-brief` |
-| Streaming health check — flag Spotify/DSP spikes or drops vs last check | `recoup-artist-streaming` |
+| Recurring **dated weekly brief** (full scope) OR a **streaming spike/drop check** (streaming scope) — both diff against the last run and write a dated file | `recoup-artist-brief` |
 | Confirm a release actually dropped; build a launch-day alert | `recoup-release-monitor` |
 
 - These are the **scheduled twins** of on-demand research skills. "Analyze the
   audience now" → `recoup-artist-audience`; "watch [artist] every week" →
   `recoup-artist-brief`. State the modality (ask-now vs runs-on-a-cadence) when
   disambiguating.
+- `recoup-artist-brief` has **two scopes**: a full weekly brief and a
+  streaming-only spike/drop check ("check streaming", "are streams moving"). Route
+  both to it — there is no separate streaming skill.
 
 ## Domain 4 — Song audio analysis (needs an audio file; Music Flamingo)
 
@@ -100,17 +102,16 @@ artist." Route through it when the format is unspecified; otherwise go direct:
 | Finished 9:16 short-form music video (TikTok/Reel/Short) | `recoup-content-video` |
 | Lyric video — whole song's words animated, timed to audio, over motion | `recoup-content-lyric-video` |
 | Looping visualizer / Spotify Canvas — short, seamless, no-text loop | `recoup-content-visualizer` |
-| Square DSP cover art (single/EP/album) | `recoup-content-cover-art` |
-| 16:9 YouTube thumbnail with focal face + hook text | `recoup-content-thumbnail` |
-| Still graphic — carousel/photo dump, announcement/promo, or single lyric/quote card | `recoup-content-graphic` |
+| Any **still image** — DSP cover art, 16:9 thumbnail, carousel/photo dump, announcement/promo, or lyric/quote card (one skill, picks the mode) | `recoup-content-image` |
 | React to a **real timely trigger** (milestone, sync, chart entry) or current trend | `recoup-content-trend` |
 | Batch "clip family" — 15–30 assets for one song's push | `recoup-content-pack` |
 | Reformat a master video per platform, or polish the artist's own footage | `recoup-content-reformat` |
 
 - Motion jobs are distinct: **video** (artist + song clip) vs **lyric-video**
   (words on screen) vs **visualizer** (no-text loop). Match the described output.
-- Still images: **cover-art** (square DSP) vs **thumbnail** (16:9 + hook) vs
-  **graphic** (carousel / promo / quote-card modes). Match aspect + purpose.
+- All **still images** route to `recoup-content-image`, which picks its own mode
+  (cover / thumbnail / carousel / promo / quote). Don't route still-image work to
+  a sub-skill — there isn't one anymore.
 - `recoup-content-trend` reacts to **news/a trigger**, then routes the actual
   asset to a graphic/caption/video skill. Use it when the trigger is an event,
   not a format.

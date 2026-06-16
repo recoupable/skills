@@ -23,7 +23,7 @@
 
 # --- Domain 3: monitors (scheduled) ---
 {"intent": "give me the weekly brief on what's new with this artist", "expected": "recoup-artist-brief", "not": ["recoup-release-brief"]}
-{"intent": "are this artist's streams spiking or dropping vs last check", "expected": "recoup-artist-streaming"}
+{"intent": "are this artist's streams spiking or dropping vs last check", "expected": "recoup-artist-brief"}
 {"intent": "monitor for the single dropping and alert me on launch day", "expected": "recoup-release-monitor"}
 
 # --- Domain 4: song audio analysis ---
@@ -38,10 +38,12 @@
 {"intent": "make a tiktok video of the artist with their song", "expected": "recoup-content-video", "not": ["recoup-content-lyric-video", "recoup-content-visualizer"]}
 {"intent": "make a lyric video with the words on screen timed to the song", "expected": "recoup-content-lyric-video", "not": ["recoup-content-video"]}
 {"intent": "make a looping spotify canvas with no text", "expected": "recoup-content-visualizer", "not": ["recoup-content-video"]}
-{"intent": "make square cover art for the single for spotify", "expected": "recoup-content-cover-art", "not": ["recoup-content-thumbnail"]}
-{"intent": "make a 16:9 youtube thumbnail with a hook line", "expected": "recoup-content-thumbnail", "not": ["recoup-content-cover-art"]}
-{"intent": "make an out-now announcement promo graphic", "expected": "recoup-content-graphic"}
-{"intent": "they just crossed 1B streams, make something off that", "expected": "recoup-content-trend", "not": ["recoup-artist-streaming"]}
+{"intent": "make square cover art for the single for spotify", "expected": "recoup-content-image", "not": ["recoup-content-video"]}
+{"intent": "make a 16:9 youtube thumbnail with a hook line", "expected": "recoup-content-image"}
+{"intent": "make an out-now announcement promo graphic", "expected": "recoup-content-image"}
+{"intent": "make a carousel photo dump and a quote card", "expected": "recoup-content-image"}
+{"intent": "they just crossed 1B streams, make something off that", "expected": "recoup-content-trend", "not": ["recoup-artist-brief"]}
+{"intent": "give me a streaming health check on this artist", "expected": "recoup-artist-brief"}
 {"intent": "give me a whole content pack, 30 posts for the launch", "expected": "recoup-content-pack"}
 {"intent": "reformat this master video for tiktok reels and shorts", "expected": "recoup-content-reformat"}
 

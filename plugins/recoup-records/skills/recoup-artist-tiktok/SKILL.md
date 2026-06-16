@@ -1,6 +1,6 @@
 ---
 name: recoup-artist-tiktok
-description: Answers "which of {artist}'s songs are blowing up on TikTok" honestly. The research API (Songstats-backed) does NOT expose per-song TikTok counts, so this skill builds a per-song TikTok SIGNAL view from the data that does exist — track-level activity feeds, web/deep research with citations, and artist-level TikTok context — and refuses to fabricate per-track uses/views. Use when asked "which of {artist}'s songs are blowing up on TikTok", "TikTok for {artist}", "{artist} per-song TikTok", "TT velocity {artist}", or any per-song TikTok signal request. TikTok only — for general streaming health use recoup-artist-streaming. This skill exists because per-song TikTok is the #1 customer ask and the #1 source of fabricated numbers.
+description: Answers "which of {artist}'s songs are blowing up on TikTok" honestly. The research API (Songstats-backed) does NOT expose per-song TikTok counts, so this skill builds a per-song TikTok SIGNAL view from the data that does exist — track-level activity feeds, web/deep research with citations, and artist-level TikTok context — and refuses to fabricate per-track uses/views. Use when asked "which of {artist}'s songs are blowing up on TikTok", "TikTok for {artist}", "{artist} per-song TikTok", "TT velocity {artist}", or any per-song TikTok signal request. TikTok only — for general streaming health use recoup-artist-brief (streaming scope). This skill exists because per-song TikTok is the #1 customer ask and the #1 source of fabricated numbers.
 ---
 
 # TikTok Per-Song
