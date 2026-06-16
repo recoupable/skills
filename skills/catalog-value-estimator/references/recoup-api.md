@@ -102,24 +102,25 @@ the nearest captures — a TTM proxy once two snapshots ≥7 days apart exist.
 Empty `deltas` (not an error) when history is insufficient.
 
 ### `POST /research/measurement-jobs` — ingest current or historical counts (async)
-> **Contract-first / pending api (chat#1796).** This is the target REST ingest
-> resource; until the api ships it, `estimate.py` logs the seed as unavailable
-> and proceeds. Don't assume it returns 202 yet.
 
-One async ingest resource for both capture modes. Body:
+One async ingest resource for both capture modes (chat#1796). Body:
 `{ scope: {album_ids[] | isrcs[] | catalog_id}, source: "current" | "historical" }`.
 
 - `source:"current"` — Apify capture of present counts (**absorbs `POST /research/snapshots`**).
+  Returns **202** `{ status, source:"current", id, state:"queued", album_count, estimated_cost_usd }`
+  (`id` is the snapshot job).
 - `source:"historical"` — enqueue each resolved recording for Songstats deep
   backfill (`rank_score` = all-time streams) so the daily worker fills its full
-  daily history. **Idempotent and free:** songs already carrying `songstats`
-  history are skipped; no track is fetched from Songstats twice.
+  daily history. **Idempotent:** songs already carrying `songstats` history are
+  skipped; no track is fetched from Songstats twice. Returns **202**
+  `{ status, source:"historical", id:null, enqueued, skipped }`.
+  **Requires a card on file** — Songstats is metered, so a cardless account gets
+  **402** with a Stripe `checkoutUrl` (free tier) instead of a job;
+  `estimate.py`'s seed surfaces that link rather than aborting the run.
 
-Returns **202** + `Location: /research/measurement-jobs/{id}` and
-`{ id, state, enqueued, skipped }`. Poll `GET /research/measurement-jobs/{id}` →
-`{ state, enqueued, skipped, cost_usd }`. A `historical` job is the **only** way
-to backfill at portfolio scale — the snapshot/portfolio read path enqueues
-nothing (only a per-track historic-stats read does).
+A `historical` job is the **only** way to backfill at portfolio scale — the
+snapshot/portfolio read path enqueues nothing. There is no per-resource status
+endpoint; read run status from the generic `GET /api/tasks/runs?runId=`.
 
 ```bash
 curl -sS -X POST -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \

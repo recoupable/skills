@@ -106,10 +106,13 @@ to calibrate (see "Verification loop").
      historic-stats read enqueues a track). So `estimate.py` in `--album-ids`
      mode explicitly creates a *historical ingest job* —
      `POST /research/measurement-jobs {scope, source:"historical"}` (ranked by
-     all-time streams, deduped server-side, free). The daily cron then drains it
+     all-time streams, deduped server-side). The daily cron then drains it
      within quota; re-run the estimate later and run-rate TTMs upgrade to
-     `measured_365d`. Disable with `--no-backfill-seed`. Quota is the ceiling
-     (~900 hits / 30 days, one per track) — see `references/methodology.md` for
+     `measured_365d`. Disable with `--no-backfill-seed`. **A card on file is
+     required** (Songstats is metered) — a cardless account gets a checkout link
+     back instead of a seeded job, which the seed surfaces without failing the
+     run. Quota is the ceiling (~900 hits / 30 days, one per track) — see
+     `references/methodology.md` for
      the head-first prioritization, and `references/recoup-api.md` for the
      `measurement-jobs` + `measurements` resource model (chat#1796) that the
      legacy per-track endpoints consolidate into.

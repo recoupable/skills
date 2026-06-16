@@ -45,7 +45,7 @@ def auth_header():
     if t: return ["-H", f"Authorization: Bearer {t}"]
     sys.exit("ERROR: set RECOUP_API_KEY or RECOUP_ACCESS_TOKEN (see references/recoup-api.md).")
 
-def api(path, params=None, body=None, timeout=20):
+def api(path, params=None, body=None, timeout=20, soft=False):
     url = f"{BASE}/{path}"
     if params: url += "?" + "&".join(f"{k}={v}" for k, v in params.items())
     cmd = ["curl", "-sS", "--max-time", str(timeout)] + auth_header()
@@ -54,7 +54,10 @@ def api(path, params=None, body=None, timeout=20):
     out = subprocess.run(cmd + [url], capture_output=True, text=True).stdout
     try: j = json.loads(out)
     except Exception: return {}
-    if isinstance(j, dict) and j.get("checkoutUrl"):
+    # A 402 carries a Stripe checkoutUrl. For required reads we stop the run; for
+    # best-effort calls (soft=True, e.g. the backfill seed) we hand the body back
+    # so the caller can surface the link without aborting the whole estimate.
+    if not soft and isinstance(j, dict) and j.get("checkoutUrl"):
         sys.exit(f"ERROR: out of credits (402). Top up at: {j['checkoutUrl']}")
     return j
 
@@ -211,13 +214,16 @@ def seed_backfill(album_ids):
     is why this seed is explicit. Resource model: chat#1796."""
     if not album_ids:
         return {"note": "no album ids to seed"}
-    j = api("research/measurement-jobs",
+    # soft=True: the historical source is gated on a card on file, so a cardless
+    # account gets a 402 + checkoutUrl. Handle it here instead of aborting the run.
+    j = api("research/measurement-jobs", soft=True,
             body={"scope": {"album_ids": album_ids}, "source": "historical"}, timeout=30)
+    if isinstance(j, dict) and j.get("checkoutUrl"):
+        return {"note": "deep-history backfill needs a payment method on file (Songstats is "
+                        "metered) — add one to enable it: " + j["checkoutUrl"]}
     if not j or (isinstance(j, dict) and j.get("error")):
-        return {"note": "POST /research/measurement-jobs unavailable — pending api (chat#1796); "
-                        "re-run once it ships to seed deep history"}
-    return {"job_id": j.get("id"), "state": j.get("state"),
-            "enqueued": j.get("enqueued"), "skipped_already_backfilled": j.get("skipped")}
+        return {"note": "POST /research/measurement-jobs errored — deep history not seeded this run"}
+    return {"enqueued": j.get("enqueued"), "skipped_already_backfilled": j.get("skipped")}
 
 
 # ---------------- main ----------------
