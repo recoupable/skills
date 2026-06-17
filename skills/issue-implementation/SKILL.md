@@ -31,7 +31,7 @@ Run it in order. Docs-first and tests-first are not optional — they are the me
 ## 1. Read the issue + the ground
 
 - **Extract from the issue:** the exact contract (path, params, response envelope, status codes), the merge order, every Done-when checkbox (these are your test plan), and the source references (verify any external API doc the issue cites is still accurate). If a cited doc is **client-side-rendered** (`WebFetch` returns an empty JS shell), read it with a **browser MCP** — e.g. Chrome DevTools `navigate_page` then `evaluate_script` to pull the rendered params/response — not `WebFetch`.
-- **Read the ground:** the monorepo `PROGRESS.md` and each target submodule's `CLAUDE.md`/`AGENTS.md` (branch rules, test/lint commands, response/validation/auth conventions).
+- **Read the ground:** each target submodule's `CLAUDE.md`/`AGENTS.md` (branch rules, test/lint commands, response/validation/auth conventions).
 - **Find the closest sibling and mirror it — don't invent.** Almost every endpoint has a neighbor that already solves 90% of the shape (auth, validation, response wrapping, error envelope, credits). Build by analogy to it; consistency with the immediate neighbor beats cleverness.
 
 ## 2. Docs first — the contract

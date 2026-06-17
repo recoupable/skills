@@ -5,14 +5,13 @@ Given recordings (Spotify track IDs / ISRCs) or whole albums (Spotify album IDs)
 pull streams from the Recoup Research API, annualize, and model
 gross -> NLS -> value with labeled assumptions. Outputs estimate.json + summary.md.
 
-Two measurement modes:
-  • Track mode (--ids/--isrcs/--ids-file): per-track stats + historic-stats.
-    Spotify counts are store-served (Apify-first) and carry provenance.
-  • Portfolio mode (--album-ids/--album-ids-file): snapshot-first. Reads
-    GET /research/playcounts per album (one row per track, provenance-labeled),
-    auto-triggers POST /research/snapshots for uncaptured albums, and derives
-    TTM from GET /research/track/playcount-deltas (accepted only when the
-    capture window >= min_delta_days; labeled `runrate_<N>d`).
+Flow (both modes): current counts -> seed deep historical backfill -> optionally
+wait for the instant drain -> derive TTM. Counts come from track/stats (track
+mode) or albums/{id}/measurements (portfolio mode); the trailing-12-month TTM
+comes from the consolidated tracks/{id}/measurements series — one read that
+replaces historic-stats + playcount-deltas (chat#1796). With `--wait-backfill`,
+tracks the drain reaches in this run come back as `measured_365d` rather than a
+short-window run-rate.
 
 Every track in the output carries `data_source`, `captured_at`, and
 `ttm_source` (measured_365d | runrate_<N>d | insufficient_window | none).
@@ -45,7 +44,7 @@ def auth_header():
     if t: return ["-H", f"Authorization: Bearer {t}"]
     sys.exit("ERROR: set RECOUP_API_KEY or RECOUP_ACCESS_TOKEN (see references/recoup-api.md).")
 
-def api(path, params=None, body=None, timeout=20):
+def api(path, params=None, body=None, timeout=20, soft=False):
     url = f"{BASE}/{path}"
     if params: url += "?" + "&".join(f"{k}={v}" for k, v in params.items())
     cmd = ["curl", "-sS", "--max-time", str(timeout)] + auth_header()
@@ -54,7 +53,10 @@ def api(path, params=None, body=None, timeout=20):
     out = subprocess.run(cmd + [url], capture_output=True, text=True).stdout
     try: j = json.loads(out)
     except Exception: return {}
-    if isinstance(j, dict) and j.get("checkoutUrl"):
+    # A 402 carries a Stripe checkoutUrl. For required reads we stop the run; for
+    # best-effort calls (soft=True, e.g. the backfill seed) we hand the body back
+    # so the caller can surface the link without aborting the whole estimate.
+    if not soft and isinstance(j, dict) and j.get("checkoutUrl"):
         sys.exit(f"ERROR: out of credits (402). Top up at: {j['checkoutUrl']}")
     return j
 
@@ -67,22 +69,39 @@ def id_param(ident):
     if len(s) == 12 and s[:2].isalpha(): return ("isrc", s)
     return ("spotify_track_id", s)
 
-# ---------------- TTM via snapshot deltas (shared) ----------------
-def ttm_from_deltas(isrc, asof, cfg):
-    """Returns (ttm, ttm_source). Accepts run-rate only when window >= min_delta_days."""
-    if not isrc: return 0.0, "none"
-    since = (asof - dt.timedelta(days=400)).isoformat()
-    j = api("research/track/playcount-deltas", {"isrc": isrc, "since": since})
-    best = None
-    for d in (j.get("deltas") or []):
-        if d.get("platform") == "spotify":
-            days = num(d.get("days"))
-            if best is None or days > num(best.get("days")): best = d
-    if not best: return 0.0, "none"
-    days = num(best.get("days"))
+# ---------------- TTM from the measurements series (chat#1796) ----------------
+def measurements_series(track_id):
+    """Daily measured Spotify series for a track from the consolidated
+    `measurements` resource — one read that replaces both `track/historic-stats`
+    and `track/playcount-deltas`. `{track_id}` is provider-neutral (ISRC or
+    Spotify track id, resolved server-side). Returns [{date, value, data_source}]."""
+    j = api(f"research/tracks/{track_id}/measurements", {"granularity": "daily"}, timeout=25)
+    return j.get("series") or []
+
+def compute_ttm(series, asof, cfg):
+    """Derive (sp_ttm, ttm_source) from one measured series: a true
+    `measured_365d` diff when the series spans the trailing year, otherwise a
+    short-window run-rate from the series' own span (`runrate_<N>d` when
+    N >= min_delta_days). Replaces the client-side snapshot-delta math — the same
+    series now carries both the Songstats backfill and the Apify snapshot points."""
+    if not series: return 0.0, "none"
+    try:
+        dates = sorted(dt.date.fromisoformat(p["date"]) for p in series if p.get("date"))
+    except Exception:
+        dates = []
+    if not dates: return 0.0, "none"
+    win_start = asof - dt.timedelta(days=cfg["window_days"])
+    end_v = nearest(series, asof.isoformat())
+    start_v = nearest(series, win_start.isoformat())
+    span_ok = dates[0] <= win_start + dt.timedelta(days=45) and dates[-1] >= asof - dt.timedelta(days=45)
+    if end_v is not None and start_v is not None and span_ok:
+        return max(0.0, end_v - start_v), "measured_365d"
+    # fall back to a run-rate over the available (short) span
+    days = (dates[-1] - dates[0]).days
     if days < cfg["min_delta_days"]: return 0.0, "insufficient_window"
-    rr = num(best.get("run_rate_annualized")) or (num(best.get("delta")) / days * 365 if days else 0.0)
-    return max(0.0, rr), f"runrate_{int(days)}d"
+    v0, v1 = nearest(series, dates[0].isoformat()), nearest(series, dates[-1].isoformat())
+    if v0 is None or v1 is None: return 0.0, "insufficient_window"
+    return max(0.0, (v1 - v0) / days * 365), f"runrate_{int(days)}d"
 
 # ---------------- track mode ----------------
 def track_current(ident):
@@ -108,71 +127,59 @@ def track_current(ident):
         elif src == "tiktok": d["tt"] = num(data.get("views_total"))
     return d
 
-def nearest(history, target):
-    if not history: return None
+def nearest(series, target):
+    if not series: return None
     tt = dt.date.fromisoformat(target)
     best, bestdiff = None, 10**9
-    for h in history:
+    for h in series:
         try: dd = dt.date.fromisoformat(h["date"])
         except Exception: continue
         diff = abs((dd - tt).days)
-        if diff < bestdiff: bestdiff, best = diff, num(h.get("streams_total"))
+        if diff < bestdiff: bestdiff, best = diff, num(h.get("value"))
     return best
 
 def track_history(d, asof, years, cfg):
-    """Fills sp_ttm, ttm_source, anniversaries on dict d (track mode)."""
-    key, val = id_param(d["id"])
-    start = (asof - dt.timedelta(days=365 * years + 5)).isoformat()
-    j = api("research/track/historic-stats",
-            {key: val, "source": "spotify", "start_date": start, "end_date": asof.isoformat()},
-            timeout=25)
-    hist = []
-    for s in j.get("stats", []) or []:
-        if s.get("source") == "spotify":
-            hist = s.get("data", {}).get("history", []) or []
-    end_v = nearest(hist, asof.isoformat())
-    win_start = asof - dt.timedelta(days=cfg["window_days"])
-    start_v = nearest(hist, win_start.isoformat())
-    span_ok = False
-    if hist:
-        try:
-            dates = sorted(dt.date.fromisoformat(h["date"]) for h in hist if h.get("date"))
-            span_ok = dates[0] <= win_start + dt.timedelta(days=45) and dates[-1] >= asof - dt.timedelta(days=45)
-        except Exception: span_ok = False
-    if end_v is not None and start_v is not None and span_ok:
-        d["sp_ttm"] = max(0.0, end_v - start_v); d["ttm_source"] = "measured_365d"
-    else:
-        d["sp_ttm"], d["ttm_source"] = ttm_from_deltas(d.get("isrc"), asof, cfg)
+    """Fills sp_ttm, ttm_source, anniversaries on dict d from the measurements
+    series (provider-neutral id; one read replaces historic-stats + deltas)."""
+    series = measurements_series(d.get("isrc") or d["id"])
+    d["sp_ttm"], d["ttm_source"] = compute_ttm(series, asof, cfg)
     anns = {}
     for k in range(years + 1):
-        dd = (asof - dt.timedelta(days=365 * k))
-        v = nearest(hist, dd.isoformat())
+        dd = asof - dt.timedelta(days=365 * k)
+        v = nearest(series, dd.isoformat())
         if v is not None: anns[dd.year] = v
     d["anniversaries"] = anns
     return d
 
 # ---------------- portfolio (snapshot-first) mode ----------------
-def album_playcounts(album_id):
-    j = api("research/playcounts", {"spotify_album_id": album_id})
-    return j.get("playcounts") or []
+def album_measurements(album_id):
+    """Latest measured count per track on an album from the `measurements`
+    resource (replaces GET /research/playcounts). Items: {isrc, spotify_track_id,
+    name, value, captured_at, data_source}."""
+    j = api(f"research/albums/{album_id}/measurements", {"latest": "true"})
+    return j.get("measurements") or []
 
-def portfolio_tracks(album_ids, asof, cfg, snapshot=True, wait_mins=6, skip_ttm=False):
+def portfolio_tracks(album_ids, snapshot=True, wait_mins=6):
+    """Current per-track counts for a catalog. Captures uncaptured albums via a
+    `current` measurement-job (replaces POST /research/snapshots). TTM is filled
+    separately by fill_ttm() — after the historical seed, so an instant drain
+    yields measured_365d in the same run."""
     rows, missing = [], []
     for aid in album_ids:
-        pc = album_playcounts(aid)
-        if pc: rows += [(aid, p) for p in pc]
+        m = album_measurements(aid)
+        if m: rows += [(aid, p) for p in m]
         else: missing.append(aid)
     if missing and snapshot:
-        print(f"  {len(missing)} albums uncaptured -> POST /research/snapshots", file=sys.stderr)
-        j = api("research/snapshots", body={"album_ids": missing, "schedule": "once"})
-        print(f"  snapshot {j.get('snapshot_id','?')} queued, est ${j.get('estimated_cost_usd','?')}", file=sys.stderr)
+        print(f"  {len(missing)} albums uncaptured -> POST /research/measurement-jobs (current)", file=sys.stderr)
+        j = api("research/measurement-jobs", body={"scope": {"album_ids": missing}, "source": "current"})
+        print(f"  capture job {j.get('id','?')} queued, est ${j.get('estimated_cost_usd','?')}", file=sys.stderr)
         deadline = time.time() + wait_mins * 60
         while missing and time.time() < deadline:
             time.sleep(20)
             still = []
             for aid in missing:
-                pc = album_playcounts(aid)
-                if pc: rows += [(aid, p) for p in pc]
+                m = album_measurements(aid)
+                if m: rows += [(aid, p) for p in m]
                 else: still.append(aid)
             missing = still
             print(f"  waiting on {len(missing)} albums...", file=sys.stderr)
@@ -184,18 +191,49 @@ def portfolio_tracks(album_ids, asof, cfg, snapshot=True, wait_mins=6, skip_ttm=
         if not tid or tid in seen: continue
         seen.add(tid)
         tracks.append({"id": tid, "title": p.get("name", tid), "isrc": p.get("isrc", ""),
-                       "sp": num(p.get("platform_displayed_play_count")), "yt": 0, "sc": 0, "tt": 0,
+                       "sp": num(p.get("value")), "yt": 0, "sc": 0, "tt": 0,
                        "labels": [], "distributors": [], "album_id": aid,
                        "data_source": p.get("data_source"), "captured_at": p.get("captured_at"),
                        "anniversaries": {}})
-    workers = int(os.environ.get("ESTIMATE_WORKERS", "8"))
+    return tracks, missing
+
+def fill_ttm(tracks, asof, cfg, skip_ttm=False):
+    """Fill sp_ttm + ttm_source from each track's measurements series. Call AFTER
+    the historical backfill seed so tracks the instant drain reached come back as
+    measured_365d, not a short-window run-rate."""
     if skip_ttm:
         for t in tracks: t["sp_ttm"], t["ttm_source"] = 0.0, "skipped"
-    else:
-        def fill(t):
-            t["sp_ttm"], t["ttm_source"] = ttm_from_deltas(t["isrc"], asof, cfg); return t
-        with ThreadPoolExecutor(max_workers=workers) as ex: list(ex.map(fill, tracks))
-    return tracks, missing
+        return tracks
+    workers = int(os.environ.get("ESTIMATE_WORKERS", "8"))
+    def fill(t):
+        series = measurements_series(t.get("isrc") or t["id"])
+        t["sp_ttm"], t["ttm_source"] = compute_ttm(series, asof, cfg); return t
+    with ThreadPoolExecutor(max_workers=workers) as ex: list(ex.map(fill, tracks))
+    return tracks
+
+# ---------------- historical backfill seeding ----------------
+def seed_backfill(scope):
+    """Create a *historical* measurement-job so the Songstats worker fills in each
+    track's deep daily history — the instant drain then upgrades TTMs from a
+    short-window run-rate to `measured_365d` (poll with `--wait-backfill`). `scope`
+    is `{"album_ids":[...]}`, `{"isrcs":[...]}`, or `{"catalog_id":...}`. The job
+    ranks by all-time streams and dedupes server-side (songs already carrying
+    `songstats` history are skipped — no track is fetched twice). Reads no longer
+    enqueue backfill, so this seed is explicit. Best-effort: any error is logged
+    and never fails the estimate. Resource model: chat#1796."""
+    if not scope or not any(scope.values()):
+        return {"note": "no scope to seed"}
+    # soft=True: the historical source is gated on a card on file, so a cardless
+    # account gets a 402 + checkoutUrl. Handle it here instead of aborting the run.
+    j = api("research/measurement-jobs", soft=True,
+            body={"scope": scope, "source": "historical"}, timeout=30)
+    if isinstance(j, dict) and j.get("checkoutUrl"):
+        return {"note": "deep-history backfill needs a payment method on file (Songstats is "
+                        "metered) — add one to enable it: " + j["checkoutUrl"]}
+    if not j or (isinstance(j, dict) and j.get("error")):
+        return {"note": "POST /research/measurement-jobs errored — deep history not seeded this run"}
+    return {"enqueued": j.get("enqueued"), "skipped_already_backfilled": j.get("skipped")}
+
 
 # ---------------- main ----------------
 def main():
@@ -211,6 +249,11 @@ def main():
     ap.add_argument("--no-trajectory", action="store_true")
     ap.add_argument("--no-snapshot", action="store_true", help="portfolio mode: don't auto-trigger snapshots")
     ap.add_argument("--skip-ttm", action="store_true", help="portfolio mode: all-time only (no delta calls)")
+    ap.add_argument("--no-backfill-seed", action="store_true",
+                    help="don't seed deep Songstats historical backfill")
+    ap.add_argument("--wait-backfill", type=int, default=0,
+                    help="seconds to wait after seeding so the instant drain can upgrade "
+                         "TTMs to measured_365d in this same run (0 = don't wait)")
     ap.add_argument("--wait-mins", type=int, default=6)
     a = ap.parse_args()
 
@@ -219,14 +262,23 @@ def main():
     asof = dt.date.fromisoformat(a.asof)
     os.makedirs(a.out, exist_ok=True)
 
+    def maybe_wait():
+        if a.wait_backfill and not a.no_backfill_seed and not a.skip_ttm:
+            print(f"  waiting {a.wait_backfill}s for the instant backfill drain...", file=sys.stderr)
+            time.sleep(a.wait_backfill)
+
     portfolio_mode = bool(a.album_ids or a.album_ids_file)
     uncaptured = []
     if portfolio_mode:
         if a.album_ids: album_ids = [x.strip() for x in a.album_ids.split(",") if x.strip()]
         else: album_ids = [x.strip() for x in open(a.album_ids_file) if x.strip()]
-        tracks, uncaptured = portfolio_tracks(album_ids, asof, cfg,
-                                              snapshot=not a.no_snapshot,
-                                              wait_mins=a.wait_mins, skip_ttm=a.skip_ttm)
+        # current counts -> seed historical backfill -> (wait for instant drain) -> TTM
+        tracks, uncaptured = portfolio_tracks(album_ids, snapshot=not a.no_snapshot, wait_mins=a.wait_mins)
+        backfill_seed = ({"note": "skipped (--no-backfill-seed)"} if a.no_backfill_seed
+                         else seed_backfill({"album_ids": album_ids}))
+        print(f"  [backfill] seed -> {backfill_seed}", file=sys.stderr)
+        maybe_wait()
+        fill_ttm(tracks, asof, cfg, skip_ttm=a.skip_ttm)
         for i, t in enumerate(tracks):
             print(f"  [{i+1}/{len(tracks)}] {t['title'][:34]:34}  all-time {t['sp']:>13,.0f}  "
                   f"TTM {t['sp_ttm']:>12,.0f} ({t['ttm_source']})", file=sys.stderr)
@@ -237,15 +289,21 @@ def main():
         else: idents = [x.strip() for x in open(a.ids_file) if x.strip()]
         years = 0 if a.no_trajectory else cfg["trajectory_years"]
         workers = int(os.environ.get("ESTIMATE_WORKERS", "6"))
-        def fetch(ident):
-            cur = track_current(ident)
-            return track_history(cur, asof, max(years, 1), cfg)
-        tracks = []
+        # 1. current per-track stats (resolves ISRCs) -> 2. seed backfill -> 3. wait -> 4. TTM/history
         with ThreadPoolExecutor(max_workers=workers) as ex:
-            for i, cur in enumerate(ex.map(fetch, idents)):
-                tracks.append(cur)
-                print(f"  [{i+1}/{len(idents)}] {cur['title'][:34]:34}  all-time {cur['sp']:>13,.0f}  "
-                      f"TTM {cur['sp_ttm']:>12,.0f} ({cur['ttm_source']})", file=sys.stderr)
+            tracks = list(ex.map(track_current, idents))
+        isrcs = [t["isrc"] for t in tracks if t.get("isrc")]
+        backfill_seed = ({"note": "skipped (--no-backfill-seed)"} if a.no_backfill_seed
+                         else seed_backfill({"isrcs": isrcs}) if isrcs else {"note": "no ISRCs resolved"})
+        print(f"  [backfill] seed -> {backfill_seed}", file=sys.stderr)
+        maybe_wait()
+        def fetch(t):
+            return track_history(t, asof, max(years, 1), cfg)
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            list(ex.map(fetch, tracks))
+        for i, cur in enumerate(tracks):
+            print(f"  [{i+1}/{len(tracks)}] {cur['title'][:34]:34}  all-time {cur['sp']:>13,.0f}  "
+                  f"TTM {cur['sp_ttm']:>12,.0f} ({cur['ttm_source']})", file=sys.stderr)
 
     R = cfg["rates"]
     sp_all = sum(t["sp"] for t in tracks); yt_all = sum(t["yt"] for t in tracks)
@@ -291,6 +349,8 @@ def main():
         "captured_at_min": min(caps) if caps else None,
         "captured_at_max": max(caps) if caps else None,
         "ttm_coverage_share": (sum(1 for t in tracks if t["sp_ttm"] > 0) / len(tracks)) if tracks else 0,
+        "deep_history_share": (sum(1 for t in tracks if t.get("ttm_source") == "measured_365d") / len(tracks)) if tracks else 0,
+        "backfill_seed": backfill_seed,
         "uncaptured_albums": uncaptured,
         "notes": "runrate_* TTM is a short-window annualization (>=%dd accepted) — noisier than measured_365d; "
                  "seasonality uncorrected. Portfolio mode measures Spotify only (yt/sc enter via gross-up)."
@@ -334,6 +394,8 @@ def main():
         "", "## Provenance", "",
         f"- **Counts:** {src_mix} (captured {str(provenance['captured_at_min'])[:10]} → {str(provenance['captured_at_max'])[:10]})",
         f"- **TTM derivation:** {ttm_mix} · TTM coverage {provenance['ttm_coverage_share']*100:.0f}% of tracks",
+        f"- **Deep history (measured_365d):** {provenance['deep_history_share']*100:.0f}% of tracks · "
+        f"backfill seed: {provenance['backfill_seed']}",
         ""]
     if result["distributors"]:
         lines.append(f"- **Distributor(s):** {', '.join(result['distributors'])}")

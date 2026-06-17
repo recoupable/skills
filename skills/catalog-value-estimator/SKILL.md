@@ -88,19 +88,36 @@ to calibrate (see "Verification loop").
      `references/recoup-api.md`: `lookup`, `tracks`),
      then feed the IDs in.
 2. **Measure streams.** For every track, pull all-time per-platform counts
-   (`/research/track/stats`) and the trailing-12-month delta
-   (`/research/track/historic-stats`, diff the cumulative `streams_total` at the
-   window endpoints). `scripts/estimate.py` does both. Spotify counts are
-   served from Recoup's measurement store (Apify-first; every entry carries
-   `data_source` + `captured_at` provenance) — they are platform-displayed
-   play counts, quota-free and refreshed within ~24h.
-   - **Portfolio scale (hundreds–thousands of tracks):** snapshot first —
-     `POST /research/snapshots` captures every track of every album in one
-     async job (~$0.003/album, cost estimate returned before spend), then read
-     `GET /research/playcounts?spotify_album_id=…` per album. Two snapshots
-     ≥7 days apart give per-track run-rates via
-     `GET /research/track/playcount-deltas` — a TTM proxy that needs no
-     Songstats history. See `references/recoup-api.md`.
+   (`/research/track/stats`) and the trailing-12-month TTM from the
+   **`measurements`** resource. `scripts/estimate.py` does both. Spotify counts
+   are served from Recoup's measurement store (Apify-first; every entry carries
+   `data_source` + `captured_at` provenance) — they are platform-displayed play
+   counts, quota-free and refreshed within ~24h. The skill runs one flow in both
+   modes: **current counts → seed historical backfill → (wait for the instant
+   drain) → derive TTM.**
+   - **TTM is one read.** `GET /research/tracks/{id}/measurements?granularity=daily`
+     returns the stitched series; the skill derives `measured_365d` (full-year
+     span) vs `runrate_<N>d` (short span) from it — replacing the old
+     `historic-stats` + `playcount-deltas` calls and all client-side delta math.
+   - **Portfolio scale (hundreds–thousands of tracks):** read current counts via
+     `GET /research/albums/{id}/measurements?latest=true`; uncaptured albums are
+     captured with a `current` measurement-job (`POST /research/measurement-jobs
+     {source:"current"}`, ~$0.003/album). See `references/recoup-api.md`.
+   - **Seed deep historical backfill, then capture it in the same run.** A real
+     `measured_365d` TTM needs a full year of daily history that only the
+     Songstats worker supplies, and **reads no longer auto-enqueue it** — so the
+     skill explicitly creates a *historical ingest job*
+     (`POST /research/measurement-jobs {scope, source:"historical"}`, ranked by
+     all-time streams, deduped server-side). The drain now **fires immediately**
+     (not a daily wait), so `--wait-backfill <secs>` pauses after the seed and the
+     same run comes back with `measured_365d` for tracks the drain reached.
+     Disable seeding with `--no-backfill-seed`. **A card on file is required**
+     (Songstats is metered) — a cardless account gets a checkout link instead of a
+     seeded job, which the seed surfaces without failing the run. Quota is the
+     ceiling (~900 hits / 30 days, one per track) — see `references/methodology.md`
+     for the head-first prioritization, and `references/recoup-api.md` for the
+     `measurement-jobs` + `measurements` resource model (chat#1796) that the
+     legacy per-track endpoints consolidate into.
 3. **Model gross → NLS → value.** Apply public per-stream rates, the deduction
    stack, and the multiple band from `references/methodology.md`. Keep
    *measured* platforms separate from *approximated* ones and carry a band, not
@@ -142,6 +159,14 @@ platform, gross/NLS/value with low–central–high bands, the per-track table, 
 concentration metrics, and the exact assumption set used (so any number can be
 traced back). `summary.md` is the same thing in prose + a table.
 
+The `provenance` block reports measurement honesty, including
+`deep_history_share` (fraction of tracks on a true `measured_365d` TTM) and
+`backfill_seed` (what the run enqueued). On a freshly seeded catalog
+`deep_history_share` starts low and the value leans on `runrate_*` proxies;
+it climbs toward 100% as the backfill worker drains over the following weeks.
+State that coverage when sharing a portfolio baseline — it is the difference
+between a measured number and a run-rate estimate.
+
 Lead with what's **measured** (streams are real, pulled live) and present the
 dollar figures as a **directional model** with assumptions visible. This matters
 especially when sharing with a rights owner who knows their real numbers —
@@ -159,10 +184,14 @@ overclaiming a value you derived from public rates costs credibility.
 - **History depth.** Spotify history is a stitched series from Recoup's
   measurement store: snapshot captures (2026-06 onward) plus backfilled
   Songstats points (day-level, typically from ~2021), each point labeled with
-  `data_source`. Tracks not yet backfilled return their snapshot-only series
-  and are auto-enqueued for backfill — re-query later for the deeper series,
-  or use snapshot deltas for the run-rate meanwhile. The all-time cumulative
-  always reflects the full life.
+  `data_source`. A track only has the deep series once the Songstats backfill
+  worker has filled it. **Enqueueing is not automatic for portfolio runs:** a
+  per-track `historic-stats` read enqueues lazily, but the snapshot/portfolio
+  path does not — that is why portfolio mode seeds the backfill explicitly
+  (Step 2). Until a track is drained it returns its snapshot-only series, so
+  early portfolio runs lean on `runrate_*` TTMs; re-run after the worker drains
+  to pick up `measured_365d`. The all-time cumulative always reflects the full
+  life regardless.
 - **Every rate, deduction, and multiple is an assumption** (see methodology).
   The multiple is the single biggest swing — concentration and a flat run-rate
   argue for the low end.
