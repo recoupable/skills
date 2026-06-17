@@ -1,5 +1,5 @@
 ---
-name: recoup-release
+name: recoup-releases
 description: Plan and run a music release end-to-end, or do any single stage of it. Modes — plan (one-command full workflow: scaffold workspace → creative brief → dated campaign → master RELEASE.md + deliverables → playlist targeting → post-release monitoring → completion gate), brief (data-grounded creative brief: visualizer directions, content angles, playlist targets), campaign (dated rollout schedule with owners), doc (the master RELEASE.md + DSP pitch + press one-sheet), monitor (confirm the release dropped + launch-day alert), and demo (run the whole thing on synthetic data). Use for "start/plan a release", "release [title]", "creative brief for [release]", "rollout schedule", "RELEASE.md / DSP pitch / one-sheet", "did [artist]'s single drop", or "release demo". Everything lands in releases/{artist}/{release}/.
 ---
 
@@ -63,7 +63,7 @@ gap, and next stages. **Truthfulness over polish** — never claim "ready" while
 stage is missing.
 
 **Release-type emphasis:** single = tight timeline, one hero track; EP/album =
-track-by-track narrative, phased singles; sync-focused = lead with `recoup-song`
+track-by-track narrative, phased singles; sync-focused = lead with `recoup-songs`
 pitch mode; catalog-reissue = anniversary hooks + reactivation.
 
 ## Mode: brief (the creative brief — structured input, not assets)

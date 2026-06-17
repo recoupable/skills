@@ -1,5 +1,5 @@
 ---
-name: recoup-catalog
+name: recoup-catalogs
 description: Review, value, and package a music catalog deal — or quickly estimate a catalog's worth from public data. Modes — review (one-command end-to-end diligence: ingest → value → dashboard → report), ingest (clean/normalize a messy data room of royalty statements + rights files), value (full valuation from seller files — NPS/NLS, concentration, decay, scenarios), dashboard (the customer-facing DASHBOARD.html), report (IC memo / seller cleanup / financing pack → shareable PDF), estimate (value a catalog/album/song from public streaming data only, no seller files), and demo (run it on a synthetic catalog). Use for "review/underwrite this catalog", "clean these royalty statements", "catalog valuation", "NPS/NLS multiple", "build the deal dashboard", "write the IC memo", "what's this catalog worth from public data", or "deal demo". Source files are immutable; completion is gated.
 ---
 

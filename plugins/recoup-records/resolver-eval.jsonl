@@ -4,24 +4,27 @@
 # Goal of this set: prove ONE fat description fires for ALL its sub-intents (many intra-cluster
 # intents map to the same fat skill), and that cross-skill forks still route correctly.
 
-# --- recoup-platform: every mode must fire it ---
-{"intent": "set me up, verify my email and give me an api key", "expected": "recoup-platform"}
-{"intent": "scaffold the sandbox folders from my orgs and artists", "expected": "recoup-platform"}
-{"intent": "call the recoup api to fetch this artist's socials", "expected": "recoup-platform"}
-{"intent": "edit this google doc and sync it to a sandbox file", "expected": "recoup-platform"}
-{"intent": "create a new artist account for Mvney", "expected": "recoup-platform"}
-{"intent": "what artists do I have, organize this artist's files", "expected": "recoup-platform"}
-{"intent": "that worked, remember this so we don't redo it next time", "expected": "recoup-platform"}
+# --- Tier 2: operating the box (setup / api / learn) ---
+{"intent": "set me up, verify my email and give me an api key", "expected": "recoup-setup"}
+{"intent": "scaffold the sandbox folders from my orgs and artists", "expected": "recoup-setup"}
+{"intent": "call the recoup api to fetch this artist's socials", "expected": "recoup-api"}
+{"intent": "edit this google doc and sync it to a sandbox file", "expected": "recoup-api"}
+{"intent": "that worked, remember this so we don't redo it next time", "expected": "recoup-learn"}
+# --- Tier 1: recoup-artists (roster: create + workspace) ---
+{"intent": "create a new artist account for Mvney", "expected": "recoup-artists"}
+{"intent": "what artists do I have, organize this artist's files", "expected": "recoup-artists"}
+{"intent": "onboard a new signing and set up their folder", "expected": "recoup-artists"}
+{"intent": "what's in this sandbox, list my roster", "expected": "recoup-artists"}
 
 # --- recoup-research: many sub-intents must all fire it ---
 {"intent": "research Drake and give me an overview", "expected": "recoup-research"}
 {"intent": "where are this artist's fans and what markets should we expand to", "expected": "recoup-research"}
 {"intent": "compare these two artists and find collaborators", "expected": "recoup-research"}
 {"intent": "find emerging unsigned artists in afrobeats", "expected": "recoup-research"}
-{"intent": "which playlists should this catalog target and where are the gaps", "expected": "recoup-research", "not": ["recoup-song"]}
+{"intent": "which playlists should this catalog target and where are the gaps", "expected": "recoup-research", "not": ["recoup-songs"]}
 {"intent": "find the manager and press contacts and draft outreach", "expected": "recoup-research"}
 {"intent": "which of this artist's songs are blowing up on tiktok", "expected": "recoup-research"}
-{"intent": "give me the weekly brief on what changed for this artist", "expected": "recoup-research", "not": ["recoup-release"]}
+{"intent": "give me the weekly brief on what changed for this artist", "expected": "recoup-research", "not": ["recoup-releases"]}
 {"intent": "are this artist's streams spiking or dropping this week", "expected": "recoup-research"}
 {"intent": "enrich this record label with structured facts and recent news", "expected": "recoup-research"}
 {"intent": "deep research why this song went viral, with citations", "expected": "recoup-research"}
@@ -37,26 +40,26 @@
 {"intent": "give me a whole content pack, 30 posts for the launch", "expected": "recoup-content"}
 {"intent": "they just crossed 1B streams, make something off that", "expected": "recoup-content", "not": ["recoup-research"]}
 
-# --- recoup-release: sub-intents ---
-{"intent": "start a release and take it end to end", "expected": "recoup-release"}
-{"intent": "give me a pre-release creative brief with concept directions", "expected": "recoup-release", "not": ["recoup-research"]}
-{"intent": "build the dated rollout schedule for the single", "expected": "recoup-release"}
-{"intent": "create the RELEASE.md master doc and the DSP pitch", "expected": "recoup-release"}
-{"intent": "did this artist's single drop yet, set a launch alert", "expected": "recoup-release"}
-{"intent": "show me the release workflow demo", "expected": "recoup-release"}
+# --- recoup-releases: sub-intents ---
+{"intent": "start a release and take it end to end", "expected": "recoup-releases"}
+{"intent": "give me a pre-release creative brief with concept directions", "expected": "recoup-releases", "not": ["recoup-research"]}
+{"intent": "build the dated rollout schedule for the single", "expected": "recoup-releases"}
+{"intent": "create the RELEASE.md master doc and the DSP pitch", "expected": "recoup-releases"}
+{"intent": "did this artist's single drop yet, set a launch alert", "expected": "recoup-releases"}
+{"intent": "show me the release workflow demo", "expected": "recoup-releases"}
 
-# --- recoup-catalog: sub-intents + the valuation fork ---
-{"intent": "review and underwrite this catalog deal end to end", "expected": "recoup-catalog"}
-{"intent": "clean and normalize this messy royalty data room", "expected": "recoup-catalog"}
-{"intent": "value this catalog from the ingested seller files", "expected": "recoup-catalog"}
-{"intent": "build the executive dashboard html for this deal", "expected": "recoup-catalog"}
-{"intent": "write the IC memo and export a shareable pdf", "expected": "recoup-catalog"}
-{"intent": "estimate this catalog's value from public streaming data, no seller files", "expected": "recoup-catalog", "not": ["recoup-research"]}
-{"intent": "run the catalog deal demo on synthetic data", "expected": "recoup-catalog"}
+# --- recoup-catalogs: sub-intents + the valuation fork ---
+{"intent": "review and underwrite this catalog deal end to end", "expected": "recoup-catalogs"}
+{"intent": "clean and normalize this messy royalty data room", "expected": "recoup-catalogs"}
+{"intent": "value this catalog from the ingested seller files", "expected": "recoup-catalogs"}
+{"intent": "build the executive dashboard html for this deal", "expected": "recoup-catalogs"}
+{"intent": "write the IC memo and export a shareable pdf", "expected": "recoup-catalogs"}
+{"intent": "estimate this catalog's value from public streaming data, no seller files", "expected": "recoup-catalogs", "not": ["recoup-research"]}
+{"intent": "run the catalog deal demo on synthetic data", "expected": "recoup-catalogs"}
 
-# --- recoup-song: audio-grounded, vs research/songwriting ---
-{"intent": "analyze this track's audio, bpm key genre and a mix critique", "expected": "recoup-song"}
-{"intent": "find the best 15 seconds of this song to clip", "expected": "recoup-song", "not": ["recoup-content"]}
-{"intent": "write a playlist pitch and sync brief for this single from the audio", "expected": "recoup-song", "not": ["recoup-research"]}
+# --- recoup-songs: audio-grounded, vs research/songwriting ---
+{"intent": "analyze this track's audio, bpm key genre and a mix critique", "expected": "recoup-songs"}
+{"intent": "find the best 15 seconds of this song to clip", "expected": "recoup-songs", "not": ["recoup-content"]}
+{"intent": "write a playlist pitch and sync brief for this single from the audio", "expected": "recoup-songs", "not": ["recoup-research"]}
 
-# (songwriting capability removed; learnings folded into recoup-platform)
+# (songwriting capability removed; platform split into setup/api/artists/learn)

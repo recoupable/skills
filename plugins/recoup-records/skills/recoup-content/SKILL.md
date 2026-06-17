@@ -1,6 +1,6 @@
 ---
 name: recoup-content
-description: Make any social-ready content asset for an artist — captions, images (cover art, thumbnails, carousels, promos, quote cards), short-form videos, lyric videos, visualizers/Canvas, per-platform reformats, a whole content pack, or a reactive post off a real milestone/trend. Use when the user says "make content for [artist]", "write a caption", "make cover art / a thumbnail / a carousel / a promo / a quote card", "make a TikTok/Reel/short video", "lyric video", "visualizer / Spotify Canvas", "reformat this for TikTok", "content pack / 30 posts for the launch", or "they just hit [X], make something". Picks the mode from the ask; stops at the finished asset (does not post). To find which 5–15s of a song to clip, use recoup-song (hook).
+description: Make any social-ready content asset for an artist — captions, images (cover art, thumbnails, carousels, promos, quote cards), short-form videos, lyric videos, visualizers/Canvas, per-platform reformats, a whole content pack, or a reactive post off a real milestone/trend. Use when the user says "make content for [artist]", "write a caption", "make cover art / a thumbnail / a carousel / a promo / a quote card", "make a TikTok/Reel/short video", "lyric video", "visualizer / Spotify Canvas", "reformat this for TikTok", "content pack / 30 posts for the launch", or "they just hit [X], make something". Picks the mode from the ask; stops at the finished asset (does not post). To find which 5–15s of a song to clip, use recoup-songs (hook).
 ---
 
 # Recoup Content
@@ -33,7 +33,7 @@ Format request → go straight to that mode. **News/trigger** ("they just hit
 1M") → **trend** mode (it finds the real moment, then routes to a format mode).
 Unspecified ("make me something for the launch") → ask one question (which
 format, or a full pack?), then route. To find the clip-worthy moment first, use
-`recoup-song` (hook) and feed the timestamps to **video**.
+`recoup-songs` (hook) and feed the timestamps to **video**.
 
 ## Shared backbone (every mode)
 
@@ -113,7 +113,7 @@ done; regenerate.
 
 Edit, don't generate. Master → genuinely **distinct** per-platform cuts (never
 identical re-uploads — platforms suppress them): TikTok/Reels/Shorts 9:16 lead
-with the hook (use `recoup-song` hook for the in-point), captions clear of UI
+with the hook (use `recoup-songs` hook for the in-point), captions clear of UI
 safe zones; X/feed 1:1 or 16:9, front-load the payoff. Or polish raw BTS/live
 footage (trim, crop, caption). Analyze-gate each cut.
 
@@ -122,7 +122,7 @@ footage (trim, crop, caption). Analyze-gate each cut.
 Orchestrates the modes above. **Estimate + confirm cost before spending**
 (`POST /content/estimate`; on `insufficient_credits` surface `checkoutUrl`) — no
 silent 30-asset fan-outs. A ~20-asset default: 6–10 **video** clips across looks
-(each led by a `recoup-song` hook), 4–6 **image** quote cards, 1 carousel, 1
+(each led by a `recoup-songs` hook), 4–6 **image** quote cards, 1 carousel, 1
 visualizer, captions per asset. **Theme to the audience** (via `recoup-research`
 audience data) — bias looks/copy to where the fans are. Analyze-gate every asset;
 assemble a `pack-manifest.md`. Cohesion: a clip *family*, one look + voice.

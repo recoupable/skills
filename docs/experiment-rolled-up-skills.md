@@ -9,14 +9,19 @@
 | | Focused (control) | Rolled-up (treatment) |
 |---|---|---|
 | **Branch** | `recoup-label-in-a-box` | `experiment/rolled-up-skills` |
-| **Skill count** | 41 | **6** |
-| **Shape** | many narrow skills; the resolver picks the skill | a handful of fat skills; the resolver picks the skill, then the **skill body picks the mode** |
-| **Routing burden** | on the resolver (41-way) | split: resolver (6-way) + in-skill mode dispatch |
+| **Skill count** | 41 | **9** (6 capability + 3 operating) |
+| **Shape** | many narrow skills; the resolver picks the skill | fat skills in two tiers; the resolver picks the skill, then the **skill body picks the mode** |
+| **Routing burden** | on the resolver (41-way) | split: resolver (9-way) + in-skill mode dispatch |
 
 ## What rolled up into what
 
-Six fat, mode-dispatching skills absorb the entire plugin (songwriting was
-removed):
+Nine fat, mode-dispatching skills in two tiers absorb the entire plugin
+(songwriting was removed). *Note: an earlier pass collapsed the operating tier into
+one `recoup-platform`; the routing eval showed its modes were the only confusable
+ones, so it was split into `recoup-setup` + `recoup-api` + `recoup-artists` +
+`recoup-learn` — see `docs/ab-eval-results.md`.*
+
+**Tier 1 — capabilities:**
 
 - **`recoup-research`** ← artist-research, audience, competition, scout, playlists,
   outreach, tiktok, brief, web-intelligence (9) · modes: overview · audience ·
@@ -24,17 +29,23 @@ removed):
 - **`recoup-content`** ← content (router), caption, image, video, lyric-video,
   visualizer, pack, reformat, trend (9) · modes: caption · image · video ·
   lyric-video · visualizer · reformat · pack · trend
-- **`recoup-release`** ← release start, brief, campaign, doc, demo, monitor (6) ·
+- **`recoup-releases`** ← release start, brief, campaign, doc, demo, monitor (6) ·
   modes: plan · brief · campaign · doc · monitor · demo
-- **`recoup-catalog`** ← deal start, ingest, value, dashboard, report, demo,
+- **`recoup-catalogs`** ← deal start, ingest, value, dashboard, report, demo,
   catalog-value (7) · modes: review · ingest · value · dashboard · report ·
   estimate · demo
-- **`recoup-song`** ← song analyze, hook, pitch-kit (3) · modes: analyze · hook · pitch
-- **`recoup-platform`** ← setup, setup-sandbox, api, artist-create, artist-workspace,
-  learn (6) · modes: setup · sandbox · api · create-artist · workspace · learn
+- **`recoup-songs`** ← song analyze, hook, pitch-kit (3) · modes: analyze · hook · pitch
+- **`recoup-artists`** ← artist-create, artist-workspace (2) · modes: create · workspace
+  *(roster management = real label work, so it's a capability, not operating)*
 
-**`recoup-songwriting` was removed** (capability dropped, not folded). Nothing else
-stayed standalone — the plugin is now 6 fat skills, end to end.
+**Tier 2 — operating the box (config / plumbing):**
+
+- **`recoup-setup`** ← setup, setup-sandbox (2) · modes: connect · scaffold
+- **`recoup-api`** ← api (raw REST + connector actions)
+- **`recoup-learn`** ← learn (compounding memory)
+
+**`recoup-songwriting` was removed** (capability dropped, not folded). The plugin
+is now **9 fat skills in two tiers** — 6 capabilities + 3 operating.
 
 All references/scripts/templates each cluster needed were carried into the fat
 skill (union, deduped), so capability is preserved — only the packaging changed.
