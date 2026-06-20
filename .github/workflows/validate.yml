@@ -20,10 +20,8 @@ jobs:
         run: python3 scripts/check_vendored.py
       - name: Manifest + parity validation
         run: python3 scripts/validate_manifests.py
-      # recoup-records is now a first-class, hand-maintained plugin (not generated
-      # from the source plugins), so the bundle-drift gate is intentionally retired.
-      # The generator (scripts/build_records_plugin.py) is kept for one-off reseeding
-      # but no longer gates CI. See docs/fat-skills-benchmark.md.
+      # recoup-records is a first-class, hand-maintained plugin (the focused source
+      # plugins were consolidated into it), so there is no bundle-drift gate.
       - name: Resolver reachability (no dark skills)
         run: python3 scripts/check_resolvable.py
       - name: Resolver eval (routing fixtures + coverage)

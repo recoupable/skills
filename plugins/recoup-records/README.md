@@ -11,10 +11,9 @@
 
 
 > **First-class, hand-maintained plugin.** This is the flagship "everything in
-> one install" bundle and is now maintained directly (it was originally generated
-> from the focused plugins; that generation model is retired for it — see
-> `docs/fat-skills-benchmark.md`). Edit skills here directly. The source plugins
-> may drift from this bundle; that is expected and accepted.
+> one install" bundle, maintained directly. It was originally generated from the
+> focused plugins, which have since been consolidated into it — edit skills here
+> directly.
 >
 > **Routing is governed by `RESOLVER.md`** (the skill dispatcher) and enforced by
 > two CI gates: `scripts/check_resolvable.py` (every skill is reachable; no dark
@@ -25,17 +24,8 @@
 
 The whole Recoup platform as a single plugin: artist setup and API access, music-industry research, catalog deal review, content creation, song audio analysis, and end-to-end release workflows — every skill, agent, and hook from the focused plugins, bundled together.
 
-One install gives you everything below. Prefer a focused install? Install the
-individual plugin instead — same skills, smaller surface.
-
-| Source plugin | Status |
-|---------------|--------|
-| recoup-essentials | bundled |
-| recoup-research | bundled |
-| recoup-deals | bundled |
-| recoup-content | bundled |
-| recoup-song-analysis | bundled |
-| recoup-releases | bundled |
+One install gives you the full platform — setup & API access, research, catalog
+deals, content, song analysis, and releases — as a single self-contained plugin.
 
 ## Install
 
@@ -53,7 +43,3 @@ routing gates (also run in CI):
 python3 scripts/check_resolvable.py     # every skill reachable from RESOLVER.md
 python3 scripts/run_resolver_eval.py     # routing fixtures valid + full coverage
 ```
-
-The old generator (`scripts/build_records_plugin.py`) still exists for a one-off
-reseed from the focused plugins, but it no longer gates CI and will overwrite
-hand edits — use it only deliberately.

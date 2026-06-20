@@ -17,11 +17,8 @@ recoupable/skills/
 │   ├── song-writing/
 │   └── ...
 ├── plugins/                  ← rich bundles: skills + hooks + shared references
-│   ├── recoup-essentials/
-│   ├── recoup-deals/
-│   ├── recoup-research/
-│   ├── recoup-song-analysis/
-│   └── recoup-content/
+│   ├── recoup-records/       ← the all-in-one "record label in a box"
+│   └── recoup-engineering/   ← engineering workflows (issues, TDD, benchmarks)
 ├── scripts/                  ← validation gates + vendored.json (shared-file registry)
 ├── .claude-plugin/           ← repo-as-plugin manifest + marketplace.json (Claude registry)
 ├── .codex-plugin/            ← repo-as-plugin manifest (Codex)
@@ -102,7 +99,7 @@ plugins/my-plugin/
 └── LICENSE
 ```
 
-- **Author a plugin by copying an existing one** (e.g. `plugins/recoup-content/`), then edit the manifests, README, and skills. Don't hand-write manifests from scratch.
+- **Author a plugin by copying an existing one** (e.g. `plugins/recoup-engineering/`), then edit the manifests, README, and skills. Don't hand-write manifests from scratch.
 - **Ship all three per-plugin manifests** (`.claude-plugin`, `.cursor-plugin`, `.codex-plugin`). They mostly match; only harness-specific fields differ (e.g. Cursor lists a `skills` path).
 - **Promote skills into a plugin when they share a canonical reference.** If one skill owns a doc that sibling skills depend on, that cross-dependency breaks the self-contained rule — move them under a plugin and put the shared doc in `plugins/{name}/references/`, vendored into each skill (Portable Skill Contract rule 5).
 - Plugin skills follow the **same Portable Skill Contract** as top-level skills.
@@ -132,8 +129,7 @@ What to do instead:
   playlists, then synthesize")? Write a **skill** that names and chains the other
   skills. Make it manual-only with `disable-model-invocation: true` if it must
   not auto-fire.
-- **Never** add a `commands` path to any `plugin.json`, and never add a
-  `commands/` component to `scripts/build_records_plugin.py`.
+- **Never** add a `commands` path to any `plugin.json`.
 
 > Exception: hook **commands** in `hooks/hooks.json` (`"type": "command"`) are a
 > different thing — shell commands run on lifecycle events. Those are fine.
@@ -180,7 +176,7 @@ python3 scripts/check_resolvable.py        # every skill reachable from RESOLVER
 python3 scripts/run_resolver_eval.py       # routing fixtures valid + full coverage
 ```
 
-**`recoup-records` is a first-class, hand-maintained plugin** — "a record label in a box" (`plugins/recoup-records/`) that ships every focused plugin's skills, agents, hooks, references, scripts, templates, and fixtures so a user can install one thing instead of six. The old generator (`scripts/build_records_plugin.py`) still exists for a one-off reseed from the focused plugins, but it **no longer gates CI** and will overwrite hand edits — use it only deliberately.
+**`recoup-records` is the flagship, hand-maintained plugin** — "a record label in a box" (`plugins/recoup-records/`) that ships the full platform in one install: artist setup and API access, research, catalog deals, content, song analysis, and releases — every skill, agent, hook, reference, script, template, and fixture. It is self-contained; edit its skills directly.
 
 **Editing a shared (vendored) file:** change the *canonical* copy only, then re-sync every copy listed in `scripts/vendored.json` (there is no `--sync` flag — copy them yourself), then re-check. Groups come in two shapes: single files (`canonical`/`copies`) and whole directories (`canonical_dir`/`copies_dirs`):
 

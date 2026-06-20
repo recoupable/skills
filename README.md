@@ -31,35 +31,21 @@ git clone https://github.com/recoupable/skills.git
 | [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
 | [trend-to-song](skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
 
-> **Setup, API access, and artist onboarding** (`recoup-setup`, `recoup-setup-sandbox`, `recoup-artist-workspace`, `recoup-create-artist`, `recoup-api`) now ship in the **Recoup Essentials** plugin below — start there.
+> **Setup, API access, and artist onboarding** now ship inside the **Recoup Records** plugin below.
 
 ## Plugins
 
-Beyond the open skills library above, Recoup ships focused **plugins** — bundles of skills and agents for one workflow. Add the marketplace once, then install the plugins you need:
-
-```bash
-/plugin marketplace add recoupable/skills
-/plugin install recoup-essentials@recoup
-```
-
-### Everything in one install
-
-Want the whole platform without managing six plugins? Install **Recoup Records** — a record label in a box — a single bundle of every plugin's skills, agents, and hooks:
+Beyond the open skills library above, Recoup ships two **plugins** — richer bundles of skills, agents, and hooks. Add the marketplace once, then install what you need:
 
 ```bash
 /plugin marketplace add recoupable/skills
 /plugin install recoup-records@recoup
 ```
 
-> Pick **one or the other** — install `recoup-records` for everything, *or* the focused plugins below for a smaller surface. Installing both would register the same skills twice. The bundle is generated from the focused plugins by `scripts/build_records_plugin.py`, so it never drifts.
-
 | Plugin | What it does |
 |--------|-------------|
-| [Recoup Essentials](plugins/recoup-essentials) | Setup, API keys, sandbox scaffolding, artist creation, and direct Recoup API access — **start here** |
-| [Recoup Research](plugins/recoup-research) | Music industry research — artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection |
-| [Recoup Deals](plugins/recoup-deals) | Music catalog deals — data-room ingestion, royalty normalization, rights checks, and valuation for buy-side, seller-prep, financing, and post-close |
-| [Recoup Content](plugins/recoup-content) | Content workflows — draft, edit, and publish social-ready content for artists |
-| [Recoup Song Analysis](plugins/recoup-song-analysis) | Song audio analysis — catalog metadata, lyrics, playlist pitches, sync briefs, and mix feedback via Music Flamingo |
+| [Recoup Records](plugins/recoup-records) | A record label in a box — the whole platform in one install: artist setup & API access, research, catalog deals, content, song analysis, and releases |
+| [Recoup Engineering](plugins/recoup-engineering) | Engineering workflows — write and ship high-signal GitHub tracking issues docs-first and test-driven, and benchmark skill packs against the frontier |
 
 ## Creating a Skill
 
