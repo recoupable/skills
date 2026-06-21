@@ -38,8 +38,9 @@ Loaded automatically by description-matching when the agent recognizes the task:
 | `recoup-artist-workspace` | Work inside artist directories — create them, enumerate them, and edit context, songs, brand, and audience. |
 | `recoup-create-artist` | End-to-end 8-call chain to create, identify, and enrich a new artist account from a name. |
 | `recoup-api` | Call the Recoupable API for artist data, socials, orgs, research, and documents — plus connector actions (Google Docs / Drive / Sheets, Gmail, TikTok, Instagram). |
+| `recoup-account-status` | Inspect a Recoup account's health/usage — resolve by email, account ID, or artist name, then pull its artists, socials, chats, scheduled tasks, sandboxes, credits, and subscription, and render an `ACCOUNT.md`, a per-artist `ARTIST.md` tree, and a status PDF. |
 
-These five skills cross-reference each other heavily (setup → sandbox → workspace → artist creation → API), which is why they ship as one plugin rather than standalone skills.
+These six skills cross-reference each other heavily (setup → sandbox → workspace → artist creation → API, with account-status reporting on top), which is why they ship as one plugin rather than standalone skills.
 
 ## Required environment
 
@@ -57,7 +58,8 @@ plugins/recoup-essentials/
 │   ├── recoup-setup-sandbox/SKILL.md
 │   ├── recoup-artist-workspace/SKILL.md
 │   ├── recoup-create-artist/SKILL.md
-│   └── recoup-api/SKILL.md
+│   ├── recoup-api/SKILL.md
+│   └── recoup-account-status/   (SKILL.md + scripts/)
 ├── LICENSE
 └── README.md
 ```
