@@ -187,20 +187,20 @@ def build(lead, out_dir):
     if isinstance(socials, list) and socials:
         story.append(Spacer(1, 16))
         story.append(Paragraph("Artist channels", body))
-        shead = [Paragraph(t, cellbw) for t in ("Handle", "Followers", "Bio", "Platform")]
+        shead = [Paragraph(t, cellbw) for t in ("Platform", "Handle", "Followers", "Bio")]
         sdata = [shead]
         for s in socials:
             handle = s.get("handle") or s.get("platform") or "—"
             url = s.get("url")
             hcell = Paragraph(
                 f'<a href="{url}" color="#0b1f3a"><u>{handle}</u></a>' if url else handle, small)
-            sdata.append([hcell, thousands(s.get("followers")),
-                          Paragraph(s.get("bio") or "—", small), s.get("platform") or "—"])
-        stbl = Table(sdata, colWidths=[1.65 * inch, 0.85 * inch, 3.0 * inch, 1.1 * inch])
+            sdata.append([s.get("platform") or "—", hcell, thousands(s.get("followers")),
+                          Paragraph(s.get("bio") or "—", small)])
+        stbl = Table(sdata, colWidths=[1.1 * inch, 1.65 * inch, 0.85 * inch, 3.0 * inch])
         stbl.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), navy),
             ("FONTSIZE", (0, 1), (-1, -1), 9),
-            ("ALIGN", (1, 1), (1, -1), "RIGHT"),
+            ("ALIGN", (2, 1), (2, -1), "RIGHT"),
             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
             ("LINEBELOW", (0, 1), (-1, -2), 0.3, colors.HexColor("#eeeeee")),
             ("TOPPADDING", (0, 0), (-1, -1), 5), ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
