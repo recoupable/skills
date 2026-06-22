@@ -54,6 +54,7 @@ def build(lead, out_dir):
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.platypus import (
             SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak, CondPageBreak,
+            KeepTogether,
         )
     except ImportError:
         sys.exit("reportlab not installed. Run: pip install reportlab --break-system-packages")
@@ -104,8 +105,6 @@ def build(lead, out_dir):
         ref.append("owner " + acct["owner_email"])
     if acct.get("owner_account_id"):
         ref.append("account " + acct["owner_account_id"])
-    if acct.get("artist_account_id"):
-        ref.append("artist " + acct["artist_account_id"])
     if ref:
         story.append(Paragraph("Admin reference — " + "  ·  ".join(ref),
                                ParagraphStyle("admin", parent=styles["Normal"], fontSize=8,
@@ -153,7 +152,7 @@ def build(lead, out_dir):
         cols = ["", "Release", "Year", "Tracks"] + (["Value"] if has_value else []) + ["Streams"]
         head = [Paragraph(t, cellbw) for t in cols]
         data = [head]
-        shown = releases[:3]
+        shown = releases[:7]
         for r in shown:
             row = [cover(r.get("image"), 30), (r.get("name") or "—")[:34],
                    str(r.get("year") or "—"),
@@ -185,8 +184,6 @@ def build(lead, out_dir):
     # Artist channels — verified socials table (last block on page 1)
     socials = lead.get("socials")
     if isinstance(socials, list) and socials:
-        story.append(Spacer(1, 16))
-        story.append(Paragraph("Artist channels", body))
         shead = [Paragraph(t, cellbw) for t in ("Platform", "Handle", "Followers", "Bio")]
         sdata = [shead]
         for s in socials:
@@ -205,7 +202,9 @@ def build(lead, out_dir):
             ("LINEBELOW", (0, 1), (-1, -2), 0.3, colors.HexColor("#eeeeee")),
             ("TOPPADDING", (0, 0), (-1, -1), 5), ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
         ]))
-        story.append(stbl)
+        # KeepTogether so the heading + table never split across a page boundary.
+        story.append(Spacer(1, 12))
+        story.append(KeepTogether([Paragraph("Artist channels", body), Spacer(1, 4), stbl]))
 
     # ---- Page 2: an honest reading of THIS catalog's data ----
     # CondPageBreak (not a hard PageBreak) avoids a blank page when page 1 is already full.
