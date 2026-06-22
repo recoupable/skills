@@ -236,6 +236,10 @@ def build(lead, out_dir):
     except (TypeError, ValueError):
         pass
 
+    # Analyst-supplied verified observations (case-specific, e.g. collab splits, audience gap)
+    for note in (lead.get("reading_notes") or []):
+        story.append(Paragraph(note, body))
+
     # Dormant tail
     dormant = lead.get("dormant_releases")
     rm = lead.get("releases_measured")
@@ -260,6 +264,33 @@ def build(lead, out_dir):
         f"about {artist}, the honest next step is to read it against your actual statements; that's "
         f"where the range tightens and where anything uncollected would show up. Happy to do that "
         f"read with you whenever it's useful.", body))
+
+    # Roster CTA — natural next step: extend the same baseline to the rest of the roster
+    roster = lead.get("roster") or {}
+    rartists = roster.get("artists") or []
+    if rartists:
+        label = (roster.get("label") or "").strip()
+        cta_block = [Paragraph(f"Extend the analysis — the {label} roster".strip(), h2)]
+        if roster.get("note"):
+            cta_block.append(Paragraph(roster["note"], body))
+        rdata = [[Paragraph(t, cellbw) for t in ("Artist", "Spotify followers")]]
+        for a in rartists:
+            rdata.append([a.get("name", "—"), thousands(a.get("followers"))])
+        if roster.get("more_count"):
+            rdata.append([Paragraph(f"<i>+ {roster['more_count']} more on the roster</i>", small), ""])
+        rtbl = Table(rdata, colWidths=[3.4 * inch, 1.6 * inch])
+        rtbl.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), navy),
+            ("FONTSIZE", (0, 1), (-1, -1), 9.5),
+            ("ALIGN", (1, 1), (1, -1), "RIGHT"),
+            ("LINEBELOW", (0, 1), (-1, -2), 0.3, colors.HexColor("#eeeeee")),
+            ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ]))
+        cta_block += [Spacer(1, 6), rtbl]
+        if roster.get("cta"):
+            cta_block += [Spacer(1, 6), Paragraph("<b>" + roster["cta"] + "</b>", body)]
+        story.append(Spacer(1, 14))
+        story.append(KeepTogether(cta_block))
 
     story.append(Spacer(1, 10))
     story.append(Paragraph("How this is calculated", body))

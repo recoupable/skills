@@ -22,5 +22,20 @@
     {"platform": "Instagram", "handle": "@neontidemusic", "url": "https://www.instagram.com/neontidemusic/", "followers": 12500, "bio": "indie / electronic · Austin TX"},
     {"platform": "TikTok", "handle": "@neontidemusic", "url": "https://www.tiktok.com/@neontidemusic", "followers": 8300, "bio": "new music every friday"}
   ],
+  "reading_notes": [
+    "<b>The dominant release is a collaboration.</b> Most of the value sits in a co-credited track, so the owner's realizable share depends on master/publishing splits a statement would confirm.",
+    "<b>Big streams, smaller owned audience.</b> The catalog leans on a breakout moment more than a dedicated fanbase — the clearest place to build durable value is converting listeners into followers."
+  ],
+  "roster": {
+    "label": "Example Label",
+    "note": "Neon Tide is one of several artists on the roster. The same baseline runs on any of them — a sample by Spotify following:",
+    "artists": [
+      {"name": "Artist Two", "followers": 14200},
+      {"name": "Artist Three", "followers": 6100},
+      {"name": "Artist Four", "followers": 2300}
+    ],
+    "more_count": 5,
+    "cta": "Want the same valuation + socials baseline for the rest of the roster? Reply and we'll run it."
+  },
   "_note": "Spoofed sample lead — all PII (name, email, Spotify ID) is fictional."
 }
