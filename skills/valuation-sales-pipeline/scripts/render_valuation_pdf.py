@@ -53,7 +53,7 @@ def build(lead, out_dir):
         from reportlab.lib import colors
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.platypus import (
-            SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak,
+            SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak, CondPageBreak,
         )
     except ImportError:
         sys.exit("reportlab not installed. Run: pip install reportlab --break-system-packages")
@@ -96,6 +96,20 @@ def build(lead, out_dir):
     story = []
     story.append(Paragraph(f"{artist} — Catalog Valuation", h1))
     story.append(Paragraph("Recoup · measured live from public streaming data", sub))
+
+    # Admin reference (owner email + account ids) — for easy lookup by admins
+    acct = lead.get("account") or {}
+    ref = []
+    if acct.get("owner_email"):
+        ref.append("owner " + acct["owner_email"])
+    if acct.get("owner_account_id"):
+        ref.append("account " + acct["owner_account_id"])
+    if acct.get("artist_account_id"):
+        ref.append("artist " + acct["artist_account_id"])
+    if ref:
+        story.append(Paragraph("Admin reference — " + "  ·  ".join(ref),
+                               ParagraphStyle("admin", parent=styles["Normal"], fontSize=8,
+                                              textColor=colors.grey, spaceAfter=10)))
 
     # Headline value band
     band = Table([[Paragraph("Estimated catalog value", cellbw)],
@@ -194,7 +208,8 @@ def build(lead, out_dir):
         story.append(stbl)
 
     # ---- Page 2: an honest reading of THIS catalog's data ----
-    story.append(PageBreak())
+    # CondPageBreak (not a hard PageBreak) avoids a blank page when page 1 is already full.
+    story.append(CondPageBreak(6.5 * inch))
     story.append(Paragraph("Reading your result", h2))
     story.append(Paragraph(
         f"Everything on the previous page is measured live from public play counts — the same "
