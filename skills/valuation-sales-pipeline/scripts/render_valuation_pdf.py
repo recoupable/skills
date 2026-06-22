@@ -310,7 +310,7 @@ def build(lead, out_dir):
     if releases:
         story.append(PageBreak())
         total_rel = lead.get("releases_measured") or len(releases)
-        story.append(Paragraph("Appendix — full catalog measured", h2))
+        story.append(Paragraph("Appendix A — full catalog measured", h2))
         story.append(Paragraph(
             f"All {total_rel} releases measured live from public Spotify play counts. Streams are "
             f"platform-displayed counts; per-release value is modeled at the catalog level (see page 2). "
