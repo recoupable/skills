@@ -1,27 +1,28 @@
 # First outreach email - template
 
-Principles: from the **rep personally**; reference the **specific artist + their number**;
-**deliver the valuation PDF** (give before you ask); include **one free, specific insight**;
-end with a **tiny CTA**. Founder/operator-to-operator, not salesy. Tailor the lever to the
-relationship (owner vs. label vs. collaborator).
+First touch is **scannable in 3-5 seconds** - a busy inbox gives you a glance, not a read. Keep it
+to **2 sentences + 3 bullets + 1 CTA**. From the **rep personally**; reference the **specific artist
++ their number**; **deliver the valuation PDF** as the long-form next step (give before you ask);
+plain hyphens only (no em/en dashes, which read as AI-generated). Put the depth in the PDF, not the
+email - the PDF is there for anyone who wants the data before taking the CTA.
 
 ## Reusable template
 
-> **Subject:** {Artist} - your catalog valuation (+ one thing I'd fix first)
+> **Subject:** {Artist} - your catalog valuation ({hook})
 >
-> Hi {first_name}, I'm {rep_name} from Recoup - I saw you just ran a valuation on
-> **{Artist}**. Here's the full breakdown: **{est_value}**, off {streams_millions}M
-> lifetime streams. [attach: {Artist}-valuation.pdf]
+> Hi {first_name}, your {Artist} valuation {one-line context}. I finished the run - full breakdown
+> attached, and the headline is a lot bigger: [attach: {Artist}-valuation.pdf]
 >
-> One thing jumped out: {one specific, free insight - a playlist gap, a likely-uncollected
-> royalty source like neighboring rights / Content ID, or a concentration note}. That alone
-> is usually worth more than the tool fee.
+> - {bullet 1 - the corrected headline: full lifetime streams vs. what the tool measured}
+> - {bullet 2 - corrected value vs. the figure the tool showed}
+> - {bullet 3 - one free insight: concentration, uncollected royalty source, master-vs-publishing}
 >
-> I help catalogs like {Artist}'s actually *grow* that number - recover royalties you're
-> already owed and lift monthly streams, measured against today's baseline. Worth a 15-min
-> call this week? Happy to send a short growth plan first either way.
+> Worth 15 minutes this week to walk through it? [calendar link]
 >
 > - {rep_name}
+
+Three short bullets, max one line each. If a point needs a sentence of caveat, it belongs in the
+PDF, not here. Don't pitch the engagement in the cold email - that's the call (see Lever below).
 
 ## Variables
 
@@ -29,13 +30,17 @@ relationship (owner vs. label vs. collaborator).
 | --- | --- |
 | `{Artist}` | person record `looked_up_artist` |
 | `{first_name}` | person record `name` (or "there") |
-| `{est_value}` | `est_catalog_value` |
-| `{streams_millions}` | `lifetime_streams` / 1e6, rounded |
+| `{hook}` | the one-glance reason to open - e.g. "your valuation was cut short (real number is ~10x higher)" |
+| `{one-line context}` | the setup the bullets pay off - e.g. "stopped partway and priced it at {tool_value} off ~9% of the catalog" |
+| `{bullet 1-3}` | from the lead JSON / PDF: corrected streams, corrected value vs. tool, one insight |
 | `{rep_name}` | the Attio `owner` working the lead |
-| `{one specific insight}` | from research - playlist gap, uncollected royalty source, concentration |
+| `[calendar link]` | the rep's booking link |
 
-## Lever by relationship
+## Lever (for the follow-up call, not the cold email)
 
-- **Owner/Operator** → catalog growth + recovery on their own catalog. Strongest pilot fit.
-- **Label / Manager** → buyer-ready baseline + measurement/recovery across the whole roster.
-- **Collaborator** → artist-to-artist; deliver the baseline, confirm their role, widen later.
+Keep the cold email about *their* number + the CTA. Save the engagement framing for the call, and
+tailor it to the relationship:
+
+- **Owner/Operator** -> catalog growth + recovery on their own catalog. Strongest pilot fit.
+- **Label / Manager / distributor** -> buyer-ready baseline + measurement/recovery across the whole roster.
+- **Collaborator** -> artist-to-artist; deliver the baseline, confirm their role, widen later.
