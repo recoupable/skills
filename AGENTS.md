@@ -18,7 +18,7 @@ recoupable/skills/
 │   └── ...
 ├── plugins/                  ← rich bundles: skills + hooks + shared references
 │   ├── recoup-records/       ← the all-in-one "record label in a box"
-│   └── recoup-engineering/   ← engineering workflows (issues, TDD, benchmarks)
+│   └── recoup-internal/      ← internal eng + ops (issues, TDD, benchmarks, sales pipeline, account health)
 ├── scripts/                  ← validation gates + vendored.json (shared-file registry)
 ├── .claude-plugin/           ← repo-as-plugin manifest + marketplace.json (Claude registry)
 ├── .codex-plugin/            ← repo-as-plugin manifest (Codex)
@@ -99,7 +99,7 @@ plugins/my-plugin/
 └── LICENSE
 ```
 
-- **Author a plugin by copying an existing one** (e.g. `plugins/recoup-engineering/`), then edit the manifests, README, and skills. Don't hand-write manifests from scratch.
+- **Author a plugin by copying an existing one** (e.g. `plugins/recoup-internal/`), then edit the manifests, README, and skills. Don't hand-write manifests from scratch.
 - **Ship all three per-plugin manifests** (`.claude-plugin`, `.cursor-plugin`, `.codex-plugin`). They mostly match; only harness-specific fields differ (e.g. Cursor lists a `skills` path).
 - **Promote skills into a plugin when they share a canonical reference.** If one skill owns a doc that sibling skills depend on, that cross-dependency breaks the self-contained rule — move them under a plugin and put the shared doc in `plugins/{name}/references/`, vendored into each skill (Portable Skill Contract rule 5).
 - Plugin skills follow the **same Portable Skill Contract** as top-level skills.

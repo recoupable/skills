@@ -82,10 +82,10 @@
       }
     },
     {
-      "name": "recoup-engineering",
-      "source": "./plugins/recoup-engineering",
+      "name": "recoup-internal",
+      "source": "./plugins/recoup-internal",
       "version": "0.1.0",
-      "description": "Engineering workflows for AI agents \u2014 write and maintain high-signal GitHub tracking issues, deliver them docs-first and test-driven end-to-end, and benchmark any plugin or skills folder against the frontier of skill design.",
+      "description": "Recoup's internal toolkit for AI agents \u2014 engineering and operations. Write and maintain high-signal GitHub tracking issues, deliver them docs-first and test-driven end-to-end, benchmark any plugin or skills folder against the frontier of skill design, work the catalog-valuation sales funnel in Attio, and produce account-health snapshots for any Recoup account.",
       "author": {
         "name": "Recoup",
         "email": "agent@recoupable.com",
@@ -96,18 +96,21 @@
       "license": "Apache-2.0",
       "keywords": [
         "recoup",
+        "recoup-internal",
         "engineering",
         "github-issues",
         "issue-tracking",
         "test-driven-development",
         "skill-design",
         "plugin-benchmark",
+        "sales-pipeline",
+        "account-health",
         "agent-skills"
       ],
       "interface": {
-        "displayName": "Recoup Engineering",
-        "shortDescription": "Write and ship GitHub tracking issues, and benchmark skill packs against the frontier",
-        "longDescription": "Engineering workflow skills for AI agents. Write and maintain high-signal GitHub tracking issues in the Recoupable house style, deliver them docs-first and test-driven from open to shipped with preview verification, and benchmark any plugin or skills folder against the frontier of skill/plugin design.",
+        "displayName": "Recoup Internal",
+        "shortDescription": "Recoup's internal engineering + ops skills: issues, skill benchmarks, sales pipeline, account health",
+        "longDescription": "Recoup's internal toolkit for AI agents. Write and maintain high-signal GitHub tracking issues in the Recoupable house style and deliver them docs-first and test-driven with preview verification, benchmark any plugin or skills folder against the frontier of skill design, work the catalog-valuation sales funnel in Attio from lead to Pro signup, and produce account-health snapshots for any Recoup account.",
         "developerName": "Recoup",
         "category": "Developer Tools",
         "capabilities": [

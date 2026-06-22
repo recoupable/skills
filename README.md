@@ -45,7 +45,7 @@ Beyond the open skills library above, Recoup ships two **plugins** — richer bu
 | Plugin | What it does |
 |--------|-------------|
 | [Recoup Records](plugins/recoup-records) | A record label in a box — the whole platform in one install: artist setup & API access, research, catalog deals, content, song analysis, and releases |
-| [Recoup Engineering](plugins/recoup-engineering) | Engineering workflows — write and ship high-signal GitHub tracking issues docs-first and test-driven, and benchmark skill packs against the frontier |
+| [Recoup Internal](plugins/recoup-internal) | Recoup's internal engineering & ops — write and ship high-signal GitHub tracking issues docs-first and test-driven, benchmark skill packs against the frontier, work the catalog-valuation sales funnel in Attio, and produce account-health snapshots |
 
 ## Creating a Skill
 

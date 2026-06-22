@@ -4,25 +4,25 @@
     {
       "canonical": "assets/recoup-icon.png",
       "copies": [
-        "plugins/recoup-engineering/assets/recoup-icon.png"
+        "plugins/recoup-internal/assets/recoup-icon.png"
       ]
     },
     {
       "canonical_dir": "skills/skill-pack-benchmark",
       "copies_dirs": [
-        "plugins/recoup-engineering/skills/skill-pack-benchmark"
+        "plugins/recoup-internal/skills/skill-pack-benchmark"
       ]
     },
     {
       "canonical_dir": "skills/issue-management",
       "copies_dirs": [
-        "plugins/recoup-engineering/skills/issue-management"
+        "plugins/recoup-internal/skills/issue-management"
       ]
     },
     {
       "canonical_dir": "skills/issue-implementation",
       "copies_dirs": [
-        "plugins/recoup-engineering/skills/issue-implementation"
+        "plugins/recoup-internal/skills/issue-implementation"
       ]
     }
   ]
