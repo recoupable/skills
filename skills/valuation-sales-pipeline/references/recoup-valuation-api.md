@@ -5,6 +5,14 @@ Recoup APIs**. Call them directly — `scripts/fetch_catalog.py` does exactly th
 scraping the UI. Base: `https://recoup-api.vercel.app` (or `https://api.recoupable.com`).
 Auth: `x-api-key: $RECOUP_API_KEY` (or `Authorization: Bearer $RECOUP_ACCESS_TOKEN`).
 
+> **Auth gotcha — the key and the token cover different routes.** A hex `x-api-key` authorizes
+> `/api/spotify/*` (search, albums, art) but is **rejected by `/api/research/*`** (the per-album
+> measurements and the estimator). Those need a **Bearer access token** (`RECOUP_ACCESS_TOKEN`, e.g.
+> a Privy session JWT), which **expires in ~1 hour** ("Authentication token expired"). If a catalog
+> reads back as **0 streams across every album**, it's almost always this — a hex key or an expired
+> token on `/research/*`, not a dormant catalog. Use the Bearer token for measurement work and grab a
+> fresh one when it 401s.
+
 ## The flow the UI runs
 
 1. **Resolve the artist** — `GET /api/spotify/search?q=<name>&limit=5` → pick the artist id.
@@ -62,9 +70,27 @@ geography) and `avatar`; overkill for a one-off report.
 (cross-checked to the Spotify id) and read live follower/bio counts directly — that's what the
 bundled ICEBOX example did when the socials store had no rows yet.
 
+## Spotting a truncated free run (credits)
+
+The free valuation charges credits per measurement, so a **large catalog can exhaust the lead's
+credits mid-run** — the tool then reports a value computed on a *partial* catalog, undercounting
+badly (Chilled Cat: only ~27% of the catalog measured, ~$290K shown vs ~$1.08M on the full catalog).
+Before trusting the tool's figure for a big catalog, check the lead's remaining credits via Supabase
+(service key in `mono/api/.env.local`): `account_emails` (email → `account_id`) →
+`credits_usage.remaining_credits` (333 free grant). A **near-zero balance timestamped at the
+valuation time** means the run was cut short — **re-measure the full catalog** with `fetch_catalog.py`
+(it now pages all albums) and reframe the outreach as *"we finished your interrupted run."*
+
 ## What the API does NOT give you
 
 Dollar figures (catalog value, per-release value) are a **model output**, not an API field. Take
 the band the marketing tool displays, or compute it with the `catalog-value-estimator` skill
 (streams → annual NLS → × multiple). `fetch_catalog.py` fills streams + art + counts and leaves
 the dollar fields for you to add.
+
+**The estimator's value is trailing-12-month-driven and needs history.** It prices on TTM streams
+derived from snapshot deltas (`/research/track/playcount-deltas`, which needs ≥2 captures ≥7 days
+apart). A brand-new lead has only a single capture date → **TTM 0 → value $0** — you cannot recompute
+a rigorous dollar figure same-day. Two honest workarounds: (a) scale the marketing tool's own
+per-stream basis for *that* artist (`tool_value / tool_streams_measured`) to the full live catalog;
+or (b) trigger snapshots now and re-run the estimator in ~4 weeks once a trailing window exists.

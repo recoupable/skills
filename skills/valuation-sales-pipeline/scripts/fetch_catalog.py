@@ -68,8 +68,17 @@ def main():
         name = name or resolved
     name = name or args.artist or artist_id
 
-    albums = _get("/api/spotify/artist/albums?" + urllib.parse.urlencode(
-        {"id": artist_id, "include_groups": "album,single", "limit": 50, "offset": 0})).get("items", [])
+    # Page the WHOLE catalog — large catalogs (lo-fi / compilation brands) routinely run to
+    # hundreds of releases, and a single limit=50 page silently truncates them (observed: a
+    # 126-release catalog read back as 50, undercounting lifetime streams by ~3x).
+    albums, offset = [], 0
+    while True:
+        page = _get("/api/spotify/artist/albums?" + urllib.parse.urlencode(
+            {"id": artist_id, "include_groups": "album,single", "limit": 50, "offset": offset})).get("items", [])
+        albums += page
+        if len(page) < 50:
+            break
+        offset += 50
 
     releases, dormant = [], 0
     seen, uni_streams, uni_tracks = set(), 0, 0  # dedupe tracks cross-listed across albums
@@ -102,6 +111,17 @@ def main():
             "streams": streams,
             "image": _img300(al.get("images")),
         })
+
+    # Loud failure on the most common trap: /api/research/* rejects a hex x-api-key (it only
+    # works for /api/spotify/*) and rejects an expired Bearer token. fetch reads those failures
+    # as empty albums, so the catalog looks "0 streams / all dormant" when it's really an auth
+    # problem. Surface it instead of emitting a plausible-but-wrong empty catalog.
+    if albums and uni_streams == 0:
+        print("WARNING: 0 streams measured across all " + str(len(albums)) + " albums. /api/research/* "
+              "likely rejected the credential — use a Bearer RECOUP_ACCESS_TOKEN (not a hex "
+              "RECOUP_API_KEY, which only authorizes /api/spotify/*), and make sure it hasn't expired "
+              "(~1h for a Privy session token). This is almost always auth/expiry, not a dormant catalog.",
+              file=sys.stderr)
 
     releases.sort(key=lambda r: r.get("streams") or 0, reverse=True)
     lead = {

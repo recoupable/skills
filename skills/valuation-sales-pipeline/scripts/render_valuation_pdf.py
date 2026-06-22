@@ -3,10 +3,10 @@
 
 Reads a lead JSON (see fixtures/example-lead.json for the shape) and writes:
 
-  Page 1 — the headline the lead already saw: estimated value + range, key stats,
+  Page 1 - the headline the lead already saw: estimated value + range, key stats,
            and the per-release breakdown with album art ("what we measured").
-  Page 2 — an honest reading of THAT data (concentration, dormant tail, range
-           caveats) — grounded in page 1, no unverified claims.
+  Page 2 - an honest reading of THAT data (concentration, dormant tail, range
+           caveats) - grounded in page 1, no unverified claims.
 
 Lead data can be assembled directly from the public Recoup APIs with
 scripts/fetch_catalog.py (album art + streams), so no DOM scraping is needed.
@@ -24,14 +24,14 @@ def money(n):
     try:
         return "${:,.0f}".format(float(n))
     except (TypeError, ValueError):
-        return str(n or "—")
+        return str(n or "-")
 
 
 def hstreams(n):
     try:
         n = float(n)
     except (TypeError, ValueError):
-        return "—"
+        return "-"
     if n >= 1_000_000:
         return "{:.1f}M".format(n / 1_000_000)
     if n >= 1_000:
@@ -43,7 +43,7 @@ def thousands(n):
     try:
         return "{:,.0f}".format(float(n))
     except (TypeError, ValueError):
-        return "—"
+        return "-"
 
 
 def build(lead, out_dir):
@@ -95,10 +95,10 @@ def build(lead, out_dir):
     doc = SimpleDocTemplate(path, pagesize=LETTER, topMargin=0.7 * inch,
                             bottomMargin=0.7 * inch, leftMargin=0.8 * inch, rightMargin=0.8 * inch)
     story = []
-    story.append(Paragraph(f"{artist} — Catalog Valuation", h1))
+    story.append(Paragraph(f"{artist} - Catalog Valuation", h1))
     story.append(Paragraph("Recoup · measured live from public streaming data", sub))
 
-    # Admin reference (owner email + account ids) — for easy lookup by admins
+    # Admin reference (owner email + account ids) - for easy lookup by admins
     acct = lead.get("account") or {}
     ref = []
     if acct.get("owner_email"):
@@ -106,14 +106,14 @@ def build(lead, out_dir):
     if acct.get("owner_account_id"):
         ref.append("account " + acct["owner_account_id"])
     if ref:
-        story.append(Paragraph("Admin reference — " + "  ·  ".join(ref),
+        story.append(Paragraph("Admin reference - " + "  ·  ".join(ref),
                                ParagraphStyle("admin", parent=styles["Normal"], fontSize=8,
                                               textColor=colors.grey, spaceAfter=10)))
 
     # Headline value band
     band = Table([[Paragraph("Estimated catalog value", cellbw)],
                   [Paragraph(money(central), big)],
-                  [Paragraph(f"Range {money(low)} – {money(high)}" if low and high else "", cellbw)]],
+                  [Paragraph(f"Range {money(low)} - {money(high)}" if low and high else "", cellbw)]],
                  colWidths=[6.9 * inch])
     band.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, -1), navy),
@@ -130,8 +130,8 @@ def build(lead, out_dir):
         rows.append(["Tracks measured", thousands(lead.get("tracks_measured"))])
     if lead.get("releases_measured") is not None:
         rows.append(["Releases measured", thousands(lead.get("releases_measured"))])
-    rows += [["Relationship", lead.get("relationship") or "—"],
-             ["Valued", lead.get("valued_at") or "—"]]
+    rows += [["Relationship", lead.get("relationship") or "-"],
+             ["Valued", lead.get("valued_at") or "-"]]
     stats = Table(rows, colWidths=[2.3 * inch, 4.6 * inch])
     stats.setStyle(TableStyle([
         ("FONTSIZE", (0, 0), (-1, -1), 10.5),
@@ -154,11 +154,11 @@ def build(lead, out_dir):
         data = [head]
         shown = releases[:7]
         for r in shown:
-            row = [cover(r.get("image"), 30), (r.get("name") or "—")[:34],
-                   str(r.get("year") or "—"),
-                   str(r.get("tracks") if r.get("tracks") is not None else "—")]
+            row = [cover(r.get("image"), 30), (r.get("name") or "-")[:34],
+                   str(r.get("year") or "-"),
+                   str(r.get("tracks") if r.get("tracks") is not None else "-")]
             if has_value:
-                row.append(money(r.get("value")) if r.get("value") is not None else "—")
+                row.append(money(r.get("value")) if r.get("value") is not None else "-")
             row.append(hstreams(r.get("streams")))
             data.append(row)
         total_rel = lead.get("releases_measured") or len(releases)
@@ -181,18 +181,18 @@ def build(lead, out_dir):
             "Spotify play counts.",
             ParagraphStyle("note", parent=styles["Normal"], fontSize=8.5, textColor=colors.grey)))
 
-    # Artist channels — verified socials table (last block on page 1)
+    # Artist channels - verified socials table (last block on page 1)
     socials = lead.get("socials")
     if isinstance(socials, list) and socials:
         shead = [Paragraph(t, cellbw) for t in ("Platform", "Handle", "Followers", "Bio")]
         sdata = [shead]
         for s in socials:
-            handle = s.get("handle") or s.get("platform") or "—"
+            handle = s.get("handle") or s.get("platform") or "-"
             url = s.get("url")
             hcell = Paragraph(
                 f'<a href="{url}" color="#0b1f3a"><u>{handle}</u></a>' if url else handle, small)
-            sdata.append([s.get("platform") or "—", hcell, thousands(s.get("followers")),
-                          Paragraph(s.get("bio") or "—", small)])
+            sdata.append([s.get("platform") or "-", hcell, thousands(s.get("followers")),
+                          Paragraph(s.get("bio") or "-", small)])
         stbl = Table(sdata, colWidths=[1.1 * inch, 1.65 * inch, 0.85 * inch, 3.0 * inch])
         stbl.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), navy),
@@ -211,10 +211,10 @@ def build(lead, out_dir):
     story.append(CondPageBreak(6.5 * inch))
     story.append(Paragraph("Reading your result", h2))
     story.append(Paragraph(
-        f"Everything on the previous page is measured live from public play counts — the same "
+        f"Everything on the previous page is measured live from public play counts - the same "
         f"figures you saw when you ran {artist}. A few honest reads from that data:", body))
 
-    # Concentration — by value if present, else by streams.
+    # Concentration - by value if present, else by streams.
     try:
         if releases:
             key = "value" if has_value else "streams"
@@ -231,7 +231,7 @@ def build(lead, out_dir):
             if pct >= 40:
                 story.append(Paragraph(
                     f"<b>It rests on one release.</b> ~{pct}% of the catalog's {unit} comes from "
-                    f"“{top.get('name')}.” That makes the value real but concentrated — a catalog "
+                    f"“{top.get('name')}.” That makes the value real but concentrated - a catalog "
                     f"spread across more songs is steadier to own and tends to be valued higher.", body))
     except (TypeError, ValueError):
         pass
@@ -252,44 +252,40 @@ def build(lead, out_dir):
     # Range honesty
     if low and high:
         story.append(Paragraph(
-            f"<b>The band is wide ({money(low)}–{money(high)}) on purpose.</b> It's modeled from "
-            f"public streaming alone and is master-side only — publishing isn't included. A real "
+            f"<b>The band is wide ({money(low)}-{money(high)}) on purpose.</b> It's modeled from "
+            f"public streaming alone and is master-side only - publishing isn't included. A real "
             f"royalty statement would narrow it considerably.", body))
 
     # Sincere close
     story.append(Spacer(1, 4))
     story.append(Paragraph(
-        f"We built this to be accurate to what's public, not to flatter — which is why we'd rather "
-        f"show you the concentration and the gaps than hide them. If it matches what you already know "
-        f"about {artist}, the honest next step is to read it against your actual statements; that's "
-        f"where the range tightens and where anything uncollected would show up. Happy to do that "
-        f"read with you whenever it's useful.", body))
+        f"We built this to be accurate to what's public, not to flatter. If it matches what you already "
+        f"know about {artist}, the honest next step is to read it against your actual statements - "
+        f"that's where the range tightens and anything uncollected shows up.", body))
 
-    # How this is calculated — stays on page 2 with the reading.
-    story.append(Spacer(1, 10))
+    # How this is calculated - stays on page 2 with the reading.
+    story.append(Spacer(1, 6))
     story.append(Paragraph("How this is calculated", body))
     story.append(Paragraph(
-        "Value is modeled as <b>sustainable annual Net Label Share (NLS) × a 10–16× market "
-        "multiple</b>. NLS is what the owner keeps after artist royalties, distribution fees, and "
-        "reserves — not headline streaming revenue. Annual run-rate is taken from the catalog's "
-        "lifetime average; other platforms are approximated as a labeled share of Spotify. "
-        "Directional estimate from public data, not an appraisal.", body))
-    story.append(Spacer(1, 10))
+        "Value is modeled as <b>sustainable annual Net Label Share (NLS) × a 10-16× market multiple</b> - "
+        "what the owner keeps after artist royalties, distribution, and reserves, not headline revenue. "
+        "Other platforms approximated as a labeled share of Spotify. Directional estimate, not an appraisal.", body))
+    story.append(Spacer(1, 6))
     story.append(Paragraph(
-        "<i>Prepared by Recoup. Estimate only — not financial advice or an offer.</i>",
+        "<i>Prepared by Recoup. Estimate only - not financial advice or an offer.</i>",
         ParagraphStyle("foot", parent=styles["Normal"], fontSize=8.5, textColor=colors.grey)))
 
-    # Roster CTA — on its own page (hard PageBreak before; appendix breaks after).
+    # Roster CTA - on its own page (hard PageBreak before; appendix breaks after).
     roster = lead.get("roster") or {}
     rartists = roster.get("artists") or []
     if rartists:
         label = (roster.get("label") or "").strip()
-        cta_block = [Paragraph(f"Extend the analysis — the {label} roster".strip(), h2)]
+        cta_block = [Paragraph(f"Extend the analysis - the {label} roster".strip(), h2)]
         if roster.get("note"):
             cta_block.append(Paragraph(roster["note"], body))
         rdata = [[Paragraph(t, cellbw) for t in ("Artist", "Spotify followers")]]
         for a in rartists:
-            rdata.append([a.get("name", "—"), thousands(a.get("followers"))])
+            rdata.append([a.get("name", "-"), thousands(a.get("followers"))])
         if roster.get("more_count"):
             rdata.append([Paragraph(f"<i>+ {roster['more_count']} more on the roster</i>", small), ""])
         rtbl = Table(rdata, colWidths=[3.4 * inch, 1.6 * inch])
@@ -310,7 +306,7 @@ def build(lead, out_dir):
     if releases:
         story.append(PageBreak())
         total_rel = lead.get("releases_measured") or len(releases)
-        story.append(Paragraph("Appendix A — full catalog measured", h2))
+        story.append(Paragraph("Appendix A - full catalog measured", h2))
         story.append(Paragraph(
             f"All {total_rel} releases measured live from public Spotify play counts. Streams are "
             f"platform-displayed counts; per-release value is modeled at the catalog level (see page 2). "
@@ -318,9 +314,9 @@ def build(lead, out_dir):
         ahead = [Paragraph(t, cellbw) for t in ("#", "", "Release", "Year", "Tracks", "Streams")]
         adata = [ahead]
         for i, r in enumerate(releases, 1):
-            adata.append([str(i), cover(r.get("image"), 22), (r.get("name") or "—")[:46],
-                          str(r.get("year") or "—"),
-                          str(r.get("tracks") if r.get("tracks") is not None else "—"),
+            adata.append([str(i), cover(r.get("image"), 22), (r.get("name") or "-")[:46],
+                          str(r.get("year") or "-"),
+                          str(r.get("tracks") if r.get("tracks") is not None else "-"),
                           hstreams(r.get("streams"))])
         atbl = Table(adata, colWidths=[0.3 * inch, 0.4 * inch, 3.25 * inch, 0.6 * inch, 0.7 * inch, 1.05 * inch], repeatRows=1)
         atbl.setStyle(TableStyle([
@@ -340,13 +336,13 @@ def build(lead, out_dir):
         rlabel = ((lead.get("roster") or {}).get("label") or "label").strip()
         rsource = (lead.get("roster") or {}).get("source")
         story.append(PageBreak())
-        story.append(Paragraph(f"Appendix B — full {rlabel} roster", h2))
+        story.append(Paragraph(f"Appendix B - full {rlabel} roster", h2))
         src = f" ({rsource})" if rsource else ""
         any_missing = any(isinstance(a, dict) and a.get("followers") is None for a in full)
-        caveat = (" Spotify followers verified per artist ID where available (— = not yet resolved)."
-                  if any_missing else " Spotify followers verified per artist ID.")
+        caveat = (" Spotify follower counts as provided in the lead data (- = not provided)."
+                  if any_missing else " Spotify follower counts as provided in the lead data.")
         story.append(Paragraph(
-            f"The complete {rlabel} roster — {len(full)} artists{src}. The same valuation + socials "
+            f"The complete {rlabel} roster - {len(full)} artists{src}. The same valuation + socials "
             f"baseline runs on any of them.{caveat}", body))
         story.append(Spacer(1, 6))
         if full and isinstance(full[0], dict):
@@ -355,7 +351,7 @@ def build(lead, out_dir):
             bdata = [[Paragraph(t, cellbw) for t in ("Artist", "Spotify followers")]]
             for a in rows:
                 f = a.get("followers")
-                bdata.append([a.get("name", "—"), thousands(f) if f is not None else "—"])
+                bdata.append([a.get("name", "-"), thousands(f) if f is not None else "-"])
             btbl = Table(bdata, colWidths=[3.7 * inch, 1.6 * inch], repeatRows=1)
             btbl.setStyle(TableStyle([
                 ("BACKGROUND", (0, 0), (-1, 0), navy),

@@ -12,6 +12,11 @@ then route it.
      estimated value.
    - Weak: tiny or zero-stream lookups, near-zero estimated value (often a fan typing in
      their own bedroom project, or a test/junk row).
+   - **Don't trust the tool's number blindly on a large catalog** — a free run can exhaust the
+     lead's credits partway and report a value built on only part of the catalog (Chilled Cat:
+     ~27% measured, ~$290K shown vs ~$1.08M on the full catalog). If the lead has a deep catalog,
+     check remaining credits and re-measure the full catalog before qualifying on value (see
+     `references/recoup-valuation-api.md` → "Spotting a truncated free run").
 
 2. **Relationship / authority.** Can this person actually say yes to an engagement?
    - Strong: `Owner/Operator`, `Label`, `Manager`.
