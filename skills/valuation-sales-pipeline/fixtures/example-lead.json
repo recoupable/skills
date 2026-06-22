@@ -12,5 +12,12 @@
   "follower_count": 47800,
   "valued_at": "2026-06-20",
   "lead_source": "Catalog Valuation",
+  "socials": {
+    "spotify": "https://open.spotify.com/artist/0000000000EXAMPLE0000",
+    "instagram": "https://www.instagram.com/neontidemusic/",
+    "instagram_handle": "@neontidemusic",
+    "tiktok": "https://www.tiktok.com/@neontidemusic",
+    "tiktok_handle": "@neontidemusic"
+  },
   "_note": "Spoofed sample lead — all PII (name, email, Spotify ID) is fictional."
 }

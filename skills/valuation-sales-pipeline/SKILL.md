@@ -128,6 +128,11 @@ For a pursued lead, write back to the Attio record/entry (`references/attio-funn
   "reading your result" page, and a full-catalog appendix):
   `python3 scripts/render_valuation_pdf.py --lead lead.json --out ./out`
   (see `fixtures/example-lead.json` for the shape).
+- Attach the artist's **verified socials** to the lead JSON `socials` block (Spotify, Instagram,
+  TikTok, YouTube, X) so the report renders a clickable "Artist channels" line. Get them from
+  `research/lookup?spotifyId=` / `research/metrics` when available; when those are Songstats-rate-
+  limited (429) or fail, verify from the artist's **official release upload description or label
+  page**, cross-checking the **same Spotify artist id** so you don't attach a same-name impostor.
 - Draft the first email from `templates/outreach-email.md`: personal, references the
   specific artist + their number, **delivers the PDF**, gives one free specific insight
   (a playlist gap, a likely-uncollected royalty source, a concentration note), and ends

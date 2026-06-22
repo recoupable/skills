@@ -107,7 +107,23 @@ def build(lead, out_dir):
         ("TOPPADDING", (0, 0), (-1, 0), 10), ("BOTTOMPADDING", (0, -1), (-1, -1), 12),
     ]))
     story.append(band)
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 10))
+
+    # Artist channels (verified socials), rendered as inline links
+    socials = lead.get("socials") or {}
+    if socials:
+        order = [("spotify", "Spotify"), ("instagram", "Instagram"), ("tiktok", "TikTok"),
+                 ("youtube", "YouTube"), ("twitter", "X/Twitter"), ("apple_music", "Apple Music")]
+        parts = []
+        for k, label in order:
+            url = socials.get(k)
+            if url:
+                handle = socials.get(k + "_handle")
+                txt = f"{label} {handle}" if handle else label
+                parts.append(f'<a href="{url}" color="#0b1f3a"><u>{txt}</u></a>')
+        if parts:
+            story.append(Paragraph("Artist channels — " + "  ·  ".join(parts),
+                                   ParagraphStyle("soc", parent=body, fontSize=9.5, spaceAfter=12)))
 
     # Key stats (only rows that are present)
     rows = [["Lifetime streams", hstreams(lead.get("lifetime_streams"))],
