@@ -35,7 +35,7 @@ recoupable/skills/
 - **Harness** — a runtime that loads skills/plugins: Claude Code, Codex, Cursor, or bare `npx skills`.
 - **Marketplace registry** — the list of installable plugins, written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
 - **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json`.
-- **Router skill** — a domain's single entry-point skill that routes to focused sub-skills (e.g. `recoup-song-analyzer`).
+- **Router skill** — a domain's single entry-point skill that routes to focused sub-skills (e.g. `recoup-songs`).
 
 ## How Skills Load
 
