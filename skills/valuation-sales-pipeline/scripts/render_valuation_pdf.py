@@ -265,7 +265,21 @@ def build(lead, out_dir):
         f"where the range tightens and where anything uncollected would show up. Happy to do that "
         f"read with you whenever it's useful.", body))
 
-    # Roster CTA — natural next step: extend the same baseline to the rest of the roster
+    # How this is calculated — stays on page 2 with the reading.
+    story.append(Spacer(1, 10))
+    story.append(Paragraph("How this is calculated", body))
+    story.append(Paragraph(
+        "Value is modeled as <b>sustainable annual Net Label Share (NLS) × a 10–16× market "
+        "multiple</b>. NLS is what the owner keeps after artist royalties, distribution fees, and "
+        "reserves — not headline streaming revenue. Annual run-rate is taken from the catalog's "
+        "lifetime average; other platforms are approximated as a labeled share of Spotify. "
+        "Directional estimate from public data, not an appraisal.", body))
+    story.append(Spacer(1, 10))
+    story.append(Paragraph(
+        "<i>Prepared by Recoup. Estimate only — not financial advice or an offer.</i>",
+        ParagraphStyle("foot", parent=styles["Normal"], fontSize=8.5, textColor=colors.grey)))
+
+    # Roster CTA — on its own page (hard PageBreak before; appendix breaks after).
     roster = lead.get("roster") or {}
     rartists = roster.get("artists") or []
     if rartists:
@@ -289,22 +303,8 @@ def build(lead, out_dir):
         cta_block += [Spacer(1, 6), rtbl]
         if roster.get("cta"):
             cta_block += [Spacer(1, 6), Paragraph("<b>" + roster["cta"] + "</b>", body)]
-        story.append(Spacer(1, 14))
+        story.append(PageBreak())
         story.append(KeepTogether(cta_block))
-
-    story.append(Spacer(1, 10))
-    story.append(Paragraph("How this is calculated", body))
-    story.append(Paragraph(
-        "Value is modeled as <b>sustainable annual Net Label Share (NLS) × a 10–16× market "
-        "multiple</b>. NLS is what the owner keeps after artist royalties, distribution fees, and "
-        "reserves — not headline streaming revenue. Annual run-rate is taken from the catalog's "
-        "lifetime average; other platforms are approximated as a labeled share of Spotify. "
-        "Directional estimate from public data, not an appraisal.", body))
-
-    story.append(Spacer(1, 10))
-    story.append(Paragraph(
-        "<i>Prepared by Recoup. Estimate only — not financial advice or an offer.</i>",
-        ParagraphStyle("foot", parent=styles["Normal"], fontSize=8.5, textColor=colors.grey)))
 
     # ---- Appendix: the full catalog measured (matches the live tool's full list) ----
     if releases:
@@ -333,6 +333,33 @@ def build(lead, out_dir):
             ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
         ]))
         story.append(atbl)
+
+    # ---- Appendix B: the full label roster (pulled from the label site) ----
+    full = (lead.get("roster") or {}).get("full") or []
+    if full:
+        rlabel = ((lead.get("roster") or {}).get("label") or "label").strip()
+        rsource = (lead.get("roster") or {}).get("source")
+        story.append(PageBreak())
+        story.append(Paragraph(f"Appendix B — full {rlabel} roster", h2))
+        src = f" ({rsource})" if rsource else ""
+        story.append(Paragraph(
+            f"The complete {rlabel} roster — {len(full)} artists{src}. The same valuation + socials "
+            f"baseline runs on any of them.", body))
+        ncols = 3
+        per = -(-len(full) // ncols)  # ceil
+        cols = [full[i * per:(i + 1) * per] for i in range(ncols)]
+        nrows = max(len(c) for c in cols)
+        grid = []
+        for i in range(nrows):
+            grid.append([(f"{i + 1 + j * per}. {cols[j][i]}" if i < len(cols[j]) else "") for j in range(ncols)])
+        gtbl = Table(grid, colWidths=[2.3 * inch] * ncols)
+        gtbl.setStyle(TableStyle([
+            ("FONTSIZE", (0, 0), (-1, -1), 9.5),
+            ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ]))
+        story.append(Spacer(1, 6))
+        story.append(gtbl)
 
     doc.build(story)
     return path

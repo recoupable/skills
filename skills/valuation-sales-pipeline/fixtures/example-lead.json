@@ -35,7 +35,9 @@
       {"name": "Artist Four", "followers": 2300}
     ],
     "more_count": 5,
-    "cta": "Want the same valuation + socials baseline for the rest of the roster? Reply and we'll run it."
+    "cta": "Want the same valuation + socials baseline for the rest of the roster? Reply and we'll run it.",
+    "source": "examplelabel.com/artists",
+    "full": ["Neon Tide", "Artist Two", "Artist Three", "Artist Four", "Artist Five", "Artist Six", "Artist Seven", "Artist Eight"]
   },
   "_note": "Spoofed sample lead — all PII (name, email, Spotify ID) is fictional."
 }
