@@ -43,7 +43,10 @@ to prove that quickly enough that the lead converts.
   `python3 scripts/<name>.py`.
 
 The funnel's stages, field slugs, and the exact Attio API calls are documented in
-`references/attio-funnel.md`. The qualification rubric is in
+`references/attio-funnel.md`. Pulling a lead's catalog — album art + live streams —
+straight from the public Recoup APIs (the same ones the marketing valuation tool uses,
+no scraping) is documented in `references/recoup-valuation-api.md` and automated by
+`scripts/fetch_catalog.py`. The qualification rubric is in
 `references/qualification-rubric.md`. The email template is in
 `templates/outreach-email.md`. A spoofed end-to-end example is in `fixtures/`.
 
@@ -55,6 +58,22 @@ New → Report Delivered → Qualified → Pro Offer Sent → Pro Active (Won) �
 
 `New` = valuation ran (auto). `Pro Active (Won)` = a Stripe Pro subscription is live —
 the one true win. `Lost` requires a Lost Reason. See `references/attio-funnel.md`.
+
+## The report PDF (what you send)
+
+`scripts/render_valuation_pdf.py` produces a 3-part PDF whose order is deliberate:
+
+1. **Page 1 — executive summary.** The headline value + range and the top releases by streams
+   (with album art) — the *same figures the contact saw in the tool*. Its one job is to build
+   trust on first contact by proving the report is accurate to what they already saw. Lead with
+   accuracy, not a pitch.
+2. **Page 2 — an honest reading.** Grounded, specific observations from the page-1 data
+   (concentration, range caveats, master-side scope). **No unverified claims** about what Recoup
+   "will" recover or grow — only what the data shows.
+3. **Appendix — full source data.** Every measured release (album art + year + tracks + streams),
+   matching the tool's complete list, so nothing is hidden behind the summary.
+
+Build the data with `scripts/fetch_catalog.py` (below), add the dollar band, then render.
 
 ## Workflow
 
@@ -100,9 +119,15 @@ For a pursued lead, write back to the Attio record/entry (`references/attio-funn
 
 ### 4. Draft outreach + valuation PDF
 
-- Render a clean one-page valuation PDF from the lead data:
-  `python3 scripts/render_valuation_pdf.py --lead fixtures/example-lead.json --out ./out`
-  (swap in the real lead JSON; see `fixtures/example-lead.json` for the shape).
+- Pull the catalog + album art straight from the public APIs (no scraping):
+  `python3 scripts/fetch_catalog.py --artist-id <spotifyId> --out lead.json` — fills streams,
+  album art, and release counts. Add the dollar band (from the tool, or computed with the
+  `catalog-value-estimator` skill) to `lead.json`. Don't infer "dormant" from a `$0` row in the
+  live UI — confirm against the measurements endpoint (see `references/recoup-valuation-api.md`).
+- Render the valuation PDF (headline + a top-releases breakdown with album art, an honest
+  "reading your result" page, and a full-catalog appendix):
+  `python3 scripts/render_valuation_pdf.py --lead lead.json --out ./out`
+  (see `fixtures/example-lead.json` for the shape).
 - Draft the first email from `templates/outreach-email.md`: personal, references the
   specific artist + their number, **delivers the PDF**, gives one free specific insight
   (a playlist gap, a likely-uncollected royalty source, a concentration note), and ends
@@ -111,6 +136,15 @@ For a pursued lead, write back to the Attio record/entry (`references/attio-funn
 
 ## Notes & caveats
 
+- **Pull catalog data from the Recoup API, never the `/valuation` page.** `scripts/fetch_catalog.py`
+  hits the same public endpoints the marketing tool uses (`references/recoup-valuation-api.md`) and
+  returns album art + streams as structured data. Don't scrape or screenshot the marketing UI — it's
+  slower, lossy, and can show a misleading mid-measurement snapshot.
+- **Measurements are eventually consistent.** A single read can be partial — some releases return 0
+  while their measurement job is still running (we've seen the same artist read back as 0 dormant on
+  one call and 13 dormant minutes later). Re-read until counts stabilize before trusting them, and
+  **never infer a "dormant" catalog from a transient $0** — that's a measurement-timing artifact, not
+  a fact about the catalog.
 - **PII / privacy.** Leads are real people. Keep names, emails, and account IDs inside the
   CRM; the bundled `fixtures/` use spoofed data only. Never paste a lead's PII into shared
   docs or external services.
