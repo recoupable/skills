@@ -1,0 +1,16 @@
+{
+  "artist": "Neon Tide",
+  "email": "neontidemusic@example.com",
+  "name": "Alex Rivera",
+  "relationship": "Owner/Operator",
+  "primary_location": "Austin, Texas, US",
+  "spotify_artist_url": "https://open.spotify.com/artist/0000000000EXAMPLE0000",
+  "est_catalog_value": 312500,
+  "value_low": 213000,
+  "value_high": 421000,
+  "lifetime_streams": 41200000,
+  "follower_count": 47800,
+  "valued_at": "2026-06-20",
+  "lead_source": "Catalog Valuation",
+  "_note": "Spoofed sample lead — all PII (name, email, Spotify ID) is fictional."
+}
