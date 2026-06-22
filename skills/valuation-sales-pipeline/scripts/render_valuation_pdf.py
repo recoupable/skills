@@ -4,9 +4,13 @@
 Reads a lead JSON (see fixtures/example-lead.json for the shape) and writes:
 
   Page 1 - the headline the lead already saw: estimated value + range, key stats,
-           and the per-release breakdown with album art ("what we measured").
+           the top-releases breakdown with album art ("what we measured"), and the
+           artist's connected socials.
   Page 2 - an honest reading of THAT data (concentration, dormant tail, range
            caveats) - grounded in page 1, no unverified claims.
+  Appendix A - the full measured catalog (every release with art).
+  Optional - if the lead JSON has a `roster` block, a roster CTA page + an
+             "Appendix B - full roster" (used for label/manager leads).
 
 Lead data can be assembled directly from the public Recoup APIs with
 scripts/fetch_catalog.py (album art + streams), so no DOM scraping is needed.

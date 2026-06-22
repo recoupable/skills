@@ -17,9 +17,11 @@ Auth: `x-api-key: $RECOUP_API_KEY` (or `Authorization: Bearer $RECOUP_ACCESS_TOK
 
 1. **Resolve the artist** — `GET /api/spotify/search?q=<name>&limit=5` → pick the artist id.
 2. **List the catalog (with album art)** —
-   `GET /api/spotify/artist/albums?id=<artistId>&include_groups=album,single&limit=50&offset=0`
+   `GET /api/spotify/artist/albums?id=<artistId>&include_groups=album,single&limit=50&offset=<n>`
    → `items[]` each with `name`, `id`, `release_date`, `total_tracks`, and `images[]`
-   (640/300/64px — use the 300px URL for the PDF).
+   (640/300/64px — use the 300px URL for the PDF). **Page it:** the cap is 50, so walk `offset`
+   in steps of 50 until a short page — large catalogs run to hundreds of releases and a single
+   page silently truncates them. `fetch_catalog.py` does this.
 3. **(optional) warm the store** — `POST /api/research/measurement-jobs` triggers a fresh live
    measurement. The UI calls this first; for an already-measured artist the store already has data.
 4. **Per-album play counts** — `GET /api/research/albums/<albumId>/measurements` →

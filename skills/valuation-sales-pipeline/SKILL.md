@@ -141,66 +141,37 @@ For a pursued lead, write back to the Attio record/entry (`references/attio-funn
 
 ## Notes & caveats
 
-- **Pull catalog data from the Recoup API, never the `/valuation` page.** `scripts/fetch_catalog.py`
-  hits the same public endpoints the marketing tool uses (`references/recoup-valuation-api.md`) and
-  returns album art + streams as structured data. Don't scrape or screenshot the marketing UI — it's
-  slower, lossy, and can show a misleading mid-measurement snapshot.
-- **Measurements are eventually consistent.** A single read can be partial — some releases return 0
-  while their measurement job is still running (we've seen the same artist read back as 0 dormant on
-  one call and 13 dormant minutes later). Re-read until counts stabilize before trusting them, and
-  **never infer a "dormant" catalog from a transient $0** — that's a measurement-timing artifact, not
-  a fact about the catalog.
 - **PII / privacy.** Leads are real people. Keep names, emails, and account IDs inside the
   CRM; the bundled `fixtures/` use spoofed data only. Never paste a lead's PII into shared
   docs or external services.
-- **Define "Won" precisely** as a live Stripe Pro subscription — not a reply or a call.
-- **Relationship drives capacity to pay.** A $300k catalog implies only ~$24k–$36k/yr of
-  net label share, so a single catalog rarely justifies a large retainer alone — convert
-  to Pro and/or a managed growth+recovery engagement, or pursue the strongest as a pilot.
-- Attio list/option IDs are workspace-specific; discover them at runtime (see the
-  reference) rather than hardcoding.
+- **Relationship drives capacity to pay** - a single six-figure catalog rarely justifies a large
+  retainer; convert to Pro and/or a managed engagement, or run the strongest as a pilot. Sizing and
+  routing detail in `references/qualification-rubric.md`.
 
 ## Lessons from live runs (ICEBOX · Chilled Cat · Eurotripp)
 
-Hard-won notes from real leads — read these before the next run.
+The API/measurement gotchas live in `references/recoup-valuation-api.md`; the report-judgment ones
+are spelled out here because they shape what you write.
 
-- **Auth: the key and the token cover different routes.** A hex `RECOUP_API_KEY` (`x-api-key`)
-  authorizes `/api/spotify/*` but **fails on `/api/research/*`** — the per-album measurements and the
-  estimator need a **Bearer access token** (`RECOUP_ACCESS_TOKEN`, e.g. a Privy session JWT), which
-  **expires in ~1 hour**. A bad/expired token makes `fetch_catalog.py` read **0 streams across the
-  whole catalog** (it now warns loudly instead of emitting a silent empty catalog). If everything is
-  0, it's auth/expiry — not a dormant catalog. Get a fresh token and re-run.
-- **A free run can exhaust credits mid-valuation → the tool's figure is computed on a *partial*
-  catalog and undercounts.** Chilled Cat was down to 3 of 333 credits (timestamped at the valuation
-  minute); the tool measured only ~27% of the catalog (~50M of ~186M streams) and showed ~$290K when
-  the full catalog scales to ~$1.08M. **Check the lead's remaining credits** (see
-  `references/recoup-valuation-api.md` → "Spotting a truncated free run"); if near-zero at valuation
-  time, re-measure the full catalog and reframe outreach as *"we finished your interrupted run"*
-  (a strong, honest hook — pair it with a credit top-up gift).
-- **Measure the whole catalog — page past 50.** `fetch_catalog.py` now pages all albums; lo-fi /
-  compilation brands routinely have 100+ releases (Chilled Cat = 126 releases / 349 tracks).
-- **Gross streams ≠ owned value — read it honestly:**
+- **Before you trust a run, watch for these (all detailed in `references/recoup-valuation-api.md`):**
+  the auth route-split (hex `x-api-key` works on `/spotify/*` only; `/research/*` needs a Bearer
+  token that expires ~1h) · 0-streams-across-everything means auth/expiry, not a dormant catalog · a
+  credit-exhausted free run undercounts, so re-measure the full catalog and reframe as "we finished
+  your interrupted run" · the dollar model is trailing-12-month-driven, so a single-snapshot lead
+  can't be priced same-day.
+- **Gross streams ≠ owned value - read it honestly:**
   - *Collaborations / compilations* (Chilled Cat's "Vibes" releases are each Chilled Cat × a
     different producer): the owner holds only a **split** of each track, so realizable value is below
     the gross. Say so, and point to a statement to pin the splits.
   - *Cover songs* (Eurotripp's "Where's Your Head At" = ~95% of streams, a Basement Jaxx cover): the
     artist owns the **master, not the publishing**. Lead with master royalties + neighboring rights
     (SoundExchange) + Content ID, not catalog publishing.
-- **Dedup releases for display.** A single that also appears on an album/compilation double-counts at
-  the release level (Eurotripp's mixtape re-bundles its singles). Dedup by track id for lifetime
-  totals (the script does), and curate the displayed release list so one recording isn't shown twice.
-- **The dollar model is trailing-12-month-driven and needs history.** The `catalog-value-estimator`
-  prices on TTM streams via snapshot deltas; a brand-new lead with a single capture date has **no
-  trailing window → TTM 0 → $0**. You can't recompute a rigorous value same-day. Either scale the
-  marketing tool's own per-stream basis for that artist to the full catalog (what we did for Chilled
-  Cat), or start a measurement window and re-run in ~4 weeks for a fully-modeled figure.
-- **Pre-cache album art before rendering.** Downloading 100+ covers inline gets `i.scdn.co`
-  throttled and `render_valuation_pdf.py` silently drops the failed images. Pre-fetch covers to local
-  files (retries + a small delay) and point the lead JSON `image` fields at `file://` paths.
-- **Keep page-2 reading concise.** Long reading sections push "How this is calculated" + the footer
-  onto a near-empty extra page (cubic flagged this on the PR; we hit it live). Keep reading notes
-  tight so page 2 holds the whole narrative; the bundled render script's fixed text + spacers are
-  already trimmed for this.
-- **No em dashes in outbound copy.** The render script and `templates/outreach-email.md` use plain
-  hyphens — em/en dashes read as AI-generated to recipients. Keep it that way in lead JSON
-  `reading_notes` and any drafted email.
+  - Curate the displayed release list so a single that also sits on a compilation isn't shown twice
+    (lifetime totals are already deduped by track id in `fetch_catalog.py`).
+- **Pre-cache album art before rendering.** Downloading 100+ covers inline gets `i.scdn.co` throttled
+  and `render_valuation_pdf.py` silently drops the failed images. Pre-fetch covers to local files
+  (retries + a small delay) and point the lead JSON `image` fields at `file://` paths.
+- **Keep page-2 reading concise, and use plain hyphens (no em/en dashes) in all outbound copy** -
+  long reading notes push the footer onto a near-empty extra page, and em dashes read as AI-generated
+  to recipients. The render script and `templates/outreach-email.md` already follow both; keep lead
+  JSON `reading_notes` the same.
