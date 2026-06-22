@@ -142,10 +142,10 @@ For a pursued lead, write back to the Attio record/entry (`references/attio-funn
   "reading your result" page, and a full-catalog appendix):
   `python3 scripts/render_valuation_pdf.py --lead lead.json --out ./out`
   (see `fixtures/example-lead.json` for the shape).
-- Draft the first email from `templates/outreach-email.md`: personal, references the
-  specific artist + their number, **delivers the PDF**, gives one free specific insight
-  (a playlist gap, a likely-uncollected royalty source, a concentration note), and ends
-  with a low-friction CTA. Send from the rep, not a generic address.
+- Draft the first email from `templates/outreach-email.md`. First touch must be **scannable in
+  3-5 seconds**: **2 sentences + 3 bullets + 1 CTA**, from the rep (not a generic address). The PDF
+  carries the depth - keep caveats and detail out of the email. Don't pitch the engagement here;
+  that's the call.
 - After it's sent, move the entry to **Report Delivered** and log a note of what was sent.
 
 ## Notes & caveats
