@@ -52,36 +52,50 @@ in-flight measurement jobs. So:
   per-album sum double-counts. `fetch_catalog.py` does this.
 - Optionally `POST /api/research/measurement-jobs` first to warm the store before reading.
 
-## Refined social metrics (followers, bio, avatar, region)
+## Refined social metrics — exact followers + real bios via the API (no scraping, no Supabase)
 
-Recoup keeps a `socials` store with **`username`, `profile_url`, `followerCount`, `followingCount`,
-`bio`, `avatar`, `region`** — richer than a handle alone. Flow:
+Recoup keeps a `socials` store with **`username`, `profile_url`, `follower_count`, `following_count`,
+`bio`, `avatar`, `region`** — richer and **exact** vs. the rounded "1M" a public Instagram
+`og:description` shows. Onboard the valued artist and pull this entirely over the API. Full flow, all
+on `https://api.recoupable.com` (confirmed working with a Bearer Privy JWT, **including writes** — the
+old "Privy tokens don't verify on prod" note was wrong). This is **part of working the lead**, not
+overkill: it also lands the artist in the lead's own Recoup workspace so the metrics stay refreshable.
 
-- `GET /api/artists/{artist_account_id}/socials` — read stored socials for a platform artist.
-- `POST /api/socials/{id}/scrape` (or `POST /api/artist/socials/scrape` with `{artist_account_id}`)
-  — trigger an **Apify-backed** scrape; returns `{runId, datasetId}`; poll Apify for results, which
-  land back in the `socials` store.
+1. **Resolve the lead's account** — `POST /api/accounts {"email": "<lead email>"}`. Idempotent: if the
+   account already exists it is returned (with `account_id`). This is the email→`account_id` lookup —
+   **use this, not Supabase**.
+2. **Create the artist under the lead's account** —
+   `POST /api/artists {"name": "<artist>", "account_id": "<lead account_id>"}` → returns the new
+   **artist account id** as `artist.account_id`. Pass `account_id` only when your token's account has
+   org access to the lead's account; otherwise the artist is created under your own account.
+3. **Attach the verified profile URLs** —
+   `PATCH /api/artists/{artistAccountId} {"profileUrls": {"INSTAGRAM": "...", "SPOTIFY": "...",
+   "YOUTUBE": "...", "FACEBOOK": "..."}}`. **Keys must be UPPERCASE** (`SPOTIFY`, `INSTAGRAM`,
+   `TIKTOK`, `TWITTER`, `YOUTUBE`, `APPLE`, `FACEBOOK`, `THREADS`) — lowercase silently creates
+   duplicate socials instead of replacing.
+4. **Trigger the scrape** — one platform: `POST /api/socials/{social_id}/scrape` (get `social_id` from
+   `GET /api/artists/{artistAccountId}/socials`); all platforms at once:
+   `POST /api/artist/socials/scrape {"artist_account_id": "<artistAccountId>"}`. Each returns
+   `{runId, datasetId}` (Apify).
+5. **Poll, then read back** — `GET /api/apify/runs/{runId}` until `status` is `SUCCEEDED`, then
+   `GET /api/artists/{artistAccountId}/socials` for the real `follower_count` + `bio` per platform.
+   `GET /api/artists?account_id=<id>` lists artists under an account to confirm the setup.
 
-Caveat: this is keyed to a **platform artist account + stored social records**, not arbitrary
-handles. A fresh valuation lead (e.g. an artist you only have a Spotify id for) usually has **no
-socials rows yet** — you'd onboard the artist (see `recoup-essentials`/`recoup-create-artist`),
-attach the profile URLs, then scrape. Worth it for ongoing/refreshable metrics + `region` (audience
-geography) and `avatar`; overkill for a one-off report.
+Live-run caveat (Ulices Chaidez, 2026-06-22): the **Instagram** actor returned an exact 1,276,417
+(vs the rounded "1M" public meta) plus the real bio, but the Spotify/YouTube/Facebook actors returned
+empty `bio`/`follower_count` on that pass. For those, fall back to the platform page — read it via the
+**authenticated browser (chrome-devtools MCP)**, since LinkedIn/Instagram block `WebFetch` (HTTP 999).
+Put **only real platform bios** in the lead JSON `socials[].bio` (no editorial filler; leave blank if
+unverified).
 
-**For a one-off report**, get the handles from the artist's official release upload / label page
-(cross-checked to the Spotify id) and read live follower/bio counts directly — that's what the
-bundled ICEBOX example did when the socials store had no rows yet.
+## The tool's number is often a partial run — always re-measure the full catalog
 
-## Spotting a truncated free run (credits)
-
-The free valuation charges credits per measurement, so a **large catalog can exhaust the lead's
-credits mid-run** — the tool then reports a value computed on a *partial* catalog, undercounting
-badly (Chilled Cat: only ~27% of the catalog measured, ~$290K shown vs ~$1.08M on the full catalog).
-Before trusting the tool's figure for a big catalog, check the lead's remaining credits via Supabase
-(service key in `mono/api/.env.local`): `account_emails` (email → `account_id`) →
-`credits_usage.remaining_credits` (333 free grant). A **near-zero balance timestamped at the
-valuation time** means the run was cut short — **re-measure the full catalog** with `fetch_catalog.py`
-(it now pages all albums) and reframe the outreach as *"we finished your interrupted run."*
+The free valuation charges credits per measurement, so a large catalog can exhaust the lead's credits
+mid-run and report a value built on only **part** of the catalog (Chilled Cat: ~27% measured, ~$290K
+shown vs ~$1.08M full; Ulices Chaidez: 115.5M streams shown vs ~1.25B measured, ~11x). You don't need
+to check credits to catch this — `fetch_catalog.py` already pages the **whole** catalog, so just
+re-measure and compare to the tool's figure. A big gap means the run was cut short — reframe the
+outreach as *"we finished your interrupted run."*
 
 ## What the API does NOT give you
 
