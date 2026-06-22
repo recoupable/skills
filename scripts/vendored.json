@@ -24,6 +24,18 @@
       "copies_dirs": [
         "plugins/recoup-internal/skills/issue-implementation"
       ]
+    },
+    {
+      "canonical_dir": "skills/valuation-sales-pipeline",
+      "copies_dirs": [
+        "plugins/recoup-internal/skills/valuation-sales-pipeline"
+      ]
+    },
+    {
+      "canonical_dir": "skills/recoup-account-status",
+      "copies_dirs": [
+        "plugins/recoup-internal/skills/recoup-account-status"
+      ]
     }
   ]
 }
