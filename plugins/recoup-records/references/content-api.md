@@ -7,7 +7,7 @@ skill bundles one; otherwise set the auth header inline (`x-api-key: $RECOUP_API
 `Authorization: Bearer $RECOUP_ACCESS_TOKEN`).
 
 > This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-content/references/content-api.md`; edit the canonical and
+> the canonical `plugins/recoup-records/references/content-api.md`; edit the canonical and
 > re-sync (see `scripts/vendored.json`).
 
 `BASE="https://api.recoupable.com/api"`. Pass the auth header from `account-resolver.md`

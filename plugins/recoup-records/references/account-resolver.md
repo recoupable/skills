@@ -5,7 +5,7 @@ identifier** to the right endpoint. Getting either wrong is the most common caus
 silent 401/404. Read this before writing curl calls.
 
 > This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-content/references/account-resolver.md`; edit the
+> the canonical `plugins/recoup-records/references/account-resolver.md`; edit the
 > canonical and re-sync (see `scripts/vendored.json`).
 
 ## 1. Auth — two modes

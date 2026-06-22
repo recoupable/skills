@@ -1,6 +1,6 @@
 ---
 name: release-readiness-reviewer
-description: Final quality check on a release workspace before it's called ready. Verifies completeness, timeline feasibility, honest gaps, and that no numbers were fabricated. Dispatched by recoup-release-start before the final recap.
+description: Final quality check on a release workspace before it's called ready. Verifies completeness, timeline feasibility, honest gaps, and that no numbers were fabricated. Dispatched by the recoup-releases skill (plan mode) before the final recap.
 tools:
   - Read
   - Glob

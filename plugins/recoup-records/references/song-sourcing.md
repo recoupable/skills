@@ -5,7 +5,7 @@ finder, the compose/mux step) needs a real `song.mp3`. Don't assume one exists l
 don't assume the user has one to hand. Never fabricate or substitute audio.
 
 > This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-content/references/song-sourcing.md`; edit the canonical and
+> the canonical `plugins/recoup-records/references/song-sourcing.md`; edit the canonical and
 > re-sync (see `scripts/vendored.json`).
 
 ## Order of attempts

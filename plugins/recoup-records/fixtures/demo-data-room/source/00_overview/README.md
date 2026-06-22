@@ -1,7 +1,7 @@
 # Demo data room — synthetic catalog
 
-This is the synthetic catalog bundled with the recoup-deals
-plugin to demonstrate end-to-end behavior. Every file in this folder
+This is the synthetic catalog bundled with the recoup-catalogs
+skill to demonstrate end-to-end behavior. Every file in this folder
 is fake — invented song titles, invented writers, invented PROs.
 
 ## What it represents
@@ -26,10 +26,10 @@ seller files contain so the plugin can surface them as findings:
 - An incomplete recording-agreement file (signature page never
   attached) for the masters.
 
-If you opened this README via `/recoup-deal-demo`, the plugin already
+If you opened this README via recoup-catalogs demo mode, the plugin already
 copied this folder into `deals/demo-catalog/source/`. From there it
-ran `/recoup-deal-start` end-to-end and the agent authored
-`deals/demo-catalog/DASHBOARD.html` via the recoup-deal-dashboard skill.
+ran recoup-catalogs review mode end-to-end and the agent authored
+`deals/demo-catalog/DASHBOARD.html` via recoup-catalogs dashboard mode.
 Open that file in a browser for the executive read.
 
 ## File index

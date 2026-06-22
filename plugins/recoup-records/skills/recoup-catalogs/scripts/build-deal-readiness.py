@@ -3,7 +3,7 @@
 
 This is NOT the customer-facing dashboard — that's
 ``deals/{deal-id}/DASHBOARD.html``, written by the agent via the
-recoup-deal-dashboard skill and validated by ``validate-dashboard.py``.
+recoup-catalogs dashboard mode and validated by ``validate-dashboard.py``.
 
 This script generates the analyst-facing readiness summary at
 ``workpapers/readiness-check.md`` (default), reporting an overall
@@ -17,7 +17,7 @@ status from open findings:
 
 The Stop hook reads the resulting deal_status to decide whether the
 agent can claim a package is shareable. Customers don't open this
-file. The script is also referenced by ``/recoup-deal-dashboard`` for the
+file. The script is also referenced by recoup-catalogs dashboard mode for the
 analyst readiness gate.
 
 Severity comparison is case-insensitive. Both the canonical lowercase taxonomy

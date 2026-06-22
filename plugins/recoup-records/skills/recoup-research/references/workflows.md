@@ -35,7 +35,7 @@ Raw numbers are noise without interpretation. Heuristics for each data type:
   `playlists_total`) to see what's active now vs all-time
 - These are **current snapshots**, not time series — to track change over time,
   store today's snapshot and diff against a prior one (this is what
-  `recoup-artist-brief` does)
+  `recoup-research` (weekly-update mode) does)
 
 **Similar artists** (`/research/similar` → `artists[]`):
 
@@ -483,7 +483,7 @@ Beyond the `/research/*` endpoints, the agent running this skill typically produ
   `research/{date}.md`, `releases/{slug}/RELEASE.md`. See "Saving research" above.
 - **Handoffs to other skills** — `content-creation` (promo content, captions,
   one-sheets), `release-management` (RELEASE.md lifecycle), `streaming-growth`
-  (Spotify Showcase/Marquee, DSP ads), `recoup-artist-workspace` (workspace
+  (Spotify Showcase/Marquee, DSP ads), `recoup-artists` (workspace
   setup/lookup), `trend-to-song` (reverse from cultural moment to song).
 
 ### Chaining rules (read before composing)
@@ -606,7 +606,7 @@ Step 3 — Enrich (optional, deep context)
 
 Step 4 — Write to artist workspace
   If any candidate warrants ongoing tracking:
-    Create context/artist.md scaffold via recoup-artist-workspace skill
+    Create context/artist.md scaffold via recoup-artists skill
     Save Step 1-3 synthesis to research/{date}-tiktok-scout.md
 
 Step 5 — HANDOFF to trend-to-song skill

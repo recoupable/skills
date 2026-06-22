@@ -6,7 +6,7 @@ flow. The goal is to find statement issues before they become valuation errors.
 ## Workflow
 
 1. Confirm raw statements are preserved in `source/`.
-2. Use `recoup-deal-ingest` if no normalized `royalty-ledger.csv` exists.
+2. Use `recoup-catalogs` (ingest mode) if no normalized `royalty-ledger.csv` exists.
 3. Validate ledger grain, dates, currencies, sources, rights types, and asset
    matches.
 4. Reconcile gross, deductions, participant shares, and owner net.

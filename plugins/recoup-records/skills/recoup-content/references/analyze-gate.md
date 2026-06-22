@@ -6,7 +6,7 @@ user an asset is ready until you've inspected it.** `POST /api/content/analyze` 
 agent's eyes.
 
 > This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-content/references/analyze-gate.md`; edit the canonical and
+> the canonical `plugins/recoup-records/references/analyze-gate.md`; edit the canonical and
 > re-sync (see `scripts/vendored.json`).
 
 ## When to run it

@@ -2,7 +2,7 @@
 """Post-hoc trust enforcement for the agent-built executive dashboard.
 
 The dashboard at ``deals/{deal-id}/DASHBOARD.html`` is written by the
-agent (via the recoup-deal-dashboard skill). This script validates it
+agent (via recoup-catalogs dashboard mode). This script validates it
 without rendering anything. It is the trust gate that lets us give
 the agent full creative freedom while still keeping the deliverable
 defensible.

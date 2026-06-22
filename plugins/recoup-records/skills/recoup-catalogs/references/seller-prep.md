@@ -5,9 +5,9 @@ prep is not about inflating value. It is about reducing avoidable discounts.
 
 ## Workflow
 
-1. Run `recoup-deal-start` with workflow type `seller-prep`.
+1. Run `recoup-catalogs` (review mode) to scaffold the deal workspace for seller prep.
 2. Inventory files and build missing-document tracker.
-3. Use `recoup-deal-ingest` to normalize metadata and royalty statements.
+3. Use `recoup-catalogs` (ingest mode) to normalize metadata and royalty statements.
 4. Use `recoup-catalogs` to find unsupported assets.
 5. Use `recoup-catalogs` to find income leakage and statement gaps.
 6. Rank fixes by likely value impact and time to cure.

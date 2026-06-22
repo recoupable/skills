@@ -24,7 +24,7 @@ format-only jobs (a generic quote card, a stock-feel clip), just generate from t
 inputs.
 
 > This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-content/references/workspace-context.md`; edit the
+> the canonical `plugins/recoup-records/references/workspace-context.md`; edit the
 > canonical and re-sync (see `scripts/vendored.json`).
 
 ## 1. Find the workspace

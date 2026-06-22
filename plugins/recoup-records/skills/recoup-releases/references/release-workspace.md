@@ -24,11 +24,11 @@ Use lowercase-kebab-case for both slugs (`gatsby-grace`, `blue-slide-park`).
 | Stage | Skill | Writes to |
 | --- | --- | --- |
 | Intake | (orchestrator) | `assumptions.yaml`, scaffolds the tree |
-| Creative brief | `recoup-release-brief` | `brief/` |
-| Schedule | `recoup-release-campaign` | `campaign/` |
-| Master doc + deliverables | `recoup-release-doc` | `RELEASE.md`, `reports/` |
-| Targeting | `recoup-artist-playlists` → `recoup-artist-outreach` (research) | `targeting/` |
-| Post-release | `recoup-release-monitor`, `recoup-artist-brief` (streaming or full scope) | `tracking/` |
+| Creative brief | `recoup-releases` (brief mode) | `brief/` |
+| Schedule | `recoup-releases` (campaign mode) | `campaign/` |
+| Master doc + deliverables | `recoup-releases` (doc mode) | `RELEASE.md`, `reports/` |
+| Targeting | `recoup-research` (playlists) → `recoup-research` (contacts) | `targeting/` |
+| Post-release | `recoup-releases` (monitor mode), `recoup-research` (weekly-update) | `tracking/` |
 
 ## Rules
 

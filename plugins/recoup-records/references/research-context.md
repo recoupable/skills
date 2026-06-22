@@ -10,7 +10,7 @@ whenever an artist is named and a credential is set — grounded output beats gu
 every time, and the data is cheap to read.
 
 > This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-content/references/research-context.md`; edit the canonical
+> the canonical `plugins/recoup-records/references/research-context.md`; edit the canonical
 > and re-sync (see `scripts/vendored.json`).
 
 ## Where research fits in the backbone

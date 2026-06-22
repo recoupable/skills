@@ -1,10 +1,10 @@
 # Music Flamingo API — call contract
 
-Shared reference for every `recoup-song-*` skill. It documents the one endpoint
+Shared reference for the `recoup-songs` skill. It documents the one endpoint
 these skills depend on: Recoup's audio language model ("Music Flamingo").
 
-> This file is **vendored**: a byte-identical copy lives in each `recoup-song-*`
-> skill so every skill stays self-contained. The canonical copy is in
+> This file is **vendored**: a byte-identical copy lives in the `recoup-songs`
+> skill so it stays self-contained. The canonical copy is in
 > `recoup-songs`. Do not edit one copy without re-syncing the others
 > (`scripts/vendored.json` + `scripts/check_vendored.py` enforce this).
 
