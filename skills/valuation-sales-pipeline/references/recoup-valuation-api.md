@@ -42,6 +42,26 @@ in-flight measurement jobs. So:
   per-album sum double-counts. `fetch_catalog.py` does this.
 - Optionally `POST /api/research/measurement-jobs` first to warm the store before reading.
 
+## Refined social metrics (followers, bio, avatar, region)
+
+Recoup keeps a `socials` store with **`username`, `profile_url`, `followerCount`, `followingCount`,
+`bio`, `avatar`, `region`** — richer than a handle alone. Flow:
+
+- `GET /api/artists/{artist_account_id}/socials` — read stored socials for a platform artist.
+- `POST /api/socials/{id}/scrape` (or `POST /api/artist/socials/scrape` with `{artist_account_id}`)
+  — trigger an **Apify-backed** scrape; returns `{runId, datasetId}`; poll Apify for results, which
+  land back in the `socials` store.
+
+Caveat: this is keyed to a **platform artist account + stored social records**, not arbitrary
+handles. A fresh valuation lead (e.g. an artist you only have a Spotify id for) usually has **no
+socials rows yet** — you'd onboard the artist (see `recoup-essentials`/`recoup-create-artist`),
+attach the profile URLs, then scrape. Worth it for ongoing/refreshable metrics + `region` (audience
+geography) and `avatar`; overkill for a one-off report.
+
+**For a one-off report**, get the handles from the artist's official release upload / label page
+(cross-checked to the Spotify id) and read live follower/bio counts directly — that's what the
+bundled ICEBOX example did when the socials store had no rows yet.
+
 ## What the API does NOT give you
 
 Dollar figures (catalog value, per-release value) are a **model output**, not an API field. Take

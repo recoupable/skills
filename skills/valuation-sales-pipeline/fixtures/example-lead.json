@@ -12,12 +12,10 @@
   "follower_count": 47800,
   "valued_at": "2026-06-20",
   "lead_source": "Catalog Valuation",
-  "socials": {
-    "spotify": "https://open.spotify.com/artist/0000000000EXAMPLE0000",
-    "instagram": "https://www.instagram.com/neontidemusic/",
-    "instagram_handle": "@neontidemusic",
-    "tiktok": "https://www.tiktok.com/@neontidemusic",
-    "tiktok_handle": "@neontidemusic"
-  },
+  "socials": [
+    {"platform": "Spotify", "handle": "Neon Tide", "url": "https://open.spotify.com/artist/0000000000EXAMPLE0000", "followers": 47800, "bio": "Artist profile"},
+    {"platform": "Instagram", "handle": "@neontidemusic", "url": "https://www.instagram.com/neontidemusic/", "followers": 12500, "bio": "indie / electronic · Austin TX"},
+    {"platform": "TikTok", "handle": "@neontidemusic", "url": "https://www.tiktok.com/@neontidemusic", "followers": 8300, "bio": "new music every friday"}
+  ],
   "_note": "Spoofed sample lead — all PII (name, email, Spotify ID) is fictional."
 }

@@ -87,6 +87,7 @@ def build(lead, out_dir):
     h2 = ParagraphStyle("h2", parent=styles["Heading2"], textColor=navy, fontSize=16, spaceAfter=8)
     sub = ParagraphStyle("sub", parent=styles["Normal"], textColor=colors.grey, fontSize=11, spaceAfter=14)
     body = ParagraphStyle("body", parent=styles["Normal"], fontSize=10.5, leading=15, spaceAfter=8)
+    small = ParagraphStyle("small", parent=styles["Normal"], fontSize=9, leading=11)
     cellbw = ParagraphStyle("cellbw", parent=styles["Normal"], textColor=colors.white, fontSize=10, leading=13)
     big = ParagraphStyle("big", parent=styles["Normal"], textColor=colors.white, fontSize=22, leading=24)
 
@@ -107,23 +108,7 @@ def build(lead, out_dir):
         ("TOPPADDING", (0, 0), (-1, 0), 10), ("BOTTOMPADDING", (0, -1), (-1, -1), 12),
     ]))
     story.append(band)
-    story.append(Spacer(1, 10))
-
-    # Artist channels (verified socials), rendered as inline links
-    socials = lead.get("socials") or {}
-    if socials:
-        order = [("spotify", "Spotify"), ("instagram", "Instagram"), ("tiktok", "TikTok"),
-                 ("youtube", "YouTube"), ("twitter", "X/Twitter"), ("apple_music", "Apple Music")]
-        parts = []
-        for k, label in order:
-            url = socials.get(k)
-            if url:
-                handle = socials.get(k + "_handle")
-                txt = f"{label} {handle}" if handle else label
-                parts.append(f'<a href="{url}" color="#0b1f3a"><u>{txt}</u></a>')
-        if parts:
-            story.append(Paragraph("Artist channels — " + "  ·  ".join(parts),
-                                   ParagraphStyle("soc", parent=body, fontSize=9.5, spaceAfter=12)))
+    story.append(Spacer(1, 16))
 
     # Key stats (only rows that are present)
     rows = [["Lifetime streams", hstreams(lead.get("lifetime_streams"))],
@@ -154,7 +139,7 @@ def build(lead, out_dir):
         cols = ["", "Release", "Year", "Tracks"] + (["Value"] if has_value else []) + ["Streams"]
         head = [Paragraph(t, cellbw) for t in cols]
         data = [head]
-        shown = releases[:6]
+        shown = releases[:3]
         for r in shown:
             row = [cover(r.get("image"), 30), (r.get("name") or "—")[:34],
                    str(r.get("year") or "—"),
@@ -179,8 +164,34 @@ def build(lead, out_dir):
         story.append(tbl)
         story.append(Spacer(1, 6))
         story.append(Paragraph(
-            "Album art and streams measured live from public Spotify play counts.",
+            "Top releases by streams; full catalog in the appendix. Measured live from public "
+            "Spotify play counts.",
             ParagraphStyle("note", parent=styles["Normal"], fontSize=8.5, textColor=colors.grey)))
+
+    # Artist channels — verified socials table (last block on page 1)
+    socials = lead.get("socials")
+    if isinstance(socials, list) and socials:
+        story.append(Spacer(1, 16))
+        story.append(Paragraph("Artist channels", body))
+        shead = [Paragraph(t, cellbw) for t in ("Handle", "Followers", "Bio", "Platform")]
+        sdata = [shead]
+        for s in socials:
+            handle = s.get("handle") or s.get("platform") or "—"
+            url = s.get("url")
+            hcell = Paragraph(
+                f'<a href="{url}" color="#0b1f3a"><u>{handle}</u></a>' if url else handle, small)
+            sdata.append([hcell, thousands(s.get("followers")),
+                          Paragraph(s.get("bio") or "—", small), s.get("platform") or "—"])
+        stbl = Table(sdata, colWidths=[1.65 * inch, 0.85 * inch, 3.0 * inch, 1.1 * inch])
+        stbl.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), navy),
+            ("FONTSIZE", (0, 1), (-1, -1), 9),
+            ("ALIGN", (1, 1), (1, -1), "RIGHT"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("LINEBELOW", (0, 1), (-1, -2), 0.3, colors.HexColor("#eeeeee")),
+            ("TOPPADDING", (0, 0), (-1, -1), 5), ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+        ]))
+        story.append(stbl)
 
     # ---- Page 2: an honest reading of THIS catalog's data ----
     story.append(PageBreak())
