@@ -42,7 +42,7 @@ TYPE_EXTRAS = {
     "remix": [("pre-release", -14, "Tease the remix vs the original")],
     "collab": [("pre-release", -21, "Coordinate co-marketing with the collaborator")],
     "soundtrack": [("pre-release", -21, "Sync/placement co-promo with the title")],
-    "sync-focused": [("pre-release", -28, "Prioritize sync-licensing outreach (see recoup-song-pitch-kit)")],
+    "sync-focused": [("pre-release", -28, "Prioritize sync-licensing outreach (see recoup-songs pitch mode)")],
     "catalog-reissue": [("pre-release", -21, "Anniversary hook + existing-audience reactivation (lighter discovery push)")],
 }
 

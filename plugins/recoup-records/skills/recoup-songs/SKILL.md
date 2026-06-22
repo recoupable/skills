@@ -19,7 +19,7 @@ in the body.
 
 | The user wants… | Mode | Core presets |
 |---|---|---|
-| "analyze this song", "what does it sound like", "key/BPM/genre/mood", "tag it", "transcribe lyrics", "critique the mix" | **analyze** | `music_theory`, `lyric_transcription`, `mix_feedback`, full report |
+| "analyze this song", "what does it sound like", "key/BPM/genre/mood", "tag it", "transcribe lyrics", "critique the mix" | **analyze** | `catalog_metadata`, `music_theory`, `lyric_transcription`, `mix_feedback`, full report |
 | "find the hook", "best 15 seconds", "what to clip", "where's the drop" | **hook** | `sync_brief_match` + `music_theory` + `lyric_transcription` |
 | "playlist pitch", "pitch to Spotify", "sync brief", "where could this be placed" | **pitch** | `sync_brief_match`, `music_theory`, `lyric_transcription` |
 

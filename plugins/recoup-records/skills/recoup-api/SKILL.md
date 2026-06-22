@@ -54,9 +54,9 @@ listener `cities`, `charts`, `playlist` (singular), `venues`, `radio`,
 ## Connector actions (Google Docs/Sheets/Drive, Gmail, TikTok, Instagram)
 
 For reads/writes **outside** Recoup:
-- `GET /api/connectors/actions` — catalog (each action's `slug`, `parameters`
+- `GET /connectors/actions` — catalog (each action's `slug`, `parameters`
   schema, `connectorSlug`, `isConnected`).
-- `POST /api/connectors/actions` `{actionSlug, parameters}` — execute one.
+- `POST /connectors/actions` `{actionSlug, parameters}` — execute one.
 
 Slugs are `UPPERCASE_SNAKE_CASE` (e.g. `GOOGLEDOCS_UPDATE_DOCUMENT_MARKDOWN`,
 `GMAIL_FETCH_EMAILS`). **Always pull the parameters schema from the catalog before

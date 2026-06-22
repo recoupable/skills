@@ -9,7 +9,7 @@ description: >-
   a "streams → revenue → value" model, or produce an executive baseline report —
   even if they don't say the words "Catalog Value Estimator". This works from
   PUBLIC data only — for a full data-room valuation with the seller's royalty
-  statements, use recoup-deal-value instead. Triggers include
+  statements, use recoup-catalogs instead. Triggers include
   "what is this catalog worth", "value the K.I.D.S. masters", "estimate NLS",
   "how is this album performing", "build a portfolio baseline", "streams to
   revenue", "annualize streams", "catalog value from public data", or any

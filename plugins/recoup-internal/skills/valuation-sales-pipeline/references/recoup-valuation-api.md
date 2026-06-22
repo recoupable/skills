@@ -64,7 +64,7 @@ Recoup keeps a `socials` store with **`username`, `profile_url`, `followerCount`
 
 Caveat: this is keyed to a **platform artist account + stored social records**, not arbitrary
 handles. A fresh valuation lead (e.g. an artist you only have a Spotify id for) usually has **no
-socials rows yet** — you'd onboard the artist (see `recoup-essentials`/`recoup-create-artist`),
+socials rows yet** — you'd onboard the artist (see `recoup-artists`),
 attach the profile URLs, then scrape. Worth it for ongoing/refreshable metrics + `region` (audience
 geography) and `avatar`; overkill for a one-off report.
 

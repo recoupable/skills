@@ -32,7 +32,8 @@ scaffold your folders. Idempotent and safe to re-run.
    AND artists are both empty, it's a throwaway key — re-do with the real email.
 7. **Seed memory:** append a `<!-- recoup-setup:start/end -->` block to
    `~/.claude/CLAUDE.md` (idempotent replace) so music-industry questions route to
-   Recoup. 8. Print a smoke-test prompt.
+   Recoup.
+8. Print a smoke-test prompt.
 
 ## Mode: scaffold (build the account's folder tree)
 

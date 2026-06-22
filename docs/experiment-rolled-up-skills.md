@@ -68,7 +68,7 @@ git checkout experiment/rolled-up-skills
    branch the description is broader (many sub-intents in one), so watch for
    *over-firing* (fat skill grabs an unrelated ask) and *under-firing* (the broad
    description is too diffuse to match). `resolver-eval.jsonl` encodes the intents
-   to try (43 positives spanning every sub-mode + 10 cross-skill negatives).
+   to try (45 positives spanning every sub-mode + 7 cross-skill negatives).
 2. **Mode selection** — once a fat skill fires, does the model pick the correct
    *mode* from the body? (This burden doesn't exist on the focused branch.)
 3. **Execution quality** — does the model follow the right procedure, or does the
