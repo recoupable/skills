@@ -344,22 +344,40 @@ def build(lead, out_dir):
         src = f" ({rsource})" if rsource else ""
         story.append(Paragraph(
             f"The complete {rlabel} roster — {len(full)} artists{src}. The same valuation + socials "
-            f"baseline runs on any of them.", body))
-        ncols = 3
-        per = -(-len(full) // ncols)  # ceil
-        cols = [full[i * per:(i + 1) * per] for i in range(ncols)]
-        nrows = max(len(c) for c in cols)
-        grid = []
-        for i in range(nrows):
-            grid.append([(f"{i + 1 + j * per}. {cols[j][i]}" if i < len(cols[j]) else "") for j in range(ncols)])
-        gtbl = Table(grid, colWidths=[2.3 * inch] * ncols)
-        gtbl.setStyle(TableStyle([
-            ("FONTSIZE", (0, 0), (-1, -1), 9.5),
-            ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
-            ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ]))
+            f"baseline runs on any of them. Spotify followers verified per artist ID where available "
+            f"(— = not yet resolved).", body))
         story.append(Spacer(1, 6))
-        story.append(gtbl)
+        if full and isinstance(full[0], dict):
+            # Artist | Spotify followers, sorted desc (unresolved last)
+            rows = sorted(full, key=lambda x: (x.get("followers") is None, -(x.get("followers") or 0)))
+            bdata = [[Paragraph(t, cellbw) for t in ("Artist", "Spotify followers")]]
+            for a in rows:
+                f = a.get("followers")
+                bdata.append([a.get("name", "—"), thousands(f) if f is not None else "—"])
+            btbl = Table(bdata, colWidths=[3.7 * inch, 1.6 * inch], repeatRows=1)
+            btbl.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, 0), navy),
+                ("FONTSIZE", (0, 1), (-1, -1), 9.5),
+                ("ALIGN", (1, 1), (1, -1), "RIGHT"),
+                ("LINEBELOW", (0, 1), (-1, -2), 0.25, colors.HexColor("#eeeeee")),
+                ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+            ]))
+            story.append(btbl)
+        else:
+            ncols = 3
+            per = -(-len(full) // ncols)  # ceil
+            cols = [full[i * per:(i + 1) * per] for i in range(ncols)]
+            nrows = max(len(c) for c in cols)
+            grid = []
+            for i in range(nrows):
+                grid.append([(f"{i + 1 + j * per}. {cols[j][i]}" if i < len(cols[j]) else "") for j in range(ncols)])
+            gtbl = Table(grid, colWidths=[2.3 * inch] * ncols)
+            gtbl.setStyle(TableStyle([
+                ("FONTSIZE", (0, 0), (-1, -1), 9.5),
+                ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ]))
+            story.append(gtbl)
 
     doc.build(story)
     return path

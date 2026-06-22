@@ -37,7 +37,14 @@
     "more_count": 5,
     "cta": "Want the same valuation + socials baseline for the rest of the roster? Reply and we'll run it.",
     "source": "examplelabel.com/artists",
-    "full": ["Neon Tide", "Artist Two", "Artist Three", "Artist Four", "Artist Five", "Artist Six", "Artist Seven", "Artist Eight"]
+    "full": [
+      {"name": "Neon Tide", "followers": 47800},
+      {"name": "Artist Two", "followers": 14200},
+      {"name": "Artist Three", "followers": 6100},
+      {"name": "Artist Four", "followers": 2300},
+      {"name": "Artist Five", "followers": 980},
+      {"name": "Artist Six", "followers": null}
+    ]
   },
   "_note": "Spoofed sample lead — all PII (name, email, Spotify ID) is fictional."
 }
