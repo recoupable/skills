@@ -195,8 +195,13 @@ def build(lead, out_dir):
             url = s.get("url")
             hcell = Paragraph(
                 f'<a href="{url}" color="#0b1f3a"><u>{handle}</u></a>' if url else handle, small)
+            # Cap the bio so one verbose profile (e.g. a long quote) can't inflate the table
+            # height and bump the "Reading your result" section onto its own near-empty page.
+            bio = s.get("bio") or "-"
+            if len(bio) > 88:
+                bio = bio[:87].rstrip() + "…"
             sdata.append([s.get("platform") or "-", hcell, thousands(s.get("followers")),
-                          Paragraph(s.get("bio") or "-", small)])
+                          Paragraph(bio, small)])
         stbl = Table(sdata, colWidths=[1.1 * inch, 1.65 * inch, 0.85 * inch, 3.0 * inch])
         stbl.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), navy),
