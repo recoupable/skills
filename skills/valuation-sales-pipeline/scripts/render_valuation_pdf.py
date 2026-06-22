@@ -342,10 +342,12 @@ def build(lead, out_dir):
         story.append(PageBreak())
         story.append(Paragraph(f"Appendix B — full {rlabel} roster", h2))
         src = f" ({rsource})" if rsource else ""
+        any_missing = any(isinstance(a, dict) and a.get("followers") is None for a in full)
+        caveat = (" Spotify followers verified per artist ID where available (— = not yet resolved)."
+                  if any_missing else " Spotify followers verified per artist ID.")
         story.append(Paragraph(
             f"The complete {rlabel} roster — {len(full)} artists{src}. The same valuation + socials "
-            f"baseline runs on any of them. Spotify followers verified per artist ID where available "
-            f"(— = not yet resolved).", body))
+            f"baseline runs on any of them.{caveat}", body))
         story.append(Spacer(1, 6))
         if full and isinstance(full[0], dict):
             # Artist | Spotify followers, sorted desc (unresolved last)
