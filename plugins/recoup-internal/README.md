@@ -40,7 +40,7 @@ claude plugin install https://github.com/recoupable/recoup-internal
 | [recoup-issue-write-tracker](skills/recoup-issue-write-tracker) | Write and maintain high-signal GitHub tracking issues that coordinate multi-PR, multi-repo work — structure, the Open→Done lifecycle, evidence/linking rules, and acceptance criteria |
 | [recoup-issue-implement-tdd](skills/recoup-issue-implement-tdd) | Deliver a tracked issue end-to-end — documentation-driven (contract first), then test-driven (red→green) implementation, verified against the live preview and posted to the PR |
 | [recoup-skill-benchmark-pack](skills/recoup-skill-benchmark-pack) | Benchmark any plugin, skill pack, or skills folder against the frontier (gstack, gbrain, compound-engineering, PM OS) — measure it, grade a 15-dimension scorecard, and produce a prioritized list of moves to steal |
-| [recoup-sales-work-pipeline](skills/recoup-sales-work-pipeline) | Work the catalog-valuation sales funnel in Attio — qualify an inbound lead against revenue goals, enrich and advance the CRM record, and draft the first outreach email plus a one-page valuation PDF |
+| [recoup-funnel-valuation-pipeline](skills/recoup-funnel-valuation-pipeline) | Work the catalog-valuation sales funnel in Attio — qualify an inbound lead against revenue goals, enrich and advance the CRM record, and draft the first outreach email plus a one-page valuation PDF |
 | [recoup-account-health-report](skills/recoup-account-health-report) | Produce an account-health snapshot for any Recoup account (artists, socials, chats, tasks, credits, subscription) as an ACCOUNT.md, a per-artist tree, and a polished status PDF — admin token inspects any account, owner token only its own |
 
 ## License
