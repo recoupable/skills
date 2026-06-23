@@ -4,8 +4,8 @@ Agent plugin for **Recoup's internal workflows** — engineering and operations.
 Write and maintain high-signal GitHub tracking issues, deliver them docs-first
 and test-driven from open to shipped, benchmark any plugin or skills folder
 against the frontier of skill design, work the catalog-valuation sales funnel in
-Attio, and produce account-health snapshots for any Recoup account. Built by
-[Recoup](https://recoupable.com).
+Attio, produce account-health snapshots for any Recoup account, and draft, ship,
+and measure data-grounded social posts. Built by [Recoup](https://recoupable.com).
 
 These are the internal-facing skills behind the rest of the Recoup skills repo —
 the dev-tooling and ops skills the team runs, as opposed to the artist/label
@@ -42,6 +42,7 @@ claude plugin install https://github.com/recoupable/recoup-internal
 | [recoup-eval-skill-benchmark](skills/recoup-eval-skill-benchmark) | Benchmark any plugin, skill pack, or skills folder against the frontier (gstack, gbrain, compound-engineering, PM OS) — measure it, grade a 15-dimension scorecard, and produce a prioritized list of moves to steal |
 | [recoup-funnel-valuation-pipeline](skills/recoup-funnel-valuation-pipeline) | Work the catalog-valuation sales funnel in Attio — qualify an inbound lead against revenue goals, enrich and advance the CRM record, and draft the first outreach email plus a one-page valuation PDF |
 | [recoup-account-health-report](skills/recoup-account-health-report) | Produce an account-health snapshot for any Recoup account (artists, socials, chats, tasks, credits, subscription) as an ACCOUNT.md, a per-artist tree, and a polished status PDF — admin token inspects any account, owner token only its own |
+| [recoup-social-ship-posts](skills/recoup-social-ship-posts) | Write, publish, and measure data-grounded LinkedIn and X posts — product announcements and artist highlights — with copy principles, CTA choice, connector publishing (incl. X native video), and a learn→draft→publish→re-measure loop |
 
 ## License
 
