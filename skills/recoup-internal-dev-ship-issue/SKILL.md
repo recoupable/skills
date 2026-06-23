@@ -1,11 +1,11 @@
 ---
 name: recoup-internal-dev-ship-issue
-description: INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal ship issue #N"). Never use for customer-facing or artist requests. Deliver a tracked GitHub issue end-to-end in the Recoupable house style — documentation-driven (OpenAPI/contract first), then test-driven (red→green) implementation that matches the docs, verified against the live preview deployment, with results posted to the PR. Use when the user says "implement this issue", "build out issue #N", "ship the issue", "do the implementation", "take this issue and build it", or hands you a tracking issue (usually from the recoup-internal-dev-issue-tracker skill) to deliver. Covers docs-first ordering, the TDD loop, preview verification, the docs↔API↔reality reconciliation, and PR review hygiene. Pairs with the recoup-internal-dev-issue-tracker skill (which writes the issue this one implements).
+description: INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal ship issue #N"). Never use for customer-facing or artist requests. Deliver a tracked GitHub issue end-to-end in the Recoup house style — documentation-driven (OpenAPI/contract first), then test-driven (red→green) implementation that matches the docs, verified against the live preview deployment, with results posted to the PR. Use when the user says "implement this issue", "build out issue #N", "ship the issue", "do the implementation", "take this issue and build it", or hands you a tracking issue (usually from the recoup-internal-dev-issue-tracker skill) to deliver. Covers docs-first ordering, the TDD loop, preview verification, the docs↔API↔reality reconciliation, and PR review hygiene. Pairs with the recoup-internal-dev-issue-tracker skill (which writes the issue this one implements).
 ---
 
 # Implementing a Tracked Issue
 
-How we take a tracking issue from open to shipped at Recoupable. The bar: **the docs, the API, and the live preview all tell the same story — and every claim you make on the PR is something you actually ran.** No contract drift, no "should work," no untested assertions.
+How we take a tracking issue from open to shipped at Recoup. The bar: **the docs, the API, and the live preview all tell the same story — and every claim you make on the PR is something you actually ran.** No contract drift, no "should work," no untested assertions.
 
 This is the delivery counterpart to the **recoup-internal-dev-issue-tracker** skill: that one writes the issue; this one implements it. The gold-standard reference slice this skill is built from is [chat#1789](https://github.com/recoupable/chat/issues/1789) (the tracking issue) → [docs#236](https://github.com/recoupable/docs/pull/236) (contract) → [api#653](https://github.com/recoupable/api/pull/653) (implementation). Read those three together to see the whole loop.
 
@@ -45,7 +45,7 @@ Documentation-driven development: the docs/OpenAPI change is the contract, and i
 
 ## 3. API by TDD, matching the docs
 
-Branch per the repo's rule (Recoupable `api` PRs target `test`). Mirror the sibling implementation's layering (route → handler → validate → data function → response shaping; auth; credits).
+Branch per the repo's rule (Recoup `api` PRs target `test`). Mirror the sibling implementation's layering (route → handler → validate → data function → response shaping; auth; credits).
 
 **Red → green → refactor, one unit at a time:**
 
@@ -89,7 +89,7 @@ All three must agree before you call it done. This step is the entire point of t
 ## 8. Hand off in merge order
 
 - Merge order is **docs → api** (the contract lands first). Honor hard dependencies (a database migration before the api that reads it).
-- **Never merge without explicit user approval.** When the user approves: merge, then promote per the repo flow (Recoupable: squash → `test`, then `test` → `main` via a release PR, then sync `test` with `main`), checking the release scope first.
+- **Never merge without explicit user approval.** When the user approves: merge, then promote per the repo flow (Recoup: squash → `test`, then `test` → `main` via a release PR, then sync `test` with `main`), checking the release scope first.
 - On merge, **update the tracking issue to Done** with the **recoup-internal-dev-issue-tracker** skill — a closure note (PR links, ✅ ISO date, merge path, what shipped, and a Verified clause citing the live results), and check off the Done-when boxes you actually verified.
 
 ## Principles

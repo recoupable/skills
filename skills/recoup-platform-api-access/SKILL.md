@@ -1,11 +1,11 @@
 ---
 name: recoup-platform-api-access
-description: Call the Recoupable API and external connectors directly — fetch any platform resource (artists, socials, organizations, research, documents) and run connector actions (Google Docs/Sheets/Drive edits, Gmail, TikTok, Instagram). Use whenever you need raw Recoup data, a platform resource, to write curl against api.recoupable.com, or to read/write something outside Recoup like a Google Doc URL or a spreadsheet. The plumbing every other skill rides on. To onboard or operate on an artist use the recoup-roster-* skills; for first-run connection use recoup-platform-connect-account.
+description: Call the Recoup API and external connectors directly — fetch any platform resource (artists, socials, organizations, research, documents) and run connector actions (Google Docs/Sheets/Drive edits, Gmail, TikTok, Instagram). Use whenever you need raw Recoup data, a platform resource, to write curl against api.recoupable.com, or to read/write something outside Recoup like a Google Doc URL or a spreadsheet. The plumbing every other skill rides on. To onboard or operate on an artist use the recoup-roster-* skills; for first-run connection use recoup-platform-connect-account.
 ---
 
 # Recoup — API Access
 
-The platform access layer: authenticate, talk to the Recoupable REST API, and
+The platform access layer: authenticate, talk to the Recoup REST API, and
 invoke external connectors. Base `https://api.recoupable.com/api`; docs
 `https://developers.recoupable.com` (`/llms.txt`, `/llms-full.txt`, OpenAPI JSONs).
 

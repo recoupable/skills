@@ -136,8 +136,8 @@ Add a route for the new skill in [`RESOLVER.md`](RESOLVER.md) and a fixture in `
 
 ## About
 
-[Recoupable](https://recoupable.com) is an AI-powered music management platform. These skills power the agents that help artists and labels manage their careers.
+[Recoup](https://recoupable.com) is an AI-powered music management platform. These skills power the agents that help artists and labels manage their careers.
 
 - **Website**: [recoupable.com](https://recoupable.com)
 - **App**: [chat.recoupable.com](https://chat.recoupable.com)
-- **Support**: agent@recoupable.com
+- **Support**: support@recoupable.com

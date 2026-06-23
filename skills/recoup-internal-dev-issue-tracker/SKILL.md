@@ -1,11 +1,11 @@
 ---
 name: recoup-internal-dev-issue-tracker
-description: INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal write a tracking issue"). Never use for customer-facing or artist requests. Write and maintain high-signal GitHub issues — especially long-lived tracking issues that coordinate multi-PR, multi-repo efforts — in the Recoupable house style. Use when the user says "write an issue", "create a tracking issue", "open an issue for this work", "update the issue", "check off / close out an item", "log what shipped on the issue", "maintain the issue", or when capturing a plan, cutover, migration, or cleanup that spans more than one PR. Covers structure, the Open→Done lifecycle, evidence/linking rules, and acceptance criteria.
+description: INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal write a tracking issue"). Never use for customer-facing or artist requests. Write and maintain high-signal GitHub issues — especially long-lived tracking issues that coordinate multi-PR, multi-repo efforts — in the Recoup house style. Use when the user says "write an issue", "create a tracking issue", "open an issue for this work", "update the issue", "check off / close out an item", "log what shipped on the issue", "maintain the issue", or when capturing a plan, cutover, migration, or cleanup that spans more than one PR. Covers structure, the Open→Done lifecycle, evidence/linking rules, and acceptance criteria.
 ---
 
 # Writing & Maintaining Issues
 
-How we write GitHub issues at Recoupable. The bar: **a teammate (or a cold agent) can read the issue and know exactly what's done, what's left, why each decision was made, and how to verify any claim — without re-deriving it from git history.** Issues are persistent memory, not a TODO dump.
+How we write GitHub issues at Recoup. The bar: **a teammate (or a cold agent) can read the issue and know exactly what's done, what's left, why each decision was made, and how to verify any claim — without re-deriving it from git history.** Issues are persistent memory, not a TODO dump.
 
 Most substantial work gets a **tracking issue**: a long-lived issue that coordinates a multi-PR (often multi-submodule) effort. The two reference issues this skill is built from are [chat#1747](https://github.com/recoupable/chat/issues/1747) (cutover plan) and [chat#1767](https://github.com/recoupable/chat/issues/1767) (post-cutover cleanup). Read them if you want the gold standard.
 

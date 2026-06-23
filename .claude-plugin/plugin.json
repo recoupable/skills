@@ -2,10 +2,10 @@
   "name": "recoup-skills",
   "displayName": "Recoup Skills",
   "version": "2.0.0",
-  "description": "Every Recoup skill in one install — a record label in a box: artist setup & API access, music-industry research, catalog deal review, content creation, song audio analysis, and end-to-end release campaigns, plus Recoup's internal engineering & ops tooling. Portable across agents; also installable via `npx skills add recoupable/skills`.",
+  "description": "A record label in a box. Recoup turns your AI agent into a full music team — artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation — all in one install.",
   "author": {
-    "name": "Recoupable",
-    "email": "agent@recoupable.com",
+    "name": "Recoup",
+    "email": "support@recoupable.com",
     "url": "https://recoupable.com"
   },
   "homepage": "https://recoupable.com",

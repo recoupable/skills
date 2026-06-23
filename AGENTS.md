@@ -137,7 +137,7 @@ The single plugin (`recoup-skills`, `source "."`) is listed in **two files that 
 
 `scripts/validate_manifests.py` enforces this "dual-manifest parity" on `(name, source, version)` — **edit one, edit the other**. Keep the version in both marketplaces and both `plugin.json` files in sync.
 
-**Author email must match across layers:** the marketplace entry's email must equal the email in `plugin.json`. Use `agent@recoupable.com` everywhere (the support email documented in `CLAUDE.md`).
+**Author email must match across layers:** the marketplace entry's email must equal the email in `plugin.json`. Use `support@recoupable.com` everywhere (the support email documented in `CLAUDE.md`).
 
 ## Naming & branding
 
