@@ -1,5 +1,5 @@
 ---
-name: recoup-account-status
+name: recoup-account-health-report
 description: >-
   Produce an account-status / account-health snapshot for a Recoup account from
   an email, account ID, or artist name. Resolves the account, pulls its artists,

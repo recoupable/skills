@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Measure any skill pack (plugin or skills folder) against the frontier bar.
 
-This is the *deterministic* half of the skill-pack-benchmark skill: it counts
+This is the *deterministic* half of the recoup-skill-benchmark-pack skill: it counts
 what can be counted exactly so the agent never eyeballs (and mis-guesses) the
 numbers. It is harness-agnostic and reads only the target you point it at — it
 makes no network calls and writes nothing except its report.

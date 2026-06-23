@@ -1,6 +1,6 @@
 # The frontier bar — what makes a skill pack good (the standard to benchmark against)
 
-This is the reference standard the `skill-pack-benchmark` skill scores any
+This is the reference standard the `recoup-skill-benchmark-pack` skill scores any
 plugin or skills folder against. It distills the confirmed patterns and **real,
 measured numbers** from the current frontier of skill/plugin design. It is
 domain-agnostic: the pack under review can be about engineering, music,

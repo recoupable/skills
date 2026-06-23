@@ -1,5 +1,5 @@
 ---
-name: valuation-sales-pipeline
+name: recoup-sales-work-pipeline
 description: >-
   Work the Recoup "Valuation Leads" sales funnel in Attio — take an inbound
   catalog-valuation lead and progress it from "valuation ran" to "signed up for

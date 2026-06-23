@@ -1,40 +1,10 @@
 {
-  "_comment": "Maps each canonical shared file to its vendored copies. Every copy is kept byte-identical by scripts/check_vendored.py. Populated as skills are made self-contained (Phase 2). See AGENTS.md 'Portable Skill Contract'.",
+  "_comment": "Maps each canonical shared file to its byte-identical vendored copies, kept in sync by scripts/check_vendored.py. See AGENTS.md 'Portable Skill Contract'. recoup-internal's skills were renamed to the recoup-[domain]-[verb]-[noun] convention and now diverge from the public skills/ library, so they are intentionally no longer vendored copies.",
   "groups": [
     {
       "canonical": "assets/recoup-icon.png",
       "copies": [
         "plugins/recoup-internal/assets/recoup-icon.png"
-      ]
-    },
-    {
-      "canonical_dir": "skills/skill-pack-benchmark",
-      "copies_dirs": [
-        "plugins/recoup-internal/skills/skill-pack-benchmark"
-      ]
-    },
-    {
-      "canonical_dir": "skills/issue-management",
-      "copies_dirs": [
-        "plugins/recoup-internal/skills/issue-management"
-      ]
-    },
-    {
-      "canonical_dir": "skills/issue-implementation",
-      "copies_dirs": [
-        "plugins/recoup-internal/skills/issue-implementation"
-      ]
-    },
-    {
-      "canonical_dir": "skills/valuation-sales-pipeline",
-      "copies_dirs": [
-        "plugins/recoup-internal/skills/valuation-sales-pipeline"
-      ]
-    },
-    {
-      "canonical_dir": "skills/recoup-account-status",
-      "copies_dirs": [
-        "plugins/recoup-internal/skills/recoup-account-status"
       ]
     }
   ]
