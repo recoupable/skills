@@ -8,8 +8,9 @@
   "plugins": [
     {
       "name": "recoup-skills",
+      "displayName": "Recoup Skills",
       "source": ".",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "The open skills library \u2014 portable music-industry skills (artist management, songwriting, analytics, release campaigns, setup) you can drop into any agent. Also installable directly via `npx skills add recoupable/skills`.",
       "author": {
         "name": "Recoupable",
@@ -39,13 +40,16 @@
           "Write"
         ],
         "websiteURL": "https://recoupable.com",
-        "brandColor": "#345A5D"
+        "brandColor": "#345A5D",
+        "composerIcon": "./assets/recoup-icon.png",
+        "logo": "./assets/recoup-icon.png"
       }
     },
     {
       "name": "recoup-records",
+      "displayName": "Recoup Records",
       "source": "./plugins/recoup-records",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "A record label in a box \u2014 one install that bundles every Recoup plugin: setup, research, deals, content, song analysis, and releases. Install this instead of picking individual plugins.",
       "author": {
         "name": "Recoup",
@@ -77,13 +81,16 @@
           "Write"
         ],
         "websiteURL": "https://recoupable.com",
-        "brandColor": "#345A5D"
+        "brandColor": "#345A5D",
+        "composerIcon": "./assets/recoup-icon.png",
+        "logo": "./assets/recoup-icon.png"
       }
     },
     {
       "name": "recoup-internal",
+      "displayName": "Recoup Internal",
       "source": "./plugins/recoup-internal",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "Recoup's internal toolkit for AI agents \u2014 engineering and operations. Write and maintain high-signal GitHub tracking issues, deliver them docs-first and test-driven end-to-end, benchmark any plugin or skills folder against the frontier of skill design, work the catalog-valuation sales funnel in Attio, produce account-health snapshots for any Recoup account, and draft, publish, and measure data-grounded social posts.",
       "author": {
         "name": "Recoup",
@@ -118,7 +125,9 @@
           "Write"
         ],
         "websiteURL": "https://recoupable.com",
-        "brandColor": "#345A5D"
+        "brandColor": "#345A5D",
+        "composerIcon": "./assets/recoup-icon.png",
+        "logo": "./assets/recoup-icon.png"
       }
     }
   ]
