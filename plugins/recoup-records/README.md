@@ -1,13 +1,13 @@
 # Recoup — Record Label in a Box
 
-> ⚗️ **EXPERIMENT BRANCH (`experiment/rolled-up-skills`).** This variant folds the
-> 41 focused skills into **9 fat, mode-dispatching skills** in two tiers —
-> **capabilities** (`recoup-artists`, `recoup-research`, `recoup-content`,
-> `recoup-releases`, `recoup-catalogs`, `recoup-songs`) and **operating the box**
-> (`recoup-setup`, `recoup-api`, `recoup-learn`). Songwriting was removed. It exists
-> to A/B the fat-skill style against the focused style on the main branch; the
-> shape was tuned by an empirical routing eval (see `docs/ab-eval-results.md` and
-> `docs/experiment-rolled-up-skills.md`).
+> ⚗️ **EXPERIMENT BRANCH (`experiment/rolled-up-skills`).** This variant restructures
+> the plugin into a **middle tier grouped into domains** — **capability** domains
+> (`roster`, `research`, `song`, `content`, `release`, `catalog`) plus a **platform**
+> domain (operating the system). Every name is uniform
+> `recoup-[domain]-[verb]-[noun]`. It sits between the focused and fat-skill extremes —
+> the empirically-recommended hybrid (see `docs/ab-eval-results.md`,
+> `docs/experiment-rolled-up-skills.md`, and the layout in
+> `docs/skill-rename-proposal-v3.md`). Songwriting was removed.
 
 
 > **First-class, hand-maintained plugin.** This is the flagship "everything in

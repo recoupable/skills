@@ -45,4 +45,10 @@ claude plugin install https://github.com/recoupable/recoup-internal
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+This project is licensed under the AGPL-3.0 for non-commercial use. See [LICENSE](LICENSE).
+
+### Commercial Use
+
+For commercial use or deployments requiring a setup, please contact us for a
+commercial license at support@recoupable.com. By using this software, you agree
+to the terms of the license.

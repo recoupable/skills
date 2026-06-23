@@ -32,15 +32,14 @@ the Recoup research API into clear, actionable briefs.
 
 ## Skills available
 
-All modes of the `recoup-research` skill:
+The `recoup-research-*` skills:
 
-- `recoup-research` (overview mode) — full sweep
-- `recoup-research` (playlists mode) — playlist analysis
-- `recoup-research` (audience mode) — demographics and geography
-- `recoup-research` (competition mode) — peer comparison
-- `recoup-research` (discover mode) — discovery and charts
-- `recoup-research` (contacts mode) — contacts and outreach
-- `recoup-research` (web mode) — fallback web research
+- `recoup-research-artist-overview` — full sweep on one artist (overview, audience, competition, TikTok)
+- `recoup-research-find-talent` — emerging/unsigned discovery + viral autopsy
+- `recoup-research-playlist-targets` — playlist strategy + placement gaps
+- `recoup-research-find-contacts` — managers/A&R/press + drafted outreach
+- `recoup-research-weekly-brief` — recurring "what changed" + streaming spikes
+- `recoup-research-the-web` — open-web/deep research + enrich any entity
 
 ## Output standards
 

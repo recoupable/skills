@@ -1,5 +1,9 @@
 # Skill Rename Proposal — v2 (after your notes)
 
+> **⚠️ Superseded by v3 (`skill-rename-proposal-v3.md`).** v2 below explored
+> deliverable-led freeform names; the direction we landed on is the uniform
+> `recoup-[domain]-[verb]-[noun]` convention in v3. Kept here for history.
+
 > **What changed from v1:** your notes said my abstract names ("overview",
 > "insights", "monitor", "placement", "launch") didn't tell you *what you get* or
 > *about whom*. v2 follows three rules pulled from your own notes:

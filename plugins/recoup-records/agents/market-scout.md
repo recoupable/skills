@@ -35,12 +35,11 @@ obvious.
 
 ## Skills available
 
-All via the `recoup-research` skill (pick the mode):
+The `recoup-research-*` skills:
 
-- `recoup-research` (discover mode) — primary tool: emerging artists, viral songs, charts
-- `recoup-research` (overview mode) — deep dive on top candidates
-- `recoup-research` (audience mode) — market opportunity sizing
-- `recoup-research` (web mode) — cultural context
+- `recoup-research-find-talent` — primary tool: emerging artists, viral songs
+- `recoup-research-artist-overview` — deep dive on top candidates (+ audience sizing)
+- `recoup-research-the-web` — cultural context
 
 ## Output standards
 
