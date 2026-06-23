@@ -39,7 +39,7 @@ recoupable/skills/            ← the repo root IS the plugin
 - **Plugin** — this repo, rooted at the repo root: it ships every skill in `skills/` **plus** agents, hooks, and shared references, installed through a runtime's plugin system or `npx skills`. A skill is a subset of the plugin. (No slash-`commands/` — skills only; see "No slash-commands".)
 - **Harness** — a runtime that loads skills/plugins: Claude Code, Codex, Cursor, or bare `npx skills`.
 - **Marketplace registry** — the single installable-plugin entry (`recoup-skills`, `source "."`), written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
-- **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json` (currently empty — no shared copies today).
+- **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json` (the references, templates, and fixtures shared across skills).
 - **Resolver** — the repo-root `RESOLVER.md` routing table that maps a user request to the one skill that should handle it. Skills stay flat and discoverable; there is no separate "router" entry-point skill. Reachability is enforced by `scripts/check_resolvable.py`.
 
 ## How Skills Load
