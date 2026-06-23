@@ -1,11 +1,4 @@
 {
-  "_comment": "Maps each canonical shared file to its byte-identical vendored copies, kept in sync by scripts/check_vendored.py. See AGENTS.md 'Portable Skill Contract'. recoup-internal's skills were renamed to the recoup-[domain]-[verb]-[noun] convention and now diverge from the public skills/ library, so they are intentionally no longer vendored copies.",
-  "groups": [
-    {
-      "canonical": "assets/recoup-icon.png",
-      "copies": [
-        "plugins/recoup-internal/assets/recoup-icon.png"
-      ]
-    }
-  ]
+  "_comment": "Maps each canonical shared file to its byte-identical vendored copies, kept in sync by scripts/check_vendored.py. See AGENTS.md 'Portable Skill Contract'. After the collapse into a single flat plugin at the repo root there are no cross-plugin vendored copies; each skill vendors its own references inside its own directory. This list is intentionally empty.",
+  "groups": []
 }

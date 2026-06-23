@@ -8,34 +8,39 @@ Public skills for AI agents working in the music industry. Skills teach agents h
 
 ## Structure
 
-This repo holds **two kinds of thing**: standalone skills and richer plugins. Both are authored here once and install across every harness.
+This repo **is a single flat plugin** rooted at the repo root: every skill lives in `skills/`, and the shared components (agents, hooks, references, templates, fixtures, the resolver) sit alongside it. It installs across every harness — as a Claude/agents marketplace plugin, a Codex plugin, or a bare `npx skills add recoupable/skills`.
 
 ```text
-recoupable/skills/
-├── skills/                   ← portable, standalone skills (drop into any agent)
-│   ├── chart-metric/
-│   ├── song-writing/
-│   └── ...
-├── plugins/                  ← rich bundles: skills + hooks + shared references
-│   ├── recoup-records/       ← the all-in-one "record label in a box"
-│   └── recoup-internal/      ← internal eng + ops (issues, TDD, benchmarks, sales pipeline, account health)
+recoupable/skills/            ← the repo root IS the plugin
+├── skills/                   ← every skill (recoup-[domain]-[verb]-[noun]); recoup-internal-* are staff-gated
+│   ├── recoup-roster-add-artist/
+│   ├── recoup-research-the-web/
+│   ├── recoup-internal-dev-issue-tracker/
+│   └── ...                   (31 skills, flat)
+├── agents/                   ← specialized subagents
+├── hooks/                    ← lifecycle hooks (hooks.json + *.sh)
+├── references/               ← shared docs (canonical sources for any vendored copies)
+├── templates/                ← workspace scaffolds
+├── fixtures/                 ← golden / demo data
+├── RESOLVER.md               ← routing table (request → one skill)
+├── resolver-eval.jsonl       ← routing fixtures
 ├── scripts/                  ← validation gates + vendored.json (shared-file registry)
-├── .claude-plugin/           ← repo-as-plugin manifest + marketplace.json (Claude registry)
-├── .codex-plugin/            ← repo-as-plugin manifest (Codex)
+├── .claude-plugin/           ← plugin.json + marketplace.json (Claude registry)
+├── .codex-plugin/            ← plugin.json (Codex)
 ├── .agents/plugins/          ← marketplace.json (Cursor / agents registry)
 ├── README.md
 ├── contributing.md
-└── AGENTS.md                 ← this file
+└── AGENTS.md                 ← this file (CLAUDE.md symlinks here)
 ```
 
 ## Glossary
 
 - **Skill** — a `SKILL.md` folder that teaches one task. Portable; runs on any agent.
-- **Plugin** — a bundle in `plugins/{name}/` that ships skills **plus** hooks and shared references, installed through a runtime's plugin system. A skill is a subset of a plugin. (No slash-`commands/` — skills only; see "No slash-commands".)
+- **Plugin** — this repo, rooted at the repo root: it ships every skill in `skills/` **plus** agents, hooks, and shared references, installed through a runtime's plugin system or `npx skills`. A skill is a subset of the plugin. (No slash-`commands/` — skills only; see "No slash-commands".)
 - **Harness** — a runtime that loads skills/plugins: Claude Code, Codex, Cursor, or bare `npx skills`.
-- **Marketplace registry** — the list of installable plugins, written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
-- **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json`.
-- **Resolver** — a plugin's `RESOLVER.md` routing table that maps a user request to the one skill that should handle it. Skills stay flat and discoverable; there is no separate "router" entry-point skill. Reachability is enforced by `scripts/check_resolvable.py`.
+- **Marketplace registry** — the single installable-plugin entry (`recoup-skills`, `source "."`), written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
+- **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json` (currently empty — no shared copies today).
+- **Resolver** — the repo-root `RESOLVER.md` routing table that maps a user request to the one skill that should handle it. Skills stay flat and discoverable; there is no separate "router" entry-point skill. Reachability is enforced by `scripts/check_resolvable.py`.
 
 ## How Skills Load
 
@@ -84,25 +89,14 @@ description: What it does and when to use it
 - Include **when** to use it — mention trigger phrases users would say
 - Be specific — vague descriptions won't trigger
 
-## Plugins
+## The plugin (this repo)
 
-A plugin lives in `plugins/{name}/` and bundles skills with shared references and per-harness manifests:
+The whole repo is one flat plugin. There is **no `plugins/` directory** and no per-plugin subfolders — add capabilities by adding **skills** to `skills/`, not by creating new plugins.
 
-```text
-plugins/my-plugin/
-├── .claude-plugin/plugin.json   ← manifest for Claude Code
-├── .cursor-plugin/plugin.json   ← manifest for Cursor
-├── .codex-plugin/plugin.json    ← manifest for Codex
-├── skills/                      ← the plugin's skills (same SKILL.md format)
-├── references/                  ← shared docs, vendored into each skill that needs them
-├── README.md
-└── LICENSE
-```
-
-- **Author a plugin by copying an existing one** (e.g. `plugins/recoup-internal/`), then edit the manifests, README, and skills. Don't hand-write manifests from scratch.
-- **Ship all three per-plugin manifests** (`.claude-plugin`, `.cursor-plugin`, `.codex-plugin`). They mostly match; only harness-specific fields differ (e.g. Cursor lists a `skills` path).
-- **Promote skills into a plugin when they share a canonical reference.** If one skill owns a doc that sibling skills depend on, that cross-dependency breaks the self-contained rule — move them under a plugin and put the shared doc in `plugins/{name}/references/`, vendored into each skill (Portable Skill Contract rule 5).
-- Plugin skills follow the **same Portable Skill Contract** as top-level skills.
+- **Add a skill** by creating `skills/recoup-[domain]-[verb]-[noun]/SKILL.md` (see "Skill Format"), then add a route in `RESOLVER.md` and a fixture in `resolver-eval.jsonl`. CI fails on any skill that isn't reachable from the resolver.
+- **Manifests live at the repo root** — `.claude-plugin/plugin.json` (Claude), `.codex-plugin/plugin.json` (Codex), and the two `marketplace.json` files. Skills auto-resolve from `skills/`; you don't enumerate them in the manifest.
+- **Shared components sit at the root** too: `agents/`, `hooks/`, `references/`, `templates/`, `fixtures/`. A skill must still be **self-contained** — it may reference only files inside its own directory, so a skill that needs a shared reference vendors its own copy (Portable Skill Contract rule 5). The root `references/` is the canonical source for any such copies and is also used by `agents/` and `hooks/`.
+- Every skill follows the **Portable Skill Contract** below.
 
 ## No slash-commands — skills only
 
@@ -136,20 +130,20 @@ What to do instead:
 
 ## The marketplace registry
 
-Installable plugins are listed in **two files that must stay identical in content**:
+The single plugin (`recoup-skills`, `source "."`) is listed in **two files that must stay identical in content**:
 
 - `.claude-plugin/marketplace.json` (Claude)
 - `.agents/plugins/marketplace.json` (Cursor / agents)
 
-`scripts/validate_manifests.py` enforces this "dual-manifest parity" — **edit one, edit the other**. When you add a plugin, add its entry to both.
+`scripts/validate_manifests.py` enforces this "dual-manifest parity" on `(name, source, version)` — **edit one, edit the other**. Keep the version in both marketplaces and both `plugin.json` files in sync.
 
-**Author email must match across layers:** a plugin's email in the marketplace entry must equal the email in that plugin's own `plugin.json`. Use `agent@recoupable.com` everywhere (the support email documented in `CLAUDE.md`).
+**Author email must match across layers:** the marketplace entry's email must equal the email in `plugin.json`. Use `agent@recoupable.com` everywhere (the support email documented in `CLAUDE.md`).
 
 ## Naming & branding
 
 - Slugs are **plain-English, lowercase, hyphenated** — no filler suffixes: `recoup-song-find-hook`, not `recoup-song-find-hook-finder`.
-- **Plugin names drop any `-plugin` suffix**: `recoup-records`, not `recoup-records-plugin`.
-- Pattern: `recoup-[domain]-[verb]-[noun]` — four words, domain-first, so the `/` list auto-clusters by domain and every name says what it does. Domains are a small, stable set (`platform`, `roster`, `research`, `song`, `content`, `release`, `catalog`); a skill slots into an existing one. A plugin routes to its skills through its `RESOLVER.md` table — no separate router skill.
+- **The plugin name drops any `-plugin` suffix**: `recoup-skills`, not `recoup-skills-plugin`.
+- Pattern: `recoup-[domain]-[verb]-[noun]` — four words, domain-first, so the `/` list auto-clusters by domain and every name says what it does. Domains are a small, stable set (`platform`, `roster`, `research`, `song`, `content`, `release`, `catalog`); a skill slots into an existing one. **Internal staff skills** add an `internal` segment — `recoup-internal-[domain]-[verb]-[noun]` (five tokens) — and are gated behind the literal `recoup-internal` trigger keyword in their `description`. The plugin routes to its skills through the root `RESOLVER.md` table — no separate router skill.
 - Preserve history on renames/moves with `git mv`, then update the `name:` frontmatter, cross-references, README tables, and `scripts/vendored.json` paths.
 
 ## Portable Skill Contract (cross-harness)
@@ -176,7 +170,7 @@ python3 scripts/check_resolvable.py        # every skill reachable from RESOLVER
 python3 scripts/run_resolver_eval.py       # routing fixtures valid + full coverage
 ```
 
-**`recoup-records` is the flagship, hand-maintained plugin** — "a record label in a box" (`plugins/recoup-records/`) that ships the full platform in one install: artist setup and API access, research, catalog deals, content, song analysis, and releases — every skill, agent, hook, reference, script, template, and fixture. It is self-contained; edit its skills directly.
+**This repo is the flagship, hand-maintained plugin** — "a record label in a box" rooted at the repo root that ships the full platform in one install: artist setup and API access, research, catalog deals, content, song analysis, and releases — every skill (in `skills/`), agent, hook, reference, script, template, and fixture. It also ships Recoup's internal eng/ops skills (`recoup-internal-*`, staff-gated behind the `recoup-internal` keyword). Edit the skills directly.
 
 **Editing a shared (vendored) file:** change the *canonical* copy only, then re-sync every copy listed in `scripts/vendored.json` (there is no `--sync` flag — copy them yourself), then re-check. Groups come in two shapes: single files (`canonical`/`copies`) and whole directories (`canonical_dir`/`copies_dirs`):
 
