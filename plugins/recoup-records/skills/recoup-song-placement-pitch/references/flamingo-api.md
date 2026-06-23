@@ -3,10 +3,6 @@
 Shared reference for the `recoup-song-*` skills. It documents the one endpoint
 these skills depend on: Recoup's audio language model ("Music Flamingo").
 
-> This file is **vendored**: byte-identical copies live in each `recoup-song-*`
-> skill so they stay self-contained. The canonical copy is in the plugin-root
-> `references/`. Do not edit one copy without re-syncing the others.
-
 ## Entry points
 
 The same analysis is reachable four ways. They all share one request/response

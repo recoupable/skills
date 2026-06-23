@@ -4,10 +4,6 @@ Recoup content skills authenticate one of two ways and must pass the **right art
 identifier** to the right endpoint. Getting either wrong is the most common cause of a
 silent 401/404. Read this before writing curl calls.
 
-> This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-records/references/account-resolver.md`; edit the
-> canonical and re-sync (see `scripts/vendored.json`).
-
 ## 1. Auth — two modes
 
 Pick whichever credential the environment provides; prefer the API key when both exist.
@@ -24,6 +20,7 @@ elif [ -n "$RECOUP_ACCESS_TOKEN" ]; then
   AUTH=(-H "Authorization: Bearer $RECOUP_ACCESS_TOKEN")
 else
   echo "No Recoup credential set — ask the user to authenticate; do not retry blindly." >&2
+  return 1 2>/dev/null || exit 1   # stop — never call the API unauthenticated
 fi
 # Use as:  curl -sS "${AUTH[@]}" "https://api.recoupable.com/api/..."
 ```

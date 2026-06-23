@@ -23,10 +23,6 @@ THIS artist" and there's no context and no API data, ask rather than invent. For
 format-only jobs (a generic quote card, a stock-feel clip), just generate from the user's
 inputs.
 
-> This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-records/references/workspace-context.md`; edit the
-> canonical and re-sync (see `scripts/vendored.json`).
-
 ## 1. Find the workspace
 
 Artist workspaces live at `artists/{artist-slug}/`. Resolve the slug from the artist

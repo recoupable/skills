@@ -5,10 +5,6 @@ while being glitchy, empty, off-brand, or showing the wrong subject. **Do not te
 user an asset is ready until you've inspected it.** `POST /api/content/analyze` is the
 agent's eyes.
 
-> This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-records/references/analyze-gate.md`; edit the canonical and
-> re-sync (see `scripts/vendored.json`).
-
 ## When to run it
 
 After every **video** generation checkpoint — clip, composed final, upscaled output. Not just

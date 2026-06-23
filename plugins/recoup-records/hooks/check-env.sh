@@ -7,7 +7,7 @@
 # (the session-start-directive pattern): a session-start hook must DIRECT, not
 # merely describe. It arbitrates to a single directive:
 #
-#   - No Recoup credential  -> the directive is "run /recoup-platform-connect-account first" (a hard
+#   - No Recoup credential  -> the directive is "run recoup-platform-connect-account first" (a hard
 #     blocker; nothing else can succeed, so it wins arbitration).
 #   - Configured            -> the directive is "route through RESOLVER.md before
 #     acting" (picking the right one is the whole game).
@@ -33,7 +33,7 @@ echo "[SESSION-START DIRECTIVE — recoup-records]"
 if [ "$have_cred" = "no" ]; then
   # Single directive: nothing else works without a credential, so this wins.
   echo "DIRECTIVE: No Recoup credential is set (RECOUP_API_KEY / RECOUP_ACCESS_TOKEN)."
-  echo "Run /recoup-platform-connect-account now. Do NOT attempt artist, research, content, deal, or"
+  echo "Run recoup-platform-connect-account now. Do NOT attempt artist, research, content, deal, or"
   echo "release work until a credential is set — those skills will fail. After setup,"
   echo "route every request through the bundle's RESOLVER.md.${ffmpeg_note}"
 else

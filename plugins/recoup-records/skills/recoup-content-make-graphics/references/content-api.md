@@ -6,10 +6,6 @@ estimation. For auth + artist-ID resolution, use the account-resolver reference 
 skill bundles one; otherwise set the auth header inline (`x-api-key: $RECOUP_API_KEY`, or
 `Authorization: Bearer $RECOUP_ACCESS_TOKEN`).
 
-> This file ships inside the skill that reads it. It is a byte-identical vendored copy of
-> the canonical `plugins/recoup-records/references/content-api.md`; edit the canonical and
-> re-sync (see `scripts/vendored.json`).
-
 `BASE="https://api.recoupable.com/api"`. Pass the auth header from `account-resolver.md`
 as `"${AUTH[@]}"` on every call.
 
