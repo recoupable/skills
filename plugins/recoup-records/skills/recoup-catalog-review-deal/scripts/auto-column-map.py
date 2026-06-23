@@ -279,7 +279,7 @@ def _read_xlsx_headers(input_path: Path, sheet: str | None) -> list[str]:
         import openpyxl  # type: ignore[import-not-found]
     except ImportError as exc:
         raise SystemExit(
-            "openpyxl is required for XLSX inputs. Install via: pip3 install -r requirements.txt"
+            "openpyxl is required for XLSX inputs. Install: pip3 install openpyxl"
         ) from exc
     workbook = openpyxl.load_workbook(input_path, data_only=True, read_only=True)
     if sheet and sheet in workbook.sheetnames:

@@ -1,6 +1,6 @@
 ---
 name: recoup-research-find-contacts
-description: Find the industry people around an artist — managers, A&R, press — and draft outreach you can send. Use for "find the manager for", "who's the A&R", "find press contacts", or "draft outreach to [person]". Drafts only; never sends. To research the artist themselves use recoup-research-artist-overview.
+description: Find music-industry people — managers, A&R, press, label and booking contacts — and draft outreach you can send. Use for "find the manager for [artist]", "who's the A&R at [label]", "find press contacts", or "draft outreach to [person]". Drafts only; never sends. To research an artist's metrics and audience use recoup-research-artist-overview.
 ---
 
 # Recoup Research — Find Contacts
@@ -20,8 +20,8 @@ export RECOUP_API="https://api.recoupable.com/api"   # auth header: x-api-key: $
 - Fall back to `/web` + `/deep` for narrative and leads.
 
 **Never fabricate a contact** — only surface people who appear in sourced results;
-draft outreach only after the person is confirmed. Reference the artist's real
-specifics (markets, listeners) so drafts aren't generic. Full chains in
+draft outreach only after the person is confirmed. Reference real specifics
+(the artist, label, market, or release in play) so drafts aren't generic. Full chains in
 `references/workflows.md` (People Outreach).
 
 ## Guardrails

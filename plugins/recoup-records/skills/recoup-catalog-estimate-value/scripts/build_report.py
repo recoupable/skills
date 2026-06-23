@@ -2,10 +2,14 @@
 """Build a branded executive baseline PDF from estimate.json (output of estimate.py).
 Usage: python3 build_report.py --estimate out/estimate.json --out out
 Requires: matplotlib, reportlab.  -> out/<asset>-baseline-report.pdf"""
-import argparse, json, os, re, datetime as dt
-import matplotlib; matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
+import argparse, json, os, re, sys, datetime as dt
+try:
+    import matplotlib; matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import FuncFormatter
+    import reportlab  # noqa: F401 — submodule imports below; verify availability up front
+except ImportError as exc:
+    sys.exit(f"build_report.py needs matplotlib + reportlab — install: pip3 install matplotlib reportlab ({exc})")
 
 ap = argparse.ArgumentParser(); ap.add_argument("--estimate", required=True); ap.add_argument("--out", default=".")
 A = ap.parse_args(); R = json.load(open(A.estimate)); OUT = A.out; os.makedirs(OUT, exist_ok=True)

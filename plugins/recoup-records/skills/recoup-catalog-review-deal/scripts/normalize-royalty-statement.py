@@ -564,7 +564,7 @@ def _read_xlsx_rows(input_path: Path, sheet: str | None) -> tuple[list[str], lis
         import openpyxl  # type: ignore[import-not-found]
     except ImportError as exc:  # pragma: no cover - import-time guard
         raise SystemExit(
-            "openpyxl is required for XLSX inputs. Install via: pip3 install -r requirements.txt"
+            "openpyxl is required for XLSX inputs. Install: pip3 install openpyxl"
         ) from exc
     workbook = openpyxl.load_workbook(input_path, data_only=True, read_only=True)
     if sheet and sheet in workbook.sheetnames:

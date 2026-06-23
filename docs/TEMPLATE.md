@@ -355,7 +355,7 @@ Every skill — standalone **and** plugin — must run on **any** harness (Claud
 1. **Self-contained.** A skill reads/executes **only files inside its own directory** (`references/`, `scripts/`, `templates/`, `fixtures/`, `assets/`). Never reference `../`, `../../references/`, another skill's directory, or a plugin-root `scripts/`/`references/`.
 2. **No platform variables in the body.** Do **not** write `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_SKILL_DIR}`, or any `$CLAUDE_*` path in a SKILL.md body. They only expand in JSON configs (hooks/`.mcp.json`) on Claude Code and ship as literal, broken strings elsewhere. Use plain relative paths. *(Exception: `hooks/hooks.json` and `.mcp.json` MAY use `${CLAUDE_PLUGIN_ROOT}` — it expands in JSON on Claude Code.)*
 3. **Reference docs with backtick paths, never markdown links.** Write `` `references/foo.md` `` (a backtick path the agent can locate), not `[foo](./references/foo.md)`. Agents interpret markdown links as CWD-relative `Read` calls, and the CWD is never the skill dir.
-4. **Co-locate scripts; invoke relatively.** Ship scripts in the skill's own `scripts/` and call them as `python3 scripts/foo.py`. Add a one-line note that scripts ship alongside the skill. A script's imported siblings must live in the same `scripts/`.
+4. **Co-locate scripts; invoke relatively.** Ship scripts in the skill's own `scripts/` and call them as `python3 scripts/foo.py`. Add a one-line note that scripts ship alongside the skill. A script's imported siblings must live in the same `scripts/`. If a script needs a third-party package, **guard the import and name the package in the error** (`except ImportError: sys.exit("needs X — pip3 install X")`) rather than shipping a `requirements.txt` — the failing script then tells the agent exactly what to install, just-in-time.
 5. **Duplicate shared material; drift-check it.** If two skills need the same reference/script, **copy it into each**; register every copy in `scripts/vendored.json` so `scripts/check_vendored.py` keeps them byte-identical (§8a). Vendoring is allowed; silent divergence is not.
 
 > **Why:** `${CLAUDE_PLUGIN_ROOT}` is Claude-Code-only and doesn't expand in markdown; runtime CWD is the user's project, not the skill dir. Self-containment with relative/backtick paths is the only pattern that travels across harnesses.
@@ -665,7 +665,7 @@ metadata:
 - `hooks/hooks.json` (+ scripts) — event automation. Hooks JSON **may** use `${CLAUDE_PLUGIN_ROOT}` (it expands in JSON on Claude Code) — a SKILL.md body never may (§8 rule 2).
 - `evals/` — scenarios that assert the skill fires and produces correctly.
 - `fixtures/` — golden inputs/outputs and demo data (vendor demo dirs via `vendored.json`).
-- `requirements.txt` — if scripts need third-party Python.
+- Third-party Python deps — **guard each import and name the package in the error** (`pip3 install X`), not a `requirements.txt` (§8 rule 4). Add a `requirements.txt` only when a machine consumes it (CI dep-install, Dependabot, pip-audit).
 
 ---
 

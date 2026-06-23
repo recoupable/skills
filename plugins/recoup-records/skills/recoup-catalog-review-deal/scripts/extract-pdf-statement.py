@@ -29,7 +29,7 @@ except ImportError as exc:  # pragma: no cover - import-time guard
         json.dumps(
             {
                 "status": "missing_dependency",
-                "error": "pdfplumber is required. Install via: pip3 install -r requirements.txt",
+                "error": "pdfplumber is required. Install: pip3 install pdfplumber",
                 "details": str(exc),
             }
         ),

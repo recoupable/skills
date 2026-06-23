@@ -73,8 +73,8 @@ It walks a whole directory in one call (no per-file loop), writes to a
 **separate** review ledger, and tags every row `match_confidence: low` /
 `notes: extracted from PDF, verify against source`. **Always spot-check against
 the source PDF and run `validate-normalized-ledger.py` before merging into
-`royalty-ledger.csv`.** Requires `pip3 install -r requirements.txt` (pdfplumber);
-without it the script exits with a clean `missing_dependency` status. Scanned /
+`royalty-ledger.csv`.** Requires `pip3 install pdfplumber`; without it the script
+exits with a clean `missing_dependency` status. Scanned /
 image-only PDFs (true OCR) are still out of scope, and these society templates
 are not yet covered by golden fixtures — treat output as a draft.
 

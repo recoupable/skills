@@ -14,7 +14,8 @@ relatively); methodology + API contract in `references/`.
 - `python3 scripts/fetch_album_tracks.py` — pull the catalog from public sources.
 - `python3 scripts/estimate.py` — estimate streams→revenue→value per
   `references/methodology.md` (uses `references/recoup-api.md`).
-- `python3 scripts/build_report.py` — assemble the estimate report.
+- `python3 scripts/build_report.py` — assemble the estimate report (needs
+  `pip3 install matplotlib reportlab`).
 
 Be explicit that this is a **public-data estimate** (wider error bars than a
 seller-file valuation), and state the assumptions. For a real data room with seller
