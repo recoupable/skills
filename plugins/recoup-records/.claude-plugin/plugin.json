@@ -1,6 +1,7 @@
 {
   "name": "recoup-records",
-  "version": "0.1.0",
+  "displayName": "Recoup Records",
+  "version": "0.1.1",
   "description": "A record label in a box: setup, research, deals, roster, content, song analysis, and releases management",
   "author": {
     "name": "Recoup",

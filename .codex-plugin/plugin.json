@@ -1,6 +1,6 @@
 {
   "name": "recoup-skills",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AI agent skills for the music industry — artist management, songwriting, analytics, release campaigns, and more.",
   "author": {
     "name": "Recoupable",
@@ -29,6 +29,8 @@
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
     "websiteURL": "https://recoupable.com",
-    "brandColor": "#345A5D"
+    "brandColor": "#345A5D",
+    "composerIcon": "./assets/recoup-icon.png",
+    "logo": "./assets/recoup-icon.png"
   }
 }
