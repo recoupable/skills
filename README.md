@@ -25,8 +25,6 @@ Clone the repo and load it as a plugin — the repo root is the plugin, with eve
 git clone https://github.com/recoupable/skills.git
 ```
 
-> **One plugin, everything included.** As of v2 this repo ships as a **single flat plugin** rooted at the repo root — there are no separate "records" or "internal" installs anymore. Adding the marketplace (or `npx skills add recoupable/skills`) installs every skill in `skills/`. The agent picks the right one via [`RESOLVER.md`](RESOLVER.md).
-
 ## Skills
 
 Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters by domain.
@@ -39,7 +37,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | recoup-roster-list-artists | See who's on your roster |
 | recoup-roster-manage-artist | Work inside one artist's folder — context, brand, songs, releases |
 
-### research — intelligence
+### research — industry intelligence
 
 | Skill | What it does |
 |-------|-------------|
@@ -50,7 +48,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | recoup-research-weekly-brief | The recurring "what changed this week" update |
 | recoup-research-the-web | Open-web search, deep research, entity enrichment |
 
-### song — single-song audio
+### song — audio analysis
 
 | Skill | What it does |
 |-------|-------------|
@@ -58,7 +56,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | recoup-song-find-hook | Find the most clip-worthy 5–15 seconds |
 | recoup-song-placement-pitch | Playlist/editorial pitch + sync brief from the audio |
 
-### content — assets
+### content — media assets
 
 | Skill | What it does |
 |-------|-------------|
@@ -136,8 +134,7 @@ Add a route for the new skill in [`RESOLVER.md`](RESOLVER.md) and a fixture in `
 
 ## About
 
-[Recoup](https://recoupable.com) is an AI-powered music management platform. These skills power the agents that help artists and labels manage their careers.
+[Recoup](https://recoupable.com) is an AI-powered music platform. These skills power the agents that help artists and labels manage their careers.
 
 - **Website**: [recoupable.com](https://recoupable.com)
-- **App**: [chat.recoupable.com](https://chat.recoupable.com)
 - **Support**: support@recoupable.com
