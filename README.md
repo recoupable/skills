@@ -28,6 +28,7 @@ git clone https://github.com/recoupable/skills.git
 | [content-creation](skills/content-creation) | Create social videos, TikToks, Reels, and visual content using AI primitives |
 | [music-industry-research](skills/music-industry-research) | Music industry research — artist analytics, people search, competitive analysis, web intelligence |
 | [release-management](skills/release-management) | Plan and execute release campaigns |
+| [social-posts](skills/social-posts) | Write data-grounded LinkedIn and X posts for announcements and artist highlights, publish via the connector, and track performance |
 | [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
 | [trend-to-song](skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
 

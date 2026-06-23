@@ -88,10 +88,16 @@ the outreach tone and whether they can actually authorize work:
 
 - Web-search the artist + the person/brand behind the email. Compare the email handle to
   the looked-up artist (self-search of own brand vs. a third party).
+- **Verify the person's *current* role, not a stale one.** People change companies and keep
+  legacy profile handles — pick the LinkedIn whose handle/email domain matches the lead's email,
+  and confirm their *present* employer (a title pulled from an old campaign can be years out of
+  date and will mis-set the Relationship). LinkedIn and Instagram block `WebFetch` (HTTP 999) —
+  read them via the **authenticated browser (chrome-devtools MCP)**.
 - Classify the **Relationship**: `Owner/Operator` (the artist or label/brand itself) ·
   `Label` · `Manager` · `Collaborator` (released work with the artist) · `Fan/Other` ·
   `Unknown`. Owners/labels/managers can authorize an engagement; collaborators are warm
-  insiders; fans rarely convert.
+  insiders; fans rarely convert. Keep the lead JSON `relationship` and the Attio field in sync —
+  if you re-classify after deeper research, update **both** (the PDF reads the JSON).
 - Cross-check recent product activity (signup date, credits used) if you have account
   access — a lead who burned most of their credits is highly engaged.
 
@@ -124,19 +130,22 @@ For a pursued lead, write back to the Attio record/entry (`references/attio-funn
   album art, and release counts. Add the dollar band (from the tool, or computed with the
   `catalog-value-estimator` skill) to `lead.json`. Don't infer "dormant" from a `$0` row in the
   live UI — confirm against the measurements endpoint (see `references/recoup-valuation-api.md`).
+- **Onboard the valued artist under the lead's own Recoup account and pull exact socials over the
+  API** (part of working the lead, not overkill). The self-contained recipe — resolve `account_id`
+  via `POST /api/accounts {email}` (the email→`account_id` lookup; no Supabase), create the artist,
+  `PATCH` profile URLs, scrape, poll — is in `references/recoup-valuation-api.md`. Put the `account_id`
+  in lead JSON `account.owner_account_id` so the PDF admin line carries it.
+- Fill the lead JSON `socials` block so the report renders the "Artist channels" line. Use the
+  **exact** `follower_count` + **real** `bio` from the scrape (blank, never filler, if unverified),
+  and cross-check the **same Spotify artist id** so you don't attach a same-name impostor.
 - Render the valuation PDF (headline + a top-releases breakdown with album art, an honest
   "reading your result" page, and a full-catalog appendix):
   `python3 scripts/render_valuation_pdf.py --lead lead.json --out ./out`
   (see `fixtures/example-lead.json` for the shape).
-- Attach the artist's **verified socials** to the lead JSON `socials` block (Spotify, Instagram,
-  TikTok, YouTube, X) so the report renders a clickable "Artist channels" line. Get them from
-  `research/lookup?spotifyId=` / `research/metrics` when available; when those are Songstats-rate-
-  limited (429) or fail, verify from the artist's **official release upload description or label
-  page**, cross-checking the **same Spotify artist id** so you don't attach a same-name impostor.
-- Draft the first email from `templates/outreach-email.md`: personal, references the
-  specific artist + their number, **delivers the PDF**, gives one free specific insight
-  (a playlist gap, a likely-uncollected royalty source, a concentration note), and ends
-  with a low-friction CTA. Send from the rep, not a generic address.
+- Draft the first email from `templates/outreach-email.md`. First touch must be **scannable in
+  3-5 seconds**: **2 sentences + 3 bullets + 1 CTA**, from the rep (not a generic address). The PDF
+  carries the depth - keep caveats and detail out of the email. Don't pitch the engagement here;
+  that's the call.
 - After it's sent, move the entry to **Report Delivered** and log a note of what was sent.
 
 ## Notes & caveats
@@ -173,5 +182,7 @@ are spelled out here because they shape what you write.
   (retries + a small delay) and point the lead JSON `image` fields at `file://` paths.
 - **Keep page-2 reading concise, and use plain hyphens (no em/en dashes) in all outbound copy** -
   long reading notes push the footer onto a near-empty extra page, and em dashes read as AI-generated
-  to recipients. The render script and `templates/outreach-email.md` already follow both; keep lead
-  JSON `reading_notes` the same.
+  to recipients. The render script auto-generates the concentration paragraph from the data, so add
+  only **2-3 short `reading_notes`** of your own and **don't repeat the concentration point** - that
+  duplicate is what tips page 2 over. Expect a **4-page** render (cover · reading+channels ·
+  Appendix A x2); a near-empty page means you overflowed - trim a `reading_note`.
