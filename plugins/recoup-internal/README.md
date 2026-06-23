@@ -13,25 +13,30 @@ product (see `recoup-records`).
 
 ## Install
 
+`recoup-internal` ships as a plugin in the **`recoupable/skills`** marketplace —
+it is not a standalone repo. Add the marketplace once, then install the plugin.
+
 ### Claude Code (CLI)
 
 ```bash
-claude plugin install https://github.com/recoupable/recoup-internal
+/plugin marketplace add recoupable/skills
+/plugin install recoup-internal@recoup
 ```
 
 ### Claude Cowork
 
 1. Open the plugin marketplace (puzzle-piece icon in the sidebar).
-2. Click **Add custom plugin** and paste:
-   `https://github.com/recoupable/recoup-internal`
-3. Approve the requested tool permissions (`Read`, `Write`).
-4. Confirm install: type `/plugin` and check that `recoup-internal` is listed.
+2. Click **Add custom plugin** and paste the marketplace repo:
+   `https://github.com/recoupable/skills`
+3. Install **recoup-internal** from the list and approve the requested tool
+   permissions (`Read`, `Write`).
+4. Confirm: type `/plugin` and check that `recoup-internal` is listed.
 
 ### Cursor
 
-1. Cursor → Settings → Plugins → **Add custom plugin**.
-2. Paste the GitHub URL above.
-3. Restart Cursor so `.cursor-plugin/plugin.json` loads the skills.
+1. Cursor → Settings → Plugins → **Add custom plugin** and paste
+   `https://github.com/recoupable/skills`.
+2. Install **recoup-internal**, then restart Cursor so its skills load.
 
 ## Skills
 
