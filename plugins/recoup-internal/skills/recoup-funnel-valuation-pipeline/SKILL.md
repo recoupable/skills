@@ -13,7 +13,7 @@ description: >-
   API key.
 ---
 
-# Valuation Sales Pipeline
+# Valuation Funnel
 
 Turn inbound **catalog-valuation leads** into **Recoup Pro signups**. When someone
 runs Recoup's free "what is my catalog worth?" valuation, a lead lands in the Attio
@@ -37,7 +37,7 @@ to prove that quickly enough that the lead converts.
 - `ATTIO_API_KEY` — an Attio access token (read-write on records + list entries).
 - `RECOUP_API_KEY` (`recoup_sk_…`) — for catalog sizing via the Research API; mint one
   with `POST https://api.recoupable.com/api/agents/signup`. Load the
-  `music-industry-research` and `catalog-value-estimator` skills for endpoint detail.
+  `recoup-research-artist-overview` and `recoup-catalog-estimate-value` skills for endpoint detail.
 - `reportlab` for the PDF: `pip install reportlab --break-system-packages`.
 - Scripts ship in this skill's `scripts/`; run them from the skill directory as
   `python3 scripts/<name>.py`.
@@ -122,7 +122,7 @@ For a pursued lead, write back to the Attio record/entry (`references/attio-funn
 - Pull the catalog + album art straight from the public APIs (no scraping):
   `python3 scripts/fetch_catalog.py --artist-id <spotifyId> --out lead.json` — fills streams,
   album art, and release counts. Add the dollar band (from the tool, or computed with the
-  `catalog-value-estimator` skill) to `lead.json`. Don't infer "dormant" from a `$0` row in the
+  `recoup-catalog-estimate-value` skill) to `lead.json`. Don't infer "dormant" from a `$0` row in the
   live UI — confirm against the measurements endpoint (see `references/recoup-valuation-api.md`).
 - Render the valuation PDF (headline + a top-releases breakdown with album art, an honest
   "reading your result" page, and a full-catalog appendix):

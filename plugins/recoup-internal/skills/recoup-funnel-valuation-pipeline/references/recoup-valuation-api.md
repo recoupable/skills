@@ -86,7 +86,7 @@ valuation time** means the run was cut short — **re-measure the full catalog**
 ## What the API does NOT give you
 
 Dollar figures (catalog value, per-release value) are a **model output**, not an API field. Take
-the band the marketing tool displays, or compute it with the `catalog-value-estimator` skill
+the band the marketing tool displays, or compute it with the `recoup-catalog-estimate-value` skill
 (streams → annual NLS → × multiple). `fetch_catalog.py` fills streams + art + counts and leaves
 the dollar fields for you to add.
 

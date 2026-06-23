@@ -18,7 +18,7 @@ description: >-
   own tests.
 ---
 
-# Skill Pack Benchmark
+# Skill Benchmark
 
 Grade any plugin or skills folder against the frontier bar for what makes skills
 and plugins *good*. The output is an evidence-backed report: where the pack

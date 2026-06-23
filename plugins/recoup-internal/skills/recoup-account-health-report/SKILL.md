@@ -12,7 +12,7 @@ description: >-
   account; an owner token only its own).
 ---
 
-# Recoup Account Status
+# Recoup Account Health
 
 Builds a complete picture of how a Recoup account uses the product and packages
 it as Markdown + a PDF. This is the workflow that produced the Sound of Fractures
@@ -33,7 +33,7 @@ account status report.
   - An **owner** token only sees its own account.
 - `reportlab` for the PDF: `pip install reportlab --break-system-packages`.
 - Base URL: `https://api.recoupable.com/api` (override with `RECOUP_API_BASE`).
-  Load the `recoup-api` skill for endpoint details.
+  Load the `recoup-platform-api-access` skill for endpoint details.
 
 ## Quick run
 
