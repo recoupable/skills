@@ -7,7 +7,7 @@ per-album live play counts (store-served Spotify counts — no Songstats quota,
 so no 429), then writes a lead JSON ready for render_valuation_pdf.py.
 
 Dollar figures (est_catalog_value, per-release value) come from the valuation
-model — load the catalog-value-estimator skill to fill those in, or copy the
+model — load the recoup-catalog-estimate-value skill to fill those in, or copy the
 band the marketing tool shows. This script fills everything else.
 
 Auth: RECOUP_API_KEY (x-api-key) or RECOUP_ACCESS_TOKEN (Bearer).
@@ -133,7 +133,7 @@ def main():
         "dormant_releases": dormant,
         "releases": releases,
         "_note": "Catalog + album art from public Recoup APIs. Fill est_catalog_value / "
-                 "value_low / value_high / per-release value via the catalog-value-estimator "
+                 "value_low / value_high / per-release value via the recoup-catalog-estimate-value "
                  "model (or copy the band the marketing valuation tool shows).",
     }
     with open(args.out, "w") as f:
