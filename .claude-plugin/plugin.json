@@ -1,11 +1,11 @@
 {
   "name": "recoup-skills",
   "displayName": "Recoup Skills",
-  "version": "1.0.1",
-  "description": "AI agent skills for the music industry — artist management, songwriting, analytics, release campaigns, and more.",
+  "version": "2.0.0",
+  "description": "A record label in a box. Recoup turns your AI agent into a full music team — artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation — all in one install.",
   "author": {
-    "name": "Recoupable",
-    "email": "agent@recoupable.com",
+    "name": "Recoup",
+    "email": "support@recoupable.com",
     "url": "https://recoupable.com"
   },
   "homepage": "https://recoupable.com",
@@ -13,12 +13,16 @@
   "license": "AGPL-3.0-only",
   "keywords": [
     "music",
+    "recoup",
+    "record-label",
     "artist-management",
     "songwriting",
+    "music-research",
+    "catalog-deals",
+    "content-creation",
+    "release-management",
     "music-marketing",
     "analytics",
-    "release-management",
-    "chartmetric",
     "agent-skills"
   ]
 }

@@ -2,7 +2,7 @@
   "name": "recoup",
   "owner": {
     "name": "Recoup",
-    "email": "agent@recoupable.com",
+    "email": "support@recoupable.com",
     "url": "https://recoupable.com"
   },
   "plugins": [
@@ -10,41 +10,11 @@
       "name": "recoup-skills",
       "displayName": "Recoup Skills",
       "source": ".",
-      "description": "The open skills library \u2014 portable music-industry skills (artist management, songwriting, analytics, release campaigns, setup) you can drop into any agent. Also installable directly via `npx skills add recoupable/skills`.",
-      "version": "1.0.1",
-      "author": {
-        "name": "Recoupable",
-        "email": "agent@recoupable.com",
-        "url": "https://recoupable.com"
-      },
-      "homepage": "https://recoupable.com",
-      "repository": "https://github.com/recoupable/skills",
-      "license": "AGPL-3.0-only",
-      "keywords": [
-        "music",
-        "artist-management",
-        "songwriting",
-        "music-marketing",
-        "analytics",
-        "release-management",
-        "agent-skills"
-      ],
-      "category": "Music",
-      "tags": [
-        "skills-library",
-        "artist-management",
-        "songwriting"
-      ]
-    },
-    {
-      "name": "recoup-records",
-      "displayName": "Recoup Records",
-      "source": "./plugins/recoup-records",
-      "description": "A record label in a box \u2014 one install that bundles every Recoup plugin: setup, research, deals, content, song analysis, and releases. Install this instead of picking individual plugins.",
-      "version": "0.1.1",
+      "description": "A record label in a box. Recoup turns your AI agent into a full music team — artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation — all in one install.",
+      "version": "2.0.0",
       "author": {
         "name": "Recoup",
-        "email": "agent@recoupable.com",
+        "email": "support@recoupable.com",
         "url": "https://recoupable.com"
       },
       "homepage": "https://recoupable.com",
@@ -55,54 +25,20 @@
         "recoup",
         "record-label",
         "artist-management",
+        "songwriting",
         "music-research",
         "catalog-deals",
         "content-creation",
         "release-management",
+        "music-marketing",
+        "analytics",
         "agent-skills"
       ],
       "category": "Music",
       "tags": [
         "record-label",
         "all-in-one",
-        "bundle"
-      ]
-    },
-    {
-      "name": "recoup-internal",
-      "displayName": "Recoup Internal",
-      "source": "./plugins/recoup-internal",
-      "description": "Recoup's internal toolkit for AI agents \u2014 engineering and operations. Write and maintain high-signal GitHub tracking issues, deliver them docs-first and test-driven end-to-end, benchmark any plugin or skills folder against the frontier of skill design, work the catalog-valuation sales funnel in Attio, produce account-health snapshots for any Recoup account, and draft, publish, and measure data-grounded social posts.",
-      "version": "0.1.1",
-      "author": {
-        "name": "Recoup",
-        "email": "agent@recoupable.com",
-        "url": "https://recoupable.com"
-      },
-      "homepage": "https://recoupable.com",
-      "repository": "https://github.com/recoupable/skills",
-      "license": "AGPL-3.0-only",
-      "keywords": [
-        "recoup",
-        "recoup-internal",
-        "engineering",
-        "github-issues",
-        "issue-tracking",
-        "test-driven-development",
-        "skill-design",
-        "plugin-benchmark",
-        "sales-pipeline",
-        "account-health",
-        "social-posts",
-        "agent-skills"
-      ],
-      "category": "Developer Tools",
-      "tags": [
-        "github-issues",
-        "test-driven-development",
-        "skill-design",
-        "sales-pipeline",
-        "account-health"
+        "artist-management"
       ]
     }
   ]

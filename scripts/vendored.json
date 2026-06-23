@@ -1,10 +1,186 @@
 {
-  "_comment": "Maps each canonical shared file to its byte-identical vendored copies, kept in sync by scripts/check_vendored.py. See AGENTS.md 'Portable Skill Contract'. recoup-internal's skills were renamed to the recoup-[domain]-[verb]-[noun] convention and now diverge from the public skills/ library, so they are intentionally no longer vendored copies.",
+  "_comment": "Maps each canonical shared file/dir to its byte-identical vendored copies, kept in sync by scripts/check_vendored.py. See AGENTS.md 'Portable Skill Contract' rule 5: skills are self-contained, so references/templates/fixtures shared by multiple skills are COPIED into each skill (not centralized) and registered here so they can't silently drift. The canonical is the repo-root copy (references/ , templates/ , fixtures/) when the shared file exists at root; for the few files shared only between sibling skills (no root copy), the canonical is one skill's copy and the others point at it. Edit the canonical, then re-sync per AGENTS.md.",
   "groups": [
     {
-      "canonical": "assets/recoup-icon.png",
+      "canonical_dir": "fixtures/demo-data-room",
+      "copies_dirs": [
+        "skills/recoup-catalog-review-deal/fixtures/demo-data-room"
+      ]
+    },
+    {
+      "canonical": "references/account-resolver.md",
       "copies": [
-        "plugins/recoup-internal/assets/recoup-icon.png"
+        "skills/recoup-content-asset-pack/references/account-resolver.md",
+        "skills/recoup-content-make-graphics/references/account-resolver.md",
+        "skills/recoup-content-make-video/references/account-resolver.md",
+        "skills/recoup-content-reactive-post/references/account-resolver.md",
+        "skills/recoup-content-write-caption/references/account-resolver.md"
+      ]
+    },
+    {
+      "canonical": "references/analyze-gate.md",
+      "copies": [
+        "skills/recoup-content-asset-pack/references/analyze-gate.md",
+        "skills/recoup-content-make-graphics/references/analyze-gate.md",
+        "skills/recoup-content-make-video/references/analyze-gate.md",
+        "skills/recoup-content-reactive-post/references/analyze-gate.md",
+        "skills/recoup-content-write-caption/references/analyze-gate.md"
+      ]
+    },
+    {
+      "canonical": "references/content-api.md",
+      "copies": [
+        "skills/recoup-content-asset-pack/references/content-api.md",
+        "skills/recoup-content-make-graphics/references/content-api.md",
+        "skills/recoup-content-make-video/references/content-api.md",
+        "skills/recoup-content-reactive-post/references/content-api.md",
+        "skills/recoup-content-write-caption/references/content-api.md"
+      ]
+    },
+    {
+      "canonical": "references/deal-workflow.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/references/deal-workflow.md"
+      ]
+    },
+    {
+      "canonical": "references/deal-workspace.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/references/deal-workspace.md"
+      ]
+    },
+    {
+      "canonical": "references/endpoints.md",
+      "copies": [
+        "skills/recoup-research-artist-overview/references/endpoints.md"
+      ]
+    },
+    {
+      "canonical": "references/flamingo-api.md",
+      "copies": [
+        "skills/recoup-song-analyze-audio/references/flamingo-api.md",
+        "skills/recoup-song-find-hook/references/flamingo-api.md",
+        "skills/recoup-song-placement-pitch/references/flamingo-api.md"
+      ]
+    },
+    {
+      "canonical": "references/red-flags.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/references/red-flags.md"
+      ]
+    },
+    {
+      "canonical": "references/research-context.md",
+      "copies": [
+        "skills/recoup-content-asset-pack/references/research-context.md",
+        "skills/recoup-content-make-graphics/references/research-context.md",
+        "skills/recoup-content-make-video/references/research-context.md",
+        "skills/recoup-content-reactive-post/references/research-context.md",
+        "skills/recoup-content-write-caption/references/research-context.md"
+      ]
+    },
+    {
+      "canonical": "references/response-shapes.md",
+      "copies": [
+        "skills/recoup-research-artist-overview/references/response-shapes.md"
+      ]
+    },
+    {
+      "canonical": "references/song-sourcing.md",
+      "copies": [
+        "skills/recoup-content-asset-pack/references/song-sourcing.md",
+        "skills/recoup-content-make-graphics/references/song-sourcing.md",
+        "skills/recoup-content-make-video/references/song-sourcing.md",
+        "skills/recoup-content-reactive-post/references/song-sourcing.md",
+        "skills/recoup-content-write-caption/references/song-sourcing.md"
+      ]
+    },
+    {
+      "canonical": "references/workflows.md",
+      "copies": [
+        "skills/recoup-research-artist-overview/references/workflows.md",
+        "skills/recoup-research-find-contacts/references/workflows.md",
+        "skills/recoup-research-find-talent/references/workflows.md",
+        "skills/recoup-research-playlist-targets/references/workflows.md",
+        "skills/recoup-research-the-web/references/workflows.md",
+        "skills/recoup-research-weekly-brief/references/workflows.md"
+      ]
+    },
+    {
+      "canonical": "references/workspace-context.md",
+      "copies": [
+        "skills/recoup-content-asset-pack/references/workspace-context.md",
+        "skills/recoup-content-make-graphics/references/workspace-context.md",
+        "skills/recoup-content-make-video/references/workspace-context.md",
+        "skills/recoup-content-reactive-post/references/workspace-context.md",
+        "skills/recoup-content-write-caption/references/workspace-context.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-estimate-value/references/methodology.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/references/methodology.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-estimate-value/references/recoup-api.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/references/recoup-api.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-release-plan-rollout/references/response-shapes.md",
+      "copies": [
+        "skills/recoup-release-track-drop/references/response-shapes.md"
+      ]
+    },
+    {
+      "canonical": "templates/deal-workspace/assumptions.yaml",
+      "copies": [
+        "skills/recoup-catalog-review-deal/templates/assumptions.yaml",
+        "skills/recoup-catalog-review-deal/templates/deal-workspace/assumptions.yaml"
+      ]
+    },
+    {
+      "canonical": "templates/deal-workspace/evidence-ledger.json",
+      "copies": [
+        "skills/recoup-catalog-review-deal/templates/deal-workspace/evidence-ledger.json",
+        "skills/recoup-catalog-review-deal/templates/evidence-ledger.json"
+      ]
+    },
+    {
+      "canonical": "templates/deal-workspace/findings.json",
+      "copies": [
+        "skills/recoup-catalog-review-deal/templates/deal-workspace/findings.json",
+        "skills/recoup-catalog-review-deal/templates/findings.json"
+      ]
+    },
+    {
+      "canonical": "templates/deal-workspace/memos/financing-pack.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/templates/deal-workspace/memos/financing-pack.md",
+        "skills/recoup-catalog-review-deal/templates/memos/financing-pack.md"
+      ]
+    },
+    {
+      "canonical": "templates/deal-workspace/memos/ic-memo.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/templates/deal-workspace/memos/ic-memo.md",
+        "skills/recoup-catalog-review-deal/templates/memos/ic-memo.md"
+      ]
+    },
+    {
+      "canonical": "templates/deal-workspace/memos/seller-cleanup-report.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/templates/deal-workspace/memos/seller-cleanup-report.md",
+        "skills/recoup-catalog-review-deal/templates/memos/seller-cleanup-report.md"
+      ]
+    },
+    {
+      "canonical": "templates/deal-workspace/missing-files.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/templates/deal-workspace/missing-files.md",
+        "skills/recoup-catalog-review-deal/templates/missing-files.md"
       ]
     }
   ]

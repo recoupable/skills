@@ -90,14 +90,14 @@ Accept reasonable defaults; confirm the derived names once before writing files.
 | Input | Example | Used for |
 |---|---|---|
 | **Track** | `public` / `private` | Picks the knob set in §1 + §19 |
-| **Company legal/parent name** | `Recoupable` | `author.name`, attribution, owner object — stays the real company name |
+| **Company legal/parent name** | `Recoup` | `author.name`, attribution, owner object — stays the real company name |
 | **Brand name** (may equal company) | `Recoup` | User-facing display labels (`Recoup — Research`) |
 | **Brand prefix** (kebab, lowercase) | `recoup` | Plugin + plugin-skill identifiers |
 | **GitHub org** | `recoupable` | Plugin source URLs, repo links (lowercase) |
 | **GitHub repo name** | `skills` | `https://github.com/<org>/<repo>.git` |
 | **License** | `Apache-2.0` (public) / `Proprietary` (private) | `LICENSE`, every manifest `license` field |
 | **Maintainer name / email / GitHub handle** | `Sidney Swift` / `agent@company.com` / `sidneyswift` | Owner objects, CODEOWNERS, READMEs |
-| **Support email** | `agent@recoupable.com` | `owner.email`, `author.email`, attribution — **must match across every layer** |
+| **Support email** | `support@recoupable.com` | `owner.email`, `author.email`, attribution — **must match across every layer** |
 | **Departments / teams** | Research, Deals, Content, Songs | Become plugins (one per audience cluster) |
 | **Known plugin skills per dept** (optional) | "artist research", "royalty normalization" | Become prefixed `skills/` folders inside a plugin |
 | **Known standalone skills** (optional, public) | "songwriting", "getting started" | Become unprefixed top-level `skills/` folders |

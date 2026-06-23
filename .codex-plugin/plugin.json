@@ -1,10 +1,10 @@
 {
   "name": "recoup-skills",
-  "version": "1.0.1",
-  "description": "AI agent skills for the music industry — artist management, songwriting, analytics, release campaigns, and more.",
+  "version": "2.0.0",
+  "description": "A record label in a box. Recoup turns your AI agent into a full music team — artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation — all in one install.",
   "author": {
-    "name": "Recoupable",
-    "email": "agent@recoupable.com",
+    "name": "Recoup",
+    "email": "support@recoupable.com",
     "url": "https://recoupable.com"
   },
   "homepage": "https://recoupable.com",
@@ -12,22 +12,29 @@
   "license": "AGPL-3.0-only",
   "keywords": [
     "music",
+    "recoup",
+    "record-label",
     "artist-management",
     "songwriting",
+    "music-research",
+    "catalog-deals",
+    "content-creation",
+    "release-management",
     "music-marketing",
     "analytics",
-    "release-management",
-    "chartmetric",
     "agent-skills"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Recoup Skills",
-    "shortDescription": "Music industry skills for AI agents",
-    "longDescription": "Teach your coding agent how to manage artists, write songs, analyze music analytics, plan releases, and more. General skills work for anyone — platform skills integrate with the Recoupable platform.",
-    "developerName": "Recoupable",
-    "category": "Productivity",
-    "capabilities": ["Read", "Write"],
+    "shortDescription": "A record label in a box — your AI music team in one install",
+    "longDescription": "The whole Recoup platform in one plugin: artist research and analytics, A&R and contact discovery, content and short-form video, song analysis, end-to-end release campaigns, and catalog valuation — everything your AI music team needs to run an artist's career.",
+    "developerName": "Recoup",
+    "category": "Music",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "websiteURL": "https://recoupable.com",
     "brandColor": "#345A5D",
     "composerIcon": "./assets/recoup-icon.png",

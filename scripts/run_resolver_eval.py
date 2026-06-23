@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolver-eval runner for the recoup-records bundle.
+"""Resolver-eval runner for the Recoup Skills plugin (repo root).
 
 This is the "does the RIGHT skill fire?" test — the rarest, highest-value part
 of a tested skill bundle. Most people test a skill's *output*; almost nobody
@@ -25,7 +25,7 @@ It runs in two tiers:
       non-zero below RECOUP_RESOLVER_EVAL_MIN_PASS (default 1.0). Tunables:
       RECOUP_RESOLVER_EVAL_MODEL (default openai/gpt-5.4-nano), AI_GATEWAY_BASE_URL.
 
-Fixtures: plugins/recoup-records/resolver-eval.jsonl — one JSON object per line:
+Fixtures: resolver-eval.jsonl (repo root) — one JSON object per line:
     {"intent": "research Drake", "expected": "recoup-artist-research"}
     {"intent": "value it from public data, no seller files",
      "expected": "recoup-catalog-value", "not": ["recoup-deal-value"]}
@@ -44,8 +44,8 @@ import urllib.request
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN = REPO_ROOT / "plugins" / "recoup-records"
-# Co-located with the plugin (NOT under tests/, which is gitignored) so the
+PLUGIN = REPO_ROOT
+# Co-located with the plugin root (NOT under tests/, which is gitignored) so the
 # fixtures ship and CI can run them on a fresh checkout.
 FIXTURES = PLUGIN / "resolver-eval.jsonl"
 SKILL_TOKEN = re.compile(r"`(recoup-[a-z0-9-]+)`")
@@ -134,7 +134,7 @@ def skill_descriptions() -> dict[str, str]:
 def _call_gateway(intent: str, catalog: str) -> str:
     """Route one intent via the gateway. Returns the raw reply (or '__ERROR__: ...')."""
     system = (
-        "You are the skill router for the recoup-records plugin. Given a USER "
+        "You are the skill router for the Recoup Skills plugin. Given a USER "
         "REQUEST and a catalog of skills (name: description), choose the SINGLE "
         "best skill. Reply with ONLY the skill name (e.g. recoup-research); reply "
         "none if nothing fits."

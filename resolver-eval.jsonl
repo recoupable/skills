@@ -1,0 +1,64 @@
+# Resolver-eval fixtures — middle-tier (domain-grouped skills).
+# One JSON object per line: {"intent": <user phrasing>, "expected": <skill that owns it>, "not": [<must-not-fire>]}
+# Run: python3 scripts/run_resolver_eval.py
+# Goal: prove each skill fires for a real phrasing, and the cross-skill forks route correctly.
+
+# --- platform ---
+{"intent": "set me up, verify my email and give me an api key", "expected": "recoup-platform-connect-account"}
+{"intent": "scaffold my sandbox folders from my orgs and artists", "expected": "recoup-platform-build-workspace"}
+{"intent": "call the recoup api to fetch this artist's socials", "expected": "recoup-platform-api-access"}
+{"intent": "edit this google doc and sync it to a sandbox file", "expected": "recoup-platform-api-access"}
+{"intent": "that worked, remember this so we don't redo it next time", "expected": "recoup-platform-capture-lesson"}
+
+# --- roster ---
+{"intent": "onboard a new signing and set up their folder", "expected": "recoup-roster-add-artist"}
+{"intent": "what artists do I have, list my roster", "expected": "recoup-roster-list-artists"}
+{"intent": "organize this artist's files and update their brand", "expected": "recoup-roster-manage-artist"}
+
+# --- research ---
+{"intent": "research Drake and give me an overview of how they're doing", "expected": "recoup-research-artist-overview"}
+{"intent": "where are this artist's fans and what markets should we expand to", "expected": "recoup-research-artist-overview"}
+{"intent": "find emerging unsigned artists in afrobeats", "expected": "recoup-research-find-talent"}
+{"intent": "which playlists should this catalog target and where are the gaps", "expected": "recoup-research-playlist-targets", "not": ["recoup-song-placement-pitch"]}
+{"intent": "find the manager and press contacts and draft outreach", "expected": "recoup-research-find-contacts"}
+{"intent": "give me the weekly brief on what changed for this artist", "expected": "recoup-research-weekly-brief", "not": ["recoup-release-plan-rollout"]}
+{"intent": "deep research why this song went viral, with citations", "expected": "recoup-research-the-web"}
+{"intent": "enrich this record label with structured facts and recent news", "expected": "recoup-research-the-web"}
+
+# --- song (audio-grounded) ---
+{"intent": "analyze this track's audio, bpm key genre and a mix critique", "expected": "recoup-song-analyze-audio"}
+{"intent": "find the best 15 seconds of this song to clip", "expected": "recoup-song-find-hook", "not": ["recoup-content-make-video"]}
+{"intent": "write a playlist pitch and sync brief for this single from the audio", "expected": "recoup-song-placement-pitch", "not": ["recoup-research-playlist-targets"]}
+
+# --- content ---
+{"intent": "write an instagram caption in this artist's voice", "expected": "recoup-content-write-caption"}
+{"intent": "make square cover art and a youtube thumbnail with a hook line", "expected": "recoup-content-make-graphics"}
+{"intent": "make a tiktok video of the artist with their song", "expected": "recoup-content-make-video"}
+{"intent": "make a looping spotify canvas with no text", "expected": "recoup-content-make-video"}
+{"intent": "give me a whole content pack, 30 posts for the launch", "expected": "recoup-content-asset-pack"}
+{"intent": "they just crossed 1B streams, make something off that", "expected": "recoup-content-reactive-post", "not": ["recoup-research-artist-overview"]}
+
+# --- release ---
+{"intent": "start a release and take it end to end with a brief and rollout schedule", "expected": "recoup-release-plan-rollout", "not": ["recoup-research-weekly-brief"]}
+{"intent": "did this artist's single drop yet, set a launch alert", "expected": "recoup-release-track-drop"}
+
+# --- catalog (the valuation fork) ---
+{"intent": "review and underwrite this catalog deal end to end", "expected": "recoup-catalog-review-deal"}
+{"intent": "clean and normalize this messy royalty data room", "expected": "recoup-catalog-review-deal"}
+{"intent": "write the IC memo and export a shareable pdf", "expected": "recoup-catalog-review-deal"}
+{"intent": "estimate this catalog's value from public streaming data, no seller files", "expected": "recoup-catalog-estimate-value", "not": ["recoup-research-the-web"]}
+
+# --- internal (Recoup staff only; gated by the recoup-internal keyword) ---
+{"intent": "recoup-internal write a tracking issue for the auth migration", "expected": "recoup-internal-dev-issue-tracker"}
+{"intent": "recoup-internal ship issue #412 end to end, docs-first and test-driven", "expected": "recoup-internal-dev-ship-issue"}
+{"intent": "recoup-internal benchmark this skills folder against the frontier", "expected": "recoup-internal-eval-skill-benchmark"}
+{"intent": "recoup-internal work the valuation funnel and advance this Attio lead", "expected": "recoup-internal-funnel-valuation-pipeline"}
+{"intent": "recoup-internal account health snapshot for this account", "expected": "recoup-internal-account-health-report"}
+{"intent": "recoup-internal draft and ship a launch post for LinkedIn and X", "expected": "recoup-internal-social-ship-posts"}
+
+# --- gating invariant: WITHOUT the recoup-internal keyword, internal skills must NOT fire ---
+# Only the internal skills with a plausible customer-facing collision get a negative; the dev/eval
+# skills (issue-tracker, ship-issue, eval-skill-benchmark) have no customer-request surface to confuse.
+{"intent": "what's this catalog worth from public streaming data", "expected": "recoup-catalog-estimate-value", "not": ["recoup-internal-funnel-valuation-pipeline"]}
+{"intent": "write a caption for the artist's instagram post", "expected": "recoup-content-write-caption", "not": ["recoup-internal-social-ship-posts"]}
+{"intent": "how is this artist doing across streaming and socials", "expected": "recoup-research-artist-overview", "not": ["recoup-internal-account-health-report"]}

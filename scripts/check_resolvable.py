@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolver reachability audit for the recoup-records bundle.
+"""Resolver reachability audit for the Recoup Skills plugin (repo root).
 
 Enforces that the bundle's RESOLVER.md routing table stays honest as skills are
 added/removed — the "no dark skills" guarantee. A skill that exists but isn't
@@ -12,8 +12,8 @@ Two findings, both fatal (exit 1):
   2. BROKEN ROUTE — a `recoup-*` token in RESOLVER.md with no matching skill dir.
 
 Usage:
-  python3 scripts/check_resolvable.py                 # default: recoup-records
-  python3 scripts/check_resolvable.py plugins/recoup-content   # any plugin with a RESOLVER.md
+  python3 scripts/check_resolvable.py                 # default: repo root (skills/ + RESOLVER.md)
+  python3 scripts/check_resolvable.py path/to/subdir  # any dir with skills/ + RESOLVER.md
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_PLUGIN = REPO_ROOT / "plugins" / "recoup-records"
+DEFAULT_PLUGIN = REPO_ROOT
 
 # A skill reference in RESOLVER.md is a backtick-wrapped slug: `recoup-foo-bar`.
 SKILL_TOKEN = re.compile(r"`(recoup-[a-z0-9-]+)`")
