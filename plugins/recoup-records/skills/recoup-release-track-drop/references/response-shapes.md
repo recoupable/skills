@@ -1,9 +1,7 @@
 # Response shapes (production `api.recoupable.com`, songstats-based)
 
-The research backend is **songstats-based**. There is **no** `match_strength`, **no**
-`cm_statistics`, and **no** Chartmetric numeric IDs. Don't code against the old
-Chartmetric fields — they're gone. When you need a field not verified below,
-**dump it first** rather than guessing:
+The research backend is **songstats-based**. When you need a field not verified
+below, **dump it first** rather than guessing:
 
 ```bash
 curl -s "$RECOUP_API/research/<ep>?artist=..." -H "x-api-key: $RECOUP_API_KEY" | jq 'keys'
@@ -49,14 +47,13 @@ first sensible result is the match; disambiguate by `name`/`avatar` if needed.
 
 ### `GET /research/similar` → `artists[]`
 Same per-artist shape as search (`songstats_artist_id`, `id`, `name`, `avatar`,
-`site_url`). **It does NOT return `career_stage`, `recent_momentum`, `score`, or
-follower counts** — those Chartmetric fields are gone. To compare peers, fetch
-each peer's `/research/metrics` / `/research/profile` separately.
+`site_url`) — no scores or follower counts. To compare peers, fetch each peer's
+`/research/metrics` / `/research/profile` separately.
 
 ### `GET /research/profile` → `artist_info{}`
 `artist_info` carries `name`, `country`, `bio`, `avatar`, `site_url`, genres/label
-where available. There is **no** top-level `sp_followers` and **no**
-`cm_statistics`. For follower/listener numbers use `/research/metrics`.
+where available. There is **no** top-level `sp_followers`. For follower/listener
+numbers use `/research/metrics`.
 
 ### `GET /research/audience` → `audience[]`
 `{ ..., "audience": [], "artist_info": {...}, "source_ids": [] }`. The `audience`
@@ -75,7 +72,7 @@ Take the latest entry for the current value; introspect with `jq '.stats[0]'`.
 `track`, `track/playlists` all return the common envelope with their own data
 array. Their exact inner field names are **not pinned here** — run
 `jq '.<array>[0] | keys'` once before coding against them, and prefer the names
-the live response actually shows over any remembered Chartmetric field.
+the live response actually shows.
 
 - **`milestones`** — `status: "success"` with `milestones: []` is common and legit; don't retry. Fall back to `insights` / `career`.
 - **`tracks` / `track`** — track objects carry an `id` you pass to `/research/track` and `/research/track/playlists`. Per-song TikTok fields may or may not be present per track; if absent, report "no data" (never fabricate — see `recoup-research-artist-overview` tiktok mode).
@@ -83,8 +80,5 @@ the live response actually shows over any remembered Chartmetric field.
 
 ## The discipline
 
-The whole reason this file exists: the previous version documented Chartmetric
-fields (`cm_statistics`, `match_strength`, `career_stage` on similar, nested
-`placements[]`) that **production no longer returns**. If you find yourself
-reaching for one of those, stop and `jq keys` the live response — the field is
-almost certainly renamed or gone.
+If a field you expect isn't documented above, stop and `jq keys` the live
+response before coding against it — trust what the response actually shows.

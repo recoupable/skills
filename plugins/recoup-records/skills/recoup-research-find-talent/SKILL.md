@@ -12,9 +12,9 @@ export RECOUP_API="https://api.recoupable.com/api"   # auth header: x-api-key: $
 ```
 
 Discovery starts from a known **anchor** artist and fans out through `/similar`,
-validated with `/metrics`. The `discover`/`genres` endpoints were removed — use
-web/deep research to find anchors or scan a scene. Full chains in
-`references/workflows.md` (A&R Discovery, Viral Song Autopsy).
+validated with `/metrics`. Use web/deep research to find anchors or scan a
+scene. Full chains in `references/workflows.md` (A&R Discovery, Viral Song
+Autopsy).
 
 ## Procedure
 

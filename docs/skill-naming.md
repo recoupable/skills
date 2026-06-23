@@ -22,22 +22,21 @@ job 3 expands *how they prompt*. A good skill serves all three.
 
 ## Naming convention
 
-**Pattern:** `recoup-{domain}-{action|thing}` — domain first, ≤ 3 tokens.
+**Pattern:** `recoup-[domain]-[verb]-[noun]` — domain first, exactly four words.
 
-- **Domain first** so the alphabetical list self-groups by subject. Domains are a
-  small, stable set: `setup · artist · song · content · deal · release`. New
-  skills slot into an existing domain; we rarely add a domain.
-- **Action or thing second**, whichever a human would say:
-  - Action skills take a **verb**: `recoup-song-analyze`, `recoup-deal-value`.
-  - Artifact skills take a **noun**: `recoup-deal-dashboard`, `recoup-release-doc`.
-- **Never four tokens.** `recoup-content-cover-art`, not
-  `recoup-content-create-coverart`. (The action lives in the description; the
-  name stays scannable.)
-- **Front doors keep `-start`:** `recoup-deal-start`, `recoup-release-start`.
+- **Domain first** so the alphabetical `/` list self-groups by subject. Domains
+  are a small, stable set: `platform · roster · research · song · content ·
+  release · catalog`. New skills slot into an existing domain; we rarely add one.
+- **Verb + noun tail** makes every name self-describing — it says what the skill
+  does and to what: `recoup-research-find-talent`, `recoup-content-write-caption`,
+  `recoup-catalog-estimate-value`, `recoup-roster-add-artist`.
 - **The skim test:** from the name alone, would Molly (a non-technical music
-  marketer) know roughly what it does? If not, rename.
-
-This matches the scope-token + modality guidance in `capability-plugins.md`.
+  marketer) know what it does? If not, rename — the verb+noun tail exists to pass
+  this test.
+- **Routing lives in `RESOLVER.md`,** the plugin's dispatch table; every skill is
+  flat and reachable from it (no separate "router" entry-point skill). Add a
+  `RESOLVER.md` row whenever you add a skill — `scripts/check_resolvable.py`
+  fails on any skill the resolver can't reach.
 
 ---
 
@@ -84,12 +83,9 @@ Applying the test:
 
 | Cluster | Decision | Why |
 | --- | --- | --- |
-| Song (7) | **Merge → 2** (`recoup-song-analyze`, `recoup-song-pitch`) | All operate on one audio file; modes (lyrics, mix, metadata / hook, playlist, sync) are sayable and advertised in the description. |
-| Graphics (3) | **Merge → 1** (`recoup-content-graphic`) | Interchangeable still-image formats from similar inputs. |
-| Setup (2) | **Merge → 1** (`recoup-setup`) | Sandbox scaffolding is a branch of first-run setup. |
-| Onboarding (2) | **Merge → 1** (`recoup-artist-create`) | Folder conventions become a reference inside create. |
-| Pre-release brief (2, duplicate) | **Merge → 1** (`recoup-release-brief`) | True duplicate across two plugins. |
-| **Monitors (3)** | **Keep split** | "Did my release drop", "are streams spiking", "what's new this week" are three distinct high-intent things a user browses for. Burying them as modes of one "monitor" hides capability — fails the discovery test. |
+| Brand kit | **Merge → modes** (`rostrum-brand-kit`) | One browseable name; each brand is a sayable mode ("use the *space heater* brand"). |
+| Song work | **Keep split** (`recoup-song-analyze-audio`, `recoup-song-find-hook`, `recoup-song-placement-pitch`) | "Analyze my audio", "find the hook", "pitch this song" are distinct high-intent things a user browses for — folding them would hide capability. |
+| Content formats | **Keep split** (`recoup-content-write-caption`, `recoup-content-make-graphics`, `recoup-content-make-video`, …) | Each output is something a user names directly; one "content" skill would bury what's possible. |
 
 ---
 
@@ -102,99 +98,3 @@ request. For every pair on the same topic:
 - On-demand vs scheduled twins each state their mode in the first sentence
   ("Ask now…" vs "Runs weekly and saves…").
 - No two skills share the same trigger phrases.
-
----
-
-## Migration map (current → proposed)
-
-**As built: 43 skills.** From the 6 plugins: 48 → 41 (song −4 (7→3), graphics −2 (3→1),
-release-pack duplicate −1). Plus 2 curated standalone skills pulled into the bundle by the
-generator's `EXTRA_SKILLS` map: `recoup-songwriting` (from `skills/song-writing`) and
-`recoup-catalog-value` (from `skills/catalog-value-estimator`, input-gated vs
-`recoup-deal-value`). `chart-metric`, `issue-implementation`, `issue-management`, and the 4
-plugin-duplicated standalones (music-industry-research, content-creation, short-video,
-release-management) were deliberately left out.
-
-The `setup-sandbox`, `artist-workspace`, and 3-monitor merges in the table below were
-**not** applied — per the granularity rule *"when unsure, keep it visible"*, each is a
-distinct browse intent (same call as keeping the monitors split). They were renamed for
-consistency but kept as separate skills. Optional future add: `recoup-account-profile` (→ 42).
-
-### setup (→ 2)
-| Current | Becomes |
-| --- | --- |
-| recoup-setup, recoup-setup-sandbox | `recoup-setup` (sandbox mode) |
-| recoup-api | `recoup-api` |
-
-### artist (→ 11)
-| Current | Becomes |
-| --- | --- |
-| recoup-create-artist, recoup-artist-workspace | `recoup-artist-create` |
-| recoup-artist-research | `recoup-artist-research` (router) |
-| recoup-audience-analysis | `recoup-artist-audience` |
-| recoup-competitive-analysis | `recoup-artist-competition` |
-| recoup-playlist-intelligence | `recoup-artist-playlists` |
-| recoup-people-outreach | `recoup-artist-outreach` |
-| recoup-trend-detection | `recoup-artist-scout` |
-| recoup-tiktok-per-song | `recoup-artist-tiktok` |
-| recoup-weekly-brief | `recoup-artist-brief` |
-| recoup-streaming-check | `recoup-artist-streaming` |
-| recoup-web-intelligence | `recoup-web-research` (utility) |
-
-### song (→ 2)
-| Current | Becomes |
-| --- | --- |
-| recoup-song-analyzer, recoup-song-metadata, recoup-song-lyrics, recoup-song-mix-feedback | `recoup-song-analyze` (modes: report / metadata / lyrics / mix) |
-| recoup-song-hook, recoup-song-playlist-pitch, recoup-song-sync-brief | `recoup-song-pitch` (modes: hook / playlist / sync) |
-
-### content (→ 11)
-| Current | Becomes |
-| --- | --- |
-| recoup-content | `recoup-content` (router) |
-| recoup-short-video | `recoup-content-video` |
-| recoup-brand-voice-caption | `recoup-content-caption` |
-| recoup-content-pack | `recoup-content-pack` |
-| recoup-content-reformat | `recoup-content-reformat` |
-| recoup-carousel, recoup-promo-graphic, recoup-quote-cards | `recoup-content-graphic` (modes: carousel / promo / quote) |
-| recoup-cover-art | `recoup-content-cover-art` |
-| recoup-thumbnail | `recoup-content-thumbnail` |
-| recoup-lyric-video | `recoup-content-lyric-video` |
-| recoup-visualizer | `recoup-content-visualizer` |
-| recoup-trend-jack | `recoup-content-trend` |
-
-### deal (→ 6)
-| Current | Becomes |
-| --- | --- |
-| recoup-deal-start | `recoup-deal-start` (orchestrator) |
-| recoup-deal-ingest | `recoup-deal-ingest` |
-| recoup-deal-analysis | `recoup-deal-value` |
-| recoup-deal-dashboard | `recoup-deal-dashboard` |
-| recoup-deal-report | `recoup-deal-report` |
-| recoup-deal-demo | `recoup-deal-demo` |
-
-### release (→ 6)
-| Current | Becomes |
-| --- | --- |
-| recoup-release-start | `recoup-release-start` (orchestrator) |
-| recoup-release-campaign | `recoup-release-campaign` |
-| recoup-release-doc | `recoup-release-doc` |
-| recoup-release-marketing-brief, recoup-release-pack | `recoup-release-brief` |
-| recoup-release-demo | `recoup-release-demo` |
-| recoup-new-release-monitor | `recoup-release-monitor` |
-
-### optional
-| New | Purpose |
-| --- | --- |
-| `recoup-account-profile` | Capture who the user is (artist / manager / label / investor) + goals, so every skill tailors output and routing. |
-
----
-
-## Execution order
-
-1. Rename in place with `git mv` (preserves history); update `name:` frontmatter,
-   cross-references, READMEs, and `scripts/vendored.json` paths.
-2. Merge clusters: compose the parent skill, move each former skill's body into a
-   mode/reference, advertise modes in the description, delete the old dirs.
-3. Rewrite descriptions to the template.
-4. Re-sync vendored copies; regenerate the bundle
-   (`python3 scripts/build_records_plugin.py`); run all four gates.

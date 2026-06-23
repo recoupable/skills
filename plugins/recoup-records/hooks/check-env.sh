@@ -3,8 +3,7 @@
 # check-env.sh — SessionStart directive for the recoup-records bundle.
 #
 # Emits ONE imperative, position-pinned directive (not passive context the model
-# silently absorbs and then ignores). Per docs/fat-skills-benchmark.md P6
-# (the session-start-directive pattern): a session-start hook must DIRECT, not
+# silently absorbs and then ignores): a session-start hook must DIRECT, not
 # merely describe. It arbitrates to a single directive:
 #
 #   - No Recoup credential  -> the directive is "run recoup-platform-connect-account first" (a hard

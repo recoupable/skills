@@ -38,6 +38,8 @@ repo root
 │   ├── portability_lint.py
 │   ├── check_vendored.py
 │   ├── validate_manifests.py
+│   ├── check_resolvable.py       # routing: every skill reachable from a plugin's RESOLVER.md
+│   ├── run_resolver_eval.py      # routing: RESOLVER fixtures route to the right skill
 │   └── vendored.json
 ├── skills/                       # STANDALONE portable skills (unprefixed, npx-installable)
 │   └── <capability>/SKILL.md     # one folder per skill; optional references/ scripts/ templates/ fixtures/
@@ -47,6 +49,8 @@ repo root
     ├── .codex-plugin/plugin.json      # Codex manifest (has `skills` + `interface` block)
     ├── .cursor-plugin/plugin.json     # Cursor manifest (has `skills` + `repository`; NO `interface` block)
     ├── README.md, LICENSE, .gitignore
+    ├── RESOLVER.md               # optional: routing table → which skill handles a request (multi-skill plugins)
+    ├── resolver-eval.jsonl       # optional: routing fixtures (intent → expected skill) for RESOLVER.md
     ├── skills/<prefix>-<capability>/SKILL.md   # one folder per skill (prefixed)
     ├── references/               # optional: shared docs, VENDORED byte-identical into each skill that uses them
     ├── agents/                   # optional: subagents
@@ -125,9 +129,9 @@ Accept reasonable defaults; confirm the derived names once before writing files.
 4. **Name a skill for the capability, not the department or a helper verb.** Keep a verb only when the verb *is* the capability (`{{PREFIX}}-create-wiki`).
    - ❌ `{{PREFIX}}-watch` (watch what?), `generate-vendor-list` (leading verb), `operations-vendor-tool` (department prefix)
 5. **The skim test** — assume the user sees a flat list where the **name is the only visible thing**. From the name alone, will they know what it does? If not, it's too vague.
-6. **The `description` is the load-bearing field** — the router reads it, not the name. Lead with concrete trigger phrases the user would actually type, then a bidirectional `Do NOT use for X — use Y instead` cross-route clause.
+6. **The `description` is the load-bearing field** — the agent routes on it, not the name. Lead with concrete trigger phrases the user would actually type, then a bidirectional `Do NOT use for X — use Y instead` cross-route clause.
 7. **The frontmatter `name` MUST match the skill folder name exactly** (CI enforces this).
-8. **Router skill pattern** — give each plugin one **entry-point skill** (`{{PREFIX}}-<group>-analyzer` or similar) that resolves inputs and routes to focused sub-skills (e.g. `recoup-song-analyzer`).
+8. **Resolver dispatch, not a router skill** — keep a plugin's skills **flat** and route to them with a `RESOLVER.md` table at the plugin root (a request → the one skill that handles it). Do **not** add an entry-point "router" skill. Every skill must be reachable from the resolver (`scripts/check_resolvable.py` fails on any that isn't). Small single-purpose plugins can skip the table; add it once routing between several skills matters.
 9. **What stays the real company name (not branded):** `author.name`, `interface.developerName`, the GitHub org/repo, owner objects, support email, and prose attribution. Only *identifiers* and *display labels* take the brand prefix.
 
 ### Mapping departments → plugins; standalone vs plugin
@@ -180,9 +184,9 @@ python3 scripts/validate_manifests.py
 5. Write `LICENSE` + `.gitignore` (§10).
 6. Write `.github/workflows/validate.yml` (§11). **[PRIVATE]** add CODEOWNERS + PR template.
 7. **[PUBLIC]** Write the standalone skills under `skills/` (§13).
-8. For each plugin: three manifests + `README.md` + `LICENSE` + `.gitignore` + ≥1 starter `SKILL.md` (§12, §14); vendor any shared references and register them in `vendored.json`.
+8. For each plugin: three manifests + `README.md` + `LICENSE` + `.gitignore` + ≥1 starter `SKILL.md` (§12, §14); vendor any shared references and register them in `vendored.json`. For a multi-skill plugin, add a `RESOLVER.md` routing table + `resolver-eval.jsonl` fixtures (§9b).
 9. *(optional)* Write the `docs/` skill-craft reference (§15).
-10. Run all three validation gates + the pre-flight checklist (§17), then the Codex/dev install handoff (§18).
+10. Run every validation gate + the pre-flight checklist (§17), then the Codex/dev install handoff (§18).
 
 ---
 
@@ -397,9 +401,9 @@ python3 scripts/check_vendored.py
 
 ---
 
-## 9. Validation gates (three Python scripts — all must exit 0)
+## 9. Validation gates (stdlib Python — all must exit 0)
 
-Write these three scripts (stdlib only, no dependencies). They are the repo's quality gate and run in CI. Track the **exit code**, not the counts.
+Write these scripts (stdlib only, no dependencies). They are the repo's quality gate and run in CI. Track the **exit code**, not the counts. The three **universal** gates below run on every repo; the two **routing** gates (§9b) run for any plugin that ships a `RESOLVER.md`.
 
 ```bash
 python3 scripts/portability_lint.py    # every skill is cross-harness portable (§8)
@@ -412,6 +416,22 @@ python3 scripts/validate_manifests.py  # manifests valid JSON + semver + source 
 - **`validate_manifests.py`** — every `marketplace.json`/`plugin.json`/`.mcp.json` is valid JSON; each catalog plugin entry has `name`+`source`+`version`; `version` matches `^\d+\.\d+\.\d+([-+].+)?$`; `source` resolves to a real directory; names unique; **dual-manifest parity** on `(name, source, version)` (the `.agents` copy may add `interface`/`policy`, ignored). Exit 1 on any problem.
 
 > These three scripts are domain-agnostic — reproduce them as-is. Only `vendored.json` is repo-specific.
+
+### 9b. Routing gates (per-plugin `RESOLVER.md` — two more scripts)
+
+A multi-skill plugin keeps its routing honest with a `RESOLVER.md` dispatch table at the plugin root plus a `resolver-eval.jsonl` of routing fixtures. Two more stdlib scripts gate them; both **no-op (exit 0)** for plugins that ship no `RESOLVER.md`, so they're safe to run everywhere.
+
+```bash
+python3 scripts/check_resolvable.py    # every skill is reachable from its plugin's RESOLVER.md (no "dark" skills)
+python3 scripts/run_resolver_eval.py   # each resolver-eval.jsonl fixture routes to the expected skill
+```
+
+- **`RESOLVER.md`** — a routing table at the plugin root: rows of *user intent → the one skill that handles it*, grouped by domain. It is how the agent picks a skill; there is no entry-point "router" skill.
+- **`resolver-eval.jsonl`** — one JSON object per line: `{"intent": "<a request a user would type>", "expected": "<skill-name>", "not": ["<skill that must NOT fire>"]}`. Cover every skill with at least one positive fixture.
+- **`check_resolvable.py`** — parses each plugin's `RESOLVER.md`, asserts every skill folder is reachable from it and no route points at a deleted skill. Exit 1 on an unreachable skill or a dangling route; no-op if the plugin has no `RESOLVER.md`.
+- **`run_resolver_eval.py`** — runs the `resolver-eval.jsonl` fixtures (structural checks by default; an optional LLM tier scores live routing), asserting each intent resolves to `expected`, never to a `not` skill, with full per-skill coverage. Exit 1 on a routing miss or an uncovered skill.
+
+> Add a `RESOLVER.md` row **and** a positive fixture whenever you add a skill to a plugin that has a resolver — the coverage check fails otherwise.
 
 ---
 
@@ -472,7 +492,7 @@ on:
 
 jobs:
   portability:
-    name: Portability + drift + manifests
+    name: Portability + drift + manifests + routing
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -485,6 +505,10 @@ jobs:
         run: python3 scripts/check_vendored.py
       - name: Manifest + parity validation
         run: python3 scripts/validate_manifests.py
+      - name: Resolver reachability (no dark skills)
+        run: python3 scripts/check_resolvable.py
+      - name: Resolver routing fixtures
+        run: python3 scripts/run_resolver_eval.py
 ```
 
 ### `.github/CODEOWNERS` *(optional [PUBLIC]; recommended [PRIVATE])*
@@ -558,7 +582,7 @@ For **every** plugin create all three. They share `name`, `version`, `descriptio
 ```
 
 ### `plugins/{{PLUGIN}}/README.md`, `LICENSE`, `.gitignore`
-- `README.md`: what the plugin is, primary audience, per-harness install (Claude Code CLI, Cowork, Cursor), a Skills table (Skill | What it does) starting with the router skill, a "how it works" note (incl. that shared references are **vendored byte-identical** into each skill), requirements, and the license line. Note Cursor auto-discovers skills from `skills/`.
+- `README.md`: what the plugin is, primary audience, per-harness install (Claude Code CLI, Cowork, Cursor), a Skills table (Skill | What it does) grouped by domain, a "how it works" note (incl. that routing goes through `RESOLVER.md` and that shared references are **vendored byte-identical** into each skill), requirements, and the license line. Note Cursor auto-discovers skills from `skills/`.
 - `LICENSE`: same license as the repo.
 - `.gitignore`: the macOS/editor/secret lines from §10 (so the plugin stays clean if split into its own repo).
 
@@ -636,6 +660,7 @@ metadata:
 - **Markdown hygiene:** language-tag every code fence (use ```text for plain command/spec blocks); spaced table pipes (`| --- |`) so files pass markdownlint.
 
 ### Optional plugin assets
+- `RESOLVER.md` + `resolver-eval.jsonl` — a routing table + its fixtures for a multi-skill plugin (§9b). Add a row + a fixture per skill; gated by `check_resolvable.py` and `run_resolver_eval.py`.
 - `agents/<name>.md` — subagents (focused reviewers/analysts the skills can dispatch).
 - `hooks/hooks.json` (+ scripts) — event automation. Hooks JSON **may** use `${CLAUDE_PLUGIN_ROOT}` (it expands in JSON on Claude Code) — a SKILL.md body never may (§8 rule 2).
 - `evals/` — scenarios that assert the skill fires and produces correctly.
@@ -658,16 +683,17 @@ If you create it, it never ships with an install, so **never link a SKILL.md bac
 Persistent instructions any agent loads when working on the repo. Must contain, in full:
 - **[PRIVATE: put FIRST] Shipping changes safely:** `main` is production. Two hard rules — (1) never push to `main`; every change lands via a reviewed PR; (2) always start from latest production (`git checkout main && git pull origin main`) before branching. Then the copy-pasteable non-engineer workflow: branch → change → `git add -A && git commit` → `git push -u origin <branch>` → **open the PR yourself** with `gh pr create` (don't just hand a link; don't merge). Include the pre-start safety check and "when in doubt, stop and ask." Releasing (version bump + merge) is a maintainer task.
 - **Repository purpose + structure:** the dual-distribution model (standalone `skills/` + `plugins/`), the repo-as-plugin, both ASCII trees.
-- **Glossary:** skill, plugin, harness, marketplace registry, canonical/vendored, router skill.
+- **Glossary:** skill, plugin, harness, marketplace registry, canonical/vendored, resolver.
 - **How skills load:** progressive disclosure (frontmatter always in context → SKILL.md body when relevant → linked files on-demand); the description is the trigger.
 - **Rules:** read before you act; respect boundaries (self-contained); design for composability; keep it simple; one skill one job; no secrets.
 - **Skill format + frontmatter** for both layers (unprefixed standalone vs prefixed plugin); how to write the description.
 - **Plugins guidance:** author a plugin by copying an existing one; ship all three manifests; promote standalone skills into a plugin when they share a canonical reference.
 - **The marketplace registry:** the two catalogs that must stay in **content parity** (edit one, edit the other); author-email parity across layers; the Codex `policy` enums (§6a).
 - **Naming & branding:** reproduce §3 in full; preserve history on renames with `git mv` then update frontmatter/cross-refs/README tables/`vendored.json`.
+- **Routing:** for a multi-skill plugin, a `RESOLVER.md` table maps each request to the one handling skill — flat skills, no entry-point "router" skill (§9b).
 - **The Portable Skill Contract:** reproduce §8 in full (the five rules + the "why").
 - **Versioning:** reproduce §4 (default Model A; note Model B for synchronized private repos).
-- **Validation gates:** the three Python scripts + "all must exit 0"; the vendored-file edit recipe (§8a).
+- **Validation gates:** the universal Python scripts + the routing gates (`check_resolvable.py`, `run_resolver_eval.py`) for plugins with a `RESOLVER.md`; "all must exit 0"; the vendored-file edit recipe (§8a).
 - **Plugins table + "where does this skill go?" table:** keep updated whenever a plugin/skill is added.
 - **When to ask before acting:** *act without asking* (add/edit a skill, fix typos, update a catalog table, open a draft PR); *ask first* (create/rename/delete a plugin, modify CODEOWNERS or a marketplace.json structurally, push to `main`, touch CI); *never without direction* (repo visibility/settings, branch protection, push secrets, mirrors/forks).
 - **Three-layer update model + anti-patterns** (team-specific skills in essentials; renaming when relabeling would do; updating one manifest/catalog and forgetting the other; vague descriptions; hand-editing a vendored copy; `git rm`-ing a plugin to clean up — deprecate instead; pushing to `main` without a PR).
@@ -690,7 +716,7 @@ Identical content to `AGENTS.md` (recoup ships them identical), or a one-line `@
 ### `contributing.md`
 - How to add a skill (mkdir under `skills/` or a plugin, frontmatter, body under ~5,000 words, open a PR).
 - Skill guidelines (one job; self-contained; description is the trigger; real instructions; no secrets).
-- **Portability checklist (required — runs in CI):** the five Portable Skill Contract checks + "run the three gates locally before pushing."
+- **Portability checklist (required — runs in CI):** the five Portable Skill Contract checks + "run all the gates locally before pushing."
 - Pointer to the Portable Skill Contract in `AGENTS.md`.
 - **[PRIVATE]** add the three contribution paths by technical level (Cowork Skills UI → maintainer migrates; github.com pencil-edit → Propose changes; clone + branch + PR) and the CODEOWNERS review flow.
 
@@ -712,7 +738,7 @@ Step-by-step: add a skill (standalone or to a plugin); create a new plugin (thre
 
 ## 17. Pre-flight checklist (run before declaring done)
 
-- [ ] **All three validation gates exit 0:** `python3 scripts/portability_lint.py && python3 scripts/check_vendored.py && python3 scripts/validate_manifests.py`.
+- [ ] **All validation gates exit 0:** `python3 scripts/portability_lint.py && python3 scripts/check_vendored.py && python3 scripts/validate_manifests.py && python3 scripts/check_resolvable.py && python3 scripts/run_resolver_eval.py`.
 - [ ] Both catalogs exist and list **every** plugin (incl. the `{{PREFIX}}-skills` repo-as-plugin if shipped), with an explicit `version` per entry (Model A).
 - [ ] Dual-manifest parity on `(name, source, version)` for every plugin.
 - [ ] Every plugin has all three manifests; `version` identical across the three manifests **and** both catalog entries.
@@ -721,6 +747,7 @@ Step-by-step: add a skill (standalone or to a plugin); create a new plugin (thre
 - [ ] **[PUBLIC]** root `.claude-plugin/plugin.json` + `.codex-plugin/plugin.json` exist and ship the top-level `skills/`; standalone skills are **unprefixed**.
 - [ ] Plugin skills are **prefixed**; every `SKILL.md` `name` matches its folder exactly.
 - [ ] Every `SKILL.md` description leads with trigger phrases and has a bidirectional cross-route clause.
+- [ ] **Routing (plugins with a `RESOLVER.md`):** every skill is reachable from the resolver and has ≥1 positive `resolver-eval.jsonl` fixture; no route points at a deleted skill.
 - [ ] **Portable Skill Contract holds:** no `$CLAUDE_*` in any SKILL.md body; no `../`/cross-skill refs; backtick paths not markdown links; scripts co-located; shared files vendored + registered.
 - [ ] No SKILL.md links to `docs/` or any repo-relative path.
 - [ ] `AGENTS.md`/`CLAUDE.md` + `README.md` tables list all plugins (and standalone skills).
@@ -771,7 +798,7 @@ URL-encode the path segment/query value. Do **not** add `pluginName` or `hostId`
 | `docs/` craft layer | fold into AGENTS.md (optional) | optional |
 | Catalog `source` | relative string (`"."`, `"./plugins/x"`) | relative string, or `git-subdir` HTTPS if Cowork-strict |
 
-Everything else — naming, the Portable Skill Contract, vendoring, per-plugin versioning, the two-catalog parity, the three Python gates, the Codex `policy`/deeplink/cachebuster mechanics — is **identical** in both tracks.
+Everything else — naming, the Portable Skill Contract, vendoring, per-plugin versioning, the two-catalog parity, the validation + routing gates, the Codex `policy`/deeplink/cachebuster mechanics — is **identical** in both tracks.
 
 ---
 

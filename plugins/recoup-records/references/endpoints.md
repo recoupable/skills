@@ -6,8 +6,7 @@ parameter rules, response shapes, latency budgets, and platform source enums.
 These are the **current production endpoints** documented at
 <https://developers.recoupable.com> (see the `/api-reference/research/*` pages).
 The research API is backed by **Songstats**, so entity IDs are short
-alphanumeric strings like `wjcgfd9i` (artists) or `1ik97vot` (tracks) — **not**
-the long numeric Chartmetric IDs older versions of this skill used.
+alphanumeric strings like `wjcgfd9i` (artists) or `1ik97vot` (tracks).
 
 All examples assume:
 
@@ -43,8 +42,7 @@ Query params:
 - `q` (**required**) — a name (`Drake`, `Flowers`) **or** a streaming URL
   (`https://open.spotify.com/artist/...`).
 - `type` — `artists` (default), `tracks`, or `labels`. **These are the only
-  three valid types.** (Older versions accepted `albums`/`playlists`/`curators`/
-  `stations` — those no longer exist.)
+  three valid types.**
 - `limit` — max results (default `10`).
 - `offset` — pagination offset (default `0`).
 
@@ -143,11 +141,6 @@ curl -s "$RECOUP_API/research/track/playlists?id=1ik97vot&platform=spotify&statu
 `track/playlists` also accepts `q=` + optional `artist=` in place of `id=` for
 name-based lookup, plus `status`, `since`, `until`, `limit`, `offset`, `sort`,
 and the filter flags documented below.
-
-> **There is no `playlist` (singular), `curator`, `albums-by-name`, `cities`,
-> `charts`, `discover`, `genres`, `festivals`, `radio`, `venues`,
-> `instagram-posts`, or `rank` endpoint.** All of these returned `404` in
-> production — they were removed in the Songstats migration. Don't call them.
 
 ---
 

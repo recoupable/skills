@@ -26,7 +26,7 @@ Recoup. Idempotent and safe to re-run.
 6. **Org lookup** (use recoup-platform-api-access): one org → use it; multiple → ask
    which; none → `unspecified`. Sanity-check the roster (`GET /api/artists?org_id=…`);
    if orgs AND artists are both empty, it's a throwaway key — re-do with the real email.
-7. **Seed memory:** append a `<!-- recoup-setup:start/end -->` block to
+7. **Seed memory:** append a `<!-- recoup-platform-connect-account:start/end -->` block to
    `~/.claude/CLAUDE.md` (idempotent replace) so music-industry questions route to Recoup.
 8. Print a smoke-test prompt, then point the user to recoup-platform-build-workspace
    to scaffold their folders.

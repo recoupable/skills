@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Resolver-eval runner for the recoup-records bundle.
 
-This is the "does the RIGHT skill fire?" test from docs/fat-skills-benchmark.md
-(P1) — the rarest, highest-value part of a tested skill bundle. Most people test
-a skill's *output*; almost nobody tests its *routing*.
+This is the "does the RIGHT skill fire?" test — the rarest, highest-value part
+of a tested skill bundle. Most people test a skill's *output*; almost nobody
+tests its *routing*.
 
 It runs in two tiers:
 

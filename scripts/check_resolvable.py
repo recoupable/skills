@@ -2,8 +2,8 @@
 """Resolver reachability audit for the recoup-records bundle.
 
 Enforces that the bundle's RESOLVER.md routing table stays honest as skills are
-added/removed — the "no dark skills" guarantee from docs/fat-skills-benchmark.md
-(P2). A skill that exists but isn't reachable from the resolver is "a surgeon the
+added/removed — the "no dark skills" guarantee. A skill that exists but isn't
+reachable from the resolver is "a surgeon the
 hospital can't find"; a route that points at a deleted skill sends the agent
 nowhere.
 

@@ -6,9 +6,7 @@ but these are the fields that exist and matter. If you're looking for a field
 that isn't here, it probably doesn't exist — dump the raw response once with
 `jq '.<collection>[0] | keys'` before coding against it.
 
-**IDs are short alphanumeric strings** (`wjcgfd9i`, `1ik97vot`), not numeric
-Chartmetric IDs. **`career_stage`, `recent_momentum`, `match_strength`,
-`cm_statistics`, and `peak_position` no longer exist** anywhere in the API.
+**IDs are short alphanumeric strings** (`wjcgfd9i`, `1ik97vot`).
 
 **jq parsing note:** Some responses (especially `/research/profile`) may contain
 control characters in text fields (e.g. bio). If `jq` fails with

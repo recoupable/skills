@@ -35,7 +35,7 @@ recoupable/skills/
 - **Harness** — a runtime that loads skills/plugins: Claude Code, Codex, Cursor, or bare `npx skills`.
 - **Marketplace registry** — the list of installable plugins, written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
 - **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json`.
-- **Router skill** — a domain's single entry-point skill that routes to focused sub-skills (e.g. `recoup-songs`).
+- **Resolver** — a plugin's `RESOLVER.md` routing table that maps a user request to the one skill that should handle it. Skills stay flat and discoverable; there is no separate "router" entry-point skill. Reachability is enforced by `scripts/check_resolvable.py`.
 
 ## How Skills Load
 
@@ -147,9 +147,9 @@ Installable plugins are listed in **two files that must stay identical in conten
 
 ## Naming & branding
 
-- Slugs are **plain-English, lowercase, hyphenated** — no filler suffixes: `recoup-song-metadata`, not `recoup-song-metadata-tagger`.
-- **Plugin names drop any `-plugin` suffix**: `recoup-deals`, not `recoup-deals-plugin`.
-- Pattern: `recoup-{domain}-{noun}`; give each domain one **router skill** as the entry point.
+- Slugs are **plain-English, lowercase, hyphenated** — no filler suffixes: `recoup-song-find-hook`, not `recoup-song-find-hook-finder`.
+- **Plugin names drop any `-plugin` suffix**: `recoup-records`, not `recoup-records-plugin`.
+- Pattern: `recoup-[domain]-[verb]-[noun]` — four words, domain-first, so the `/` list auto-clusters by domain and every name says what it does. Domains are a small, stable set (`platform`, `roster`, `research`, `song`, `content`, `release`, `catalog`); a skill slots into an existing one. A plugin routes to its skills through its `RESOLVER.md` table — no separate router skill.
 - Preserve history on renames/moves with `git mv`, then update the `name:` frontmatter, cross-references, README tables, and `scripts/vendored.json` paths.
 
 ## Portable Skill Contract (cross-harness)

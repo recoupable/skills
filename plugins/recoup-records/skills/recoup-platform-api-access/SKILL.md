@@ -46,10 +46,7 @@ curl -s https://developers.recoupable.com/llms-full.txt | grep -A 30 -i "similar
 curl -s https://developers.recoupable.com/api-reference/openapi/research.json | jq '.paths | keys'
 ```
 
-Removed in the Songstats migration (return 404 — don't call): `discover`, `rank`,
-listener `cities`, `charts`, `playlist` (singular), `venues`, `radio`,
-`festivals`, `genres`, `curator`. Geography comes from `audience`; discovery from
-`similar` + `web`.
+Geography comes from `audience`; discovery from `similar` + `web`.
 
 ## Connector actions (Google Docs/Sheets/Drive, Gmail, TikTok, Instagram)
 

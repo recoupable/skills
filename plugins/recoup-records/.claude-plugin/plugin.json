@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Recoup Records",
     "shortDescription": "A record label in a box",
-    "longDescription": "The whole Recoup platform as a single plugin: artist setup and API access, music-industry research, catalog deal review, content creation, song audio analysis, and end-to-end release workflows — every skill, agent, and hook from the focused plugins, bundled together.",
+    "longDescription": "The whole Recoup platform as a single plugin: artist setup and API access, music-industry research, catalog deal review, content creation, song audio analysis, and end-to-end release workflows — every skill, agent, and hook in one bundle.",
     "developerName": "Recoup",
     "category": "Music",
     "capabilities": [

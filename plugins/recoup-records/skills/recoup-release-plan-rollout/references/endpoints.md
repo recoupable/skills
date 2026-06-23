@@ -3,8 +3,7 @@
 The live `/api/research/*` surface, verified against the OpenAPI spec at
 `developers.recoupable.com/api-reference/openapi/research.json` and live calls.
 **The research backend is songstats-based** — responses wrap data in an
-`artist_info` envelope and use `songstats_artist_id` / `id`, **not** Chartmetric
-`match_strength` / `cm_*`.
+`artist_info` envelope and use `songstats_artist_id` / `id`.
 
 ```bash
 export RECOUP_API_KEY="recoup_sk_..."
@@ -31,7 +30,6 @@ curl -s "$RECOUP_API/research/profile?id=1l65tk4s" -H "x-api-key: $RECOUP_API_KE
 `GET /api/research` — the discovery primitive.
 
 - Params: `q*`, `type` (`artists` | `tracks` | `labels`; default `artists`), `limit`, `offset`.
-- No `beta`, no `match_strength`, no `platforms` (those were the old Chartmetric engine — gone).
 - `q` may be a name or a streaming URL.
 
 ## Artist endpoints (all accept `artist=`name OR `id=`songstats-id)
@@ -83,25 +81,6 @@ curl -s -X POST "$RECOUP_API/research/enrich"  -H "x-api-key: $RECOUP_API_KEY" -
 
 - `enrich.schema` MUST include `"type":"object"` at the top level. `processor` ∈ `base|core|ultra`.
 - **Latency:** `enrich` 60–90s, `deep` 2+ min; set client timeouts ≥3 min or they look "hung."
-
-## ⚠️ Endpoints that NO LONGER EXIST (do not call — they 404)
-
-The older Chartmetric-era endpoints are **gone** from production. If a workflow
-needs one of these, use the fallback:
-
-| Removed endpoint | Use instead |
-| --- | --- |
-| `/research/cities` | `/research/audience` (geo where present) + `POST /research/web` for tour/market geo |
-| `/research/rank` | `/research/metrics` (followers/listeners trend) + `/research/insights` |
-| `/research/charts` | `POST /research/web` ("what's charting on {platform} {country}") |
-| `/research/discover` | `/research/similar` from an anchor artist + `POST /research/web` |
-| `/research/genres` | (no longer needed — there is no genre-id `discover`) |
-| `/research/festivals`, `/research/radio`, `/research/venues` | `POST /research/web` / `POST /research/deep` |
-| `/research/instagram-posts` | `POST /research/web` (or the platform Social Media API outside research) |
-| `/research/playlist` (single, by id), `/research/curator` | `/research/playlists` + `/research/track/playlists` + `POST /research/web` |
-
-There is also **no `match_strength`** and **no `cm_statistics`** — see
-`references/response-shapes.md` for the real envelope.
 
 ## Credits
 

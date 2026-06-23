@@ -5,10 +5,7 @@ questions, plus the interpretation rules of thumb and cross-cutting synthesis
 patterns to apply once you have the data.
 
 The research API is backed by **Songstats** — IDs are short alphanumeric
-strings, and several endpoints from older versions (`cities`, `charts`,
-`discover`, `genres`, `festivals`, `radio`, `venues`, `rank`,
-`instagram-posts`, `playlist`/`curator` detail) **no longer exist**. The
-workflows below only use endpoints that are live in production.
+strings. Every workflow below uses endpoints that are live in production.
 
 All examples assume:
 
@@ -57,8 +54,8 @@ Raw numbers are noise without interpretation. Heuristics for each data type:
 
 **Audience** (`/research/audience?platform=` → `audience[]`):
 
-- The only geographic/demographic source now (Spotify city data was removed).
-  Country breakdown here is your geography signal.
+- Your geographic/demographic source — country breakdown here is your geography
+  signal.
 - Gender skew → content strategy (visual style, messaging).
 - Age concentration → platform priority (Gen Z = TikTok, 25–34 = Instagram).
 - Often `[]` for smaller artists — fall back to another platform or web research.
@@ -167,9 +164,8 @@ metrics are snapshots, store today's reading to measure change next time.
 
 **Question:** "Where is this artist strong, and where should they tour?"
 
-> The dedicated `cities`, `venues`, and `festivals` endpoints were removed.
-> Geography now comes from `/research/audience` country breakdowns plus web
-> research for venues/festivals.
+> Geography comes from `/research/audience` country breakdowns plus web research
+> for venues/festivals.
 
 ```bash
 # 1. Audience geography across platforms (country breakdown lives here now)
@@ -198,10 +194,9 @@ expansion opportunities.
 
 **Question:** "Find emerging artists in [genre] before they blow up"
 
-> The `discover` (filter-based) and `genres` endpoints were removed. Discovery
-> now starts from a known **anchor artist** and fans out through `/similar`,
-> validated with `/metrics`. Use web/deep research to find anchors or scan a
-> scene.
+> Discovery starts from a known **anchor artist** and fans out through
+> `/similar`, validated with `/metrics`. Use web/deep research to find anchors or
+> scan a scene.
 
 ```bash
 # 1. Pick an anchor — a known artist in the target sound. Find them, or scout via web.
@@ -651,8 +646,6 @@ The power is in combining data types:
 | **Why** — narrative + context | `/research/insights`, `/research/web`, `/research/deep` | Cultural positioning, press strategy, brand partnerships |
 | **People** — industry contacts | `/research/people`, `/research/enrich`, `/research/extract` | Outreach, CRM enrichment |
 
-Endpoints that no longer exist (don't reach for them): `cities`, `charts`,
-`discover`, `genres`, `festivals`, `radio`, `venues`, `rank`, `instagram-posts`,
-`playlist` (singular), `curator`. Geography → `/research/audience`; discovery →
-anchor artist + `/research/similar` + `/research/web`; headline rank → compare
+Geography → `/research/audience`; discovery → anchor artist +
+`/research/similar` + `/research/web`; headline rank → compare
 `/research/metrics` snapshots.
