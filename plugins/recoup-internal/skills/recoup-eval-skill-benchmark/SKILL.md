@@ -1,5 +1,5 @@
 ---
-name: recoup-skill-benchmark-pack
+name: recoup-eval-skill-benchmark
 description: >-
   Benchmark ANY plugin, skill pack, or skills folder against the current
   frontier of skill/plugin design (gstack, gbrain, compound-engineering, PM OS).

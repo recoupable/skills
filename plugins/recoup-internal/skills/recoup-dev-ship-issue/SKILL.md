@@ -1,17 +1,17 @@
 ---
-name: recoup-issue-implement-tdd
-description: Deliver a tracked GitHub issue end-to-end in the Recoupable house style — documentation-driven (OpenAPI/contract first), then test-driven (red→green) implementation that matches the docs, verified against the live preview deployment, with results posted to the PR. Use when the user says "implement this issue", "build out issue #N", "ship the issue", "do the implementation", "take this issue and build it", or hands you a tracking issue (usually from the recoup-issue-write-tracker skill) to deliver. Covers docs-first ordering, the TDD loop, preview verification, the docs↔API↔reality reconciliation, and PR review hygiene. Pairs with the recoup-issue-write-tracker skill (which writes the issue this one implements).
+name: recoup-dev-ship-issue
+description: Deliver a tracked GitHub issue end-to-end in the Recoupable house style — documentation-driven (OpenAPI/contract first), then test-driven (red→green) implementation that matches the docs, verified against the live preview deployment, with results posted to the PR. Use when the user says "implement this issue", "build out issue #N", "ship the issue", "do the implementation", "take this issue and build it", or hands you a tracking issue (usually from the recoup-dev-issue-tracker skill) to deliver. Covers docs-first ordering, the TDD loop, preview verification, the docs↔API↔reality reconciliation, and PR review hygiene. Pairs with the recoup-dev-issue-tracker skill (which writes the issue this one implements).
 ---
 
 # Implementing a Tracked Issue
 
 How we take a tracking issue from open to shipped at Recoupable. The bar: **the docs, the API, and the live preview all tell the same story — and every claim you make on the PR is something you actually ran.** No contract drift, no "should work," no untested assertions.
 
-This is the delivery counterpart to the **recoup-issue-write-tracker** skill: that one writes the issue; this one implements it. The gold-standard reference slice this skill is built from is [chat#1789](https://github.com/recoupable/chat/issues/1789) (the tracking issue) → [docs#236](https://github.com/recoupable/docs/pull/236) (contract) → [api#653](https://github.com/recoupable/api/pull/653) (implementation). Read those three together to see the whole loop.
+This is the delivery counterpart to the **recoup-dev-issue-tracker** skill: that one writes the issue; this one implements it. The gold-standard reference slice this skill is built from is [chat#1789](https://github.com/recoupable/chat/issues/1789) (the tracking issue) → [docs#236](https://github.com/recoupable/docs/pull/236) (contract) → [api#653](https://github.com/recoupable/api/pull/653) (implementation). Read those three together to see the whole loop.
 
 ## Prerequisite: implement against a real contract, not a vibe
 
-Only start when the issue is a proper spec — it should carry a **Goal**, a **proposed contract** (endpoint, params, response shape), a **merge sequencing** block (docs → api), **Done-when** acceptance criteria, and **source references**. If it doesn't, stop and write/upgrade it with the **recoup-issue-write-tracker** skill first. Implementing against a vague issue is how you ship the wrong thing.
+Only start when the issue is a proper spec — it should carry a **Goal**, a **proposed contract** (endpoint, params, response shape), a **merge sequencing** block (docs → api), **Done-when** acceptance criteria, and **source references**. If it doesn't, stop and write/upgrade it with the **recoup-dev-issue-tracker** skill first. Implementing against a vague issue is how you ship the wrong thing.
 
 ## The loop
 
@@ -90,7 +90,7 @@ All three must agree before you call it done. This step is the entire point of t
 
 - Merge order is **docs → api** (the contract lands first). Honor hard dependencies (a database migration before the api that reads it).
 - **Never merge without explicit user approval.** When the user approves: merge, then promote per the repo flow (Recoupable: squash → `test`, then `test` → `main` via a release PR, then sync `test` with `main`), checking the release scope first.
-- On merge, **update the tracking issue to Done** with the **recoup-issue-write-tracker** skill — a closure note (PR links, ✅ ISO date, merge path, what shipped, and a Verified clause citing the live results), and check off the Done-when boxes you actually verified.
+- On merge, **update the tracking issue to Done** with the **recoup-dev-issue-tracker** skill — a closure note (PR links, ✅ ISO date, merge path, what shipped, and a Verified clause citing the live results), and check off the Done-when boxes you actually verified.
 
 ## Principles
 
@@ -127,4 +127,4 @@ gh pr comment <n> --repo recoupable/api --body-file results.md
 - [ ] Docs ↔ API ↔ live results **agree** (reconciled and re-pushed if not).
 - [ ] Verification **posted on the PR**; bot findings **triaged** (validated, not rubber-stamped).
 - [ ] No secret value echoed anywhere — env-var names only.
-- [ ] On merge: promoted per the repo flow and the tracking issue moved to **Done** (recoup-issue-write-tracker).
+- [ ] On merge: promoted per the repo flow and the tracking issue moved to **Done** (recoup-dev-issue-tracker).
