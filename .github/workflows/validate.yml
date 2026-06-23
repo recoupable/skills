@@ -20,3 +20,9 @@ jobs:
         run: python3 scripts/check_vendored.py
       - name: Manifest + parity validation
         run: python3 scripts/validate_manifests.py
+      # recoup-records is a first-class, hand-maintained plugin (the focused source
+      # plugins were consolidated into it), so there is no bundle-drift gate.
+      - name: Resolver reachability (no dark skills)
+        run: python3 scripts/check_resolvable.py
+      - name: Resolver eval (routing fixtures + coverage)
+        run: python3 scripts/run_resolver_eval.py

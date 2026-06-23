@@ -1,0 +1,36 @@
+{
+  "name": "recoup-records",
+  "version": "0.1.0",
+  "description": "A record label in a box: setup, research, deals, roster, content, song analysis, and releases management",
+  "author": {
+    "name": "Recoup",
+    "email": "support@recoupable.com",
+    "url": "https://recoupable.com"
+  },
+  "homepage": "https://recoupable.com",
+  "repository": "https://github.com/recoupable/skills",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "music",
+    "recoup",
+    "record-label",
+    "artist-management",
+    "music-research",
+    "catalog-deals",
+    "content-creation",
+    "release-management",
+    "agent-skills"
+  ],
+  "interface": {
+    "displayName": "Recoup Records",
+    "shortDescription": "A record label in a box",
+    "longDescription": "The whole Recoup platform as a single plugin: artist setup and API access, music-industry research, catalog deal review, content creation, song audio analysis, and end-to-end release workflows — every skill, agent, and hook in one bundle.",
+    "developerName": "Recoup",
+    "category": "Music",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://recoupable.com"
+  }
+}

@@ -16,12 +16,9 @@ recoupable/skills/
 │   ├── chart-metric/
 │   ├── song-writing/
 │   └── ...
-├── plugins/                  ← rich bundles: skills + commands/hooks + shared references
-│   ├── recoup-essentials/
-│   ├── recoup-deals/
-│   ├── recoup-research/
-│   ├── recoup-song-analysis/
-│   └── recoup-content/
+├── plugins/                  ← rich bundles: skills + hooks + shared references
+│   ├── recoup-records/       ← the all-in-one "record label in a box"
+│   └── recoup-internal/      ← internal eng + ops (issues, TDD, benchmarks, sales pipeline, account health)
 ├── scripts/                  ← validation gates + vendored.json (shared-file registry)
 ├── .claude-plugin/           ← repo-as-plugin manifest + marketplace.json (Claude registry)
 ├── .codex-plugin/            ← repo-as-plugin manifest (Codex)
@@ -34,11 +31,11 @@ recoupable/skills/
 ## Glossary
 
 - **Skill** — a `SKILL.md` folder that teaches one task. Portable; runs on any agent.
-- **Plugin** — a bundle in `plugins/{name}/` that ships skills **plus** commands, hooks, and shared references, installed through a runtime's plugin system. A skill is a subset of a plugin.
+- **Plugin** — a bundle in `plugins/{name}/` that ships skills **plus** hooks and shared references, installed through a runtime's plugin system. A skill is a subset of a plugin. (No slash-`commands/` — skills only; see "No slash-commands".)
 - **Harness** — a runtime that loads skills/plugins: Claude Code, Codex, Cursor, or bare `npx skills`.
 - **Marketplace registry** — the list of installable plugins, written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
 - **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json`.
-- **Router skill** — a domain's single entry-point skill that routes to focused sub-skills (e.g. `recoup-song-analyzer`).
+- **Resolver** — a plugin's `RESOLVER.md` routing table that maps a user request to the one skill that should handle it. Skills stay flat and discoverable; there is no separate "router" entry-point skill. Reachability is enforced by `scripts/check_resolvable.py`.
 
 ## How Skills Load
 
@@ -102,10 +99,40 @@ plugins/my-plugin/
 └── LICENSE
 ```
 
-- **Author a plugin by copying an existing one** (e.g. `plugins/recoup-content/`), then edit the manifests, README, and skills. Don't hand-write manifests from scratch.
+- **Author a plugin by copying an existing one** (e.g. `plugins/recoup-internal/`), then edit the manifests, README, and skills. Don't hand-write manifests from scratch.
 - **Ship all three per-plugin manifests** (`.claude-plugin`, `.cursor-plugin`, `.codex-plugin`). They mostly match; only harness-specific fields differ (e.g. Cursor lists a `skills` path).
 - **Promote skills into a plugin when they share a canonical reference.** If one skill owns a doc that sibling skills depend on, that cross-dependency breaks the self-contained rule — move them under a plugin and put the shared doc in `plugins/{name}/references/`, vendored into each skill (Portable Skill Contract rule 5).
 - Plugin skills follow the **same Portable Skill Contract** as top-level skills.
+
+## No slash-commands — skills only
+
+**Do not author `commands/` (slash-command files) in any plugin.** This repo
+standardizes on **skills** as the single authoring primitive across every harness.
+
+Why:
+
+- **A skill already gives you a `/slash` entry for free.** Every harness
+  auto-registers `/skill-name` when it loads a `SKILL.md` — you don't need a
+  command file to get a typed entry point.
+- **Commands are redundant or gone on the harnesses we ship to.** Claude Code
+  *merged* custom commands into skills (a command file is just the old format).
+  Codex *deprecated and removed* standalone prompts/commands in favor of skills.
+  Only Cursor still treats commands as a distinct primitive — not enough to
+  justify a layer that's dead weight everywhere else.
+- **One primitive, no drift.** A command that wraps a single skill is pure
+  duplication to keep in sync. Skills also do everything commands did *plus*
+  supporting files, invocation control, and auto-invocation.
+
+What to do instead:
+
+- **Need a branded/orchestrating entry point** (e.g. "run research + audience +
+  playlists, then synthesize")? Write a **skill** that names and chains the other
+  skills. Make it manual-only with `disable-model-invocation: true` if it must
+  not auto-fire.
+- **Never** add a `commands` path to any `plugin.json`.
+
+> Exception: hook **commands** in `hooks/hooks.json` (`"type": "command"`) are a
+> different thing — shell commands run on lifecycle events. Those are fine.
 
 ## The marketplace registry
 
@@ -120,9 +147,9 @@ Installable plugins are listed in **two files that must stay identical in conten
 
 ## Naming & branding
 
-- Slugs are **plain-English, lowercase, hyphenated** — no filler suffixes: `recoup-song-metadata`, not `recoup-song-metadata-tagger`.
-- **Plugin names drop any `-plugin` suffix**: `recoup-deals`, not `recoup-deals-plugin`.
-- Pattern: `recoup-{domain}-{noun}`; give each domain one **router skill** as the entry point.
+- Slugs are **plain-English, lowercase, hyphenated** — no filler suffixes: `recoup-song-find-hook`, not `recoup-song-find-hook-finder`.
+- **Plugin names drop any `-plugin` suffix**: `recoup-records`, not `recoup-records-plugin`.
+- Pattern: `recoup-[domain]-[verb]-[noun]` — four words, domain-first, so the `/` list auto-clusters by domain and every name says what it does. Domains are a small, stable set (`platform`, `roster`, `research`, `song`, `content`, `release`, `catalog`); a skill slots into an existing one. A plugin routes to its skills through its `RESOLVER.md` table — no separate router skill.
 - Preserve history on renames/moves with `git mv`, then update the `name:` frontmatter, cross-references, README tables, and `scripts/vendored.json` paths.
 
 ## Portable Skill Contract (cross-harness)
@@ -132,20 +159,24 @@ Every skill must run on **any** harness (Claude Code, Codex, Cursor, bare `npx s
 1. **Self-contained.** A skill reads/executes **only files inside its own directory** (`references/`, `scripts/`, `templates/`, `fixtures/`). Never reference `../`, `../../references/`, another skill's directory, or a plugin-root `scripts/`/`templates/`.
 2. **No platform variables in the body.** Do **not** write `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_SKILL_DIR}`, or any `$CLAUDE_*` path. These only expand in JSON configs (hooks/`.mcp.json`) on Claude Code and **do not exist on other harnesses** — they ship as literal, broken strings. Use plain relative paths.
 3. **Reference docs with backtick paths, never markdown links.** Write `` `references/foo.md` `` (a backtick path the agent can locate), not `[foo](./references/foo.md)`. Agents interpret markdown links as CWD-relative `Read` calls, and the CWD is never the skill directory.
-4. **Co-locate scripts; invoke relatively.** Ship scripts in the skill's own `scripts/` and call them as `python3 scripts/foo.py`. Add a one-line note that scripts ship alongside the skill. If a script imports a sibling or helper, that sibling must also live in the same `scripts/`.
+4. **Co-locate scripts; invoke relatively.** Ship scripts in the skill's own `scripts/` and call them as `python3 scripts/foo.py`. Add a one-line note that scripts ship alongside the skill. If a script imports a sibling or helper, that sibling must also live in the same `scripts/`. If a script needs a third-party package, **guard the import and name the package in the error** (`except ImportError: sys.exit("needs X — pip3 install X")`) rather than shipping a `requirements.txt` — the failing script then tells the agent exactly what to install.
 5. **Duplicate shared material; drift-check it.** If two skills need the same reference/script, **copy it into each** (do not centralize). Register every copy in `scripts/vendored.json` so `scripts/check_vendored.py` keeps them byte-identical. Vendoring is allowed; silent divergence is not.
 
 > Why: `${CLAUDE_PLUGIN_ROOT}` is Claude-Code-only and doesn't expand in markdown (anthropics/claude-code#9354); runtime CWD is the user's project, not the skill dir. Self-containment with relative/backtick paths is the only pattern that travels across harnesses.
 
 ## Validation gates (run before every PR)
 
-Three scripts gate the repo. **All three must exit 0** — don't track the counts, track the exit code:
+Five scripts gate the repo. **All five must exit 0** — don't track the counts, track the exit code:
 
 ```bash
-python3 scripts/portability_lint.py    # every skill is cross-harness portable
-python3 scripts/check_vendored.py      # vendored copies are byte-identical to canonical
-python3 scripts/validate_manifests.py  # manifests valid + marketplace parity
+python3 scripts/portability_lint.py        # every skill is cross-harness portable
+python3 scripts/check_vendored.py          # vendored copies are byte-identical to canonical
+python3 scripts/validate_manifests.py      # manifests valid + marketplace parity
+python3 scripts/check_resolvable.py        # every skill reachable from RESOLVER.md (no dark skills)
+python3 scripts/run_resolver_eval.py       # routing fixtures valid + full coverage
 ```
+
+**`recoup-records` is the flagship, hand-maintained plugin** — "a record label in a box" (`plugins/recoup-records/`) that ships the full platform in one install: artist setup and API access, research, catalog deals, content, song analysis, and releases — every skill, agent, hook, reference, script, template, and fixture. It is self-contained; edit its skills directly.
 
 **Editing a shared (vendored) file:** change the *canonical* copy only, then re-sync every copy listed in `scripts/vendored.json` (there is no `--sync` flag — copy them yourself), then re-check. Groups come in two shapes: single files (`canonical`/`copies`) and whole directories (`canonical_dir`/`copies_dirs`):
 

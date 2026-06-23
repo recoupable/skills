@@ -1,0 +1,95 @@
+{
+  "artist": "Neon Tide",
+  "email": "neontidemusic@example.com",
+  "name": "Alex Rivera",
+  "relationship": "Owner/Operator",
+  "primary_location": "Austin, Texas, US",
+  "spotify_artist_url": "https://open.spotify.com/artist/0000000000EXAMPLE0000",
+  "est_catalog_value": 312500,
+  "value_low": 213000,
+  "value_high": 421000,
+  "lifetime_streams": 41200000,
+  "follower_count": 47800,
+  "valued_at": "2026-06-20",
+  "lead_source": "Catalog Valuation",
+  "account": {
+    "owner_email": "alex@example.com",
+    "owner_account_id": "00000000-0000-4000-8000-000000000000",
+    "artist_account_id": "11111111-1111-4111-8111-111111111111"
+  },
+  "socials": [
+    {
+      "platform": "Spotify",
+      "handle": "Neon Tide",
+      "url": "https://open.spotify.com/artist/0000000000EXAMPLE0000",
+      "followers": 47800,
+      "bio": "Artist profile"
+    },
+    {
+      "platform": "Instagram",
+      "handle": "@neontidemusic",
+      "url": "https://www.instagram.com/neontidemusic/",
+      "followers": 12500,
+      "bio": "indie / electronic · Austin TX"
+    },
+    {
+      "platform": "TikTok",
+      "handle": "@neontidemusic",
+      "url": "https://www.tiktok.com/@neontidemusic",
+      "followers": 8300,
+      "bio": "new music every friday"
+    }
+  ],
+  "reading_notes": [
+    "<b>The dominant release is a collaboration.</b> Most of the value sits in a co-credited track, so the owner's realizable share depends on master/publishing splits a statement would confirm.",
+    "<b>Big streams, smaller owned audience.</b> The catalog leans on a breakout moment more than a dedicated fanbase - the clearest place to build durable value is converting listeners into followers."
+  ],
+  "roster": {
+    "label": "Example Label",
+    "note": "Neon Tide is one of several artists on the roster. The same baseline runs on any of them - a sample by Spotify following:",
+    "artists": [
+      {
+        "name": "Artist Two",
+        "followers": 14200
+      },
+      {
+        "name": "Artist Three",
+        "followers": 6100
+      },
+      {
+        "name": "Artist Four",
+        "followers": 2300
+      }
+    ],
+    "more_count": 5,
+    "cta": "Want the same valuation + socials baseline for the rest of the roster? Reply and we'll run it.",
+    "source": "examplelabel.com/artists",
+    "full": [
+      {
+        "name": "Neon Tide",
+        "followers": 47800
+      },
+      {
+        "name": "Artist Two",
+        "followers": 14200
+      },
+      {
+        "name": "Artist Three",
+        "followers": 6100
+      },
+      {
+        "name": "Artist Four",
+        "followers": 2300
+      },
+      {
+        "name": "Artist Five",
+        "followers": 980
+      },
+      {
+        "name": "Artist Six",
+        "followers": null
+      }
+    ]
+  },
+  "_note": "Spoofed sample lead - all PII (name, email, Spotify ID) is fictional."
+}

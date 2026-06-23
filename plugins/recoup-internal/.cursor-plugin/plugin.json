@@ -1,0 +1,27 @@
+{
+  "name": "recoup-internal",
+  "version": "0.1.0",
+  "description": "Recoup's internal toolkit for AI agents — engineering and operations. Write and maintain high-signal GitHub tracking issues, deliver them docs-first and test-driven end-to-end, benchmark any plugin or skills folder against the frontier of skill design, work the catalog-valuation sales funnel in Attio, and produce account-health snapshots for any Recoup account.",
+  "author": {
+    "name": "Recoup",
+    "email": "agent@recoupable.com"
+  },
+  "homepage": "https://recoupable.com",
+  "repository": "https://github.com/recoupable/skills",
+  "license": "AGPL-3.0-only",
+  "logo": "assets/recoup-icon.png",
+  "keywords": [
+    "recoup",
+    "recoup-internal",
+    "engineering",
+    "github-issues",
+    "issue-tracking",
+    "test-driven-development",
+    "skill-design",
+    "plugin-benchmark",
+    "sales-pipeline",
+    "account-health",
+    "agent-skills"
+  ],
+  "skills": "./skills/"
+}

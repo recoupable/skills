@@ -1,6 +1,6 @@
 ---
 name: songwriting
-description: Guide for writing and evaluating song lyrics and concepts. Use when brainstorming song ideas, writing lyrics, evaluating song drafts, refining hooks, or improving existing songs. Applies the 7 C's framework to ensure songs are memorable, clear, and authentic.
+description: Guide for writing and evaluating song lyrics and concepts (no audio needed). Use when brainstorming song ideas, writing lyrics, evaluating song drafts, refining a song's written lyrical/melodic hook, or improving an unfinished song. Applies the 7 C's framework to ensure songs are memorable, clear, and authentic. For finding the clip-worthy moment in a finished recording, use recoup-song-hook (that needs an audio file).
 ---
 
 # Songwriting

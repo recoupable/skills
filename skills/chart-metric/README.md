@@ -50,4 +50,10 @@ If Python is unavailable, see [references/curl-fallback.md](references/curl-fall
 
 ## License
 
-Apache-2.0
+This project is licensed under the AGPL-3.0 for non-commercial use.
+
+### Commercial Use
+
+For commercial use or deployments requiring a setup, please contact us for a
+commercial license at support@recoupable.com. By using this software, you agree
+to the terms of the license.

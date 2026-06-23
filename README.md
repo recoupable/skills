@@ -32,24 +32,21 @@ git clone https://github.com/recoupable/skills.git
 | [songwriting](skills/songwriting) | Structured songwriting using the 7 C's method |
 | [trend-to-song](skills/trend-to-song) | Turn cultural moments into songs and campaign strategies |
 
-> **Setup, API access, and artist onboarding** (`recoup-setup`, `recoup-setup-sandbox`, `recoup-artist-workspace`, `recoup-create-artist`, `recoup-api`) now ship in the **Recoup Essentials** plugin below — start there.
+> **Setup, API access, and artist onboarding** now ship inside the **Recoup Records** plugin below.
 
 ## Plugins
 
-Beyond the open skills library above, Recoup ships focused **plugins** — bundles of skills, commands, and agents for one workflow. Add the marketplace once, then install the plugins you need:
+Beyond the open skills library above, Recoup ships two **plugins** — richer bundles of skills, agents, and hooks. Add the marketplace once, then install what you need:
 
 ```bash
 /plugin marketplace add recoupable/skills
-/plugin install recoup-essentials@recoup
+/plugin install recoup-records@recoup
 ```
 
 | Plugin | What it does |
 |--------|-------------|
-| [Recoup Essentials](plugins/recoup-essentials) | Setup, API keys, sandbox scaffolding, artist creation, and direct Recoup API access — **start here** |
-| [Recoup Research](plugins/recoup-research) | Music industry research — artist analytics, audience insights, playlist intelligence, competitive analysis, trend detection |
-| [Recoup Deals](plugins/recoup-deals) | Music catalog deals — data-room ingestion, royalty normalization, rights checks, and valuation for buy-side, seller-prep, financing, and post-close |
-| [Recoup Content](plugins/recoup-content) | Content workflows — draft, edit, and publish social-ready content for artists |
-| [Recoup Song Analysis](plugins/recoup-song-analysis) | Song audio analysis — catalog metadata, lyrics, playlist pitches, sync briefs, and mix feedback via Music Flamingo |
+| [Recoup Records](plugins/recoup-records) | A record label in a box — the whole platform in one install: artist setup & API access, research, catalog deals, content, song analysis, and releases |
+| [Recoup Internal](plugins/recoup-internal) | Recoup's internal engineering & ops — write and ship high-signal GitHub tracking issues docs-first and test-driven, benchmark skill packs against the frontier, work the catalog-valuation sales funnel in Attio, and produce account-health snapshots |
 
 ## Creating a Skill
 

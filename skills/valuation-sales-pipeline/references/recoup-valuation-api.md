@@ -81,6 +81,12 @@ overkill: it also lands the artist in the lead's own Recoup workspace so the met
    `GET /api/artists/{artistAccountId}/socials` for the real `follower_count` + `bio` per platform.
    `GET /api/artists?account_id=<id>` lists artists under an account to confirm the setup.
 
+Caveat: this is keyed to a **platform artist account + stored social records**, not arbitrary
+handles. A fresh valuation lead (e.g. an artist you only have a Spotify id for) usually has **no
+socials rows yet** — you'd onboard the artist (steps above), attach the profile URLs, then scrape.
+Worth it for ongoing/refreshable metrics + `region` (audience geography) and `avatar`; overkill for
+a one-off report.
+
 Live-run caveat (Ulices Chaidez, 2026-06-22): the **Instagram** actor returned an exact 1,276,417
 (vs the rounded "1M" public meta) plus the real bio, but the Spotify/YouTube/Facebook actors returned
 empty `bio`/`follower_count` on that pass. For those, fall back to the platform page — read it via the
