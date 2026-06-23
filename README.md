@@ -19,7 +19,7 @@ npx skills add recoupable/skills
 
 ### Manual
 
-Clone and point your agent at the `skills/` directory:
+Clone the repo and load it as a plugin — the repo root is the plugin, with every skill under `skills/`:
 
 ```bash
 git clone https://github.com/recoupable/skills.git

@@ -134,7 +134,7 @@ def skill_descriptions() -> dict[str, str]:
 def _call_gateway(intent: str, catalog: str) -> str:
     """Route one intent via the gateway. Returns the raw reply (or '__ERROR__: ...')."""
     system = (
-        "You are the skill router for the recoup-records plugin. Given a USER "
+        "You are the skill router for the Recoup Skills plugin. Given a USER "
         "REQUEST and a catalog of skills (name: description), choose the SINGLE "
         "best skill. Reply with ONLY the skill name (e.g. recoup-research); reply "
         "none if nothing fits."

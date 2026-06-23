@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# check-env.sh — SessionStart directive for the recoup-records bundle.
+# check-env.sh — SessionStart directive for the Recoup Skills plugin.
 #
 # Emits ONE imperative, position-pinned directive (not passive context the model
 # silently absorbs and then ignores): a session-start hook must DIRECT, not
@@ -27,7 +27,7 @@ if ! command -v ffmpeg >/dev/null 2>&1; then
   ffmpeg_note=" (note: ffmpeg not on PATH — the async content pipeline still works; only the short-video manual compose/mux step needs it.)"
 fi
 
-echo "[SESSION-START DIRECTIVE — recoup-records]"
+echo "[SESSION-START DIRECTIVE — Recoup Skills]"
 
 if [ "$have_cred" = "no" ]; then
   # Single directive: nothing else works without a credential, so this wins.
@@ -37,7 +37,7 @@ if [ "$have_cred" = "no" ]; then
   echo "route every request through the bundle's RESOLVER.md.${ffmpeg_note}"
 else
   # Single directive: routing. Picking the right skill is the job.
-  echo "DIRECTIVE: Before acting on any request, consult the recoup-records"
+  echo "DIRECTIVE: Before acting on any request, consult the"
   echo "RESOLVER.md (the skill dispatcher at the plugin root): match the request to"
   echo "one skill, then READ that skill's SKILL.md before doing the work. If two"
   echo "skills could match, read both and pick the narrower. Do not improvise a"
