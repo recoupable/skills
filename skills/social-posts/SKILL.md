@@ -95,11 +95,12 @@ Pick the path by platform and media type. **Confirm the exact parameter schema f
 - Comment on a post → `LINKEDIN_CREATE_COMMENT_ON_POST`.
 - **Native video: not supported.** The LinkedIn connector exposes image upload only (no video upload/register action). Post videos **manually**. Get the author URN from `LINKEDIN_GET_MY_INFO`.
 
-**X (Twitter)**
-- Text → `TWITTER_CREATION_OF_A_POST`.
-- **Media including video: supported.** Upload first (`TWITTER_UPLOAD_MEDIA`, or `TWITTER_INITIALIZE_MEDIA_UPLOAD` → `TWITTER_APPEND_MEDIA_UPLOAD` → `TWITTER_GET_MEDIA_UPLOAD_STATUS` / `TWITTER_UPLOAD_LARGE_MEDIA` for video), then attach the media id to the post.
+**X (Twitter):** post with `TWITTER_CREATION_OF_A_POST` (`text`, optional `media_media_ids`; reply via `reply_in_reply_to_tweet_id`). Images upload via `TWITTER_UPLOAD_MEDIA`.
 
-So: a video can go out natively on **X** via the connector, but on **LinkedIn** it's a manual upload. Plan accordingly when a post has a video.
+Native video works, but the bytes can't go inline: `media` won't fetch a URL, and base64 hits the API's ~4.5MB body limit (`413`). Stage it server-side, then attach:
+1. `POST /api/connectors/files` with `{url, toolSlug:"TWITTER_UPLOAD_LARGE_MEDIA"}` — the server fetches the mp4 (host it anywhere public; read once) and returns `{s3key, name, mimetype}`.
+2. `TWITTER_UPLOAD_LARGE_MEDIA` with `parameters.media = {s3key, name, mimetype}` (the descriptor object, not a string) and `media_category:"tweet_video"`; wait for `processing_info.state: "succeeded"`.
+3. `TWITTER_CREATION_OF_A_POST` with the returned `media_media_ids:[id]`; put the link in a reply so the main post keeps its reach.
 
 ## Step 5 — Log and re-measure
 
