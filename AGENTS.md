@@ -95,7 +95,7 @@ The whole repo is one flat plugin. There is **no `plugins/` directory** and no p
 
 - **Add a skill** by creating `skills/recoup-[domain]-[verb]-[noun]/SKILL.md` (see "Skill Format"), then add a route in `RESOLVER.md` and a fixture in `resolver-eval.jsonl`. CI fails on any skill that isn't reachable from the resolver.
 - **Manifests live at the repo root** — `.claude-plugin/plugin.json` (Claude), `.codex-plugin/plugin.json` (Codex), and the two `marketplace.json` files. Skills auto-resolve from `skills/`; you don't enumerate them in the manifest.
-- **Shared components sit at the root** too: `agents/`, `hooks/`, `references/`, `templates/`, `fixtures/`. A skill must still be **self-contained** — it may reference only files inside its own directory, so a skill that needs a shared reference vendors its own copy (Portable Skill Contract rule 5). The root `references/` is the canonical source for any such copies and is also used by `agents/` and `hooks/`.
+- **Shared components sit at the root** too: `agents/`, `hooks/`, `references/`, `templates/`, `fixtures/`. A skill must still be **self-contained** — it may reference only files inside its own directory, so a skill that needs a shared reference vendors its own copy (Portable Skill Contract rule 5). The root `references/`/`templates/`/`fixtures/` hold the canonical copy for most shared files (a few shared only between sibling skills keep their canonical inside one skill); these roots are also used by `agents/` and `hooks/`.
 - Every skill follows the **Portable Skill Contract** below.
 
 ## No slash-commands — skills only

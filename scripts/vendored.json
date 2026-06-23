@@ -1,5 +1,5 @@
 {
-  "_comment": "Maps each canonical shared file/dir to its byte-identical vendored copies, kept in sync by scripts/check_vendored.py. See AGENTS.md 'Portable Skill Contract' rule 5: skills are self-contained, so references/templates/fixtures shared by multiple skills are COPIED into each skill (not centralized) and registered here so they can't silently drift. Canonical lives at the repo root (references/ , templates/ , fixtures/); copies live inside each skill's own dir. Edit the canonical, then re-sync per AGENTS.md.",
+  "_comment": "Maps each canonical shared file/dir to its byte-identical vendored copies, kept in sync by scripts/check_vendored.py. See AGENTS.md 'Portable Skill Contract' rule 5: skills are self-contained, so references/templates/fixtures shared by multiple skills are COPIED into each skill (not centralized) and registered here so they can't silently drift. The canonical is the repo-root copy (references/ , templates/ , fixtures/) when the shared file exists at root; for the few files shared only between sibling skills (no root copy), the canonical is one skill's copy and the others point at it. Edit the canonical, then re-sync per AGENTS.md.",
   "groups": [
     {
       "canonical_dir": "fixtures/demo-data-room",
