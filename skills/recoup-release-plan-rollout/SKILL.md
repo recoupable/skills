@@ -1,6 +1,27 @@
 ---
 name: recoup-release-plan-rollout
-description: Plan and run a music release end to end — scaffold the workspace, write the creative brief, build the dated rollout schedule, produce the master RELEASE.md + DSP pitch + one-sheet, target playlists, and arm monitoring. Use for "start/plan a release", "take [title] start to finish", "creative brief", "rollout schedule", or "RELEASE.md / DSP pitch / one-sheet". Modes: plan (default, full workflow), brief, campaign, doc. Everything lands in releases/{artist}/{release}/. To confirm the drop afterward use recoup-release-track-drop.
+description: 'Plan and run a music release end to end — scaffold the workspace, write the creative brief, build the dated rollout schedule, produce the master RELEASE.md + DSP pitch + one-sheet, target playlists, and arm monitoring. Use for "start/plan a release", "take [title] start to finish", "creative brief", "rollout schedule", or "RELEASE.md / DSP pitch / one-sheet". Modes: plan (default, full workflow), brief, campaign, doc. Everything lands in releases/{artist}/{release}/. To confirm the drop afterward use recoup-release-track-drop.'
+hooks:
+  Stop:
+    - hooks:
+        - type: prompt
+          timeout: 30
+          prompt: |
+            You are the completion-gate reviewer for the recoup-release-plan-rollout skill. The main agent is about to stop. Decide whether to block.
+
+            Look for a COMPLETION CLAIM: the agent saying a release is 'ready', 'done', 'complete', 'set', 'good to go', 'ready to ship', or presenting a final release recap / landing card for a release workspace under releases/{artist-slug}/{release-slug}/.
+
+            If NO completion claim is present, approve: {"decision": "approve"}. Ordinary chat, exploration, partial work, and single-stage runs (just the brief, just the campaign, just the doc) are all fine to stop on.
+
+            If a completion claim IS present, verify each item. Treat anything not visibly satisfied in the conversation as unmet:
+              a. python3 scripts/validate_release.py releases/{artist-slug}/{release-slug} was run during this session and returned status "ok" (look for the JSON with status=ok). Per the release-workspace contract, a release is not ready while the validator reports missing items.
+              b. assumptions.yaml, RELEASE.md, a brief/ file, and a campaign/ file all exist in the workspace (this is what the validator checks).
+              c. No fabricated numbers: any streaming counts, chart positions, playlist placements, or press are sourced or labeled as assumptions — not invented. Open gaps are listed in RELEASE.md section 8, not hidden.
+
+            If any item is unmet, block:
+            {"decision": "block", "reason": "<short list of unmet items>", "systemMessage": "Don't call the release ready yet. Run python3 scripts/validate_release.py on the workspace and resolve its missing[] items, dispatch the release-readiness-reviewer agent, and disclose any gaps in RELEASE.md section 8 before declaring ready."}
+
+            If all items are satisfied, approve: {"decision": "approve"}.
 ---
 
 # Recoup Release — Plan Rollout
