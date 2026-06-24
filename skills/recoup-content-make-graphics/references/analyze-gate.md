@@ -66,7 +66,8 @@ This makes "pass" mean *competitive with what this audience already rewarded*, n
 - **Borderline** → surface the analysis to the user and let them decide; don't silently
   pass it off as great.
 
-On Claude Code, the content skill that renders the asset carries a `Stop` hook (declared in
-its own `SKILL.md` frontmatter, so it only fires while that skill is active) that blocks
-"video/asset ready" claims that don't show an analyze-gate pass in the conversation. Treat
-the analyze gate as mandatory for any skill that renders pixels.
+On Claude Code, the content skills that render pixels (make-video, make-graphics, asset-pack,
+reactive-post) each carry a `Stop` hook in their own `SKILL.md` frontmatter — scoped to that
+skill, so it only fires while the skill is active — that blocks "video/asset ready" claims with
+no analyze-gate pass in the conversation. Text-only skills (write-caption) render nothing and
+carry no such hook. Treat the analyze gate as mandatory for any skill that renders pixels.
