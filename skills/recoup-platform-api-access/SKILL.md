@@ -63,7 +63,7 @@ executing** — shapes vary per action. Trigger heuristic: a pasted
 
 ## Send an email (from Recoup)
 
-`POST /emails` sends an email from `Agent by Recoup <agent@recoupable.com>` via
+`POST /api/emails` sends an email from `Agent by Recoup <agent@recoupable.com>` via
 Recoup — works headless with your API key, no Gmail connector needed. Use it for
 reports, alerts, and scheduled-task output.
 
@@ -75,9 +75,11 @@ curl -sS -X POST "${AUTH[@]}" -H "Content-Type: application/json" \
 ```
 
 Body: `to[]` (required) · `subject` (required) · `text` (Markdown) or `html` ·
-optional `cc[]`, `room_id`. Send via `${AUTH[@]}` (the API-key header above) — a
-`recoup_sk_` key authenticates over `x-api-key`, not Bearer. To send **as the
-user** from their own Gmail instead, use the `GMAIL_SEND_EMAIL` connector action.
+optional `cc[]`, `chat_id` (adds a chat link to the footer). Send via `${AUTH[@]}`
+above — a `recoup_sk_` key authenticates over either `x-api-key` or
+`Authorization: Bearer`. **Without a payment method on file, `to`/`cc` are limited
+to the account's own email (403 otherwise).** To send **as the user** from their
+own Gmail instead, use the `GMAIL_SEND_EMAIL` connector action.
 
 ## Troubleshooting
 
