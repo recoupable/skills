@@ -63,21 +63,29 @@ executing** — shapes vary per action. Trigger heuristic: a pasted
 
 ## Send an email (from Recoup)
 
-`POST /emails` sends an email from `Agent by Recoup <agent@recoupable.com>` via
+`POST /api/emails` sends an email from `Agent by Recoup <agent@recoupable.com>` via
 Recoup — works headless with your API key, no Gmail connector needed. Use it for
 reports, alerts, and scheduled-task output.
 
+Resolve auth **inline, in the same command** — each shell invocation is fresh, so
+an `AUTH=(...)` set in an earlier step is gone by the time you curl:
+
 ```bash
-curl -sS -X POST "${AUTH[@]}" -H "Content-Type: application/json" \
+AUTH=$([ -n "$RECOUP_API_KEY" ] && echo "x-api-key: $RECOUP_API_KEY" || echo "Authorization: Bearer $RECOUP_ACCESS_TOKEN")
+curl -sS -X POST -H "$AUTH" -H "Content-Type: application/json" \
   -d '{"to":["someone@example.com"],"subject":"Weekly report","text":"# Summary\n…"}' \
   "https://api.recoupable.com/api/emails"
 # → {"success":true,"message":"…","id":"<resend-id>"}
 ```
 
-Body: `to[]` (required) · `subject` (required) · `text` (Markdown) or `html` ·
-optional `cc[]`, `room_id`. Send via `${AUTH[@]}` (the API-key header above) — a
-`recoup_sk_` key authenticates over `x-api-key`, not Bearer. To send **as the
-user** from their own Gmail instead, use the `GMAIL_SEND_EMAIL` connector action.
+Body: `to` (**required, JSON array** — `["a@b.com"]`, not a bare string) · `subject`
+(required) · `text` (Markdown) or `html` · optional `cc[]`, `chat_id` (adds a chat
+link to the footer). The same `recoup_sk_` key authenticates over **either**
+`x-api-key` or `Authorization: Bearer`, so the inline `AUTH` above works in any
+context (sandbox sets `RECOUP_ACCESS_TOKEN`; a local user sets `RECOUP_API_KEY`).
+**Without a payment method on file, `to`/`cc` are limited to the account's own
+email (403 otherwise).** To send **as the user** from their own Gmail instead, use
+the `GMAIL_SEND_EMAIL` connector action.
 
 ## Troubleshooting
 
