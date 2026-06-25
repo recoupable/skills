@@ -21,13 +21,37 @@ Use these sections in this order. Drop sections that don't apply; never reorder 
 
 1. **Lead paragraph (no heading).** One or two sentences: what this issue tracks, the current prod/live status, and a link to the parent or sibling issue. Example: *"Tracking issue for cleanup that follows the X→Y cutover ([chat#1747](url), shipped to prod 2026-06-01). The cutover is fully live; this issue captures the remaining items."*
 2. **## Goal.** The end state in concrete terms — what "done" means at the macro level, and the downstream consequences. Name the files, endpoints, and tables involved.
-3. **## What shipped (context)** *(optional).* Hard numbers that ground the reader: commit/PR counts, rows migrated, latency measured. *"api/main has 23 commits / 13 PRs … 17,991 sessions with correct artist_id; 0 stragglers remaining."*
-4. **## Done.** Completed items as a checked list — see the Done-item format below.
-5. **## Open — <bucket>.** Remaining work as unchecked items. Bucket by theme or priority (`Open — cleanup + follow-ups`, `Open — next up (in merge order)`, `Open — pre-existing docs gaps (low priority)`). See the Open-item format below.
-6. **## Open — Phase N (LAST, only after …).** Sequenced/gated work. State the gate explicitly in the heading and the body — *"only after the cutover bundle is stable on `main` for some time."*
-7. **## Architecture decisions.** Durable decisions with rationale, so they don't get re-litigated. Bold the decision, then explain. *"**chatId source of truth is api.** createSessionHandler mints chat.id; the client uses it as …"*
-8. **## Accepted regressions / tradeoffs** *(optional).* What you knowingly gave up and may re-add later. Makes the cost explicit instead of silent.
-9. **## Inherited gaps / Source references** *(optional).* Cross-links to other trackers, the originating PRs, key files (with paths), and prior art.
+3. **## PRs.** The at-a-glance table of every PR the issue coordinates — **required for any multi-PR tracker** (see the PRs-matrix format below). Goes directly under Goal.
+4. **## What shipped (context)** *(optional).* Hard numbers that ground the reader: commit/PR counts, rows migrated, latency measured. *"api/main has 23 commits / 13 PRs … 17,991 sessions with correct artist_id; 0 stragglers remaining."*
+5. **## Done.** Completed items as a checked list — see the Done-item format below.
+6. **## Open — <bucket>.** Remaining work as unchecked items. Bucket by theme or priority (`Open — cleanup + follow-ups`, `Open — next up (in merge order)`, `Open — pre-existing docs gaps (low priority)`). See the Open-item format below.
+7. **## Open — Phase N (LAST, only after …).** Sequenced/gated work. State the gate explicitly in the heading and the body — *"only after the cutover bundle is stable on `main` for some time."*
+8. **## Architecture decisions.** Durable decisions with rationale, so they don't get re-litigated. Bold the decision, then explain. *"**chatId source of truth is api.** createSessionHandler mints chat.id; the client uses it as …"*
+9. **## Accepted regressions / tradeoffs** *(optional).* What you knowingly gave up and may re-add later. Makes the cost explicit instead of silent.
+10. **## Inherited gaps / Source references** *(optional).* Cross-links to other trackers, the originating PRs, key files (with paths), and prior art.
+
+## The PRs matrix (required for any multi-PR tracker)
+
+Every tracking issue that coordinates more than one PR carries a **PRs table directly under `## Goal`** — it's the one place a reader (or a cold agent) sees the whole PR fleet and its state at a glance, without scanning prose. This is one of the most important parts of a tracker; **never skip it.** If a follow-up tracker links several PRs and has no matrix, that's a bug — add it.
+
+Heading is `## PRs (updated <ISO date>)` so staleness is visible. Four columns, in order:
+
+```
+## PRs (updated 2026-06-25)
+
+| PR | Item | Base | State |
+|----|------|------|-------|
+| [docs#251](url) | `POST /api/emails` send-email contract (OpenAPI + types + nav) | `main` | 🔄 open — preview-verified; merge first |
+| [api#708](url) | `POST /api/emails` endpoint + route ephemeral key to `RECOUP_API_KEY` (auth fix) | `test` | 🔄 open — preview-verified end-to-end |
+| [tasks#153](url) | retire dead `run-sandbox-command` task (OpenClaw Phase 2 cleanup) | `main` | 🔄 open — 355 tests pass, grep clean |
+```
+
+- **PR** — full cross-repo ref, linked (`[api#708](url)`). One row per PR; sibling-repo PRs included.
+- **Item** — one-line what-it-does, terse. Match the wording to the Done/Open item it backs so they cross-reference.
+- **Base** — the target branch (`main`, or `test` for `api`/`chat`), because merge/promote path matters here.
+- **State** — `✅ merged <ISO> — see Done` once shipped (the row stays; the closure note lives under `## Done`), or `🔄 open — <verification status>` while in flight. Keep it current as PRs land.
+
+Follow the table with a short **merge-sequencing blockquote** when order matters (`docs → database → api → tasks`, contract-first; see Merge sequencing below). When everything is one state, say so explicitly (*"All four open and preview-verified; none merged yet"* / *"All seven merged and on prod"*) so the reader isn't left inferring.
 
 ## The Open → Done lifecycle (the most important rule)
 
@@ -123,6 +147,7 @@ gh issue view 1767 --repo recoupable/chat
 
 The non-negotiables — structure/format is covered by the sections above; these are the things most often gotten wrong:
 
+- [ ] Multi-PR tracker has a **`## PRs` matrix under `## Goal`** (PR | Item | Base | State), `updated <ISO>` heading, kept current — never omitted just because the PRs are also named in prose.
 - [ ] Shipped items are **closure notes under `## Done`** (PR link, ✅ ISO date, merge path, what changed, **Verified**) — never a bare `[x]`.
 - [ ] Every claim is **linked** (PR/SHA/file:line); numbers are **hard**, dates **ISO**; **no secrets** (env-var name, never a value).
 - [ ] **Title + lead reflect current reality** (scope + live status); reversals superseded, not erased.
