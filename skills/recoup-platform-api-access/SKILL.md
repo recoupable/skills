@@ -61,6 +61,24 @@ executing** — shapes vary per action. Trigger heuristic: a pasted
 `docs.google.com`/`drive.google.com`/`sheets.google.com` URL, or "edit this doc",
 "send an email", "post on TikTok".
 
+## Send an email (from Recoup)
+
+`POST /emails` sends an email from `Agent by Recoup <agent@recoupable.com>` via
+Recoup — works headless with your API key, no Gmail connector needed. Use it for
+reports, alerts, and scheduled-task output.
+
+```bash
+curl -sS -X POST "${AUTH[@]}" -H "Content-Type: application/json" \
+  -d '{"to":["someone@example.com"],"subject":"Weekly report","text":"# Summary\n…"}' \
+  "https://api.recoupable.com/api/emails"
+# → {"success":true,"message":"…","id":"<resend-id>"}
+```
+
+Body: `to[]` (required) · `subject` (required) · `text` (Markdown) or `html` ·
+optional `cc[]`, `room_id`. Send via `${AUTH[@]}` (the API-key header above) — a
+`recoup_sk_` key authenticates over `x-api-key`, not Bearer. To send **as the
+user** from their own Gmail instead, use the `GMAIL_SEND_EMAIL` connector action.
+
 ## Troubleshooting
 
 401 = token missing/expired (check the credential). 403 = no access to the
