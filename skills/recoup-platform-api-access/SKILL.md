@@ -9,14 +9,18 @@ The platform access layer: authenticate, talk to the Recoup REST API, and
 invoke external connectors. Base `https://api.recoupable.com/api`; docs
 `https://developers.recoupable.com` (`/llms.txt`, `/llms-full.txt`, OpenAPI JSONs).
 
-## Auth — prefer the API key
+## Auth — one Bearer header, inline
+
+Every call uses the same header, dropped straight into the `curl` (no setup step):
+the sandbox sets one of the two vars, and the API accepts a `recoup_sk_` key or a
+Privy JWT over `Bearer`.
 
 ```bash
-if [ -n "$RECOUP_API_KEY" ]; then AUTH=(-H "x-api-key: $RECOUP_API_KEY")
-elif [ -n "$RECOUP_ACCESS_TOKEN" ]; then AUTH=(-H "Authorization: Bearer $RECOUP_ACCESS_TOKEN")
-else echo "No credential — ask the user to authenticate; don't retry blindly." >&2; fi
-# curl -sS "${AUTH[@]}" "https://api.recoupable.com/api/artists/{id}/socials"
+curl -sS -H "Authorization: Bearer ${RECOUP_API_KEY:-$RECOUP_ACCESS_TOKEN}" \
+  "https://api.recoupable.com/api/artists/{id}/socials"
 ```
+
+If neither var is set, ask the user to authenticate — don't retry blindly.
 
 ## Pick the artist mode first (guessing here fabricates artists)
 
@@ -67,36 +71,24 @@ executing** — shapes vary per action. Trigger heuristic: a pasted
 Recoup — works headless with your API key, no Gmail connector needed. Use it for
 reports, alerts, and scheduled-task output.
 
-**Send it by running this exact `curl` with the `bash` tool. Do NOT use `web_fetch`,
-`fetch`, or any HTTP-request tool** — those omit the `$AUTH` header (→ 401) and
-truncate the response so you can't confirm what was sent. Resolve auth **inline, in
-the same command** (each shell is fresh, so an `AUTH` from an earlier step is gone):
+Run it with `bash` (not `web_fetch` — that hides the response and you can't confirm
+the recipient):
 
 ```bash
-AUTH=$([ -n "$RECOUP_API_KEY" ] && echo "x-api-key: $RECOUP_API_KEY" || echo "Authorization: Bearer $RECOUP_ACCESS_TOKEN")
-curl -sS -X POST -H "$AUTH" -H "Content-Type: application/json" \
+curl -sS -X POST -H "Authorization: Bearer ${RECOUP_API_KEY:-$RECOUP_ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
   -d '{"to":["someone@example.com"],"subject":"Weekly report","text":"# Summary\n…"}' \
   "https://api.recoupable.com/api/emails"
 # → {"success":true,"message":"Email sent successfully … to someone@example.com.","id":"<resend-id>"}
 ```
 
-**Payload — follow exactly (weak models get these wrong):**
-- `to` is a **JSON array of email strings**: `["a@b.com"]`. Never a bare string
-  (`"a@b.com"` → 400), never objects (`[{"email": …}]`).
-- The **only** valid keys are `to`, `cc`, `subject`, `text`, `html`, `chat_id`,
-  `account_id`. **Do not invent keys** like `recipients` or `email` — unknown keys
-  are silently dropped, and `to` then defaults to *your own* account email, so the
-  message goes to the wrong person and still returns `200` (a silent misroute).
-- `subject` is optional (defaults from the body); `text` (Markdown) or `html` is the
-  body; `cc` is an array; `chat_id` adds a footer chat link.
-- **After sending, read the JSON response:** confirm `"success": true` and that the
-  `message` names the recipient *you intended* before reporting success.
-
-The same `recoup_sk_` key authenticates over **either** `x-api-key` or
-`Authorization: Bearer`, so the inline `AUTH` above works in any context (sandbox sets
-`RECOUP_ACCESS_TOKEN`; a local user sets `RECOUP_API_KEY`). **Without a payment method
-on file, `to`/`cc` are limited to the account's own email (403 otherwise).** To send
-**as the user** from their own Gmail instead, use the `GMAIL_SEND_EMAIL` connector action.
+`to` is a JSON array of email strings (`["a@b.com"]` — not a bare string, not
+`[{"email":…}]`). The only keys are `to`, `cc`, `subject`, `text`, `html`,
+`chat_id`, `account_id`; an unknown key (e.g. `recipients`) is dropped, and `to`
+then defaults to your own account email — silently misrouting the message. `subject`
+is optional. Read the response and check `message` names the recipient you intended.
+No payment method on file → `to`/`cc` are limited to the account's own email (403).
+To send as the user from their own Gmail instead, use `GMAIL_SEND_EMAIL`.
 
 ## Troubleshooting
 
