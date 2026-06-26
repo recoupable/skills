@@ -44,7 +44,9 @@ esac
 # deal dir is a real Recoup deal workspace (carries Recoup deal markers).
 # This is what keeps us from blocking a coincidental deals/<x>/source/ path
 # in someone else's unrelated project.
-deal_dir="${file_path%%/source/*}"
+# Strip at the LAST "/source/" (single %), so an ancestor dir named "source"
+# (e.g. ~/source/deals/{id}/source/x) still resolves to the real deal dir.
+deal_dir="${file_path%/source/*}"
 is_recoup_deal="no"
 for marker in assumptions.yaml evidence-ledger.json normalized findings; do
   if [ -e "$deal_dir/$marker" ]; then

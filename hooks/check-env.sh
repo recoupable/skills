@@ -37,7 +37,9 @@ fi
 #   - artists/*/RECOUP.md            -> a Recoup roster
 #   - deals/*/{assumptions.yaml,evidence-ledger.json} -> a catalog deal workspace
 #   - releases/**/RELEASE.md         -> a release workspace
-#   - CLAUDE.md/AGENTS.md naming recoup -> a Recoup-aware project brain
+#   - CLAUDE.md/AGENTS.md naming a recoup brand token -> a Recoup-aware brain.
+#     Matched precisely (recoupable / recoup- / recoup_) so the generic finance
+#     word ("recoupment"/"recouped") in an unrelated repo does NOT trigger it.
 is_recoup_context() {
   local d="$1"
   [ -f "$d/RECOUP.md" ] && return 0
@@ -49,7 +51,7 @@ is_recoup_context() {
   ls "$d"/releases/*/RELEASE.md            >/dev/null 2>&1 && return 0
   local f
   for f in "$d/CLAUDE.md" "$d/AGENTS.md"; do
-    [ -f "$f" ] && grep -qi 'recoup' "$f" && return 0
+    [ -f "$f" ] && grep -qiE 'recoup(able|-|_)' "$f" && return 0
   done
   return 1
 }
