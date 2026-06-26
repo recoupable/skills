@@ -1,6 +1,6 @@
 ---
 name: recoup-platform-connect-account
-description: Connect your real Recoup account so the rest of the box can act for you — first-run email/PIN verification that mints an API key tied to your account, persists it locally, and seeds memory. Use for "set up Recoup", "connect my account", "connect Claude to Recoup", "I just joined", or "log in". One-time/occasional. Scaffold folders next with recoup-platform-build-workspace; for ongoing calls use recoup-platform-api-access.
+description: Connect your real Recoup account so the rest of the box can act for you — first-run email/PIN verification that mints an API key tied to your account, persists it locally, and seeds memory. Use for "set up Recoup", "connect my account", "connect Claude to Recoup", "I just joined", or "log in". One-time/occasional. Scaffold folders / build your OS next with recoup-platform-build-os; for ongoing calls use recoup-platform-api-access.
 ---
 
 # Recoup — Connect Account
@@ -28,8 +28,8 @@ Recoup. Idempotent and safe to re-run.
    if orgs AND artists are both empty, it's a throwaway key — re-do with the real email.
 7. **Seed memory:** append a `<!-- recoup-platform-connect-account:start/end -->` block to
    `~/.claude/CLAUDE.md` (idempotent replace) so music-industry questions route to Recoup.
-8. Print a smoke-test prompt, then point the user to recoup-platform-build-workspace
-   to scaffold their folders.
+8. Print a smoke-test prompt, then point the user to recoup-platform-build-os
+   to scaffold their workspace / build their OS.
 
 ## Guardrails
 

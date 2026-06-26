@@ -15,7 +15,8 @@
 ### roster — your artists
 | Intent | Skill |
 |---|---|
-| onboard / add / create a new artist, "set up [artist]", new signing | `recoup-roster-add-artist` |
+| onboard / add / create **one** new artist, "set up [artist]", new signing | `recoup-roster-add-artist` |
+| bootstrap an **empty** org's whole roster (no artists yet) — bulk-onboard a list via parallel subagents | `recoup-roster-onboard` |
 | "what artists do I have", list my roster, what's in this sandbox | `recoup-roster-list-artists` |
 | organize / update one artist's files, brand, or context | `recoup-roster-manage-artist` |
 
@@ -61,7 +62,7 @@
 | Intent | Skill |
 |---|---|
 | first-run "set up / connect Recoup", verify email, get an API key | `recoup-platform-connect-account` |
-| scaffold my sandbox / build my workspace folders | `recoup-platform-build-workspace` |
+| scaffold my workspace folders / mirror my roster, or build the org's full self-managing "music-company OS" (structure + brain + janitor + plugin, seeded with `artists/` and wired to the API) | `recoup-platform-build-os` |
 | call the Recoup API directly, fetch a resource, run a connector (Docs/Gmail/TikTok) | `recoup-platform-api-access` |
 | "remember this" / capture a reusable lesson | `recoup-platform-capture-lesson` |
 
@@ -99,5 +100,5 @@
   `recoup-research-artist-overview`.
 - **Roster vs platform.** Add/list/manage artists → the `recoup-roster-*` skills.
   First-run connect/scaffold → `recoup-platform-connect-account` /
-  `recoup-platform-build-workspace`. A raw REST/connector call →
+  `recoup-platform-build-os`. A raw REST/connector call →
   `recoup-platform-api-access`.
