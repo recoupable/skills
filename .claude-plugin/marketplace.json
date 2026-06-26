@@ -1,5 +1,8 @@
 {
   "name": "recoup",
+  "metadata": {
+    "description": "A record label in a box — Recoup's full music team (artist research, content, song analysis, release campaigns, and catalog valuation) in one install."
+  },
   "owner": {
     "name": "Recoup",
     "email": "support@recoupable.com",
@@ -8,10 +11,9 @@
   "plugins": [
     {
       "name": "recoup-skills",
-      "displayName": "Recoup Skills",
-      "source": ".",
+      "source": "./",
       "description": "A record label in a box. Recoup turns your AI agent into a full music team — artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation — all in one install.",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "author": {
         "name": "Recoup",
         "email": "support@recoupable.com",
