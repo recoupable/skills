@@ -171,7 +171,9 @@ def check_package_freshness(ws: str, version: str) -> None:
 
 def check_schedule(ws: str) -> None:
     routines = read(os.path.join(ws, "operations", "routines.md")).lower()
-    if "wired" in routines or "scheduled task" in routines and "enable" not in routines:
+    if ("wired" in routines and "not wired" not in routines) or (
+        "scheduled task" in routines and "enable" not in routines
+    ):
         ok("janitor schedule appears wired")
     else:
         find("janitor schedule not armed — wire the scheduling asset (one step) so drift is caught "
