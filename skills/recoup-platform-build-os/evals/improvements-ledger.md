@@ -6,8 +6,8 @@ improvements tied to an **observed** failure in a run (cite the run + agent), ne
 
 Row format:
 
-| Date | Finding (observed) | Evidence (run / agent / file) | Proposed change in workspace-os | Status |
-|------|--------------------|-------------------------------|---------------------------------|--------|
+| # | Pri | Finding (observed) | Evidence (run / agent / file) | Proposed change in workspace-os | Status |
+|---|-----|--------------------|-------------------------------|---------------------------------|--------|
 
 Status: `proposed` → `applied` (edited the skill) → `verified` (a later run shows it fixed) → `rejected` (with reason).
 
