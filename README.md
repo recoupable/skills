@@ -35,6 +35,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 |-------|-------------|
 | recoup-roster-add-artist | Onboard & enrich a new artist (the 8-call setup chain) |
 | recoup-roster-list-artists | See who's on your roster |
+| recoup-roster-onboard | Bootstrap an empty org's whole roster (bulk-onboard via parallel subagents) |
 | recoup-roster-manage-artist | Work inside one artist's folder — context, brand, songs, releases |
 
 ### research — industry intelligence
@@ -85,7 +86,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | Skill | What it does |
 |-------|-------------|
 | recoup-platform-connect-account | First-run setup: verify email, mint an API key |
-| recoup-platform-build-workspace | Scaffold your orgs/artists folder tree |
+| recoup-platform-build-os | Build the org's self-managing music-company OS (folders + brain + janitor + plugin), seeded from your live roster |
 | recoup-platform-api-access | Call the Recoup API & external connectors directly |
 | recoup-platform-capture-lesson | Capture a reusable lesson (compounding memory) |
 
