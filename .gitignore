@@ -5,3 +5,6 @@ __pycache__/
 # Local E2E test sandbox (not for commit)
 e2e-review/
 tests/
+
+# internal research wiki — kept locally, not shipped in the marketplace
+docs/research/
