@@ -1,13 +1,13 @@
 ---
 name: recoup-platform-api-access
-description: Call the Recoup API and external connectors directly — fetch any platform resource (artists, socials, organizations, research, documents) and run connector actions (Google Docs/Sheets/Drive edits, Gmail, TikTok, Instagram). Use whenever you need raw Recoup data, a platform resource, to write curl against api.recoupable.com, or to read/write something outside Recoup like a Google Doc URL or a spreadsheet. The plumbing every other skill rides on. To onboard or operate on an artist use the recoup-roster-* skills; for first-run connection use recoup-platform-connect-account.
+description: Call the Recoup API and external connectors directly — fetch any platform resource (artists, socials, organizations, research, documents) and run connector actions (Google Docs/Sheets/Drive edits, Gmail, TikTok, Instagram). Use whenever you need raw Recoup data, a platform resource, to write curl against api.recoupable.dev, or to read/write something outside Recoup like a Google Doc URL or a spreadsheet. The plumbing every other skill rides on. To onboard or operate on an artist use the recoup-roster-* skills; for first-run connection use recoup-platform-connect-account.
 ---
 
 # Recoup — API Access
 
 The platform access layer: authenticate, talk to the Recoup REST API, and
-invoke external connectors. Base `https://api.recoupable.com/api`; docs
-`https://developers.recoupable.com` (`/llms.txt`, `/llms-full.txt`, OpenAPI JSONs).
+invoke external connectors. Base `https://api.recoupable.dev/api`; docs
+`https://docs.recoupable.dev` (`/llms.txt`, `/llms-full.txt`, OpenAPI JSONs).
 
 ## Auth — one Bearer header, inline
 
@@ -17,7 +17,7 @@ Privy JWT over `Bearer`.
 
 ```bash
 curl -sS -H "Authorization: Bearer ${RECOUP_API_KEY:-$RECOUP_ACCESS_TOKEN}" \
-  "https://api.recoupable.com/api/artists/{id}/socials"
+  "https://api.recoupable.dev/api/artists/{id}/socials"
 ```
 
 If neither var is set, ask the user to authenticate — don't retry blindly.
@@ -46,8 +46,8 @@ Integrations · Chat & Agents · Developer/Infra. Find the exact path/params by
 grepping `llms-full.txt` or pulling the OpenAPI JSON for the area, e.g.:
 
 ```bash
-curl -s https://developers.recoupable.com/llms-full.txt | grep -A 30 -i "similar artists"
-curl -s https://developers.recoupable.com/api-reference/openapi/research.json | jq '.paths | keys'
+curl -s https://docs.recoupable.dev/llms-full.txt | grep -A 30 -i "similar artists"
+curl -s https://docs.recoupable.dev/api-reference/openapi/research.json | jq '.paths | keys'
 ```
 
 Geography comes from `audience`; discovery from `similar` + `web`.
@@ -78,7 +78,7 @@ the recipient):
 curl -sS -X POST -H "Authorization: Bearer ${RECOUP_API_KEY:-$RECOUP_ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"to":["someone@example.com"],"subject":"Weekly report","text":"# Summary\n…"}' \
-  "https://api.recoupable.com/api/emails"
+  "https://api.recoupable.dev/api/emails"
 # → {"success":true,"message":"Email sent successfully … to someone@example.com.","id":"<resend-id>"}
 ```
 
