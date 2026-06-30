@@ -18,7 +18,7 @@ Only start when the issue is a proper spec — it should carry a **Goal**, a **p
 ```
 1. Read the issue + the ground            (contract, Done-when, conventions, the sibling to mirror)
 2. Docs first — the contract              (OpenAPI/reference PR; merge target: main)
-3. API by TDD, matching the docs          (red→green→refactor; PR target: test; links the docs PR)
+3. API by TDD, matching the docs          (red→green→refactor; PR target: main; links the docs PR)
 4. Wait for the preview deployment        (poll the PR-head commit until Ready)
 5. Test the PR against the preview        (every Done-when criterion, against real data)
 6. Reconcile docs ↔ API ↔ live results    (live response is ground truth; fix drift)
@@ -45,7 +45,7 @@ Documentation-driven development: the docs/OpenAPI change is the contract, and i
 
 ## 3. API by TDD, matching the docs
 
-Branch per the repo's rule (Recoup `api` PRs target `test`). Mirror the sibling implementation's layering (route → handler → validate → data function → response shaping; auth; credits).
+Branch per the repo's rule (Recoup `api` PRs target `main`). Mirror the sibling implementation's layering (route → handler → validate → data function → response shaping; auth; credits).
 
 **Red → green → refactor, one unit at a time:**
 
@@ -54,7 +54,7 @@ Branch per the repo's rule (Recoup `api` PRs target `test`). Mirror the sibling 
 3. Write the **minimum** implementation to pass (GREEN).
 4. Refactor — **one exported function per file** (SRP). Extract inline helpers into their own lib files when a reviewer would (see how `gateChatStreamStart` / `waitForTerminalRunStatus` were pulled out).
 
-Then: the implementation must match the **documented** contract exactly (params, response envelope, status codes). Run the **full domain test suite** (not just your files) to prove no regressions, then `tsc --noEmit` and lint. Commit, push, open the api PR (base `test`) — link the issue and the docs PR, and state the docs→api merge order in the body.
+Then: the implementation must match the **documented** contract exactly (params, response envelope, status codes). Run the **full domain test suite** (not just your files) to prove no regressions, then `tsc --noEmit` and lint. Commit, push, open the api PR (base `main`) — link the issue and the docs PR, and state the docs→api merge order in the body.
 
 ## 4. Wait for the preview deployment
 
@@ -89,7 +89,7 @@ All three must agree before you call it done. This step is the entire point of t
 ## 8. Hand off in merge order
 
 - Merge order is **docs → api** (the contract lands first). Honor hard dependencies (a database migration before the api that reads it).
-- **Never merge without explicit user approval.** When the user approves: merge, then promote per the repo flow (Recoup: squash → `test`, then `test` → `main` via a release PR, then sync `test` with `main`), checking the release scope first.
+- **Never merge without explicit user approval.** When the user approves: **squash-merge the PR to `main`** — we PR directly against `main` now; the old `test` → `main` staging step is retired, checking the release scope first.
 - On merge, **update the tracking issue to Done** with the **recoup-internal-dev-issue-tracker** skill — a closure note (PR links, ✅ ISO date, merge path, what shipped, and a Verified clause citing the live results), and check off the Done-when boxes you actually verified.
 
 ## Principles
