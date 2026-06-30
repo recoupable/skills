@@ -1,6 +1,6 @@
 ---
 name: recoup-internal-dev-issue-tracker
-description: INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal write a tracking issue"). Never use for customer-facing or artist requests. Write and maintain high-signal GitHub issues — especially long-lived tracking issues that coordinate multi-PR, multi-repo efforts — in the Recoup house style. Use when the user says "write an issue", "create a tracking issue", "open an issue for this work", "update the issue", "check off / close out an item", "log what shipped on the issue", "maintain the issue", or when capturing a plan, cutover, migration, or cleanup that spans more than one PR. Covers structure, the Open→Done lifecycle, evidence/linking rules, and acceptance criteria.
+description: INTERNAL — Recoup staff tooling. Never use for customer-facing or artist requests. Write and maintain high-signal GitHub issues — especially long-lived tracking issues that coordinate multi-PR, multi-repo efforts — in the Recoup house style. Use when the user says "write an issue", "create a tracking issue", "open an issue for this work", "update the issue", "check off / close out an item", "log what shipped on the issue", "maintain the issue", or when capturing a plan, cutover, migration, or cleanup that spans more than one PR. Covers structure, the Open→Done lifecycle, evidence/linking rules, and acceptance criteria.
 ---
 
 # Writing & Maintaining Issues
