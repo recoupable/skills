@@ -7,7 +7,7 @@ description: Call the Recoup API and external connectors directly — fetch any 
 
 The platform access layer: authenticate, talk to the Recoup REST API, and
 invoke external connectors. Base `https://api.recoupable.dev/api`; docs
-`https://developers.recoupable.com` (`/llms.txt`, `/llms-full.txt`, OpenAPI JSONs).
+`https://docs.recoupable.dev` (`/llms.txt`, `/llms-full.txt`, OpenAPI JSONs).
 
 ## Auth — one Bearer header, inline
 
@@ -46,8 +46,8 @@ Integrations · Chat & Agents · Developer/Infra. Find the exact path/params by
 grepping `llms-full.txt` or pulling the OpenAPI JSON for the area, e.g.:
 
 ```bash
-curl -s https://developers.recoupable.com/llms-full.txt | grep -A 30 -i "similar artists"
-curl -s https://developers.recoupable.com/api-reference/openapi/research.json | jq '.paths | keys'
+curl -s https://docs.recoupable.dev/llms-full.txt | grep -A 30 -i "similar artists"
+curl -s https://docs.recoupable.dev/api-reference/openapi/research.json | jq '.paths | keys'
 ```
 
 Geography comes from `audience`; discovery from `similar` + `web`.
