@@ -50,8 +50,7 @@ for a metric (`GET /connectors/actions` → check `isConnected`), **say so and o
 it** — never estimate, use "industry averages", or fill gaps with
 sample/placeholder numbers. A short accurate report beats a padded, invented one.
 
-**Before you give up on missing data — get it, or hand back a connect link.** A
-scheduled task has no user to answer, so don't dead-end on a question. When a
+**Before you give up on missing data — get it, or hand back a connect link.** When a
 metric's source isn't connected, work down this list before omitting:
 1. **Scrape the public data you can get** — `POST /api/socials/{social_id}/scrape`
    (one profile) or `POST /api/artist/socials/scrape` (all of an artist's). Works
@@ -60,13 +59,11 @@ metric's source isn't connected, work down this list before omitting:
 2. **Check connection status** — `GET /api/connectors` → each connector's
    `isConnected`.
 3. **Mint a connect link** — `POST /api/connectors {"connector":"youtube"}` returns
-   `{ redirectUrl }` (a Composio OAuth URL). **Put it in the email** so the customer
-   self-connects: *"CPM/revenue needs YouTube Analytics — connect here: {redirectUrl}
-   — the next report will include it."*
+   `{ redirectUrl }` (a Composio OAuth URL). Surface it to the caller so the user can
+   self-connect: *"CPM/revenue needs YouTube Analytics — connect here: {redirectUrl}"*.
 
-Send an honest report with the real public data **plus** the connect link. That
-beats both a fabricated report and an empty/omitted one — and it's what actually
-unblocks the customer.
+Return the real public data **plus** the connect link — that beats both a fabricated
+report and an empty/omitted one.
 
 ## Docs map (pull the section you need; don't guess paths)
 
