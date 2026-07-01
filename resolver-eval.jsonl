@@ -66,3 +66,5 @@
 {"intent": "what's this catalog worth from public streaming data", "expected": "recoup-catalog-estimate-value", "not": ["recoup-internal-funnel-valuation-pipeline"]}
 {"intent": "write a caption for the artist's instagram post", "expected": "recoup-content-write-caption", "not": ["recoup-internal-social-ship-posts"]}
 {"intent": "how is this artist doing across streaming and socials", "expected": "recoup-research-artist-overview", "not": ["recoup-internal-account-health-report"]}
+{"intent": "recoup-internal audit how last night's task emails went", "expected": "recoup-internal-task-email-audit"}
+{"intent": "recoup-internal are we still sending empty footer-only emails from scheduled tasks", "expected": "recoup-internal-task-email-audit"}

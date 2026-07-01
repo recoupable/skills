@@ -80,6 +80,7 @@
 | "recoup-internal" + benchmark/audit/grade a skill pack or plugin | `recoup-internal-eval-skill-benchmark` |
 | "recoup-internal" + work the Attio catalog-valuation sales funnel | `recoup-internal-funnel-valuation-pipeline` |
 | "recoup-internal" + account-health / account-status snapshot for a Recoup account | `recoup-internal-account-health-report` |
+| "recoup-internal" + audit scheduled-task email health (what tasks emailed, how many empties the guard blocked) over a window | `recoup-internal-task-email-audit` |
 | "recoup-internal" + draft/ship/measure LinkedIn or X posts | `recoup-internal-social-ship-posts` |
 
 ---
