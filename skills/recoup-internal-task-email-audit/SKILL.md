@@ -9,8 +9,9 @@ description: >-
   last night", "what emails went out from tasks", "are we still sending empty
   emails", "task email health", "did the empty-email fix hold". Produces a
   per-run table (one row per Trigger.dev `customer-prompt-task` run: run_id,
-  recipient, prompt, email subject, body kb) plus a headline. Reads the Trigger.dev
-  run list + `email_send_log` and `chats`/`chat_messages` (Supabase).
+  recipient, prompt, email subject, body kb) plus a headline, a per-run **tool-call
+  trace**, and a **`has_hallucinated_data`** / `expected_data_source` content check.
+  Reads the Trigger.dev run list + `email_send_log` and `chats`/`chat_messages` (Supabase).
 ---
 
 # Task-email health audit
@@ -27,6 +28,8 @@ bug, resolved 2026-07-01).
 - "Are we still shipping empty footer-only emails?"
 - "Task email health for the last 24h / this week."
 - "Did the #729 guard actually block empties in production?"
+- "Is the data in this task email real, or hallucinated? Why did it fabricate?" (→ §§ 6–7)
+- "Show me the exact tool calls a task run made." (→ § 6)
 
 ## Background (what you're measuring)
 
@@ -218,6 +221,69 @@ select
 from public.chat_messages
 where chat_id = any($1) ;   -- $1 = array of the window's task chat_ids
 ```
+
+### 6. Per-run tool-call trace — *why* an email is empty / rich / hallucinated
+
+To debug a single run (what it actually fetched, whether it fabricated), pull its
+tool calls from `chat_messages`.
+
+**First, find the run's chat.** `email_send_log.chat_id` is null, so locate the chat
+by recipient (or a subject marker):
+
+```sql
+select chat_id, min(created_at) started
+from public.chat_messages
+where created_at > now() - interval '24 hours'
+  and parts::text like '%recipient@domain.com%'
+group by chat_id order by started desc;
+```
+
+**Then extract the tool calls.** ⚠️ `chat_messages.parts` is an **object**
+`{id, role, parts:[…]}`, *not* a bare array — unnest `parts::jsonb->'parts'`. A run
+is usually **one** assistant message holding every part:
+
+```sql
+select row_number() over (order by ord) as n,
+  p->>'type' as tool,
+  left(coalesce(p->'input'->>'command', p->'input'->>'skill', p->'input'->>'url',
+                p->>'text', (p->'input')::text), 200) as input_or_text,
+  left(coalesce(p->'output'->>'stdout', p->'output'->>'content',
+                (p->'output')::text, p->>'state'), 200) as result
+from public.chat_messages cm,
+  lateral jsonb_array_elements(
+    case when jsonb_typeof(cm.parts::jsonb)='array' then cm.parts::jsonb
+         else cm.parts::jsonb->'parts' end
+  ) with ordinality as t(p, ord)
+where cm.chat_id = '<chat_id>'
+  and p->>'type' in ('text','tool-bash','tool-skill','tool-web_fetch','tool-write')
+order by ord;
+```
+
+The `text` parts are the agent's **narration** — usually the smoking gun (e.g.
+*"the API doesn't have direct CPM metrics, I'll generate … sample data"*).
+
+### 7. Content audit — is the reported data real? (`has_hallucinated_data`)
+
+For each **delivered** email, set `has_hallucinated_data` from the run's tool calls
+(§ 6): **a metric is hallucinated if it isn't backed by a successful data-fetch this
+run.** Red flags:
+- the data call **errored / returned empty** (`/socials` → "Artist not found",
+  `organizations: []`) yet the email still reports numbers;
+- **no `web_fetch`** in a trends/research task (`used_web_fetch=false`);
+- the HTML/narration contains **"sample data" / "estimated" / "industry average" /
+  "realistic data" / `chart-placeholder`**;
+- the agent used the **wrong id** for a sub-resource (gotchas below) → 404 → no data.
+
+Report two columns alongside the delivered table: **`has_hallucinated_data`** (bool;
+mark `✅ verified` vs `⚠️ inferred`) and **`expected_data_source`** (where accurate
+data *should* come from — YouTube CPM → YouTube Analytics connector; trends →
+`web_fetch` + platform trending; followers/streams → Recoup socials / Research).
+
+**Id gotchas when spot-checking real data** (skip these and you'll log false "no data"):
+- `/api/artists/{id}/*` sub-resources key on the **`account_id`**, *not* the list's
+  top-level `id`. And socials are **embedded** in `/api/artists` (`account_socials`) —
+  check there before calling `/socials` at all.
+- `POST /api/socials/{id}/scrape` keys on **`social_id`**, *not* the `id` field.
 
 ## How to read it
 
