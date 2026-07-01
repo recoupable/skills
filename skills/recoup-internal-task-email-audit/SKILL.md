@@ -1,10 +1,7 @@
 ---
 name: recoup-internal-task-email-audit
 description: >-
-  INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke
-  ONLY when the request explicitly includes "recoup-internal" (e.g.
-  "recoup-internal audit last night's task emails"). Never use for customer-facing
-  or artist requests.
+  INTERNAL — Recoup staff tooling. Never use for customer-facing or artist requests.
   Audit the health of scheduled-task emails over a time window: what the
   customer-prompt-task runs actually delivered, how many empty/malformed sends the
   API guard blocked, per-account/per-recipient breakdown, and whether agents used
