@@ -43,25 +43,30 @@ rejected) with the full raw body. That log is the audit's source of truth.
 ### A. Task runs — Trigger.dev Management REST API (the run list + `run_id`)
 
 Every scheduled task run is a Trigger.dev run of the **`customer-prompt-task`**
-task ([`lib/trigger/createSchedule.ts`](https://github.com/recoupable/api/blob/main/lib/trigger/createSchedule.ts)).
-Enumerate them via the Management API. **Requires the prod `TRIGGER_SECRET_KEY`**
-— a `tr_dev_*` key returns 0 prod runs.
+task ([`lib/trigger/createSchedule.ts`](https://github.com/recoupable/api/blob/main/lib/trigger/createSchedule.ts)),
+tagged **`account:<accountId>`**. Enumerate them with the bundled script — it pages
+the Management API, filters to `customer-prompt-task` in the window, and prints the
+account array for the correlation SQL:
 
-- **List runs** (mirrors [`lib/trigger/fetchTriggerRuns.ts`](https://github.com/recoupable/api/blob/main/lib/trigger/fetchTriggerRuns.ts)):
-  ```bash
-  curl -s "https://api.trigger.dev/api/v1/runs?page%5Bsize%5D=100" \
-    -H "Authorization: Bearer $TRIGGER_SECRET_KEY"
-  ```
-  Page via `page[after]=<cursor>`. Each run has `id` (**the `run_id`**), `status`,
-  `createdAt`/`finishedAt`, `costInCents`, and `tags` (including
-  **`account:<accountId>`**). Filter client-side to
-  `taskIdentifier == "customer-prompt-task"` and `createdAt` in the window.
-  - One account: add `&filter[tag]=account:<accountId>` (this is what
-    `GET /api/tasks/runs` uses). **Omit the tag for the whole fleet** (all accounts).
-- **Run detail / prompt** (mirrors [`lib/trigger/retrieveTaskRun.ts`](https://github.com/recoupable/api/blob/main/lib/trigger/retrieveTaskRun.ts)):
-  `runs.retrieve(runId)` via `@trigger.dev/sdk` → `payload` carries the task
-  **prompt** + account/artist ids. (Or resolve the prompt from `scheduled_actions`
-  for that account — cheaper, no per-run round-trip.)
+```bash
+node scripts/fetch_task_runs.mjs --hours 24 > runs.json   # add --account <uuid> for one account
+```
+
+**Requires the PROD `TRIGGER_SECRET_KEY`** — a `tr_dev_*` key returns **0** prod
+runs (the #1 gotcha; the script warns you). Pull it without clobbering your `.env`,
+from the `recoupable/api` repo (linked to `recoup/api`):
+
+```bash
+vercel env pull /tmp/prod.env --environment=production --yes
+export TRIGGER_SECRET_KEY=$(grep '^TRIGGER_SECRET_KEY=' /tmp/prod.env | cut -d= -f2- | tr -d '"')
+# … run the script …
+rm /tmp/prod.env                                          # scrub the secrets when done
+```
+
+`runs.json` rows are `{ run_id, account, status, createdAt, finishedAt }`. For the
+exact per-run **prompt**, `runs.retrieve(runId)` (`@trigger.dev/sdk`) has
+`payload.prompt`; but `scheduled_actions.prompt` per account (in the SQL below) is
+cheaper and usually sufficient.
 
 ### B. Emails + agent activity — Supabase (project `godremdqwajrwazhbrue`)
 
@@ -111,34 +116,57 @@ select
     and rcpt in (select rcpt from w where status='sent'))                 as blocked_then_delivered;
 ```
 
+> **`tasks_run` ≠ email tasks — segment the noise.** Many `customer-prompt-task`
+> runs are **not** email tasks: profile-sync/maintenance (one account fired **33
+> runs in 24h**), health-checks, and misconfigured prompts (literally `"22"`, or
+> `"New task — replace with your instructions."`). Report **`tasks_run`** (all runs)
+> **and `email_tasks`** (prompt mentions email/send *and* the account resolves a
+> recipient) separately, and list the non-email / high-frequency / misconfigured
+> ones as a short "ops noise" callout — otherwise the delivery rate is judged
+> against a polluted denominator (the first real run read "6 of 90", but ~33 of
+> those 90 were one maintenance task).
+
 ### 2. Per-run table — one row per Trigger.dev run (**the main deliverable**)
 
 Columns: **`run_id`** · **`recipient`** · **`prompt`** (truncated) · **`subject`** ·
-**`body (kb)`**. Built by joining the Trigger.dev run list (§ A) to `email_send_log`:
+**`body (kb)`**. Paste the `array[...]::uuid[]` that the script printed into this
+**one** correlation query (returns recipient + prompt + delivered subject/body per
+account — this exact query is validated, mind the inline gotchas):
 
-1. **run_id + account + `finishedAt`** — from the Trigger.dev run list (§ A),
-   filtered to `taskIdentifier == customer-prompt-task` in the window. The account
-   is the run's `account:<id>` tag.
-2. **recipient** — the account's own email:
-   ```sql
-   select account_id, email from public.account_emails where account_id = any($1);
-   -- $1 = the run accounts from step 1
-   ```
-3. **prompt** — `runs.retrieve(run_id).payload.prompt` (or `scheduled_actions.prompt`
-   for that account); truncate to ~80 chars.
-4. **subject + body(kb)** — the `email_send_log` row for that account nearest the
-   run's `finishedAt`:
-   ```sql
-   select account_id, status,
-     substring(raw_body from '"subject"\s*:\s*"([^"]{0,80})') as subject,
-     round(length(raw_body)/1024.0, 1) as body_kb, created_at
-   from public.email_send_log
-   where account_id = any($1) and created_at > now() - interval '24 hours'
-   order by created_at;
-   ```
-   Match each run to the `sent` row with the same `account_id` and the closest
-   `created_at ≥ finishedAt`. A run with **no** matching `sent` row delivered
-   nothing — surface it (often it has a `rejected` row instead; that's a blocked empty).
+```sql
+with racct as (
+  select unnest( /* paste the account array from fetch_task_runs.mjs here */ ) as account_id
+)
+select substr(ra.account_id::text, 1, 8)                          as acct,
+       ae.email                                                   as recipient,
+       left(sa.prompt, 60)                                        as prompt,
+       es.subject,
+       es.body_kb
+from racct ra
+-- account_emails has NO created_at → limit 1, no order
+left join lateral (select email from public.account_emails
+                   where account_id = ra.account_id limit 1) ae on true
+left join lateral (select prompt from public.scheduled_actions
+                   where account_id = ra.account_id order by updated_at desc limit 1) sa on true
+-- the delivered email: newest 'sent' row for the account in the window
+left join lateral (
+  select substring(raw_body from '"subject"\s*:\s*"([^"]{0,60})') as subject,
+         round(length(raw_body) / 1024.0, 1)                      as body_kb
+  from public.email_send_log
+  where account_id = ra.account_id and status = 'sent'
+    and created_at > now() - interval '24 hours'
+  order by created_at desc limit 1
+) es on true
+order by (es.subject is not null) desc, ra.account_id;   -- delivered first
+```
+
+Then **join `runs.json` to this result by `account`** to fill `run_id`. Notes:
+- `subject is null` ⇒ the account delivered **no** email in the window (ran but
+  didn't send, or its send was a blocked empty — `rejected` rows carry a **null
+  `account_id`**, so they don't show here; count them via § 4).
+- An account with **>1 run** in the window (a task firing hourly) maps to one
+  account row here — attribute the delivered email to the run whose `finishedAt` is
+  nearest the send.
 
 Render:
 
@@ -214,6 +242,10 @@ got real reports; the 10 empties that would have been spam were blocked.
 
 ## Caveats
 
+- **Needs the PROD `TRIGGER_SECRET_KEY`** — a `tr_dev_*` key returns 0 runs; the
+  script warns you. Pull it to a scratch file and scrub it after (see § A).
+- **Not all `customer-prompt-task` runs are email tasks** — filter to email-intent
+  before judging delivery (see the § 2 callout).
 - **`email_send_log.chat_id` is null on nearly all sends** — agents don't pass it.
   So you can't join sends to a specific run/task by `chat_id`; attribute by
   **recipient** and **account_id** (on `sent` rows) instead. This null also means
