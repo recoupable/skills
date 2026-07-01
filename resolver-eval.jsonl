@@ -9,6 +9,8 @@
 {"intent": "turn this repo into our label's self-managing music-company OS", "expected": "recoup-platform-build-os"}
 {"intent": "call the recoup api to fetch this artist's socials", "expected": "recoup-platform-api-access"}
 {"intent": "edit this google doc and sync it to a sandbox file", "expected": "recoup-platform-api-access"}
+{"intent": "email me this weekly report as an html email", "expected": "recoup-platform-email-helper", "not": ["recoup-platform-api-access"]}
+{"intent": "send the daily trends summary to the artist's manager", "expected": "recoup-platform-email-helper"}
 {"intent": "that worked, remember this so we don't redo it next time", "expected": "recoup-platform-capture-lesson"}
 
 # --- roster ---
