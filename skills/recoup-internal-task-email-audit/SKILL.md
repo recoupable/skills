@@ -308,8 +308,29 @@ got real reports; the 10 empties that would have been spam were blocked.
 
 ## Caveats
 
+- **Conditional tasks make "no send" a SUCCESS, not a failure.** Since 2026-07-02,
+  task prompts may be explicitly conditional (e.g. the roster-wide "Daily YouTube
+  New-Video Report": *"If NO artist posted a new video in the window: send nothing"*).
+  Before counting a no-send run as a delivery failure, read the run's final `text`
+  part (§ 6) — an explicit honest no-op conclusion ("no new video in the last 24
+  hours", "nothing to report") is **correct behavior**. Classify runs three ways:
+  `sent` / `correct no-send (conditional)` / `failed to send`.
+- **`rejected` rows are not always guard blocks.** An expired sandbox ephemeral key
+  logs every send attempt as `rejected` too (the API 401s post-logging) — one run can
+  produce a burst of dozens of rejected rows (observed: ~35 in 6 min from a single
+  long run whose key expired). Distinguish by reading the agent's bash outputs in the
+  trace: `"Unauthorized"`/401 = key expiry (a **delivery-infra** failure), a guard
+  message ("a non-empty html or text body is required") = a real empty-body block.
+  Runs longer than ~20 minutes are at risk of key expiry.
+- **`chat_messages` part counts can shrink mid-run.** A durable-workflow step retry
+  resets the persisted assistant message and rebuilds it from scratch (observed:
+  302 parts → restart → rebuilt). Don't treat a dropping part count as data loss,
+  and re-query before concluding a run's final state.
+
 - **Needs the PROD `TRIGGER_SECRET_KEY`** — a `tr_dev_*` key returns 0 runs; the
-  script warns you. Pull it to a scratch file and scrub it after (see § A).
+  script warns you. Pull it to a scratch file and scrub it after (see § A). If
+  `vercel env pull` fails with an invalid-token error, the CLI login has expired —
+  ask the operator to run `vercel login` (or paste the key) before proceeding.
 - **Not all `customer-prompt-task` runs are email tasks** — filter to email-intent
   before judging delivery (see the § 2 callout).
 - **`email_send_log.chat_id` is null on nearly all sends** — agents don't pass it.
