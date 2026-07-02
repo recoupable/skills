@@ -30,8 +30,20 @@ If neither var is set, ask the user to authenticate — don't retry blindly.
   `account_id` + row `id`.
 - **D — add an artist** → use recoup-roster-add-artist.
 
-**Roster discovery:** `GET /accounts/id` → `GET /artists` (your roster; `org_id`
-optional — orgs are often empty, so don't stop when `organizations` is `[]`).
+**Skip discovery when the run gives you the artist.** If your context/system
+prompt provides an `artist_account_id` (scheduled tasks and headless runs pass
+one), **use it directly** — call `/api/artists/{that id}/*` and get to work. Do
+not search the roster to "confirm" an artist you were already given.
+
+**Roster discovery (only when no artist context exists):** `GET /accounts/id` →
+`GET /artists` (your **personal** roster; `org_id` optional — orgs are often
+empty, so don't stop when `organizations` is `[]`).
+
+> ⚠️ **`GET /artists?org_id=…` returns the ORG's roster, not yours** — often a
+> different, tiny list. Never conclude an artist "doesn't exist" from the
+> org-scoped list alone: check the plain personal `GET /api/artists` first. (Real
+> failure: an agent resolved `$RECOUP_ORG_ID` → a 1-artist org list and declared
+> a 59-artist personal roster's artist missing.)
 
 > **Use `account_id`, not the list `id`, for every `/artists/{id}/*` sub-resource**
 > (socials/posts/fans key on `account_id`; the list's top-level `id` 404s). And
