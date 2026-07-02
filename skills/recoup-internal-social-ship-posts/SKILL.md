@@ -34,23 +34,51 @@ These are defaults, not laws — treat each as a hypothesis to keep testing, and
 
 ## Step 1 — Learn from recent posts
 
-Rank recent posts by engagement before writing. Reactions are the cleanest signal the API exposes for personal posts; **comments are the real signal for lead-gen posts** (see CTA below).
+Rank recent posts by engagement before writing. **One bulk scrape covers X, YouTube, and Instagram**; LinkedIn is the only platform still measured per-post via the connector. Comments are the real signal for lead-gen posts (see CTA below).
 
-Pull reactions for a known post via the connector (`POST /api/connectors/actions`):
+**The bulk pull** — one call scrapes every social profile linked to the artist, with per-post metrics:
 
 ```bash
-curl -sS -X POST "https://api.recoupable.com/api/connectors/actions" \
+# 1. Trigger (returns one {runId, datasetId} per linked profile).
+#    Costs 5 credits + 1 per requested post, PER PROFILE — posts=20 on 4 profiles = 100 credits.
+curl -sS -X POST "https://api.recoupable.dev/api/artist/socials/scrape" \
+  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" -H "Content-Type: application/json" \
+  -d '{"artist_account_id":"<ARTIST_ACCOUNT_ID>","posts":20}'
+
+# 2. Poll each run until SUCCEEDED (X/YT depth runs take ~1-3 min), then read data
+curl -sS "https://api.recoupable.dev/api/apify/runs/<RUN_ID>" \
+  -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"
+```
+
+What each platform's dataset gives you:
+
+| Platform | Dataset shape | Metrics per post |
+|---|---|---|
+| **X** | one item per timeline entry — **includes RTs and replies**, so size `posts` large enough to reach older posts | `likeCount`, `retweetCount`, `replyCount`, `quoteCount`, `bookmarkCount`, **`viewCount` (impressions)** |
+| **YouTube** | up to `posts` videos **plus** `posts` Shorts (depth is per content type) | `viewCount`, `likes`, `commentsCount` |
+| **Instagram** | one profile item with a `latestPosts` array (~12, regardless of `posts`) | `likesCount`, `commentsCount`, `videoViewCount` |
+| **LinkedIn** | profile only (follower count) — **no post data**; use the connector below | — |
+
+Setup + gotchas:
+- Profiles must be linked to the artist first: `GET /api/artists/{id}/socials` to see what's attached, `PATCH /api/artists/{id}` with `profileUrls` (UPPERCASE platform keys) to add missing ones.
+- The `artist_account_id` and each post's id/URN live in the account workspace (`ACCOUNT.md`, `posts-log.md`) — read those before pulling, don't rediscover.
+- IG's public play count is a **different metric** than connector-insights views (e.g. 56 vs 259 on the same reel). Likes/comments agree across sources; only compare views within one source.
+- Do **not** use the X connector for metrics: `TWITTER_GET_POST_ANALYTICS` 403s (`client-not-enrolled` — the dev app isn't on an analytics-tier X API project) and post lookup 401s. The scrape is strictly better (impressions included).
+- Auth tokens are short-lived (~1h). Enumerate every pull, then run them in one burst; if a human-review pause intervenes, get a fresh token after it.
+
+**LinkedIn per-post** — reactions via the connector (`POST /api/connectors/actions`):
+
+```bash
+curl -sS -X POST "https://api.recoupable.dev/api/connectors/actions" \
   -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" -H "Content-Type: application/json" \
   -d '{"account_id":"<ACCOUNT_ID>","actionSlug":"LINKEDIN_LIST_REACTIONS",
        "parameters":{"entity":"urn:li:ugcPost:<ID>"}}'
 ```
 
-Notes that save you time:
 - Entity formats: `urn:li:activity:<id>`, `urn:li:ugcPost:<id>`, or `urn:li:share:<id>`. A feed URL's `ugcPost` id usually resolves as `urn:li:ugcPost:`; `urn:li:share:` may 404 for the same post. Try the activity/ugcPost form first.
 - A post's UTC time is encoded in its numeric id: `timestamp_ms = id >> 22`.
 - LinkedIn's API does **not** expose comments/impressions for **personal** posts, and post bodies often return `403`. Company-page posts unlock `LINKEDIN_GET_SHARE_STATS` / `LINKEDIN_GET_ORG_PAGE_STATS` (impressions, clicks) when reconnected with org-admin scope.
 - There's no "list my posts" endpoint for personal accounts — feed post URLs/ids must be supplied.
-- X analytics: `TWITTER_GET_POST_ANALYTICS`, plus `TWITTER_LIST_POST_LIKERS`, `TWITTER_GET_POST_RETWEETS`.
 
 Read the top performer against the flatliners and name the differences (framing, hashtags, CTA, timing). Those differences are your copy brief.
 
@@ -104,7 +132,7 @@ Native video works, but the bytes can't go inline: `media` won't fetch a URL, an
 
 ## Step 5 — Log and re-measure
 
-Record each post immediately: account, platform, the post id/URN, UTC time, the CTA used, and the copy. Then **re-pull performance ~48h later** (reactions + comments for gated posts) and compare week-over-week — report deltas, not all-time totals. Feed the result back into step 1 for the next post.
+Record each post immediately: account, platform, the post id/URN, UTC time, the CTA used, and the copy. Then **re-pull performance ~48h later**: one bulk scrape (step 1) covers X/YouTube/Instagram, plus `LINKEDIN_LIST_REACTIONS` for each LinkedIn post (and read gated posts' comments manually — the API can't). Compare week-over-week — report deltas, not all-time totals. Feed the result back into step 1 for the next post.
 
 ## Producing a demo video?
 
