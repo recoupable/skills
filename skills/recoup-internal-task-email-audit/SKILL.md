@@ -28,8 +28,8 @@ bug, resolved 2026-07-01).
 - "Are we still shipping empty footer-only emails?"
 - "Task email health for the last 24h / this week."
 - "Did the #729 guard actually block empties in production?"
-- "Is the data in this task email real, or hallucinated? Why did it fabricate?" (→ §§ 6–7)
-- "Show me the exact tool calls a task run made." (→ § 6)
+- "Is the data in this task email real, or hallucinated? Why did it fabricate?" (→ §§ 4–5)
+- "Show me the exact tool calls a task run made." (→ § 4)
 
 ## Background (what you're measuring)
 
@@ -166,7 +166,7 @@ order by (es.subject is not null) desc, ra.account_id;   -- delivered first
 Then **join `runs.json` to this result by `account`** to fill `run_id`. Notes:
 - `subject is null` ⇒ the account delivered **no** email in the window (ran but
   didn't send, or its send was a blocked empty — `rejected` rows carry a **null
-  `account_id`**, so they don't show here; count them via § 4).
+  `account_id`**, so they don't show here; the § 1 headline counts them).
 - An account with **>1 run** in the window (a task firing hourly) maps to one
   account row here — attribute the delivered email to the run whose `finishedAt` is
   nearest the send.
@@ -196,33 +196,7 @@ where status='sent' and created_at > now() - interval '24 hours'
 order by created_at desc;
 ```
 
-### 4. Blocked empties (what the guard caught — footer-only spam pre-fix)
-
-```sql
-select
-  substring(raw_body from '"subject"\s*:\s*"([^"]{0,70})') as subject,
-  substring(raw_body from '"to"\s*:\s*\[\s*"([^"]+)"')     as recipient,
-  length(raw_body) as body_len, to_char(created_at,'MM-DD HH24:MI') as at
-from public.email_send_log
-where status='rejected' and created_at > now() - interval '24 hours'
-  and raw_body not like '%sweetmantech@gmail.com%' and raw_body not like '%preview-auth-probe%'
-order by created_at desc;
-```
-
-### 5. Helper adoption (reliable send-email.mjs vs hand-rolled curl)
-
-For a set of task chats in the window (get `chat_id`s from `chats` created in the
-window, or from a fired-run log), check how the agent sent:
-
-```sql
-select
-  count(*) filter (where parts::text like '%send-email.mjs%') as used_helper,
-  count(*) filter (where parts::text like '%/api/emails%' and parts::text not like '%send-email.mjs%') as raw_curl
-from public.chat_messages
-where chat_id = any($1) ;   -- $1 = array of the window's task chat_ids
-```
-
-### 6. Per-run tool-call trace — *why* an email is empty / rich / hallucinated
+### 4. Per-run tool-call trace — *why* an email is empty / rich / hallucinated
 
 To debug a single run (what it actually fetched, whether it fabricated), pull its
 tool calls from `chat_messages`.
@@ -262,10 +236,10 @@ order by ord;
 The `text` parts are the agent's **narration** — usually the smoking gun (e.g.
 *"the API doesn't have direct CPM metrics, I'll generate … sample data"*).
 
-### 7. Content audit — is the reported data real? (`has_hallucinated_data`)
+### 5. Content audit — is the reported data real? (`has_hallucinated_data`)
 
 For each **delivered** email, set `has_hallucinated_data` from the run's tool calls
-(§ 6): **a metric is hallucinated if it isn't backed by a successful data-fetch this
+(§ 4): **a metric is hallucinated if it isn't backed by a successful data-fetch this
 run.** Red flags:
 - the data call **errored / returned empty** (`/socials` → "Artist not found",
   `organizations: []`) yet the email still reports numbers;
@@ -296,43 +270,26 @@ data *should* come from — YouTube CPM → YouTube Analytics connector; trends 
 - **`blocked_then_delivered`** = the agent's first attempt was empty (blocked),
   then it retried into a real send to the same recipient — the guard's 400
   *forced a correction*.
-- **`pct_blocked`** = the underlying empty-generation rate. It stays high (agents
-  still frequently build empty bodies); the guard makes it harmless. A high number
-  is the case for driving **helper adoption** (query 4) — the primary
-  `recoup-platform-api-access` skill still teaches raw `curl`, so agents rarely
-  pick the reliable `recoup-platform-email-helper`.
-
-**Reference point (2026-07-01 overnight batch):** 6 delivered, 10 blocked
-(63% pct_blocked), 3 blocked-then-delivered — real customers (WMG, OneRPM, gmail)
-got real reports; the 10 empties that would have been spam were blocked.
+- **`pct_blocked`** = the underlying empty-generation rate; the guard makes it
+  harmless.
 
 ## Caveats
 
-- **Conditional tasks make "no send" a SUCCESS, not a failure.** Since 2026-07-02,
-  task prompts may be explicitly conditional (e.g. the roster-wide "Daily YouTube
-  New-Video Report": *"If NO artist posted a new video in the window: send nothing"*).
-  Before counting a no-send run as a delivery failure, read the run's final `text`
-  part (§ 6) — an explicit honest no-op conclusion ("no new video in the last 24
-  hours", "nothing to report") is **correct behavior**. Classify runs three ways:
-  `sent` / `correct no-send (conditional)` / `failed to send`.
-- **`rejected` rows are not always guard blocks.** An expired sandbox ephemeral key
-  logs every send attempt as `rejected` too (the API 401s post-logging) — one run can
-  produce a burst of dozens of rejected rows (observed: ~35 in 6 min from a single
-  long run whose key expired). Distinguish by reading the agent's bash outputs in the
-  trace: `"Unauthorized"`/401 = key expiry (a **delivery-infra** failure), a guard
-  message ("a non-empty html or text body is required") = a real empty-body block.
-  Runs longer than ~20 minutes are at risk of key expiry.
-- **`chat_messages` part counts can shrink mid-run.** A durable-workflow step retry
-  resets the persisted assistant message and rebuilds it from scratch (observed:
-  302 parts → restart → rebuilt). Don't treat a dropping part count as data loss,
-  and re-query before concluding a run's final state.
+- **Classify every run `sent` / `correct no-send` / `failed` — never assume no-send
+  = failure.** Some runs aren't email tasks at all, and some prompts are explicitly
+  conditional ("if no new video, send nothing"). Read the run's final `text` part
+  (§ 4): an honest no-op conclusion is correct behavior.
+- **`rejected` ≠ always guard-blocked.** An expired sandbox ephemeral key (runs
+  >~20 min) logs every retry as `rejected` too — one run can emit dozens. Check the
+  trace: 401 "Unauthorized" = key expiry (delivery-infra); "a non-empty html or
+  text body is required" = a real guard block.
+- **Part counts can shrink mid-run** — a workflow-step retry resets the persisted
+  assistant message. Re-query before concluding a run's final state.
 
 - **Needs the PROD `TRIGGER_SECRET_KEY`** — a `tr_dev_*` key returns 0 runs; the
   script warns you. Pull it to a scratch file and scrub it after (see § A). If
   `vercel env pull` fails with an invalid-token error, the CLI login has expired —
   ask the operator to run `vercel login` (or paste the key) before proceeding.
-- **Not all `customer-prompt-task` runs are email tasks** — filter to email-intent
-  before judging delivery (see the § 2 callout).
 - **`email_send_log.chat_id` is null on nearly all sends** — agents don't pass it.
   So you can't join sends to a specific run/task by `chat_id`; attribute by
   **recipient** and **account_id** (on `sent` rows) instead. This null also means
@@ -341,14 +298,10 @@ got real reports; the 10 empties that would have been spam were blocked.
 - **`account_id` is null on `rejected` rows** — the guard runs *before* auth, so a
   400 has no resolved account. Attribute blocked empties by recipient/subject.
 - Always exclude staff test traffic (`sweetmantech@gmail.com`, `preview-auth-probe`).
-- No `email_send_log` data before **2026-06-30** — for older windows the log is
-  empty and you must fall back to Resend + `chat_messages` scraping (the pre-fix
-  method).
+- No `email_send_log` data before **2026-06-30**.
 
 ## Reference
 
-- Tracking issue: [recoupable/chat#1829](https://github.com/recoupable/chat/issues/1829)
-  (resolved 2026-07-01). Baseline (pre-fix): 38% of delivered emails were empty
-  footer-only; 30% of runs sent nothing.
-- Fix PRs: api#729 (guard), api#731 (`email_send_log` observability),
-  skills#67 (`recoup-platform-email-helper`), api#730 (register helper).
+- History: [chat#1829](https://github.com/recoupable/chat/issues/1829) (delivery,
+  resolved 2026-07-01) · [chat#1833](https://github.com/recoupable/chat/issues/1833)
+  (hallucination, resolved 2026-07-02) — baselines, fix PRs, and benchmarks live there.
