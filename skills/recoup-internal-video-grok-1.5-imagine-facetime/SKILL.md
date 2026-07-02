@@ -28,9 +28,15 @@ and only then post. Fictional characters need no gate.
 1. **Script** the call (~45-60s) as alternating turns: A, B, A, B. Topic-first, one concrete
    proof point, an organic close ("okay, send me the link") — see ship-posts' principles.
 2. **Faces**: one 9:16 "FaceTime frame" image per character (below).
-3. **Takes**: one Grok generation per turn. QC each with Whisper + frame pulls.
-4. **Cut**: concat the takes — every cut is a character switch.
-5. **Chrome**: hyperframes FaceTime UI on top. 6. **Ship**: ship-posts skill.
+3. **⛔ FRAME APPROVAL GATE — show the user every character frame and get an explicit OK
+   before ANY video call.** Frames cost $0.022 to fix; takes cost ~$2 each, and a frame
+   defect (aspect squish, baked-in fake UI, likeness drift, gibberish clothing text)
+   multiplies into every take generated on it. Skipping this gate roughly doubled the
+   prototype's video spend.
+4. **Takes**: one Grok generation per turn. On a new/changed frame, generate ONE take and
+   QC it before batching that character's remaining turns.
+5. **Cut**: concat the takes — every cut is a character switch.
+6. **Chrome**: hyperframes FaceTime UI on top. 7. **Ship**: ship-posts skill.
 
 ## Take structure (works WITH the model's limits)
 
