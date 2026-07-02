@@ -34,7 +34,7 @@ These are defaults, not laws — treat each as a hypothesis to keep testing, and
 
 ## Step 1 — Learn from recent posts
 
-Rank recent posts by engagement before writing. **One bulk scrape covers X, YouTube, and Instagram**; LinkedIn is the only platform still measured per-post via the connector. Comments are the real signal for lead-gen posts (see CTA below).
+Rank recent posts by engagement before writing. **One bulk scrape covers all four platforms** — X, YouTube, Instagram, and LinkedIn. Comments are the real signal for lead-gen posts (see CTA below).
 
 **The bulk pull** — one call scrapes every social profile linked to the artist, with per-post metrics:
 
@@ -57,7 +57,7 @@ What each platform's dataset gives you:
 | **X** | one item per timeline entry — **includes RTs and replies**, so size `posts` large enough to reach older posts | `likeCount`, `retweetCount`, `replyCount`, `quoteCount`, `bookmarkCount`, **`viewCount` (impressions)** |
 | **YouTube** | up to `posts` videos **plus** `posts` Shorts (depth is per content type) | `viewCount`, `likes`, `commentsCount` |
 | **Instagram** | one profile item with a `latestPosts` array (~12, regardless of `posts`) | `likesCount`, `commentsCount`, `videoViewCount` |
-| **LinkedIn** | profile only (follower count) — **no post data**; use the connector below | — |
+| **LinkedIn** | one item per post (`posts` requested → posts actor; omitted → profile snapshot only) | `engagement.likes`, `engagement.comments`, `engagement.shares`, reaction-type breakdown — **more than the connector can see** (personal-post comments/shares are invisible to it) |
 
 Setup + gotchas:
 - Profiles must be linked to the artist first: `GET /api/artists/{id}/socials` to see what's attached, `PATCH /api/artists/{id}` with `profileUrls` (UPPERCASE platform keys) to add missing ones.
@@ -66,7 +66,7 @@ Setup + gotchas:
 - Do **not** use the X connector for metrics: `TWITTER_GET_POST_ANALYTICS` 403s (`client-not-enrolled` — the dev app isn't on an analytics-tier X API project) and post lookup 401s. The scrape is strictly better (impressions included).
 - Auth tokens are short-lived (~1h). Enumerate every pull, then run them in one burst; if a human-review pause intervenes, get a fresh token after it.
 
-**LinkedIn per-post** — reactions via the connector (`POST /api/connectors/actions`):
+**LinkedIn — who reacted** (counts come from the scrape; use the connector only when you need the *people*, e.g. the warm-lead list on a comment-gated post):
 
 ```bash
 curl -sS -X POST "https://api.recoupable.dev/api/connectors/actions" \
@@ -77,8 +77,7 @@ curl -sS -X POST "https://api.recoupable.dev/api/connectors/actions" \
 
 - Entity formats: `urn:li:activity:<id>`, `urn:li:ugcPost:<id>`, or `urn:li:share:<id>`. A feed URL's `ugcPost` id usually resolves as `urn:li:ugcPost:`; `urn:li:share:` may 404 for the same post. Try the activity/ugcPost form first.
 - A post's UTC time is encoded in its numeric id: `timestamp_ms = id >> 22`.
-- LinkedIn's API does **not** expose comments/impressions for **personal** posts, and post bodies often return `403`. Company-page posts unlock `LINKEDIN_GET_SHARE_STATS` / `LINKEDIN_GET_ORG_PAGE_STATS` (impressions, clicks) when reconnected with org-admin scope.
-- There's no "list my posts" endpoint for personal accounts — feed post URLs/ids must be supplied.
+- The connector cannot see comments/impressions on **personal** posts (the scrape's `engagement.comments` can), and comment *bodies* still need manual reading. Company-page posts unlock `LINKEDIN_GET_SHARE_STATS` / `LINKEDIN_GET_ORG_PAGE_STATS` (impressions, clicks) when reconnected with org-admin scope.
 
 Read the top performer against the flatliners and name the differences (framing, hashtags, CTA, timing). Those differences are your copy brief.
 
@@ -132,7 +131,7 @@ Native video works, but the bytes can't go inline: `media` won't fetch a URL, an
 
 ## Step 5 — Log and re-measure
 
-Record each post immediately: account, platform, the post id/URN, UTC time, the CTA used, and the copy. Then **re-pull performance ~48h later**: one bulk scrape (step 1) covers X/YouTube/Instagram, plus `LINKEDIN_LIST_REACTIONS` for each LinkedIn post (and read gated posts' comments manually — the API can't). Compare week-over-week — report deltas, not all-time totals. Feed the result back into step 1 for the next post.
+Record each post immediately: account, platform, the post id/URN, UTC time, the CTA used, and the copy. Then **re-pull performance ~48h later**: one bulk scrape (step 1) covers all four platforms; add `LINKEDIN_LIST_REACTIONS` only when you need reactor identities, and read gated posts' comment bodies manually. Compare week-over-week — report deltas, not all-time totals. Feed the result back into step 1 for the next post.
 
 ## Producing a demo video?
 
