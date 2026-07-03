@@ -1,13 +1,13 @@
-# Endpoints reference (matches production `api.recoupable.com`)
+# Endpoints reference (matches production `api.recoupable.dev`)
 
 The live `/api/research/*` surface, verified against the OpenAPI spec at
-`developers.recoupable.com/api-reference/openapi/research.json` and live calls.
+`docs.recoupable.dev/api-reference/openapi/research.json` and live calls.
 **The research backend is songstats-based** — responses wrap data in an
 `artist_info` envelope and use `songstats_artist_id` / `id`.
 
 ```bash
 export RECOUP_API_KEY="recoup_sk_..."
-export RECOUP_API="https://api.recoupable.com/api"
+export RECOUP_API="https://api.recoupable.dev/api"
 ```
 
 ## The two-step pattern: resolve, then look up

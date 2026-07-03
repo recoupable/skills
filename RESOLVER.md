@@ -64,6 +64,7 @@
 | first-run "set up / connect Recoup", verify email, get an API key | `recoup-platform-connect-account` |
 | scaffold my workspace folders / mirror my roster, or build the org's full self-managing "music-company OS" (structure + brain + janitor + plugin, seeded with `artists/` and wired to the API) | `recoup-platform-build-os` |
 | call the Recoup API directly, fetch a resource, run a connector (Docs/Gmail/TikTok) | `recoup-platform-api-access` |
+| email a report / summary / notification to the account owner or a recipient (send email from a task) | `recoup-platform-email-helper` |
 | "remember this" / capture a reusable lesson | `recoup-platform-capture-lesson` |
 
 ## Tier 3 — Internal (Recoup staff only · gated by the `recoup-internal` keyword)
@@ -79,6 +80,7 @@
 | "recoup-internal" + benchmark/audit/grade a skill pack or plugin | `recoup-internal-eval-skill-benchmark` |
 | "recoup-internal" + work the Attio catalog-valuation sales funnel | `recoup-internal-funnel-valuation-pipeline` |
 | "recoup-internal" + account-health / account-status snapshot for a Recoup account | `recoup-internal-account-health-report` |
+| "recoup-internal" + audit scheduled-task email health (what tasks emailed, how many empties the guard blocked) over a window | `recoup-internal-task-email-audit` |
 | "recoup-internal" + draft/ship/measure LinkedIn or X posts | `recoup-internal-social-ship-posts` |
 
 ---

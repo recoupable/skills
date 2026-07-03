@@ -11,7 +11,7 @@ All examples assume:
 
 ```bash
 export RECOUP_API_KEY="recoup_sk_..."
-export RECOUP_API="https://api.recoupable.com/api"
+export RECOUP_API="https://api.recoupable.dev/api"
 AUTH="x-api-key: $RECOUP_API_KEY"
 ```
 

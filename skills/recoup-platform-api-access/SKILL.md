@@ -30,14 +30,40 @@ If neither var is set, ask the user to authenticate — don't retry blindly.
   `account_id` + row `id`.
 - **D — add an artist** → use recoup-roster-add-artist.
 
-**Roster discovery:** `GET /accounts/id` → `GET /organizations` →
-`GET /artists?org_id=…` (each artist row has `name`, `account_id`, and a row `id`
-— capture both ids).
+**Roster discovery:** `GET /accounts/id` → `GET /artists` (your roster; `org_id`
+optional — orgs are often empty, so don't stop when `organizations` is `[]`).
+
+> **Use `account_id`, not the list `id`, for every `/artists/{id}/*` sub-resource**
+> (socials/posts/fans key on `account_id`; the list's top-level `id` 404s). And
+> **socials are embedded** in the `/artists` response as `account_socials`
+> (`username`, `followerCount`, `profile_url`) — read them there before calling
+> `/artists/{account_id}/socials` at all.
 
 **Stop rule — never invent a roster:** if `GET /accounts/id` resolves to an
 `agent+…@recoupable.com` email, or `organizations` and `artists` both return `[]`,
 it's a throwaway key — say so and ask for a real-account key (or
 recoup-platform-connect-account). Don't fabricate an artist/roster to keep moving.
+
+**Stop rule — never invent metrics/data:** report only figures you retrieved from a
+successful call this run. If a call errors or returns empty, or no connector exists
+for a metric (`GET /connectors/actions` → check `isConnected`), **say so and omit
+it** — never estimate, use "industry averages", or fill gaps with
+sample/placeholder numbers. A short accurate report beats a padded, invented one.
+
+**Before you give up on missing data — get it, or hand back a connect link.** When a
+metric's source isn't connected, work down this list before omitting:
+1. **Scrape the public data you can get** — `POST /api/socials/{social_id}/scrape`
+   (one profile) or `POST /api/artist/socials/scrape` (all of an artist's). Works
+   for TikTok / Instagram / X / YouTube / Threads / Facebook. Report those real
+   public numbers.
+2. **Check connection status** — `GET /api/connectors` → each connector's
+   `isConnected`.
+3. **Mint a connect link** — `POST /api/connectors {"connector":"youtube"}` returns
+   `{ redirectUrl }` (a Composio OAuth URL). Surface it to the caller so the user can
+   self-connect: *"CPM/revenue needs YouTube Analytics — connect here: {redirectUrl}"*.
+
+Return the real public data **plus** the connect link — that beats both a fabricated
+report and an empty/omitted one.
 
 ## Docs map (pull the section you need; don't guess paths)
 

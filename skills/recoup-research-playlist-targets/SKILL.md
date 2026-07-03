@@ -8,7 +8,7 @@ description: Find which playlists an artist or whole catalog should target and w
 Catalog-wide playlist strategy from research data (not one audio file).
 
 ```bash
-export RECOUP_API="https://api.recoupable.com/api"   # auth header: x-api-key: $RECOUP_API_KEY
+export RECOUP_API="https://api.recoupable.dev/api"   # auth header: x-api-key: $RECOUP_API_KEY
 ```
 
 ## Procedure

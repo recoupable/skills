@@ -18,7 +18,7 @@ Usage:
 """
 import argparse, datetime, json, os, re, sys, urllib.request, urllib.parse
 
-BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.com")  # endpoint paths already include the /api prefix
+BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.dev")  # endpoint paths already include the /api prefix
 
 
 def api(method, path, token, body=None):

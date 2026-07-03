@@ -36,7 +36,7 @@ account status report.
     list endpoints. Confirm admin with `GET /api/admins` → `{"isAdmin": true}`.
   - An **owner** token only sees its own account.
 - `reportlab` for the PDF: `pip install reportlab --break-system-packages`.
-- Base URL: `https://api.recoupable.com/api` (override with `RECOUP_API_BASE`).
+- Base URL: `https://api.recoupable.dev/api` (override with `RECOUP_API_BASE`).
   Load the `recoup-platform-api-access` skill for endpoint details.
 
 ## Quick run

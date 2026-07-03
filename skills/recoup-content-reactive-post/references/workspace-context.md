@@ -77,9 +77,9 @@ and for resolving the artist's `id`.
 
 ```bash
 # Real captions across platforms — the best available voice signal when there's no artist.md
-curl -sS "$AUTH_HEADER" "https://api.recoupable.com/api/artists/$ARTIST_ID/posts" | jq
+curl -sS "$AUTH_HEADER" "https://api.recoupable.dev/api/artists/$ARTIST_ID/posts" | jq
 # Profile / socials for tone + handles
-curl -sS "$AUTH_HEADER" "https://api.recoupable.com/api/artists/$ARTIST_ID/socials" | jq
+curl -sS "$AUTH_HEADER" "https://api.recoupable.dev/api/artists/$ARTIST_ID/socials" | jq
 ```
 
 If neither workspace context nor API posts are available, **say so and ask the user for

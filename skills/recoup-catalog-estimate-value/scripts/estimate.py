@@ -24,7 +24,7 @@ import argparse, json, os, subprocess, sys, time, datetime as dt
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 
-BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.com/api")
+BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.dev/api")
 
 DEFAULTS = {
     "rates": {"spotify": 0.0035, "youtube": 0.00069, "soundcloud": 0.0030},

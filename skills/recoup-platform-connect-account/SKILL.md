@@ -13,7 +13,7 @@ Recoup. Idempotent and safe to re-run.
 
 1. **Idempotency:** if `~/.claude/recoup.env` exists, source it and
    `curl -s -o /dev/null -w "%{http_code}" -H "x-api-key: $RECOUP_API_KEY"
-   https://api.recoupable.com/api/accounts/id` → if `200`, skip to org lookup
+   https://api.recoupable.dev/api/accounts/id` → if `200`, skip to org lookup
    ("already set up — refreshing memory only").
 2. **Confirm email** (from session context or ask) — must be one the customer
    controls; the key inherits that account's orgs/artists. Never use an

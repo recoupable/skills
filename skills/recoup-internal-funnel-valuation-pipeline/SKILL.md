@@ -40,7 +40,7 @@ to prove that quickly enough that the lead converts.
 
 - `ATTIO_API_KEY` — an Attio access token (read-write on records + list entries).
 - `RECOUP_API_KEY` (`recoup_sk_…`) — for catalog sizing via the Research API; mint one
-  with `POST https://api.recoupable.com/api/agents/signup`. Load the
+  with `POST https://api.recoupable.dev/api/agents/signup`. Load the
   `recoup-research-artist-overview` and `recoup-catalog-estimate-value` skills for endpoint detail.
 - `reportlab` for the PDF: `pip install reportlab --break-system-packages`.
 - Scripts ship in this skill's `scripts/`; run them from the skill directory as
