@@ -39,13 +39,13 @@ Run it in order. Docs-first and tests-first are not optional — they are the me
 Documentation-driven development: the docs/OpenAPI change is the contract, and it merges before the code that fulfills it.
 
 - Branch from `main` in `docs`. Mirror the nearest sibling endpoint's OpenAPI block — params, **reuse existing schemas** (DRY), the shared error-response schema, the reference-page frontmatter, and the nav entry (adding the page to `docs.json` is what surfaces it in the generated `llms.txt`).
-- **Byte-safe edits to large/generated JSON.** Before bulk-inserting into a big OpenAPI file, round-trip it (`json.dumps(json.load(f), indent=2, ensure_ascii=False)` and diff against the original) to confirm your serializer reproduces it exactly — then load → add keys → dump. This keeps the diff additive instead of a whole-file reformat. Always re-validate the JSON parses.
+- **Additive edits to large/generated JSON.** Round-trip the file first (`json.dumps(json.load(f), indent=2)` vs the original); only load→add→dump if it reproduces byte-for-byte — otherwise (common) insert the new blocks via **anchored text edits** at brace boundaries so the diff stays purely additive. Either way, re-validate the result parses.
 - **Accuracy over symmetry.** Document only what the API will actually return. Do not add a response code or field just because a sibling has it — an undocumented-but-real gap is better than a documented-but-false one.
 - Commit, push, open the docs PR (base `main`). This is step 1 of the merge order.
 
 ## 3. API by TDD, matching the docs
 
-Branch per the repo's rule (Recoup `api` PRs target `main`). Mirror the sibling implementation's layering (route → handler → validate → data function → response shaping; auth; credits).
+Branch from `main`. Mirror the sibling implementation's layering (route → handler → validate → data function → response shaping; auth; credits).
 
 **Red → green → refactor, one unit at a time:**
 
@@ -63,6 +63,7 @@ Then: the implementation must match the **documented** contract exactly (params,
 - Find the preview for **your pushed commit** — `gh api repos/<owner>/<repo>/deployments?sha=<sha>` → its `/statuses` → `environment_url`, or the Vercel CLI (`vercel ls <project> --scope <team>` / `vercel inspect`).
 - **Confirm it's built from your commit**, not a stale earlier preview — verify the deployment's sha. Testing a stale preview is a classic false-positive/false-negative trap.
 - Poll until `Ready`. Background the poll on long builds; don't block.
+- **Preview envs may run different auth than prod** (e.g. a separate Privy app; API-key hashes peppered with a different secret) — a prod-minted key/token can 401 on a preview even though the route is fine. Get a credential minted against the preview env before concluding anything.
 
 ## 5. Test the PR against the preview
 
@@ -91,17 +92,8 @@ All three must agree before you call it done. This step is the entire point of t
 ## 8. Hand off in merge order
 
 - Merge order is **docs → api** (the contract lands first). Honor hard dependencies (a database migration before the api that reads it).
-- **Never merge without explicit user approval.** When the user approves: **squash-merge the PR to `main`** — we PR directly against `main` now; the old `test` → `main` staging step is retired, checking the release scope first.
+- **Never merge without explicit user approval.** On approval, squash-merge to `main`.
 - On merge, **update the tracking issue to Done** with the **recoup-internal-dev-issue-tracker** skill — a closure note (PR links, ✅ ISO date, merge path, what shipped, and a Verified clause citing the live results), and check off the Done-when boxes you actually verified.
-
-## Principles
-
-- **Docs-first, always** — the contract leads; code fulfills it.
-- **Tests before code** — RED before GREEN, every unit; one exported function per file.
-- **Verify against reality** — every claim on a PR is something you ran; capture hard numbers and ISO dates.
-- **Accuracy over symmetry** — never document a response the API doesn't emit; match the immediate sibling's conventions over global ideals.
-- **Minimal, additive diffs** on generated/large files; re-validate they still parse.
-- **Never echo secrets** — reference the env-var name (`SONGSTATS_API_KEY`), never a value.
 
 ## Quick reference
 
@@ -109,7 +101,6 @@ All three must agree before you call it done. This step is the entire point of t
 # Find + confirm the preview for the commit you pushed
 gh api repos/recoupable/api/deployments?sha=<SHA> --jq '.[].id'
 gh api repos/recoupable/api/deployments/<ID>/statuses --jq '[.[]|select(.state=="success")|.environment_url][0]'
-vercel ls api --scope recoup        # or: vercel inspect <url> --scope recoup
 
 # Run a single test RED→GREEN, then the whole domain + types + lint
 pnpm exec vitest run lib/<domain>/__tests__/<unit>.test.ts
@@ -130,4 +121,4 @@ gh pr comment <n> --repo recoupable/api --body-file results.md
 - [ ] Docs ↔ API ↔ live results **agree** (reconciled and re-pushed if not).
 - [ ] Verification **posted on the PR**; bot findings **triaged** (validated, not rubber-stamped).
 - [ ] No secret value echoed anywhere — env-var names only.
-- [ ] On merge: promoted per the repo flow and the tracking issue moved to **Done** (recoup-internal-dev-issue-tracker).
+- [ ] On merge: tracking issue moved to **Done** (recoup-internal-dev-issue-tracker).
