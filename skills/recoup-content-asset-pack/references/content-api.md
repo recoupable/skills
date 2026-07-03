@@ -6,7 +6,7 @@ estimation. For auth + artist-ID resolution, use the account-resolver reference 
 skill bundles one; otherwise set the auth header inline (`x-api-key: $RECOUP_API_KEY`, or
 `Authorization: Bearer $RECOUP_ACCESS_TOKEN`).
 
-`BASE="https://api.recoupable.com/api"`. Pass the auth header from `account-resolver.md`
+`BASE="https://api.recoupable.dev/api"`. Pass the auth header from `account-resolver.md`
 as `"${AUTH[@]}"` on every call.
 
 ## Endpoints
@@ -30,7 +30,7 @@ as `"${AUTH[@]}"` on every call.
 > /content/create` are **async** → `runId`, polled via `/tasks/runs`. Don't assume everything
 > is async — image/caption come straight back.
 
-Full docs: `https://developers.recoupable.com/content-agent`.
+Full docs: `https://docs.recoupable.dev/content-agent`.
 
 ## The six video modes
 
@@ -88,7 +88,7 @@ curl -sS "${AUTH[@]}" "$BASE/tasks/runs?runId=$RUN_ID" | jq '.runs[0].output'
 ```
 
 On a non-`COMPLETED` terminal status, surface `.runs[0].error` and stop — never claim
-success. See `https://developers.recoupable.com/api-reference/tasks/runs`.
+success. See `https://docs.recoupable.dev/api-reference/tasks/runs`.
 
 ## Edit operations (`PATCH $BASE/content`)
 

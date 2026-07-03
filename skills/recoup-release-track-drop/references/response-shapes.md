@@ -1,4 +1,4 @@
-# Response shapes (production `api.recoupable.com`, songstats-based)
+# Response shapes (production `api.recoupable.dev`, songstats-based)
 
 The research backend is **songstats-based**. When you need a field not verified
 below, **dump it first** rather than guessing:

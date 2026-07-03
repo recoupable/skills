@@ -40,9 +40,9 @@ context from auth and ignores account overrides.
 The API answers on two hosts; examples below resolve the base from env so a skill
 works in either environment:
 
-- `RECOUP_API` — full base including `/api` (e.g. `https://api.recoupable.com/api`)
-- `RECOUP_API_URL` — host only (e.g. `https://api.recoupable.com`)
-- Default when neither is set: `https://api.recoupable.com`
+- `RECOUP_API` — full base including `/api` (e.g. `https://api.recoupable.dev/api`)
+- `RECOUP_API_URL` — host only (e.g. `https://api.recoupable.dev`)
+- Default when neither is set: `https://api.recoupable.dev`
 
 (The public docs are inconsistent about the canonical host; honoring the env
 vars avoids hard-coding the wrong one.)
@@ -136,7 +136,7 @@ curl -sS "$API_BASE/songs/analyze/presets" "${AUTH[@]}" | jq '.presets[] | {name
 if [ -n "$RECOUP_API" ]; then
   API_BASE="${RECOUP_API%/}"
 else
-  RAW_API_URL="${RECOUP_API_URL:-https://api.recoupable.com}"
+  RAW_API_URL="${RECOUP_API_URL:-https://api.recoupable.dev}"
   API_BASE="${RAW_API_URL%/api}/api"
 fi
 

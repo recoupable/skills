@@ -25,7 +25,7 @@ research.
 
 ## Auth + the provider ID chain
 
-Research endpoints live under `https://api.recoupable.com/api/research/…` and accept the
+Research endpoints live under `https://api.recoupable.dev/api/research/…` and accept the
 same auth as everything else — reuse the `AUTH` array from the account-resolver reference
 (`x-api-key: $RECOUP_API_KEY` preferred, or `Authorization: Bearer $RECOUP_ACCESS_TOKEN`).
 
@@ -34,7 +34,7 @@ slug like `wjcgfd9i`, *not* the Recoup `account_id`/`id` and *not* the Spotify i
 once from the Spotify id in `RECOUP.md`, then reuse:
 
 ```bash
-BASE="https://api.recoupable.com/api"
+BASE="https://api.recoupable.dev/api"
 SPOTIFY_ID=$(sed -n 's/^spotifyArtistId:[[:space:]]*//p' "$ARTIST_DIR/RECOUP.md")
 
 PROVIDER_ID=$(curl -sSL --max-time 90 "${AUTH[@]}" \

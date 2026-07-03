@@ -10,7 +10,7 @@ Pick whichever credential the environment provides; prefer the API key when both
 
 | Credential | Header | Where it comes from |
 | --- | --- | --- |
-| `RECOUP_API_KEY` (`recoup_sk_…`) | `-H "x-api-key: $RECOUP_API_KEY"` | agent signup; see developers.recoupable.com/agents |
+| `RECOUP_API_KEY` (`recoup_sk_…`) | `-H "x-api-key: $RECOUP_API_KEY"` | agent signup; see docs.recoupable.dev/agents |
 | `RECOUP_ACCESS_TOKEN` | `-H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"` | short-lived sandbox token |
 
 ```bash
@@ -22,7 +22,7 @@ else
   echo "No Recoup credential set — ask the user to authenticate; do not retry blindly." >&2
   return 1 2>/dev/null || exit 1   # stop — never call the API unauthenticated
 fi
-# Use as:  curl -sS "${AUTH[@]}" "https://api.recoupable.com/api/..."
+# Use as:  curl -sS "${AUTH[@]}" "https://api.recoupable.dev/api/..."
 ```
 
 If neither is set, the user is not authenticated — tell them to sign in rather than
@@ -63,11 +63,11 @@ spans every org the account belongs to. Org rows expose `organization_id` (pass 
 
 ```bash
 ORG_ID="${RECOUP_ORG_ID:-$(curl -sS "${AUTH[@]}" \
-  "https://api.recoupable.com/api/organizations" | jq -r '.organizations[0].organization_id')}"
+  "https://api.recoupable.dev/api/organizations" | jq -r '.organizations[0].organization_id')}"
 
 # Capture BOTH ids for the matched artist.
 ARTISTS_JSON=$(curl -sS "${AUTH[@]}" \
-  "https://api.recoupable.com/api/artists?org_id=$ORG_ID")
+  "https://api.recoupable.dev/api/artists?org_id=$ORG_ID")
 
 ARTIST_ACCOUNT_ID=$(echo "$ARTISTS_JSON" \
   | jq -r --arg n "$ARTIST_NAME" '.artists[] | select(.name==$n) | .account_id')

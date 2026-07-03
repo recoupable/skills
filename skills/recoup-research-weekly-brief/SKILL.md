@@ -9,7 +9,7 @@ The recurring artifact a customer opens. Snapshots, not time series — the delt
 vs your last file.
 
 ```bash
-export RECOUP_API="https://api.recoupable.com/api"   # auth header: x-api-key: $RECOUP_API_KEY
+export RECOUP_API="https://api.recoupable.dev/api"   # auth header: x-api-key: $RECOUP_API_KEY
 ```
 
 ## Procedure (idempotent, dated, diffed)

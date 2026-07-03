@@ -8,7 +8,7 @@ description: Find emerging or unsigned artists you don't already track — A&R s
 A&R discovery of artists you *don't* already track.
 
 ```bash
-export RECOUP_API="https://api.recoupable.com/api"   # auth header: x-api-key: $RECOUP_API_KEY
+export RECOUP_API="https://api.recoupable.dev/api"   # auth header: x-api-key: $RECOUP_API_KEY
 ```
 
 Discovery starts from a known **anchor** artist and fans out through `/similar`,
