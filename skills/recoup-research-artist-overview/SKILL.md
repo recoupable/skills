@@ -11,7 +11,7 @@ never a fabricated number.
 
 ```bash
 export RECOUP_API_KEY="recoup_sk_..."   # already set in Recoup sandboxes
-export RECOUP_API="https://api.recoupable.com/api"
+export RECOUP_API="https://api.recoupable.dev/api"
 ```
 
 All GET endpoints live under `$RECOUP_API/research` and auth with `x-api-key`.

@@ -2,16 +2,16 @@
 
 All streaming data is pulled from the Recoup Research API. Spotify play counts
 come from Recoup's own measurement store (Apify-first, provenance-labeled);
-other sources are Songstats-backed. Base URL: `https://api.recoupable.com/api`.
+other sources are Songstats-backed. Base URL: `https://api.recoupable.dev/api`.
 
 ## Authentication
 
 Send one of:
 
-- `x-api-key: $RECOUP_API_KEY` — a key from `https://chat.recoupable.com/keys`,
+- `x-api-key: $RECOUP_API_KEY` — a key from `https://chat.recoupable.dev/keys`,
   or in one unauthenticated call:
   ```bash
-  export RECOUP_API_KEY=$(curl -s -X POST "https://api.recoupable.com/api/agents/signup" \
+  export RECOUP_API_KEY=$(curl -s -X POST "https://api.recoupable.dev/api/agents/signup" \
     -H "Content-Type: application/json" \
     -d '{"email":"agent+'$(date +%s)'@recoupable.com"}' | jq -r .api_key)
   ```
@@ -38,7 +38,7 @@ includes the absolute play count:
 
 ```bash
 curl -sS -H "x-api-key: $RECOUP_API_KEY" \
- "https://api.recoupable.com/api/research/track/stats?isrc=USQY51771120&source=all"
+ "https://api.recoupable.dev/api/research/track/stats?isrc=USQY51771120&source=all"
 ```
 Note: `streams_total` may be returned as a numeric string (e.g. `"296422273.0"`)
 — parse as float.
@@ -54,7 +54,7 @@ auto-enqueued for backfill — re-query later, or use playcount-deltas below.
 
 ```bash
 curl -sS -H "x-api-key: $RECOUP_API_KEY" \
- "https://api.recoupable.com/api/research/track/historic-stats?spotify_track_id=6RmGzvvqPlVwPqiI11vqT3&source=spotify&start_date=2025-06-09&end_date=2026-06-09"
+ "https://api.recoupable.dev/api/research/track/historic-stats?spotify_track_id=6RmGzvvqPlVwPqiI11vqT3&source=spotify&start_date=2025-06-09&end_date=2026-06-09"
 ```
 
 ### `GET /spotify/album` — enumerate an album's tracks
@@ -86,7 +86,7 @@ of its tracks. Counts land in the measurement store within minutes.
 ```bash
 curl -sS -X POST -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
  -d '{"album_ids":["70Zkfb99ladZ3q0JVg97co"]}' \
- "https://api.recoupable.com/api/research/snapshots"
+ "https://api.recoupable.dev/api/research/snapshots"
 ```
 
 ### `GET /research/playcounts` — latest per-track counts for an album

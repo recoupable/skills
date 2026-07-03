@@ -2,7 +2,7 @@
 
 The marketing valuation tool (`recoupable.com/valuation`) is just a thin client over **public
 Recoup APIs**. Call them directly — `scripts/fetch_catalog.py` does exactly this — instead of
-scraping the UI. Base: `https://recoup-api.vercel.app` (or `https://api.recoupable.com`).
+scraping the UI. Base: `https://recoup-api.vercel.app` (or `https://api.recoupable.dev`).
 Auth: `x-api-key: $RECOUP_API_KEY` (or `Authorization: Bearer $RECOUP_ACCESS_TOKEN`).
 
 > **Auth gotcha — the key and the token cover different routes.** A hex `x-api-key` authorizes

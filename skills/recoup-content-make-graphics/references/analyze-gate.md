@@ -14,7 +14,7 @@ at the very end; catch a bad clip before you spend more on it. (For still images
 ## How
 
 ```bash
-curl -sS -X POST "https://api.recoupable.com/api/content/analyze" "${AUTH[@]}" \
+curl -sS -X POST "https://api.recoupable.dev/api/content/analyze" "${AUTH[@]}" \
   -H "Content-Type: application/json" \
   -d "$(jq -n --arg v "$VIDEO_URL" --arg p "$RUBRIC" '{video_url:$v, prompt:$p}')" | jq -r '.text'
 ```

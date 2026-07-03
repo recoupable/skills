@@ -9,7 +9,7 @@ General open-web research and the graceful-degradation fallback for the other
 research skills. Researches any entity, not just artists.
 
 ```bash
-export RECOUP_API="https://api.recoupable.com/api"   # auth header: x-api-key: $RECOUP_API_KEY
+export RECOUP_API="https://api.recoupable.dev/api"   # auth header: x-api-key: $RECOUP_API_KEY
 ```
 
 ## Tools

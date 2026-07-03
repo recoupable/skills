@@ -4,7 +4,7 @@ Full curl examples for every production `/api/research/*` endpoint, plus
 parameter rules, response shapes, latency budgets, and platform source enums.
 
 These are the **current production endpoints** documented at
-<https://developers.recoupable.com> (see the `/api-reference/research/*` pages).
+<https://docs.recoupable.dev> (see the `/api-reference/research/*` pages).
 The research API is backed by **Songstats**, so entity IDs are short
 alphanumeric strings like `wjcgfd9i` (artists) or `1ik97vot` (tracks).
 
@@ -12,13 +12,13 @@ All examples assume:
 
 ```bash
 export RECOUP_API_KEY="recoup_sk_..."
-export RECOUP_API="https://api.recoupable.com/api"
+export RECOUP_API="https://api.recoupable.dev/api"
 ```
 
 No key? Get one instantly (no dashboard, no email verification):
 
 ```bash
-export RECOUP_API_KEY=$(curl -s -X POST "https://api.recoupable.com/api/agents/signup" \
+export RECOUP_API_KEY=$(curl -s -X POST "https://api.recoupable.dev/api/agents/signup" \
   -H "Content-Type: application/json" \
   -d '{"email":"agent+'$(date +%s)-$RANDOM'@recoupable.com"}' | jq -r .api_key)
 ```

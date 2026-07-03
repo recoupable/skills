@@ -3,7 +3,7 @@
 Usage: python3 fetch_album_tracks.py --album <spotify_album_id_or_url>
 Prints a comma-separated list of track IDs; ownership (label / P-line) to stderr."""
 import argparse, json, os, re, subprocess, sys
-BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.com/api")
+BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.dev/api")
 
 def auth():
     k = os.environ.get("RECOUP_API_KEY")
