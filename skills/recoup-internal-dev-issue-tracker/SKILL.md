@@ -51,6 +51,8 @@ Heading is `## PRs (updated <ISO date>)` so staleness is visible. Four columns, 
 - **Base** — the target branch (`main`, or `test` for `api`/`chat`), because merge/promote path matters here.
 - **State** — `✅ merged <ISO> — see Done` once shipped (the row stays; the closure note lives under `## Done`), or `🔄 open — <verification status>` while in flight. Keep it current as PRs land.
 
+**Planned rows and the PR-open rule.** A tracker written before implementation lists its planned fleet as placeholder rows — `repo#TBD | <item> | <base> | ⏳ not started` — so the whole effort is visible up front. The moment a PR opens, **replace its `#TBD` placeholder with the live ref + verification status in the same session** — never batch this for "when they're all open." An open PR whose matrix row still says `#TBD` is drift of the same class as a merged PR without a closure note. (Caught in practice on chat#1841: four PRs were open before any row was updated.)
+
 Follow the table with a short **merge-sequencing blockquote** when order matters (`docs → database → api → tasks`, contract-first; see Merge sequencing below). When everything is one state, say so explicitly (*"All four open and preview-verified; none merged yet"* / *"All seven merged and on prod"*) so the reader isn't left inferring.
 
 ## The Open → Done lifecycle (the most important rule)
