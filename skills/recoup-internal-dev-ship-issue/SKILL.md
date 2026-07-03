@@ -56,6 +56,8 @@ Branch per the repo's rule (Recoup `api` PRs target `main`). Mirror the sibling 
 
 Then: the implementation must match the **documented** contract exactly (params, response envelope, status codes). Run the **full domain test suite** (not just your files) to prove no regressions, then `tsc --noEmit` and lint. Commit, push, open the api PR (base `main`) — link the issue and the docs PR, and state the docs→api merge order in the body.
 
+**Every time you open a PR (docs, api, or any sibling): update its row in the tracking issue's PR matrix in the same session** — replace the `repo#TBD` placeholder with the live ref and a `🔄 open — <verification status>` state. Don't wait until all PRs are open or until merge; an open PR with a `#TBD` row is tracker drift.
+
 ## 4. Wait for the preview deployment
 
 - Find the preview for **your pushed commit** — `gh api repos/<owner>/<repo>/deployments?sha=<sha>` → its `/statuses` → `environment_url`, or the Vercel CLI (`vercel ls <project> --scope <team>` / `vercel inspect`).
@@ -122,6 +124,7 @@ gh pr comment <n> --repo recoupable/api --body-file results.md
 
 - [ ] Implemented against a real tracking issue (contract + Done-when present); upgraded it first if not.
 - [ ] Docs PR opened **first**; api PR links it and states the docs→api merge order.
+- [ ] Every opened PR's **matrix row updated** (`#TBD` → live ref + status) in the same session it was opened.
 - [ ] Every api unit was **RED before GREEN**; full domain suite + `tsc` + lint all clean.
 - [ ] Preview confirmed **built from your commit**; **every Done-when criterion** exercised against it with real data.
 - [ ] Docs ↔ API ↔ live results **agree** (reconciled and re-pushed if not).
