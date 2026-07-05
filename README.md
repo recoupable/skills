@@ -64,6 +64,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | recoup-content-write-caption | Captions in the artist's own voice |
 | recoup-content-make-graphics | Cover art, thumbnails, carousels, promo/quote cards |
 | recoup-content-make-video | Short-form video, lyric videos, visualizers, reformats |
+| recoup-content-clip-video | Clip long-form video into shorts via OpusClip |
 | recoup-content-asset-pack | A whole 15–30-piece clip family for one song |
 | recoup-content-reactive-post | Turn a real milestone/trend into a timely post |
 

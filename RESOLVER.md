@@ -43,6 +43,7 @@
 | write a caption in the artist's voice | `recoup-content-write-caption` |
 | cover art / thumbnail / carousel / promo / quote card | `recoup-content-make-graphics` |
 | short video / lyric video / visualizer / reformat for platforms | `recoup-content-make-video` |
+| clip a long video (podcast/stream/interview) into shorts | `recoup-content-clip-video` |
 | a whole content pack (15–30 assets) for one song | `recoup-content-asset-pack` |
 | react to a milestone/trend, make something timely | `recoup-content-reactive-post` |
 
@@ -82,6 +83,7 @@
 | "recoup-internal" + account-health / account-status snapshot for a Recoup account | `recoup-internal-account-health-report` |
 | "recoup-internal" + audit scheduled-task email health (what tasks emailed, how many empties the guard blocked) over a window | `recoup-internal-task-email-audit` |
 | "recoup-internal" + draft/ship/measure LinkedIn or X posts | `recoup-internal-social-ship-posts` |
+| "recoup-internal" + make a FaceTime-call ad / two-person video-call ad (Grok Imagine) | `recoup-internal-video-grok-1.5-imagine-facetime` |
 
 ---
 
