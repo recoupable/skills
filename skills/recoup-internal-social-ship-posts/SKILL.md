@@ -12,7 +12,7 @@ Authenticate to the Recoup API with an `x-api-key` (`RECOUP_API_KEY`) or `Author
 ## The loop
 
 1. **Learn** — pull how recent posts performed, so copy is grounded in evidence, not vibes.
-2. **Draft** — write topic-first copy that fits the platform and the goal.
+2. **Draft** — write topic-first copy that fits the platform, the goal, and the account's story canon.
 3. **Decide the CTA** — comment-gate for leads, or direct link for reach.
 4. **Publish** — via the connector where supported, or hand off for manual posting.
 5. **Log & re-measure** — record what went out; re-pull performance ~48h later.
@@ -65,6 +65,8 @@ Read the top performer against the flatliners and name the differences (framing,
 
 ## Step 2 — Draft
 
+**Check the story canon first.** If the account workspace has a `NARRATIVE.md` (story bible: premise, recurring cast, storylines), read it and name **which arc and which character this post serves** before writing a word. A post that serves no arc is an ad — reframe it into the story or drop it. Serialized rules live in the canon itself (recurring catchphrases, who may be fictionalized vs. who gets only verified numbers, cliffhanger beats); follow them over generic copy instincts. If the workspace has no `NARRATIVE.md`, note that to the account owner — the account is posting without a story.
+
 Write to the brief from step 1 plus the principles above. Structure that travels well:
 
 ```
@@ -113,7 +115,7 @@ Native video works, but the bytes can't go inline: `media` won't fetch a URL, an
 
 ## Step 5 — Log and re-measure
 
-Record each post immediately: account, platform, the post id/URN, UTC time, the CTA used, and the copy. Then **re-pull performance ~48h later**: one bulk scrape (step 1) covers all four platforms; add `LINKEDIN_LIST_REACTIONS` only when you need reactor identities, and read gated posts' comment bodies manually. Compare week-over-week — report deltas, not all-time totals. Feed the result back into step 1 for the next post.
+Record each post immediately: account, platform, the post id/URN, UTC time, the CTA used, the copy, and — when the account has a `NARRATIVE.md` — **the arc and character the post served** (continuity is what makes the next episode land; an unlogged arc breaks the serial). Then **re-pull performance ~48h later**: one bulk scrape (step 1) covers all four platforms; add `LINKEDIN_LIST_REACTIONS` only when you need reactor identities, and read gated posts' comment bodies manually. Compare week-over-week — report deltas, not all-time totals. Feed the result back into step 1 for the next post.
 
 ## Producing a demo video?
 
