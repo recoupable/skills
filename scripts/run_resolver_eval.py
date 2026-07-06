@@ -48,7 +48,8 @@ PLUGIN = REPO_ROOT
 # Co-located with the plugin root (NOT under tests/, which is gitignored) so the
 # fixtures ship and CI can run them on a fresh checkout.
 FIXTURES = PLUGIN / "resolver-eval.jsonl"
-SKILL_TOKEN = re.compile(r"`(recoup-[a-z0-9-]+)`")
+# Dots are allowed mid-slug (e.g. `recoup-internal-video-grok-1.5-imagine-facetime`).
+SKILL_TOKEN = re.compile(r"`(recoup-[a-z0-9-]+(?:\.[a-z0-9-]+)*)`")
 
 
 def skill_dirs() -> set[str]:

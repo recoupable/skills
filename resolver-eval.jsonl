@@ -59,6 +59,7 @@
 {"intent": "recoup-internal work the valuation funnel and advance this Attio lead", "expected": "recoup-internal-funnel-valuation-pipeline"}
 {"intent": "recoup-internal account health snapshot for this account", "expected": "recoup-internal-account-health-report"}
 {"intent": "recoup-internal draft and ship a launch post for LinkedIn and X", "expected": "recoup-internal-social-ship-posts"}
+{"intent": "recoup-internal make a FaceTime-call style AI video ad with Grok Imagine", "expected": "recoup-internal-video-grok-1.5-imagine-facetime", "not": ["recoup-content-make-video"]}
 
 # --- gating invariant: WITHOUT the recoup-internal keyword, internal skills must NOT fire ---
 # Only the internal skills with a plausible customer-facing collision get a negative; the dev/eval

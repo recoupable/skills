@@ -82,6 +82,7 @@
 | "recoup-internal" + account-health / account-status snapshot for a Recoup account | `recoup-internal-account-health-report` |
 | "recoup-internal" + audit scheduled-task email health (what tasks emailed, how many empties the guard blocked) over a window | `recoup-internal-task-email-audit` |
 | "recoup-internal" + draft/ship/measure LinkedIn or X posts | `recoup-internal-social-ship-posts` |
+| "recoup-internal" + FaceTime-call style AI video ad (Grok Imagine 1.5 native-speech clips) | `recoup-internal-video-grok-1.5-imagine-facetime` |
 
 ---
 
