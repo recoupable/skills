@@ -25,7 +25,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_PLUGIN = REPO_ROOT
 
 # A skill reference in RESOLVER.md is a backtick-wrapped slug: `recoup-foo-bar`.
-SKILL_TOKEN = re.compile(r"`(recoup-[a-z0-9-]+)`")
+# Dots are allowed mid-slug (e.g. `recoup-internal-video-grok-1.5-imagine-facetime`).
+SKILL_TOKEN = re.compile(r"`(recoup-[a-z0-9-]+(?:\.[a-z0-9-]+)*)`")
 
 
 def skill_dirs(plugin: Path) -> set[str]:
