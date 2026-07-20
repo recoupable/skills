@@ -61,6 +61,13 @@ Gotchas learned the hard way:
 - Sanity-check a quiet week by widening to 14 days; if the wider window shows
   returning users, the field is working and the quiet week is real.
 
+**Signup-cohort scorecard:** grade every new signup in the window against the
+activation funnel in `references/onboarding-checkpoints.md` (one column per
+account, one row per checkpoint, using the internal checks). The story is
+where the cohort stalls — historically nobody reaches step 7 (first scheduled
+task), which is the step that predicts retention — and which warm leads
+(measured-but-unclaimed valuations, enterprise domains) need human outreach.
+
 ## 2. Web UI traffic (Vercel Web Analytics)
 
 There is no documented query API, but the dashboard's internal one accepts a

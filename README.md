@@ -86,6 +86,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | Skill | What it does |
 |-------|-------------|
 | recoup-platform-connect-account | First-run setup: verify email, mint an API key |
+| recoup-platform-track-onboarding | Score an account against the activation funnel; route to the next step |
 | recoup-platform-build-os | Build the org's self-managing music-company OS (folders + brain + janitor + plugin), seeded from your live roster |
 | recoup-platform-api-access | Call the Recoup API & external connectors directly |
 | recoup-platform-capture-lesson | Capture a reusable lesson (compounding memory) |

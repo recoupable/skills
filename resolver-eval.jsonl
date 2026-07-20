@@ -5,6 +5,8 @@
 
 # --- platform ---
 {"intent": "set me up, verify my email and give me an api key", "expected": "recoup-platform-connect-account"}
+{"intent": "how far am I in setting up recoup, what should I do next", "expected": "recoup-platform-track-onboarding", "not": ["recoup-platform-connect-account"]}
+{"intent": "did I finish onboarding my account, show my activation checklist", "expected": "recoup-platform-track-onboarding"}
 {"intent": "scaffold my workspace folders and mirror my roster into artists/", "expected": "recoup-platform-build-os"}
 {"intent": "turn this repo into our label's self-managing music-company OS", "expected": "recoup-platform-build-os"}
 {"intent": "call the recoup api to fetch this artist's socials", "expected": "recoup-platform-api-access"}

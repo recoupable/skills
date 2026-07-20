@@ -84,7 +84,9 @@ actually working on in Recoup (see step 4 below).
 4. **Synthesize a verdict.** If chats, tasks, sandboxes and credits-used are all
    zero, the account is **dormant**; otherwise it shows real engagement. Flag
    data hygiene issues (duplicate artist records, mismatched social auto-matches,
-   missing platforms).
+   missing platforms). Also grade the account against the activation funnel in
+   `references/onboarding-checkpoints.md` (furthest contiguous step + skipped
+   steps) — the data pulled in steps 2–3 already answers every checkpoint.
 5. **Rank the chats** (`rank_chats`). Collect every chat across all artists and
    score each by a topic signal (regex keyword buckets over the chat **title** —
    `CHAT_THEMES`) plus a recency bonus, then take the top 10. Each row shows the

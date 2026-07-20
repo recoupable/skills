@@ -62,6 +62,7 @@
 | Intent | Skill |
 |---|---|
 | first-run "set up / connect Recoup", verify email, get an API key | `recoup-platform-connect-account` |
+| "where am I in my Recoup setup" / onboarding status / what should I do next / activation checklist | `recoup-platform-track-onboarding` |
 | scaffold my workspace folders / mirror my roster, or build the org's full self-managing "music-company OS" (structure + brain + janitor + plugin, seeded with `artists/` and wired to the API) | `recoup-platform-build-os` |
 | call the Recoup API directly, fetch a resource, run a connector (Docs/Gmail/TikTok) | `recoup-platform-api-access` |
 | email a report / summary / notification to the account owner or a recipient (send email from a task) | `recoup-platform-email-helper` |

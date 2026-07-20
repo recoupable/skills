@@ -182,6 +182,13 @@
         "skills/recoup-catalog-review-deal/templates/deal-workspace/missing-files.md",
         "skills/recoup-catalog-review-deal/templates/missing-files.md"
       ]
+    },
+    {
+      "canonical": "skills/recoup-platform-track-onboarding/references/onboarding-checkpoints.md",
+      "copies": [
+        "skills/recoup-internal-account-health-report/references/onboarding-checkpoints.md",
+        "skills/recoup-internal-weekly-usage-review/references/onboarding-checkpoints.md"
+      ]
     }
   ]
 }
