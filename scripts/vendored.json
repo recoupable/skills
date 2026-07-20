@@ -23,8 +23,7 @@
         "skills/recoup-content-asset-pack/references/analyze-gate.md",
         "skills/recoup-content-make-graphics/references/analyze-gate.md",
         "skills/recoup-content-make-video/references/analyze-gate.md",
-        "skills/recoup-content-reactive-post/references/analyze-gate.md",
-        "skills/recoup-content-write-caption/references/analyze-gate.md"
+        "skills/recoup-content-reactive-post/references/analyze-gate.md"
       ]
     },
     {
@@ -32,9 +31,7 @@
       "copies": [
         "skills/recoup-content-asset-pack/references/content-api.md",
         "skills/recoup-content-make-graphics/references/content-api.md",
-        "skills/recoup-content-make-video/references/content-api.md",
-        "skills/recoup-content-reactive-post/references/content-api.md",
-        "skills/recoup-content-write-caption/references/content-api.md"
+        "skills/recoup-content-make-video/references/content-api.md"
       ]
     },
     {
@@ -89,10 +86,7 @@
       "canonical": "references/song-sourcing.md",
       "copies": [
         "skills/recoup-content-asset-pack/references/song-sourcing.md",
-        "skills/recoup-content-make-graphics/references/song-sourcing.md",
-        "skills/recoup-content-make-video/references/song-sourcing.md",
-        "skills/recoup-content-reactive-post/references/song-sourcing.md",
-        "skills/recoup-content-write-caption/references/song-sourcing.md"
+        "skills/recoup-content-make-video/references/song-sourcing.md"
       ]
     },
     {
