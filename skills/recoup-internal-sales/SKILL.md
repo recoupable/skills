@@ -1,23 +1,30 @@
 ---
-name: recoup-internal-funnel-valuation-pipeline
+name: recoup-internal-sales
 description: >-
   INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke
   ONLY when the request explicitly includes "recoup-internal" (e.g.
-  "recoup-internal work the valuation funnel"). Never use for customer-facing or
+  "recoup-internal work the sales pipeline"). Never use for customer-facing or
   artist requests.
-  Work the Recoup "Valuation Leads" sales funnel in Attio — take an inbound
-  catalog-valuation lead and progress it from "valuation ran" to "signed up for
-  Pro." Researches who the lead is and their relationship to the artist they
-  valued, qualifies the catalog against revenue goals, enriches and advances the
-  Attio CRM record, and drafts the first outreach email plus a clean one-page
-  valuation PDF. Use when asked to "work the valuation funnel", "qualify this
-  lead", "who ran this valuation", "is this catalog worth our time", "update the
-  Attio pipeline", "advance this lead", "draft outreach for this valuation", or
-  "turn valuation leads into Pro signups". Requires an Attio API key and a Recoup
-  API key.
+  Run Recoup's sales motion in Attio — take an inbound lead and progress it from
+  first touch to "signed up for Pro." Researches who the lead is and their
+  relationship to the artist, qualifies them against revenue goals, enriches and
+  advances the Attio CRM record, and drafts the first outreach email plus any
+  supporting collateral. The catalog-valuation funnel is the primary path today;
+  other sales paths get added here as we run them. Use when asked to "work the
+  sales pipeline", "work the valuation funnel", "qualify this lead", "who ran
+  this valuation", "is this catalog worth our time", "update the Attio
+  pipeline", "advance this lead", "draft outreach", or "turn leads into Pro
+  signups". Requires an Attio API key and a Recoup API key.
 ---
 
-# Valuation Funnel
+# Recoup Sales
+
+Recoup's internal sales motion: turn inbound **leads** into **Recoup Pro signups** by
+working them through the Attio pipeline. The **catalog-valuation funnel** below is the
+primary path today and the detailed playbook; as we run other sales paths we add them
+to this skill.
+
+## Catalog-valuation funnel
 
 Turn inbound **catalog-valuation leads** into **Recoup Pro signups**. When someone
 runs Recoup's free "what is my catalog worth?" valuation, a lead lands in the Attio

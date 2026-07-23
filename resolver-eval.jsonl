@@ -58,7 +58,7 @@
 {"intent": "recoup-internal write a tracking issue for the auth migration", "expected": "recoup-internal-dev-issue-tracker"}
 {"intent": "recoup-internal ship issue #412 end to end, docs-first and test-driven", "expected": "recoup-internal-dev-ship-issue"}
 {"intent": "recoup-internal benchmark this skills folder against the frontier", "expected": "recoup-internal-eval-skill-benchmark"}
-{"intent": "recoup-internal work the valuation funnel and advance this Attio lead", "expected": "recoup-internal-funnel-valuation-pipeline"}
+{"intent": "recoup-internal work the valuation funnel and advance this Attio lead", "expected": "recoup-internal-sales"}
 {"intent": "recoup-internal account health snapshot for this account", "expected": "recoup-internal-account-health-report"}
 {"intent": "recoup-internal run the weekly usage review, what happened while I was gone", "expected": "recoup-internal-weekly-usage-review", "not": ["recoup-internal-account-health-report"]}
 {"intent": "recoup-internal draft and ship a launch post for LinkedIn and X", "expected": "recoup-internal-social-ship-posts"}
@@ -67,7 +67,7 @@
 # --- gating invariant: WITHOUT the recoup-internal keyword, internal skills must NOT fire ---
 # Only the internal skills with a plausible customer-facing collision get a negative; the dev/eval
 # skills (issue-tracker, ship-issue, eval-skill-benchmark) have no customer-request surface to confuse.
-{"intent": "what's this catalog worth from public streaming data", "expected": "recoup-catalog-estimate-value", "not": ["recoup-internal-funnel-valuation-pipeline"]}
+{"intent": "what's this catalog worth from public streaming data", "expected": "recoup-catalog-estimate-value", "not": ["recoup-internal-sales"]}
 {"intent": "write a caption for the artist's instagram post", "expected": "recoup-content-write-caption", "not": ["recoup-internal-social-ship-posts"]}
 {"intent": "how is this artist doing across streaming and socials", "expected": "recoup-research-artist-overview", "not": ["recoup-internal-account-health-report"]}
 {"intent": "recoup-internal audit how last night's task emails went", "expected": "recoup-internal-task-email-audit"}
