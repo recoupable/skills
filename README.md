@@ -100,6 +100,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | recoup-internal-dev-issue-tracker | Write & maintain high-signal GitHub tracking issues |
 | recoup-internal-dev-ship-issue | Deliver a tracked issue end-to-end (docs-first, TDD) |
 | recoup-internal-eval-skill-benchmark | Benchmark a skill pack/plugin against the frontier |
+| recoup-internal-sales | Daily sales sweep across Stripe/Privy/valuations/Attio/credits/tasks/chats → one ranked follow-up list |
 | recoup-internal-funnel-valuation-pipeline | Work the Attio catalog-valuation sales funnel |
 | recoup-internal-account-health-report | Account-health snapshot for any Recoup account |
 | recoup-internal-social-ship-posts | Draft, publish & measure LinkedIn/X posts |
