@@ -202,7 +202,7 @@ ORDER BY ae.email NULLS LAST, sa.title;
 ## Lessons from the first live run (2026-07-23)
 
 Four leads worked end to end: an inbound valuation lead, a distributor/broker, a
-Warner exec, and a dormant power user. What actually mattered.
+major-label exec, and a dormant power user. What actually mattered.
 
 ### Qualification
 
@@ -222,7 +222,7 @@ Warner exec, and a dormant power user. What actually mattered.
   The number models a 10-16x multiple on sustainable annual net label share. It is
   not an offer price and must never anchor an LOI.
 - **It mis-prices older catalogs in BOTH directions.** Against four independent
-  market comps (Duetti, beatBread, distributors) it was accurate on a 2-year
+  market comps (independent catalog buyers and distributors) it was accurate on a 2-year
   catalog, **undervalued an 8-year/90-release catalog ~2x**, and **overvalued**
   8-10 year catalogs. Cause: annual run rate is estimated as *lifetime streams ÷
   catalog age*, which averages an old catalog flat — understating one weighted to
@@ -247,7 +247,7 @@ Warner exec, and a dormant power user. What actually mattered.
 ### Keeping a lead warm — do all three
 
 Set `owner`, log a note saying what you sent and what you're waiting for, and
-create a **dated follow-up task**. A Qualified Warner lead had sat **21 days**
+create a **dated follow-up task**. A Qualified enterprise lead had sat **21 days**
 untouched because none of the three existed.
 
 ### Tooling gotchas
