@@ -120,6 +120,9 @@ entries, stages, field slugs, enrich/advance calls), then surface:
   **Negative balance still burning** → billing risk *and* a top-up conversation
   (nothing stops them at zero). **Went silent** (active last week, zero this week) →
   churn-save follow-up while it's still warm.
+- ⚠️ **Credit burn is not engagement.** A scheduled task firing daily produces
+  usage events and looks like an active account. Always confirm against step 7
+  (interactive vs `'Scheduled generation'` chats) before calling anyone active.
 - **Action:** log the follow-up; for a billing-risk account, pair the outreach with
   the plan-fit conversation from step 1.
 
@@ -195,3 +198,70 @@ ORDER BY ae.email NULLS LAST, sa.title;
   `[TEST]`, `preview-auth-probe`).
 - **Trust Stripe over the DB for paying status** — the Supabase `subscriptions`
   mirror can be empty/stale.
+
+## Lessons from the first live run (2026-07-23)
+
+Four leads worked end to end: an inbound valuation lead, a distributor/broker, a
+Warner exec, and a dormant power user. What actually mattered.
+
+### Qualification
+
+- **Credit burn is not engagement.** Two accounts looked "active today" and were
+  pure autopilot — every chat was `'Scheduled generation'` and the usage was a
+  scheduled task firing. One had been dark **4 months** while its daily task quietly
+  burned the balance negative. Check the last *interactive* chat date, always.
+- **Qualify the catalog before spending human time.** A lead who ran a valuation
+  and asked "what can I sell for" held a 10-track **public-domain classical**
+  catalog worth ~$700 — no publishing to sell, since Bach and Chopin are public
+  domain. Capture works fine; qualification is the gap. Check repertoire type and
+  streams before drafting anything.
+
+### Valuation you can put in front of a buyer
+
+- **Say "asset value, not a bid."** A catalog buyer asked "is this for the buy?"
+  The number models a 10-16x multiple on sustainable annual net label share. It is
+  not an offer price and must never anchor an LOI.
+- **It mis-prices older catalogs in BOTH directions.** Against four independent
+  market comps (Duetti, beatBread, distributors) it was accurate on a 2-year
+  catalog, **undervalued an 8-year/90-release catalog ~2x**, and **overvalued**
+  8-10 year catalogs. Cause: annual run rate is estimated as *lifetime streams ÷
+  catalog age*, which averages an old catalog flat — understating one weighted to
+  recent output, overstating a decaying one. The market prices trailing-12-month
+  performance. **Older than ~3 years: get statements before quoting.**
+- **It is Spotify only.** One artist's self-reported ~700k/month **Amazon** track
+  was worth roughly 10-20x his entire Spotify catalog *per year* at Amazon's public
+  ~$0.00402/stream rate. Ask about other DSPs before calling a catalog small.
+- **Pull real release dates.** Catalog age is floored at 1 year and falls back to 5
+  when unknown, so identical streams can value ~5x apart.
+
+### Delivering
+
+- The sequence that converted: verify the roster → measure → render the PDF →
+  deliver by email **and** the channel they replied on → advise honestly on the
+  number → ask for statements. Being the one who says *"you may be overpaying"* is
+  what turned a valuation into a partnership conversation.
+- Keep outreach short and lead with the concrete thing you did for them. Attach a
+  report only when their job makes it relevant — a label exec has no use for a
+  catalog valuation of an artist their employer already owns.
+
+### Keeping a lead warm — do all three
+
+Set `owner`, log a note saying what you sent and what you're waiting for, and
+create a **dated follow-up task**. A Qualified Warner lead had sat **21 days**
+untouched because none of the three existed.
+
+### Tooling gotchas
+
+- Privy / Spotify / Apify credentials come from the **`api`** submodule
+  (`vercel env pull`); `chat` is not Vercel-linked.
+- **Stripe lookup by login email mostly misses** — pull the active-subscription
+  roster instead of matching emails.
+- **Privy `latest_verified_at` undercounts actives** (long sessions never re-verify);
+  cross-check with interactive chats.
+- **Attio:** the people query caps at **500** (page it), `stage.active_from` gives
+  days-in-stage for non-responder detection, location writes require *every*
+  sub-field, task `content` is immutable (close and recreate), and creating an
+  attribute needs a `config` key.
+- **`socials.profile_url` is lowercased by a DB trigger** — never store a YouTube
+  `/channel/UC…` URL (case-sensitive id, silently corrupted). Resolve and store the
+  `@handle` form instead.
