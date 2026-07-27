@@ -47,21 +47,65 @@ for step 6), **`recoup-platform-api-access`** (raw Recoup API).
 
 ## Prerequisites
 
+- `RECOUP_API_KEY` / `RECOUP_ACCESS_TOKEN` — **the primary source.** A `recoup_sk_`
+  key, or an admin Privy JWT for cross-account work (see Source order). Load
+  `recoup-platform-api-access` for the endpoint map.
+- `ATTIO_API_KEY` — read + write (this sweep *writes* follow-ups back).
+- Supabase read access to production (MCP `execute_sql` or psql) — **augmentation
+  only**, for the fleet-wide aggregates the API has no endpoint for.
 - Stripe: authenticated CLI **or** a live restricted key (pass `--api-key` — the
   keychain is often unreadable in sandboxed shells).
 - `PRIVY_APP_ID` + `PRIVY_PROJECT_SECRET` — Privy Management API.
-- Supabase read access to production (MCP `execute_sql` or psql).
-- `ATTIO_API_KEY` — read + write (this sweep *writes* follow-ups back).
-- `RECOUP_API_KEY` / `RECOUP_ACCESS_TOKEN` — Recoup API for account/artist detail.
 
 Everything is a GET or SELECT **except** the two sanctioned writes named in
 Guardrails (Attio follow-ups; disabling a confirmed-dead task). Outreach is
 **always drafted for a human to send**, never sent from this skill.
 
+## Source order — dogfood the API first
+
+**1. Recoup API → 2. Supabase.** Reach for `api.recoupable.dev` first and drop to
+SQL only for what it cannot answer. This is not a style preference: the sweep is
+run by the people who own the product, and every pull is a free QA pass. The
+2026-07-26 run found two product bugs purely by looking at API responses that no
+SQL query would have surfaced.
+
+**Use the API for anything scoped to one account, artist, or task:**
+
+| Need | Call | Why not SQL |
+| --- | --- | --- |
+| A customer's tasks | `GET /api/tasks?account_id=` | Returns `owner_email`, `model`, `next_run`, `upcoming`, `recent_runs`, `trigger_schedule_id` — **none of which exist as columns** on `scheduled_actions`. A schedule that will never fire is only visible here. |
+| An artist's socials | `GET /api/artists?account_id=` | Socials are **embedded** as `account_socials`; the hand-rolled `accounts → account_socials → socials` join is where mistakes happen. |
+| Remove an artist | `DELETE /api/artists/{id}` | Encodes the last-owner check and the fail-closed song-dependency guard. Raw SQL skips both. |
+| Email → account | `POST /api/accounts` | One call vs. a `account_emails` lookup. |
+| Refresh a profile | `POST /api/socials/{id}/scrape` | Real scrape; SQL only shows you stale rows. |
+
+**Admin cross-account access.** An admin Privy JWT plus an `account_id` override
+lets you read/write in a customer's context without their key — `account_id` as a
+**query param** on GETs, in the **JSON body** on `PATCH`/`DELETE`. Authorized by
+`validateAuthContext` / `checkIsAdmin`. Confirm with `GET /api/admins` →
+`{"isAdmin":true}`. These JWTs expire in **~1 hour** — re-request rather than
+debugging a sudden 401.
+
+**Drop to SQL only for the fleet-wide sweep** — the cross-account aggregates that
+have no endpoint: per-account credit burn, negative balances, went-silent accounts,
+zombie tasks, valuation runs in a window, chat-title themes. That is most of the
+seven pulls, and SQL is genuinely the right tool there. The rule is about
+*account-scoped* reads, not about banning SQL.
+
+**When the two disagree, the API is the customer's truth** — it is what the product
+actually serves them. A DB row the API doesn't surface is not something the customer
+can see.
+
 ## The seven pulls
 
 Each pull is: **what to read → the sales signal → the action**. Always drop test
 rows (`sweetmantech*`, `sidney@`, `@example.com`, `[TEST]`, `preview-auth-probe`).
+
+These seven are the *fleet-wide* layer, so most of them are legitimately SQL (or
+Stripe/Privy/Attio). The API-first rule bites at the **next** step: the moment the
+ranked list names a person, every drill-down on that account — their tasks, artists,
+socials, scrape freshness — goes through `api.recoupable.dev`, not another SELECT.
+Ranking is a SQL job; qualifying a named lead is an API job.
 
 ### 1. Stripe — new money to protect
 
@@ -190,6 +234,13 @@ ORDER BY ae.email NULLS LAST, sa.title;
 - **Read-only except two sanctioned writes:** enriching/advancing Attio, and
   disabling a **confirmed-dead** task. Both are reversible; still **confirm before
   moving a lead to Lost or disabling a task**.
+- **Never mutate customer data with raw SQL — go through the API.** An `UPDATE` on
+  `scheduled_actions` writes the row but skips everything the endpoint does around
+  it: `updateTask` re-syncs the Trigger.dev schedule, and `deleteArtist` runs a
+  last-owner check plus a fail-closed song-dependency guard before hard-deleting.
+  A direct write leaves the row and the scheduler disagreeing, and the drift is
+  invisible in the table you just edited. Use `PATCH`/`DELETE` with an `account_id`
+  override. This applies to *every* customer-facing table, not just tasks.
 - **Draft, never send.** Every message touching a real customer is handed to the
   operator to send. No auto-send from this skill.
 - **PII stays in the CRM.** Names, emails, account IDs live in Attio/Supabase —
