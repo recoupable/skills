@@ -103,6 +103,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | recoup-internal-sales | Daily sales sweep across Stripe/Privy/valuations/Attio/credits/tasks/chats → one ranked follow-up list |
 | recoup-internal-funnel-valuation-pipeline | Work the Attio catalog-valuation sales funnel |
 | recoup-internal-account-health-report | Account-health snapshot for any Recoup account |
+| recoup-internal-marketing | The daily marketing run on our own accounts: workspace canon → socials scrape → topic pick → build → handoff |
 | recoup-internal-social-ship-posts | Draft, publish & measure LinkedIn/X posts |
 
 ## What else ships

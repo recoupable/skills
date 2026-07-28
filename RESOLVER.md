@@ -84,6 +84,7 @@
 | "recoup-internal" + account-health / account-status snapshot for a Recoup account | `recoup-internal-account-health-report` |
 | "recoup-internal" + fleet-wide weekly usage review / week in review / business pulse (logins, Stripe, credits, gateway reconciliation, catalogs) | `recoup-internal-weekly-usage-review` |
 | "recoup-internal" + audit scheduled-task email health (what tasks emailed, how many empties the guard blocked) over a window | `recoup-internal-task-email-audit` |
+| "recoup-internal" + run the day's marketing on one of our own accounts / what should we post today / make today's video (workspace canon + socials scrape + topic pick + build) | `recoup-internal-marketing` |
 | "recoup-internal" + draft/ship/measure LinkedIn or X posts | `recoup-internal-social-ship-posts` |
 | "recoup-internal" + FaceTime-call style AI video ad (Grok Imagine 1.5 native-speech clips) | `recoup-internal-video-grok-1.5-imagine-facetime` |
 
