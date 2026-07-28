@@ -19,6 +19,12 @@ project to clone. This page is the **routing table** from a brief to a format, p
 styling. Show the real interface and the real change. A beautiful abstract treatment that hides the
 product reads as generic and does not convert. Tested head-to-head and ruled on by the owner.
 
+**LinkedIn is an image post, not video — on performance grounds.** Owner ruling 2026-07-28 from
+personal-post data: images outperform video on LinkedIn. This is **not** a workaround for the
+connector lacking native video upload, and the distinction matters — it means do not hand-upload a
+video to LinkedIn "for consistency" with the other platforms either. Pick the still that depicts what
+the copy's opening line describes, size it 1080x1350 (4:5), and put the link in the first comment.
+
 **Future work:** each format above should get its own skill or reference, the way the FaceTime format
 already has one. Until then, the reference project *is* the spec — clone it, never rebuild from
 scratch.
@@ -54,7 +60,8 @@ scratch.
 
 | Next | Skill |
 |---|---|
-| Publish, per-platform copy, CTA choice, ~48h re-pull | `recoup-internal-social-ship-posts` |
+| Publish, per-platform copy, ~48h re-pull | `recoup-internal-social-ship-posts` |
+| Signup / funnel reads at the re-pull | `recoup-internal-sales`, `recoup-internal-funnel-valuation-pipeline` |
 | Composition mechanics, timing contract, rendering | the `hyperframes*` skills |
 | Media resolution (music, SFX, voice, images) | `media-use` |
 

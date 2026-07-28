@@ -56,12 +56,15 @@ curl -sS "https://api.recoupable.dev/api/apify/runs/<RUN_ID>" \
 
 1. **Rank recent posts by engagement**, per platform.
 2. **Name the differences** between the top performer and the flatliners: hook archetype, format
-   (video vs image), collaborator tagged or not, AI disclosed or not, length, posting slot, CTA type.
+   (video vs image), collaborator tagged or not, length, posting slot, CTA type.
    That list is today's copy brief.
 3. **Report week-over-week deltas, not all-time totals.** Customers and owners both read deltas;
    all-time totals hide a decline.
 4. **Escalate structural collapses.** If a platform's numbers drop an order of magnitude (e.g. Shorts
    views falling from the hundreds to single digits), that is a distribution problem and it outranks
    whatever today's post was going to be. Say so before building.
-5. **Feed it back.** Update the Performance column in `posts-log.md` for anything at its ~48h mark
+5. **Rank by conversion where it is known, engagement where it is not.** Attributed visits and
+   signups outrank likes; where the two disagree, conversion wins (`references/conversion.md`). Be
+   explicit about which posts are unattributable rather than reporting their zero as a measurement.
+6. **Feed it back.** Update the Performance column in `posts-log.md` for anything at its ~48h mark
    while you are here.
