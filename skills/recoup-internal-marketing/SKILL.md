@@ -88,8 +88,12 @@ Gate the pick on all of these before building — details in `references/topic-s
 - **Numbers.** Any figure attributed to a real artist must be measured and verified, with
   measured-vs-estimated disclosed. Never publish a number you cannot audit, including numbers about
   ourselves.
-- **AI disclosure.** Always, on generated visuals. This is a performance decision, not a legal one:
-  disclosed variants have been our platform-bests and the undisclosed one flatlined.
+- **NO AI disclosure in body copy.** Owner ruling, 2026-07-28: never spend caption or script text
+  saying the visuals are AI generated. It is already obvious to the audience, and the characters are
+  better spent on the substance. Where platform policy labelling is wanted, use the platform's own
+  **AI-content toggle at upload** rather than the caption. This **reverses** the earlier 2026-07-06
+  A/B guidance that disclosed variants performed best — if you find that older note anywhere in a
+  workspace, the ruling above wins.
 - **One idea per day.** Do not ship two competing assets into the same slot.
 
 ## Step 4 — Build the asset
