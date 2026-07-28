@@ -76,3 +76,6 @@
 {"intent": "recoup-internal do today's marketing on our own account", "expected": "recoup-internal-marketing", "not": ["recoup-internal-social-ship-posts"]}
 {"intent": "recoup-internal what should we post today", "expected": "recoup-internal-marketing", "not": ["recoup-content-write-caption"]}
 {"intent": "recoup-internal our hooks are weak, work out what to make today", "expected": "recoup-internal-marketing", "not": ["recoup-content-make-video"]}
+{"intent": "recoup-internal do today's marketing run end to end for our own account", "expected": "recoup-internal-marketing", "not": ["recoup-internal-social-ship-posts"]}
+{"intent": "recoup-internal scrape our socials, pick today's topic and build the video", "expected": "recoup-internal-marketing", "not": ["recoup-internal-social-ship-posts", "recoup-content-make-video"]}
+{"intent": "recoup-internal our hooks have been weak lately, sort out today's content run", "expected": "recoup-internal-marketing", "not": ["recoup-internal-social-ship-posts"]}
