@@ -164,11 +164,37 @@ entries, stages, field slugs, enrich/advance calls), then surface:
   **Negative balance still burning** → billing risk *and* a top-up conversation
   (nothing stops them at zero). **Went silent** (active last week, zero this week) →
   churn-save follow-up while it's still warm.
-- ⚠️ **Credit burn is not engagement.** A scheduled task firing daily produces
-  usage events and looks like an active account. Always confirm against step 7
-  (interactive vs `'Scheduled generation'` chats) before calling anyone active.
+- ⚠️ **Burn reads wrong in BOTH directions.** High burn is not engagement — a daily
+  scheduled task produces usage events and looks like an active account. And **near-zero
+  burn is not disengagement**: it is just as often an account we never funded. Confirm
+  against step 7 before calling anyone active *or* dead.
+- **Read the balance and the plan together** (see *Credits mechanics* below). An account
+  that has been at the same balance for months is not frugal, it is unrefilled.
 - **Action:** log the follow-up; for a billing-risk account, pair the outreach with
   the plan-fit conversation from step 1.
+
+#### Credits mechanics — read this before you quote anyone's balance
+
+`checkAndResetCredits` refills a stale row to the plan total (`DEFAULT_CREDITS` 333 /
+`PRO_CREDITS` 9999). Three things follow, and all three have bitten:
+
+1. **Refill is lazy, and reading a balance MUTATES it.** It is reachable from exactly one
+   place — the `GET /api/accounts/{id}/credits` handler. The spend path never calls it
+   (`autoRechargeOrFail` reads `remaining_credits` directly and mints a Checkout session on
+   a shortfall). So an account nobody opens never refills, and *your* GET is what finally
+   tops it up. That is the sanctioned one-call comp for a stale account.
+2. **It SETS, it does not add** — and only fires when the row is **> 1 month old**. On a
+   free-tier account sitting above 333 the same read silently **reduces** the balance.
+   Check `timestamp` and `is_pro` *before* you call it on anyone.
+3. **There is no staff-facing way to grant credits.** Every route under
+   `/api/admins/credits` is a GET; only the Stripe webhook and auto-recharge increment. If
+   the row is too fresh to refill, the only options are a deliberate raw DB write (breaks
+   the SQL guardrail — get sign-off and log it) or putting them on a plan.
+
+**`isPro` is derived from Stripe by account id**, so a customer whose Stripe record is
+missing `metadata.accountId` resolves to **free tier while paying** — seen live on a
+$5,000/mo account sitting on 333 credits. Check that linkage before diagnosing anything
+credit-related.
 
 ### 6. Tasks — zombie schedules on inactive accounts
 
@@ -202,9 +228,20 @@ ORDER BY ae.email NULLS LAST, sa.title;
 
 ### 7. Chats — what customers actually use Recoup for
 
-- **Read:** chats created in the window with titles, split interactive vs
-  `'Scheduled generation'` (weekly-usage-review SQL queries 5a/5b). Titles are
-  admin-readable; **bodies are owner-scoped** (see account-health caveat).
+- **Read:** chats created in the window with titles (weekly-usage-review SQL queries
+  5a/5b). Titles are admin-readable; **bodies are owner-scoped** (see account-health
+  caveat).
+- ⚠️ **Do not split on the `'Scheduled generation'` topic — it no longer identifies
+  autopilot.** Scheduled rooms now commonly carry a **NULL topic**, and titled rooms
+  include cron output (a real one: `"Weekly Performance Dashboard 2026-07-20 to
+  2026-07-26"`). Two tests that do work:
+  - **Clock alignment.** A cron fires at the same minute every day; a human is off-clock.
+    Group an account's rooms by `extract(minute from updated_at)` — one dominant minute is
+    the schedule, everything else is a person.
+  - **User messages per room** (the sharper one). A scheduled run writes **exactly one
+    user-role message per room**, at the cron minute. A human session is multi-turn and
+    off-clock. `count(user_msgs) == count(rooms)` for a month means nobody typed anything
+    that month.
 - **Signal:** theme the titles (strategy / analytics / content / release) to see
   *what* the product is used for — that shapes both the follow-up hook and product
   feedback. A **new interactive user** is engaged and worth a check-in; a
@@ -258,9 +295,15 @@ major-label exec, and a dormant power user. What actually mattered.
 ### Qualification
 
 - **Credit burn is not engagement.** Two accounts looked "active today" and were
-  pure autopilot — every chat was `'Scheduled generation'` and the usage was a
-  scheduled task firing. One had been dark **4 months** while its daily task quietly
-  burned the balance negative. Check the last *interactive* chat date, always.
+  pure autopilot — the usage was a scheduled task firing. One had been dark **4 months**
+  while its daily task quietly burned the balance negative. Check the last *interactive*
+  chat date, always (step 7 has the two tests that survive a NULL topic).
+- **And a quiet account is not a disengaged one.** A subscriber of **19 months** read as
+  dormant — 1 active day, 0 chats — because he had **456 credits against a 9,999
+  entitlement** the whole time and nobody had ever read his balance to trigger the refill.
+  He had paid $405.46 for roughly 2% of one month's allowance. Fleet-wide, **1,499 of
+  1,646** accounts were carrying an unapplied refill and **133 were blocked at or below
+  zero**. Before writing anyone off, check whether we ever funded them.
 - **Qualify the catalog before spending human time.** A lead who ran a valuation
   and asked "what can I sell for" held a 10-track **public-domain classical**
   catalog worth ~$700 — no publishing to sell, since Bach and Chopin are public
@@ -305,14 +348,38 @@ untouched because none of the three existed.
 
 - Privy / Spotify / Apify credentials come from the **`api`** submodule
   (`vercel env pull`); `chat` is not Vercel-linked.
-- **Stripe lookup by login email mostly misses** — pull the active-subscription
-  roster instead of matching emails.
+- **Stripe lookup by login email mostly misses, and the roster alone is not enough.**
+  Pull the active-subscription roster — but **`expand[]=data.customer`** or Stripe returns
+  customer *ids*, not emails, and a paying customer reads as unpaid. That cost a real
+  misdiagnosis: a $20/mo subscriber of 19 months was reported as a cold lead. The reliable
+  join is **`customer.metadata.accountId`**, not the email; a customer's Stripe address is
+  routinely different from their Recoup login (`derekgtaylor@me.com` vs `hello@dddvvv.xyz`).
+- **`usage_events.source` is NOT an auth discriminator.** `source='api'` covers ~28k events
+  across 164 accounts — effectively all traffic since `source='web'` stopped being written
+  on 2026-06-05. It is a transport label. It tells you nothing about whether a call came
+  from a customer's API key, our task runner, or the app, so never infer "they built an
+  integration" from it. To rule the task runner in or out, check `scheduled_actions` and
+  whether a room was created per run.
+- **`account_api_keys.last_used` is never written** (production code never sets it; it
+  appears only in test fixtures). There is no way to tell when a customer last used an API
+  key. Same dead-column class as `scheduled_actions.last_run` / `next_run`.
 - **Privy `latest_verified_at` undercounts actives** (long sessions never re-verify);
-  cross-check with interactive chats.
+  cross-check with interactive chats. It is trustworthy at *long* range though — a
+  320-day-old value plus zero off-clock user messages is a safe "they have been gone a year".
 - **Attio:** the people query caps at **500** (page it), `stage.active_from` gives
   days-in-stage for non-responder detection, location writes require *every*
   sub-field, task `content` is immutable (close and recreate), and creating an
   attribute needs a `config` key.
+  - **Judge prior contact by `last_interaction` / `first_interaction`, never by note
+    count.** A record with zero notes can still have years of email history; email sync
+    populates the interaction fields, not notes. Calling such a lead "never contacted" in
+    front of the rep who emailed them is the fastest way to lose the room.
+  - **`owner` lives on the list entry, not the person** — a contact on no list has nowhere
+    to hang accountability. Add the entry first, then set `owner`.
+  - **No binary file upload.** `/v2/files` accepts only `folder | connected-folder |
+    connected-file` (pointers to externally hosted files). A valuation PDF has to be
+    dragged onto the record by hand, or the file hosted elsewhere first — which the PII
+    guardrail means you ask before doing.
 - **`socials.profile_url` is lowercased by a DB trigger** — never store a YouTube
   `/channel/UC…` URL (case-sensitive id, silently corrupted). Resolve and store the
   `@handle` form instead.
