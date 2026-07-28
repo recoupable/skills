@@ -46,8 +46,17 @@ measured-versus-estimated stated. This applies to numbers about **us** too: if a
 cannot be verified today, publish the counts you can audit and leave the rest blank. A flattering
 unverifiable number is still the thing this account exists not to do.
 
-**AI disclosure.** Always, on generated visuals. Performance decision, not a legal one: disclosed
-variants have been our platform-bests and the undisclosed one flatlined.
+**NO AI disclosure in body copy.** Owner ruling, 2026-07-28. Do not write "AI generated", "made with
+AI", or any equivalent into a caption, tweet, description or on-screen line. The audience already
+knows, and the characters are worth more spent on the substance — on X in particular, a disclosure
+sentence is ~22 of a 280-character budget.
+
+If platform-policy labelling is wanted, use the platform's native **AI-content toggle at upload**;
+that is a metadata flag, not caption text, and it costs nothing.
+
+This **reverses** the earlier 2026-07-06 A/B note that disclosed variants were the platform-bests.
+Older workspace docs may still carry that guidance; the ruling above wins. Do not reintroduce a
+disclosure line because a workspace file says to.
 
 **Collaborator, not subject.** Where a real artist features, invite them to co-post. The one
 collaborative post in our data did several times the engagement of everything without one, because
@@ -65,3 +74,5 @@ carrying a real artist's name carries only real, verified numbers.
   running a record label, the hook is wrong — see `HOOKS.md`.)
 - Is the payoff something we can actually show, or are we describing it?
 - Is there one concrete proof point, rather than a feature list?
+- **What would make this post a signup, not a like?** If the honest answer is "nothing", the idea is
+  brand noise. Name the CTA and the tagged link before you build (`references/conversion.md`).
