@@ -9,6 +9,11 @@ Write social posts that earn engagement, then prove what worked with real number
 
 Authenticate to the Recoup API with an `x-api-key` (`RECOUP_API_KEY`) or `Authorization: Bearer` (`RECOUP_ACCESS_TOKEN`) header. Never hardcode credentials.
 
+> **Doing a whole day of marketing, not just a post?** Start with **`recoup-internal-marketing`** —
+> it owns reading the account workspace (narrative canon, hook doctrine, video styles), scraping the
+> account's socials, picking the day's topic, and building the asset, then hands off to this skill for
+> publish and measurement. This skill remains the owner of copy, CTA, publishing and the re-pull.
+
 ## The loop
 
 1. **Learn** — pull how recent posts performed, so copy is grounded in evidence, not vibes.
