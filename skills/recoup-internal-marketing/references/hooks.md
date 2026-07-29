@@ -50,12 +50,31 @@ When a piece contains a real before/after, **open on the hard cut between them i
 two words of text per frame, no voiceover, no logo. Pattern interrupt, contrarian claim and payoff
 promise in one gesture, and it survives sound-off. First shipped 2026-07-28.
 
+## The cold-feed premise test
+
+**The video itself must state its premise in its first beats — in VO or on-screen text — never by
+relying on the caption.** Feeds autoplay; on IG and Shorts the viewer meets the film *before* any
+caption. A cut whose story only works if the viewer arrived pre-briefed has no story for most of its
+audience.
+
+Learned 2026-07-29: a wordless narrative cut (built to the "story you'd watch for free" doctrine)
+failed owner review as "too subtle — the story gets lost." The wordless design had silently delegated
+its premise to the caption. The fix that kept both doctrines: **a sparse character inner-monologue**
+(~20–30% speech, front-loaded, silent through the film's held beat) stating the premise as the hook
+line. Two corollaries:
+
+- **First-person inner voice beats a narrator for story pieces.** The character stays the
+  protagonist; a narrator turns the film into our ad. It also pairs perfectly with i2v footage
+  generated with no lip movement — fatal for on-camera dialogue, ideal for thought.
+- Adding any VO **obligates burned captions on every line** (the sound-off constraint above).
+
 ## Checklist before rendering
 
 - [ ] Does the **first frame** stop a stranger with no sound and no context?
 - [ ] **No logo and no fade** before ~5s?
 - [ ] Spoken hook lands in **3s, 10–14 words**?
 - [ ] Which **archetype** is it? (Cannot name one → rewrite.)
+- [ ] **Cold-feed premise test:** does the video state its own premise (VO or on-screen) without the caption?
 - [ ] **Captions burned in** on every line?
 - [ ] Every beat **≤6.5s**?
 - [ ] Runtime **≤40s** unless there is a stated reason?
