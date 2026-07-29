@@ -264,7 +264,30 @@ ORDER BY ae.email NULLS LAST, sa.title;
      (re-engage + stop the token drain).
 4. **Act:** write the follow-ups into Attio (create/advance entries, set `owner` +
    next step) and draft each outreach. Present the ranked list + drafts to the
-   operator to send.
+   operator to send. Before drafting for any selected contact, build their
+   four-source dossier (next section).
+
+## The contact dossier — before any outreach is drafted
+
+The moment the operator selects a specific contact (from the ranked list or on
+their own), research that person into one concise four-row table and present it
+alongside the draft. It is the pre-flight that catches "already paying",
+"payment-blocked, not disinterested", "this IS the artist", and "we emailed
+them yesterday". Build it fresh even if a sweep pull already touched the
+account — the fleet aggregates hide the per-person timeline.
+
+| Source | What goes in the row | The lookup that works |
+| --- | --- | --- |
+| **Privy** | first + last login events | `POST https://auth.privy.io/api/v1/users/email/address` with `{"address": "<email>"}` (basic auth `PRIVY_APP_ID:PRIVY_PROJECT_SECRET` + `privy-app-id` header) → `created_at` and each linked account's `first_verified_at` / `latest_verified_at`. One call — no need to re-run the pagination script for one person. |
+| **Stripe** | customer / card / subscription status | Find the customer by `metadata.accountId` (email search misses — see Tooling gotchas), then `GET /v1/customers/{id}/payment_methods` and `GET /v1/subscriptions?customer=…&status=all`. A customer with 0 payment methods and 0 subscriptions = they reached checkout and never paid — blocked, not disinterested. |
+| **Supabase** | credits_usage, sessions, chats | All by `account_id` — except `chats`, which has **no `account_id` column**: join `sessions.account_id → chats.session_id`, then count `chat_messages` rows with `role='user'` per chat. Report typed chats separately from empty `"New chat"` rows — an untyped open is still a signal (they visited and bounced). Balance via SQL only, never the credits GET (see Credits mechanics). |
+| **Resend** | outbound emails we've sent them | `email_send_log` by `account_id` (there are no `to_email`/`subject` columns; the subject is inside `raw_body`) → cross-ref each `resend_id` against the Resend API for subject + delivery status. Zero rows = we have never emailed this person from the product. |
+
+Read the table before writing a word of outreach: the first/last-login pair
+sets the "returning vs. new" frame, the Stripe row sets the ask (rescue vs.
+upgrade vs. retention), the chats row tells you what they actually tried to do
+in their own words (titles are admin-readable), and the Resend row is what
+"we" have already said to them.
 
 ## Guardrails
 
