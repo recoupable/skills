@@ -18,14 +18,14 @@ description: >-
 
 # Recoup Sales Sweep
 
-The repeatable **prospecting + follow-up** motion for Recoup staff. Seven data
+The repeatable **prospecting + follow-up** motion for Recoup staff. Eight data
 pulls plus one synthesis: read every place a sales signal shows up, collapse it
 into one ranked list of people to follow up with, then act — enrich/advance the
 Attio pipeline and draft the outreach. First drafted 2026-07-23; refine the
 steps below against each real run.
 
 Define the window up front as UTC `[FROM, TO)` — usually **since the last sweep**
-(default last 24h). Run the seven pulls in parallel (subagents work well; each is
+(default last 24h). Run the eight pulls in parallel (subagents work well; each is
 self-contained), then synthesize.
 
 ## What this is (and what it is not)
@@ -89,19 +89,19 @@ debugging a sudden 401.
 **Drop to SQL only for the fleet-wide sweep** — the cross-account aggregates that
 have no endpoint: per-account credit burn, negative balances, went-silent accounts,
 zombie tasks, valuation runs in a window, chat-title themes. That is most of the
-seven pulls, and SQL is genuinely the right tool there. The rule is about
+eight pulls, and SQL is genuinely the right tool there. The rule is about
 *account-scoped* reads, not about banning SQL.
 
 **When the two disagree, the API is the customer's truth** — it is what the product
 actually serves them. A DB row the API doesn't surface is not something the customer
 can see.
 
-## The seven pulls
+## The eight pulls
 
 Each pull is: **what to read → the sales signal → the action**. Always drop test
 rows (`sweetmantech*`, `sidney@`, `@example.com`, `[TEST]`, `preview-auth-probe`).
 
-These seven are the *fleet-wide* layer, so most of them are legitimately SQL (or
+These eight are the *fleet-wide* layer, so most of them are legitimately SQL (or
 Stripe/Privy/Attio). The API-first rule bites at the **next** step: the moment the
 ranked list names a person, every drill-down on that account — their tasks, artists,
 socials, scrape freshness — goes through `api.recoupable.dev`, not another SELECT.
@@ -249,10 +249,22 @@ ORDER BY ae.email NULLS LAST, sa.title;
 - **Action:** note the usage themes; follow up with high-intent interactive users;
   feed recurring friction back to product.
 
+### 8. Outbound email — what we have already said to them
+
+- **Read:** the Resend sent log (paginates well past a 14-day window) plus
+  `email_send_log`, with per-message delivery status.
+- **Signal:** a lead with **zero human outreach ever** (only product email) → an
+  untouched first-contact opportunity. **Bounces on a task email** → a customer's
+  own report silently failing (fix before anyone sells them anything).
+  **Duplicate sends of the same report** → a runner bug hitting a real inbox — an
+  owned-and-fixed apology is the warmest opener there is.
+- **Action:** never-contacted feeds the ranked list; bounces and duplicates become
+  fix-then-tell hooks (see The send loop).
+
 ## Synthesis — one ranked follow-up list
 
 1. **Collapse to people.** Key every signal by account/email and merge across the
-   seven pulls — one person, all their signals, deduped.
+   eight pulls — one person, all their signals, deduped.
 2. **Rank by opportunity × urgency.** Roughly: failed payment / churn-in-progress
    (save today) > new paid customer (welcome now) > warm valuation or enterprise
    lead (work this week) > expansion / testimonial > zombie-task cleanup.
@@ -298,6 +310,43 @@ actually *done* with Recoup, in their own timeline:
 | **Tasks** | Every task: title, artist, cadence, model, enabled, last run + status, next runs, does it email — and does the sent email match the intention the customer typed when they created it? | `GET /api/tasks?account_id=` only (model / `upcoming` / `recent_runs` / `owner_email` don't exist on `scheduled_actions`). For intention-vs-output: compare the `email_send_log.raw_body` headline against the chat/task title that spawned it. A run that says COMPLETED with **no matching `email_send_log` row** delivered nothing — the customer thinks the task ran; it silently didn't reach them. |
 | **Artists** | Roster: each artist + every connected social (platform, handle/URL, followers, scrape freshness). | `GET /api/artists?account_id=` — socials embedded as `account_socials`; the social's `updated_at` is the scrape date. A one-platform roster (e.g. Spotify only) is itself an outreach hook: nothing else is connected. |
 | **Valuation / catalog** | Run count + dates, claimed vs unclaimed, the value on file, what's in the catalog (songs / albums / total streams), and the crown jewels (top songs by plays). | `playcount_snapshots` by `account` (the column is `account`, not `account_id`) → `song_measurements.snapshot = ps.id`, join `songs ON songs.isrc = song_measurements.song`; `value` is the play count. The dollar value is **not** in the DB (never persisted) — read it off the Attio auto-note or the valuation email. Repeat runs of the same catalog in one sitting = they're trying to answer a question; find out which one. |
+
+## The send loop — dossier to closed-out record
+
+The per-contact motion that converts. Run it identically for every send;
+the 2026-07-29 run repeated it seven for seven with same-day replies from
+cold contacts.
+
+1. **Fix, then tell.** The dossier almost always surfaces account defects —
+   duplicate artists or tasks, unconnected socials, blocked balances, schedules
+   that won't deliver. Repair the unambiguous ones via the API *before*
+   drafting, and open the email with what you did ("While looking at your
+   account I fixed two things you shouldn't have had to deal with"). The
+   specific observed detail is what makes outreach read personal; a fix already
+   delivered is what makes it worth answering.
+2. **Draft in the house voice.** Open with the concrete observation, never
+   meta-framing ("a quick note from a human" reads as automation). Offers are
+   things *we* will do, not commands to the reader ("I'll send you the link
+   next week, or now if you ask" beats "reply GO"). One plain close: "Let me
+   know how I can help." Valuation numbers always carry their caveats.
+3. **The operator sends; diff what actually went out.** Read the sent copy
+   (from the CRM email sync) against your draft. Any commitment the operator
+   added or changed becomes the follow-up task's content — the record must
+   match the inbox, not the draft.
+4. **Close out every send the same way:** complete the open task the send
+   fulfilled; write a sent-log note stating what was promised **and the reply
+   playbook** (what to do for each likely reply); do the keep-a-lead-warm trio,
+   writing the dated follow-up task as a **runbook** — exact ids, API calls,
+   decision rules — executable by a cold reader; set the stage to what the
+   email actually did (a Pro pitch → Pro Offer Sent; delivering the number →
+   Report Delivered; a retention touch → no stage change).
+5. **On reply, run the playbook same-day.** Log the reply; if the sender is
+   not who the record says, correct the identity immediately (rename, split
+   the people, fix future greetings); pay for substantive product feedback on
+   the spot (grant, verify the balance landed, say so in the reply);
+   reproduce any reported bug in a live browser the same day and file it with
+   evidence; and replace any task the reply mooted — a no-touch rule dies the
+   moment they engage.
 
 ## Guardrails
 
