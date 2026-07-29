@@ -51,6 +51,15 @@ curl -sS "https://api.recoupable.dev/api/apify/runs/<RUN_ID>" \
   comments by hand. Reactions are available via `LINKEDIN_LIST_REACTIONS`.
 - **Custom Shorts thumbnails** show on the watch page and channel but the Shorts feed may still show
   a video frame. Do not conclude the thumbnail failed.
+- **The YouTube scrape is noisy and returns other channels' videos.** For a clean per-video audit
+  (views, likes, `status.privacyStatus`, `status.embeddable`, publish timestamps) use the connector's
+  `YOUTUBE_GET_VIDEO_DETAILS_BATCH` with a comma-joined id list — one call covers the whole posting
+  history and is the right tool for timestamping a distribution change.
+- **Verify the linked scrape profiles actually resolve to OUR channels.** On 2026-07-29 the official
+  account's linked `youtube.com/@<handle>` turned out to be a **stranger's dormant channel** (the
+  handle was squatted; scrape returned `NO_VIDEOS` and someone else's channel metadata). A profile
+  URL that was never validated measures someone else — check the returned channel name/avatar the
+  first time a profile is scraped, and after any profile edit.
 
 ## What to produce from it
 
@@ -60,11 +69,21 @@ curl -sS "https://api.recoupable.dev/api/apify/runs/<RUN_ID>" \
    That list is today's copy brief.
 3. **Report week-over-week deltas, not all-time totals.** Customers and owners both read deltas;
    all-time totals hide a decline.
-4. **Escalate structural collapses.** If a platform's numbers drop an order of magnitude (e.g. Shorts
-   views falling from the hundreds to single digits), that is a distribution problem and it outranks
-   whatever today's post was going to be. Say so before building.
-5. **Rank by conversion where it is known, engagement where it is not.** Attributed visits and
+4. **Escalate structural collapses — but diagnose against a like-for-like baseline first.** A
+   collapse claim must compare the same *kind* of content on the same channel. The 2026-07-28
+   "Shorts collapsed from 129–397 to 7–10" claim conflated a different content genre's outliers with
+   the canon baseline: canon posts had **always** done 24–56 views, so the real trough was two videos
+   deep and had already recovered by the time it was investigated (the newest post's first-24h views
+   beat the canon lifetime median). Before stopping a run: pull per-video stats for the whole
+   history, split by content type, and check whether the *newest* post is distributing. A real
+   collapse stops the run; a mis-baselined one wastes a day.
+5. **Audience–content fit is a distribution ceiling no asset quality fixes.** Same channel, same
+   period: content matching the channel's existing audience did 37–397 views; content aimed at a
+   different audience capped around ~30. Platforms test new posts on the channel's current audience
+   first — if the account's audience does not match the content's intended audience, flag it as a
+   structural decision for the owner (e.g. start a dedicated channel) rather than iterating hooks.
+6. **Rank by conversion where it is known, engagement where it is not.** Attributed visits and
    signups outrank likes; where the two disagree, conversion wins (`references/conversion.md`). Be
    explicit about which posts are unattributable rather than reporting their zero as a measurement.
-6. **Feed it back.** Update the Performance column in `posts-log.md` for anything at its ~48h mark
+7. **Feed it back.** Update the Performance column in `posts-log.md` for anything at its ~48h mark
    while you are here.

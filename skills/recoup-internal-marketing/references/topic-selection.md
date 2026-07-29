@@ -46,6 +46,16 @@ measured-versus-estimated stated. This applies to numbers about **us** too: if a
 cannot be verified today, publish the counts you can audit and leave the rest blank. A flattering
 unverifiable number is still the thing this account exists not to do.
 
+*Verifying a generation-cost claim without a billing dashboard* (worked 2026-07-29, after the
+docs-page route 429'd): read **live official unit prices** from fal's pricing API —
+`GET https://api.fal.ai/v1/models/pricing?endpoint_id=<endpoint>` with the normal inference key
+(returns e.g. `$0.08/image`, `$0.01/second`) — and multiply by the **audited unit counts** on disk.
+For ElevenLabs, `GET /v1/usage/character-stats?start_unix=&end_unix=` gives the day's credits and
+`GET /v1/user/subscription` shows overage ($0 overage ⇒ $0 incremental on a flat plan; report the
+pro-rata plan value alongside). **Disclose computed-vs-billed:** this method is official-price ×
+audited-count, not billed line items — fal's usage/billing platform API needs an **admin-scoped**
+key (the inference `FAL_KEY` gets `authorization_error`), so name the basis when publishing.
+
 **NO AI disclosure in body copy.** Owner ruling, 2026-07-28. Do not write "AI generated", "made with
 AI", or any equivalent into a caption, tweet, description or on-screen line. The audience already
 knows, and the characters are worth more spent on the substance — on X in particular, a disclosure

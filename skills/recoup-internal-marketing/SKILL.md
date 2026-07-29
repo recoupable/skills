@@ -39,7 +39,7 @@ The account workspace holds the durable marketing knowledge. Read in this order:
 | 4 | `VIDEO-STYLES.md` | The style catalog, each pointing at a cloneable reference project. |
 | 5 | `posts-log.md` (tail) | What has already shipped, with performance and the arc each post served. |
 | 6 | `POSTING-PLAYBOOK.md`, `LINKEDIN.md` | Per-platform mechanics and gotchas. Read before publishing, not after. |
-| 7 | `cast/<character>/` | Face guide + **consent status** for any recurring character you plan to use. |
+| 7 | `cast/<character>/` | Face guide, **canonical voice**, + **consent status** for any recurring character you plan to use. |
 
 Also read the production pipeline doc (`HEYGEN-HOWTO.md` or equivalent) before generating audio.
 
@@ -105,16 +105,26 @@ Gate the pick on all of these before building — details in `references/topic-s
 
 1. **Clear the `HOOKS.md` checklist before writing the scene table.** Hook first, not last. Name
    which archetype the hook is (specific number, contrarian claim, list tease); if you cannot name
-   one, rewrite it. Never open by qualifying the audience.
+   one, rewrite it. Never open by qualifying the audience. **Cold-feed premise test:** the video
+   itself must state its premise in its first beats (VO or on-screen text) — feeds autoplay, so a
+   cut that relies on the caption for its story has no story for most viewers
+   (`references/hooks.md`).
 2. **Pick a style from `VIDEO-STYLES.md` and clone its reference project's `video/` dir.** Do not
    start from scratch. Route to the matching format skill where one exists (see
    `references/video-formats.md`); a format with no skill yet is built from its reference project.
-3. **Write the plan doc first** (`SCRIPT.md` / `scene-plan.md`) with the arc named at the top, and
+3. **A recurring character who speaks gets a canonical voice, chosen once.** Like the face guide:
+   run a small bake-off (3–4 candidate voices × the film's actual first lines, one preview file per
+   voice, owner picks), record the winner — name, voice id, pick date — in `cast/<character>/`, and
+   reuse it in every future piece. For story pieces prefer the character's **first-person inner
+   voice** over a narrator: the character stays the protagonist, and it pairs with no-lip-movement
+   footage. Per-line generation, measure-then-linear-gain (step 6 below). First set: Gatsby Grace →
+   ElevenLabs "Jessa", 2026-07-29.
+4. **Write the plan doc first** (`SCRIPT.md` / `scene-plan.md`) with the arc named at the top, and
    get it reviewed **before** spending generation credits.
-4. **QC at every gate.** Verify generated stills for likeness and prop continuity; verify clips
+5. **QC at every gate.** Verify generated stills for likeness and prop continuity; verify clips
    first/mid/last frame before compositing; lint and inspect the composition; then **read frames out
    of the finished render** — a render returning the right duration is not evidence it looks right.
-5. **Measure audio, do not blindly normalize.** House rule: measure first, prefer linear gain, and
+6. **Measure audio, do not blindly normalize.** House rule: measure first, prefer linear gain, and
    reserve dynamic normalization for genuinely quiet sources.
 
 ## Step 5 — Publish
