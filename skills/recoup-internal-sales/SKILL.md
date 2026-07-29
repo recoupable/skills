@@ -289,6 +289,16 @@ upgrade vs. retention), the chats row tells you what they actually tried to do
 in their own words (titles are admin-readable), and the Resend row is what
 "we" have already said to them.
 
+Then extend the dossier with four product-side tables — what the contact has
+actually *done* with Recoup, in their own timeline:
+
+| Table | What goes in it | The lookup that works |
+| --- | --- | --- |
+| **Lifetime activity** | Key dated events from signup to now, weighted to recent: first login, each typed chat (title verbatim), tasks created, valuation runs, checkout attempts, emails delivered or missed, last event. | Merge the four source rows chronologically. A 10–15 row timeline reads faster than any aggregate and is where the story ("built the report Thursday, hit the paywall Monday") becomes visible. |
+| **Tasks** | Every task: title, artist, cadence, model, enabled, last run + status, next runs, does it email — and does the sent email match the intention the customer typed when they created it? | `GET /api/tasks?account_id=` only (model / `upcoming` / `recent_runs` / `owner_email` don't exist on `scheduled_actions`). For intention-vs-output: compare the `email_send_log.raw_body` headline against the chat/task title that spawned it. A run that says COMPLETED with **no matching `email_send_log` row** delivered nothing — the customer thinks the task ran; it silently didn't reach them. |
+| **Artists** | Roster: each artist + every connected social (platform, handle/URL, followers, scrape freshness). | `GET /api/artists?account_id=` — socials embedded as `account_socials`; the social's `updated_at` is the scrape date. A one-platform roster (e.g. Spotify only) is itself an outreach hook: nothing else is connected. |
+| **Valuation / catalog** | Run count + dates, claimed vs unclaimed, the value on file, what's in the catalog (songs / albums / total streams), and the crown jewels (top songs by plays). | `playcount_snapshots` by `account` (the column is `account`, not `account_id`) → `song_measurements.snapshot = ps.id`, join `songs ON songs.isrc = song_measurements.song`; `value` is the play count. The dollar value is **not** in the DB (never persisted) — read it off the Attio auto-note or the valuation email. Repeat runs of the same catalog in one sitting = they're trying to answer a question; find out which one. |
+
 ## Guardrails
 
 - **Read-only except two sanctioned writes:** enriching/advancing Attio, and
