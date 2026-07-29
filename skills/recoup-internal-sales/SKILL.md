@@ -403,6 +403,12 @@ untouched because none of the three existed.
   days-in-stage for non-responder detection, location writes require *every*
   sub-field, task `content` is immutable (close and recreate), and creating an
   attribute needs a `config` key.
+  - **Enrichment fields are guesses, not facts.** On auto-captured records the
+    `name`, `description`, and `linkedin` values are often Attio *system enrichment*
+    (data-broker match on the email, `created_by_actor.type = "system"`, stamped seconds
+    after creation) — seen internally inconsistent on a real lead (name "Benita" with a
+    LinkedIn slug `ben-hanchett` and an unrelated bio). Check provenance before using a
+    name in outreach; prefer an identity the person chose (artist name, chat sign-off).
   - **Judge prior contact by `last_interaction` / `first_interaction`, never by note
     count.** A record with zero notes can still have years of email history; email sync
     populates the interaction fields, not notes. Calling such a lead "never contacted" in
