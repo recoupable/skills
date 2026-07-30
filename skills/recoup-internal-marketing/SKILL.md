@@ -1,6 +1,6 @@
 ---
 name: recoup-internal-marketing
-description: 'INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal do today''s marketing"). Never use for customer-facing or artist requests. The daily marketing run for one of our own social accounts, in order: read the account workspace (narrative canon, hook doctrine, video styles, post ledger), scrape the account''s own socials to learn what is working and what flopped, pick today''s topic (continue an arc, pull a logged idea, or draft a new one), then build the asset and hand off. Use when the user says "do today''s marketing", "today''s content run", "make today''s video", "our hooks are weak", or asks what to post today for one of OUR OWN accounts. Runs the whole day end to end. **Not for a single post''s copy** — drafting/publishing/measuring one LinkedIn or X post is recoup-internal-social-ship-posts, which this skill calls at step 5. Orchestrates: routes video production to the format skills and publish/measure to recoup-internal-social-ship-posts.'
+description: 'INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal do today''s marketing"). Never use for customer-facing or artist requests. The daily marketing run for one of our own social accounts, in order: read the account workspace (narrative canon, hook doctrine, video styles, post ledger), scrape the account''s own socials to learn what is working and what flopped, pick today''s topic (continue an arc, pull a logged idea, or draft a new one), then build the asset and hand off. Use when the user says "do today''s marketing", "today''s content run", "make today''s video", "our hooks are weak", or asks what to post today for one of OUR OWN accounts. Runs the whole day end to end. Its stated goal: convert a free content viewer into a paying Recoup subscriber — and know which post did it; so the run opens on the funnel numbers and refuses to ship into a destination that cannot convert. **Not for a single post''s copy** — drafting/publishing/measuring one LinkedIn or X post is recoup-internal-social-ship-posts, which this skill calls at step 5. Orchestrates: routes video production to the format skills and publish/measure to recoup-internal-social-ship-posts.'
 ---
 
 # Recoup Internal — Marketing (the daily run)
@@ -9,11 +9,33 @@ The loop for a day of marketing on one of **our own** accounts. This skill is th
 it owns deciding *what* to make and proving it is grounded in evidence. It delegates production to
 the video-format skills and publishing to `recoup-internal-social-ship-posts`.
 
-> **The goal is signups, not engagement.** Engagement is the leading indicator; a signup at
-> `recoupable.dev` is the result. Every post carries a **tagged CTA link** so a visit can be
-> attributed back to the post that caused it, and **step 6 closes the loop by reading conversions,
-> not just likes.** A run that produced a well-liked post and zero attributable visits did not
-> succeed — it just felt like it did.
+## The goal — read this before anything else
+
+> **Convert a free content viewer into a paying Recoup subscriber — and know which post did it.**
+
+That sentence is the job. Everything below serves it, and any step that stops serving it should be
+changed rather than performed.
+
+What follows from it, in order of how often it gets forgotten:
+
+1. **Likes, views and followers are leading indicators, not the result.** A run that produced a
+   well-liked post and zero attributable signups did not succeed — it just felt like it did.
+2. **A post is one half of a conversion; the destination is the other.** A brilliant asset pointed
+   at a page that cannot convert is a wasted asset *and* a burned first-time visitor. You own the
+   whole path from the first frame to the subscription, not just the frame.
+3. **If the result cannot be measured, say so out loud** — every run, in writing. An unmeasured
+   conversion is not a zero, and reporting engagement in its place is how a broken funnel stays
+   invisible for weeks.
+4. **You are allowed to not post.** If the evidence says the bottleneck is downstream — a dead
+   destination, a broken signup path — the highest-value marketing act that day is to say so and get
+   it fixed. Shipping a post into a funnel that converts nobody is activity, not progress.
+
+**Why this is written so bluntly:** on 2026-07-30 a full day went into hooks, frame QC and source
+attribution for a four-platform slate, while `/pricing` — the #2 marketing page, 79 visitors in 30
+days — had produced **zero trials since 2026-06-06**, and a live outreach customer's valuation
+dead-ended on prod ([chat#1902](https://github.com/recoupable/chat/issues/1902),
+[chat#1912](https://github.com/recoupable/chat/issues/1912)). Nothing in this skill would have
+surfaced either fact. Steps 2 and 5 now do.
 
 **Do the steps in order.** Each one exists because skipping it has cost us something specific, noted
 inline. Step 2 is the one most often skipped and the most expensive to skip.
@@ -46,6 +68,24 @@ Also read the production pipeline doc (`HEYGEN-HOWTO.md` or equivalent) before g
 **Output of this step:** name the **arc** and the **character** today's post serves. A post that
 serves no arc is an ad; reframe it or drop it. If the workspace has no `NARRATIVE.md`, say so to the
 account owner rather than inventing a story.
+
+## Step 2a — Read the funnel BEFORE the feed
+
+**Open every run with one number: trials/subscriptions started since the last run.** It is the only
+number that says whether the marketing is working. Pull it from `recoup-internal-sales` /
+`recoup-internal-funnel-valuation-pipeline` (Privy signups, Stripe trials and cards, credits, Attio
+stage) — not from the social scrape, which cannot see it.
+
+Then state, in one line each:
+
+- **trials/subscriptions since the last run** — the result;
+- **whether the destination for today's likely CTA converts at all** — see the gate in step 5;
+- **whether conversion is currently readable** — if `utm_campaign` capture is not live, every
+  "tagged" link is *tagged but unreadable*, and today's post will not be attributable. Write that
+  down rather than discovering it at the re-pull.
+
+If trials have been flat at zero across several runs, **that is the finding**, and it outranks
+today's post. Say so, and see the funnel guardrail below.
 
 ## Step 2 — Scrape the account's own socials
 
@@ -89,6 +129,14 @@ Three legitimate sources, in preference order:
 Gate the pick on all of these before building — details in `references/topic-selection.md`:
 
 - **Arc + character named.**
+- **Destination named.** Say where a convinced viewer goes *before* you build, and make sure it
+  continues this post's promise. If the honest answer is "the homepage," the idea is not yet a
+  conversion post — either find the page that pays off its promise, or accept and state that this is
+  a trust/awareness beat, not a conversion one. Both are legitimate; conflating them is not.
+- **Collaborator named, or explicitly none.** Featuring the artist as a **collaborator** and
+  inviting them to co-post is the largest measured lever we have: the 2026-07-22 collab reel took
+  **45 likes against 1–3** for every non-collab reel in the weeks after. Ask every run: who is the
+  collaborator, and have they been invited? "None" is an allowed answer that costs reach.
 - **Consent.** Internal roster artists need no per-piece permission. External artists need explicit
   likeness consent, and their real numbers are a *separate* gate. Check `cast/<character>/`.
 - **Numbers.** Any figure attributed to a real artist must be measured and verified, with
@@ -132,6 +180,17 @@ Gate the pick on all of these before building — details in `references/topic-s
 **Run the pre-publish gate first, then publish, then verify.** Full checklists and the per-platform
 traps: `references/publish-verify.md`. The gate is short and it has already caught a live defect
 (a literal `<YT link>` placeholder about to ship inside a YouTube description, 2026-07-28).
+
+**Load the destination before you publish, and declare whether conversion is readable.** Two lines
+in the gate, both cheap, both catching failures nothing else catches:
+
+- **Open the CTA URL today.** Confirm it returns 200 *and* that what loads pays off the post's
+  promise. A 200 from a page that cannot convert is not a pass — on 2026-07-30 every CTA in a
+  four-platform slate resolved fine and pointed at a homepage that had produced zero trials in
+  eight weeks.
+- **Declare attribution: readable or not.** If `utm_campaign` capture is not live, write
+  "conversion unreadable for this slate" into `posts-log.md` **at publish time**, not at the
+  re-pull. A tag that nothing records is not measurement, and calling it one hides the gap.
 
 **The CTA is a direct tagged link, not a comment-gate.** Ruling from our own results: comment-gates
 were tried twice and produced **zero** gated comments and zero leads both times. `ship-posts` still
@@ -188,6 +247,14 @@ a bare `recoupable.dev` or "link in bio" with no tag.
   first. Asset quality is not the bottleneck when distribution is broken, and shipping into it wastes
   the asset *and* hides the real problem. (On 2026-07-28 this was flagged twice and built past twice:
   YouTube Shorts had fallen from 129-397 views to 7-10 and the day's post shipped into it anyway.)
+- **A BROKEN FUNNEL STOPS THE RUN — same rule as a distribution collapse, one layer down.** If the
+  destination is dead-ending or trials have been flat at zero, do not build an asset and hope.
+  Report it and get a decision. The failure mode is worse than the distribution one: a broken
+  destination burns *first-time* visitors, who do not come back, and it hides behind healthy
+  engagement numbers indefinitely. (2026-07-30: `/pricing` was the #2 marketing page with zero
+  trials since 06-06, and a funded outreach customer's valuation dead-ended on prod. A full slate
+  shipped into it that day.) **The highest-value marketing act on such a day is to fix the path, not
+  to post.**
 - **A build that yields two assets queues the second one.** Do not orphan it. Name it as tomorrow's
   episode in `posts-log.md` or `NARRATIVE.md` so the next run finds it instead of starting cold.
 
