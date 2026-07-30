@@ -53,6 +53,9 @@
 {"intent": "clean and normalize this messy royalty data room", "expected": "recoup-catalog-review-deal"}
 {"intent": "write the IC memo and export a shareable pdf", "expected": "recoup-catalog-review-deal"}
 {"intent": "estimate this catalog's value from public streaming data, no seller files", "expected": "recoup-catalog-estimate-value", "not": ["recoup-research-the-web"]}
+{"intent": "how much did this artist earn from their NFT sales", "expected": "recoup-nft-valuation", "not": ["recoup-catalog-estimate-value"]}
+{"intent": "value this artist's catalog, she sold music NFTs on zora", "expected": "recoup-nft-valuation", "not": ["recoup-catalog-estimate-value", "recoup-catalog-review-deal"]}
+{"intent": "measure her onchain earnings and fold them into the valuation", "expected": "recoup-nft-valuation"}
 
 # --- internal (Recoup staff only; gated by the recoup-internal keyword) ---
 {"intent": "recoup-internal write a tracking issue for the auth migration", "expected": "recoup-internal-dev-issue-tracker"}
