@@ -1,7 +1,40 @@
 # Step 6 — Conversion: tagged CTA links and reading the result
 
-The goal of a post is a signup. This page is how a post becomes attributable, and what to read at the
-re-pull.
+The goal of a post is a **paying subscriber**, and knowing which post caused them. This page is how a
+post becomes attributable, and what to read at the re-pull.
+
+## Open every run with the funnel numbers (step 2a)
+
+The social scrape cannot see the result. Before reading a single like, pull from
+`recoup-internal-sales` / `recoup-internal-funnel-valuation-pipeline`:
+
+| Read | Why it comes first |
+|---|---|
+| **trials / subscriptions started since the last run** | the actual result; everything else is a leading indicator |
+| **signups (Privy) and cards (Stripe)** | separates "interest" from "paid" |
+| **is the likely destination converting at all** | if it converts nobody, a better asset changes nothing |
+
+**Known state 2026-07-30, re-verify rather than assume:** `/pricing` is the #2 marketing page (79
+visitors in the 30 days to 07-29) and the last real trial signup and last new card were both
+**2026-06-06** — pricing traffic producing zero trials
+([chat#1902](https://github.com/recoupable/chat/issues/1902)). The post-signup path has reproduced
+defects too: a funded outreach customer ran a valuation, saw nothing, re-ran the whole flow, hit a
+second bug via a referral, and gave up on the UI
+([chat#1912](https://github.com/recoupable/chat/issues/1912)).
+
+While that is true, **more traffic is not the constraint** and the funnel guardrail in `SKILL.md`
+applies: report it, get a decision, and prefer fixing the path over shipping into it.
+
+## The destination is half the conversion
+
+A post and its landing page are one artifact. Judge them together:
+
+- **Continuity.** The page should visibly continue the post's promise. A post about a decade of one
+  artist's catalog should not land on a generic homepage — the viewer arrives mid-thought and has to
+  restart.
+- **A single next action.** If the page offers four things, the post converted nobody in particular.
+- **Proof that it works today.** Load it on the day you publish. "It worked last week" is not a
+  check.
 
 > **Status 2026-07-28: the capture chain is NOT built yet.** Tracked as **row 29** of
 > [chat#1889](https://github.com/recoupable/chat/issues/1889). Until it ships, **tag the links anyway**

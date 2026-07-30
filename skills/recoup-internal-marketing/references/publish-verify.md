@@ -15,6 +15,14 @@ already caught a live defect.
 - [ ] **Every link resolves.** A link to an asset that is not published yet is a placeholder wearing a
       URL.
 - [ ] **CTA link is tagged** (`references/conversion.md`).
+- [ ] **The destination was opened today, and it pays off this post's promise.** Not "does it return
+      200" — *does the page a convinced viewer lands on continue the story the post told, and can it
+      actually convert?* A homepage that loads fine is still a dead end for a post about one artist's
+      catalog. On 2026-07-30 a four-platform slate shipped with every CTA resolving correctly to a
+      page that had produced **zero trials since 2026-06-06**.
+- [ ] **Attribution declared: readable or not.** If nothing records `utm_campaign` yet, write
+      "conversion unreadable for this slate" into `posts-log.md` now, at publish time. Deciding this
+      at the re-pull is how two consecutive runs reported engagement in place of conversion.
 - [ ] **X body is under 280 weighted**, computed with URLs counted as 23 characters each regardless of
       literal length. Compute it; do not eyeball it.
 - [ ] **Artist tagged with the correct per-platform handle** — they differ (`@gatsby.wtf` on IG vs
