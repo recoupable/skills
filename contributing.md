@@ -55,7 +55,13 @@ Run locally before pushing:
 python3 scripts/portability_lint.py
 python3 scripts/check_vendored.py
 python3 scripts/validate_manifests.py
+python3 scripts/check_resolvable.py    # every skill needs a route in RESOLVER.md
+python3 scripts/run_resolver_eval.py   # every skill needs a fixture in resolver-eval.jsonl
 ```
+
+All five run in CI. A new skill fails the last two until you add **a route in
+`RESOLVER.md`** and **at least one positive fixture in `resolver-eval.jsonl`** — a skill
+nobody can route to is dead weight.
 
 See the **Portable Skill Contract** in `AGENTS.md` for the full rules and rationale.
 
