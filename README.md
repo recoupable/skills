@@ -80,6 +80,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 |-------|-------------|
 | recoup-catalog-review-deal | Underwrite a deal end to end (data room → IC memo) |
 | recoup-catalog-estimate-value | Value a catalog from public data alone (no seller files) |
+| recoup-nft-valuation | Measure an artist's onchain NFT earnings & fold them into a valuation |
 
 ### platform — operate the system
 

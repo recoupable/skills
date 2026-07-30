@@ -57,6 +57,7 @@
 |---|---|
 | review/underwrite a catalog deal, clean a data room, value with files, dashboard, IC memo | `recoup-catalog-review-deal` |
 | value a catalog from public data only (no seller files) | `recoup-catalog-estimate-value` |
+| measure an artist's NFT/onchain earnings, value an artist who sold music NFTs | `recoup-nft-valuation` |
 
 ## Tier 2 — Platform (operate the system; not a label deliverable)
 | Intent | Skill |
@@ -99,7 +100,9 @@
   `recoup-research-playlist-targets`. A single song's playlist *pitch* from its audio
   → `recoup-song-placement-pitch`.
 - **Valuation fork.** With seller files → `recoup-catalog-review-deal`. From public
-  data only → `recoup-catalog-estimate-value`.
+  data only → `recoup-catalog-estimate-value`. If the artist sold music NFTs, add
+  `recoup-nft-valuation` — a streaming-only number understates them, often by an order
+  of magnitude.
 - **Briefs.** A recurring artist performance brief → `recoup-research-weekly-brief`.
   A pre-release creative brief → `recoup-release-plan-rollout` (brief mode).
 - **"Make something for a milestone."** The reactive post →
