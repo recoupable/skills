@@ -329,6 +329,18 @@ cold contacts.
    things *we* will do, not commands to the reader ("I'll send you the link
    next week, or now if you ask" beats "reply GO"). One plain close: "Let me
    know how I can help." Valuation numbers always carry their caveats.
+   **Every email carries at least one in-body link to a `recoupable.dev`
+   subdomain** — deep-linked to the exact thing you are asking for, never just
+   the signature's home-page link. A reply that never becomes a site visit
+   cannot convert, and with no in-body link every action routes back through a
+   human by default, which is how a warm lead stalls. Match the link to the ask:
+
+   | The ask | Link |
+   | --- | --- |
+   | Connect / fix streaming + social platforms | `https://chat.recoupable.dev/setup/socials` |
+   | Re-run or check a catalog valuation | `https://chat.recoupable.dev/catalogs` |
+   | Set up or edit a scheduled report | `https://chat.recoupable.dev/tasks` |
+   | Anything else / general return visit | `https://chat.recoupable.dev` |
 3. **The operator sends; diff what actually went out.** Read the sent copy
    (from the CRM email sync) against your draft. Any commitment the operator
    added or changed becomes the follow-up task's content — the record must
