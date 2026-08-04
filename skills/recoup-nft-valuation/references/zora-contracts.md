@@ -23,13 +23,64 @@ a wrong contract address produces a confident, wrong number.
 | Zora V1 Media (shared ERC-721, "Zora / ZORA") | `0xabEFBc9fD2F806065b4f3C237d4b59D9A97Bcac7` | VERIFIED — Etherscan token page, 2026-07-30 |
 | Zora V1 Market | `0xE5BFAB544ecA83849c53464F85B7164375Bdaac1` | VERIFIED — Etherscan address page, 2026-07-30 |
 | ProtocolRewards (escrow singleton, v1.1) | `0x7777777F279eba3d3Ad8F4E708545291A6fDBA8B` | VERIFIED — ourzora/protocol-rewards + Zora docs, 2026-07-30. Deterministically deployed at the **same address on every network**. |
-| Zora Auction House (reserve auctions) | — | UNVERIFIED — look up before use. Many 2021 sales settled here rather than through Market. |
+| Zora Auction House (reserve auctions) | `0xE468cE99444174Bd3bBBEd09209577d25D1Ad673` | VERIFIED — decoded `AuctionEnded` on 15 settlements from a real artist's catalog, 2026-08-04. Many 2021 sales settled here rather than through Market. **Pays the owner share as native ETH — see below.** |
 | ZoraNFTCreator (ERC721Drop factory) | — | UNVERIFIED — resolve per chain; drops are clones, so enumerate via the factory's creation event. |
 | ZoraCreator1155Factory | — | UNVERIFIED — resolve per chain. |
 
 Drops and 1155 collections are **clones**: each has its own address. Enumerate them from
 the factory's creation events for the artist's address, rather than hunting collection by
 collection.
+
+## The two-leg payment — how a V1 sale actually pays the artist
+
+**This is the single most expensive thing to get wrong on V1.** It understated a real
+artist's catalog by **2.8×** before it was caught — by the artist, not by us.
+
+Zora V1 does not pay a sale to one recipient. `bidShares` splits every settlement three
+ways — `prevOwner`, `creator`, `owner` — summing to 100%. On a **first sale of the
+artist's own work, the artist is both creator and owner**, so **two separate payments are
+theirs** and a scan that finds one has found a fraction.
+
+How each leg moves depends on the venue, and that is what makes it dangerous:
+
+| Venue | Creator leg | Owner leg | Visible in `eth_getLogs`? |
+|---|---|---|---|
+| **Direct bid/ask** (Market) | ERC-20 to artist | ERC-20 to artist | ✅ both legs |
+| **Reserve auction** (Auction House) | ERC-20 to artist | **unwrapped WETH → native ETH** to artist | ❌ **owner leg invisible** |
+
+The Auction House calls `withdraw()` on WETH and forwards native ETH with a plain value
+call. Native transfers emit **no event**, so a log-only indexer records only the creator
+leg — typically **20–30% of the sale** — and reports it as the whole thing, without error.
+
+### Worked arithmetic (real settlement, artist anonymized)
+
+```
+13.420690 WETH   winning bid            AuctionHouse -> Market
+ 4.026207 WETH   creator share (30%)    Market -> artist        <- the only leg a log scan sees
+ 9.394483 ETH    owner  share (70%)     AuctionHouse -> artist   (native, no log)
+──────────────
+13.420690        total actually received by the artist
+```
+
+Independently confirmed by balance delta: the artist's ETH balance moved **+9.355567**
+across that block — the 9.394483 owner share less 0.038916 gas, since they sent the
+settlement transaction themselves.
+
+**Reading only the logged leg reported $15,544. The sale was $51,813.**
+
+### Rules that follow
+
+- **Read the creator share per token.** It is set at mint and varies — 20%, 25% and 30%
+  all appeared within one artist's 27 works. Never assume a constant and never
+  back-compute the total by dividing by an assumed share.
+- **`AuctionEnded` is the receipt.** It carries the final `amount`, plus `tokenOwner`,
+  `curator` and `curatorFee`. Confirm `tokenOwner` is the artist — if it is not, the owner
+  leg went to a reseller and is **not** the artist's revenue. A non-zero `curatorFee` is a
+  third party's cut and must come out.
+- **Check that legs sum to the bid.** Any residual is a leg you have not found yet.
+- **This pattern is not unique to Zora.** Any marketplace that unwraps WETH before paying
+  a seller has the same blind spot. Treat "settled in native ETH" as the default
+  assumption to disprove, not an exception to discover.
 
 ## Fee constants
 
@@ -42,7 +93,10 @@ collection.
 ## What to pull per surface
 
 1. **Primary sales, V1** — settlements on Market/Auction House where the artist is the
-   creator/token owner. Capture the **settlement token**, not just an ETH amount.
+   creator/token owner. Capture the **settlement token**, not just an ETH amount — **and
+   both `bidShares` legs.** On an auction the owner leg arrives as **native ETH with no
+   log**; see *The two-leg payment* above. Reconcile each sale by balance delta or
+   `AuctionEnded` before recording it.
 2. **Primary sales, Drops/1155** — value transferred to `fundsRecipient` (which may be a
    0xSplits contract, not a wallet).
 3. **Protocol rewards** — reward **deposits** crediting the artist's address in the
