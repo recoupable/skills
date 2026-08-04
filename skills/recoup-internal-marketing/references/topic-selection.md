@@ -32,6 +32,48 @@ the canon inside a post.
 
 ## The gates every pick must clear
 
+**Why named — theirs, then ours. This gate comes first.**
+
+Before consent, before the hook, before a single frame: write one sentence on **what the person in
+the piece gets out of it**, and one on what we get. Both go at the top of the plan doc. If you
+cannot write the first sentence, the piece is an ad wearing someone's name and it does not get
+built.
+
+This gate exists because the rest of this skill did not have it. Every other artist-facing rule
+here is either a *permission* rule (consent, likeness, verified numbers) or a *distribution* rule
+("Collaborator, not subject", justified by reach). Together they answer "may we publish this?" and
+"will it travel?" — and never "what does she get?" The gap was found on 2026-08-04 by the artist,
+not by us: mid-collaboration LATASHÁ asked *"what's your case for showing the numbers? like the
+why?"* and nothing in this skill answered her.
+
+**Ours is allowed to be commercial. Say it first, plainly.** We build the tool that produced the
+number; their case is the proof it works. An artist who has caught us being wrong can smell a
+pitch dressed as a favour, and leading with our own interest costs less than being caught
+concealing it.
+
+**Four arguments that hold up** when the piece publishes an artist's real numbers:
+
+1. **Comparables.** There is no public benchmark for what a decade of independent work earns.
+   Artists hear what labels made or what a hype cycle claimed, never an audited independent figure.
+   Theirs becomes the reference point others price against, and the first to publish owns it.
+2. **Financeability.** A measured, transaction-by-transaction history is an asset. "I did well" is
+   a story; a ledger a stranger can audit is something to put in front of a buyer, a lender or a
+   deal.
+3. **The record is already public.** Chain data, play counts and sales sit there unread. Publishing
+   is not exposure, it is claiming authorship of a record that exists either way. (Only true where
+   the source genuinely is public — do not stretch it to cover private statements or DMs.)
+4. **Scope honesty protects them.** Shipping a partial, clearly-labelled figure sets a **floor**
+   that later work raises. It reads as conservative rather than inflated, and it stops a
+   still-incomplete number being mistaken for a career total.
+
+**State the risk in their terms, in the same breath.** Not a disclaimer at the end — the sentence
+that could make them say no. Publishing earnings raises a target profile (acutely so for an artist
+who has been hacked); historical dollars get misread as current wealth; a person can be flattened
+into a figure. Naming the risk unprompted is what makes it consent rather than a signature.
+
+**Then let them decide, and take no for an answer.** A yes obtained by not mentioning the downside
+is worth less than a no.
+
 **Arc + character named.** A post that serves no arc is an ad. Reframe or drop it.
 
 **Consent.**
