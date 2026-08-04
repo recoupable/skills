@@ -128,6 +128,12 @@ Three legitimate sources, in preference order:
 
 Gate the pick on all of these before building — details in `references/topic-selection.md`:
 
+- **Why named — theirs first, then ours.** One sentence on what the person in the piece gets out of
+  it, one on what we get. Both at the top of the plan doc. **If you cannot write the first
+  sentence, do not build the piece** — it is an ad wearing someone's name. Where it publishes an
+  artist's real numbers, state the risk to them in the same breath as the case, then let them
+  decide. Ours is allowed to be commercial; say so plainly rather than dressing it as a favour.
+  Arguments that hold up, and the incident that added this gate: `references/topic-selection.md`.
 - **Arc + character named.**
 - **Destination named.** Say where a convinced viewer goes *before* you build, and make sure it
   continues this post's promise. If the honest answer is "the homepage," the idea is not yet a
@@ -167,8 +173,11 @@ Gate the pick on all of these before building — details in `references/topic-s
    voice** over a narrator: the character stays the protagonist, and it pairs with no-lip-movement
    footage. Per-line generation, measure-then-linear-gain (step 6 below). First set: Gatsby Grace →
    ElevenLabs "Jessa", 2026-07-29.
-4. **Write the plan doc first** (`SCRIPT.md` / `scene-plan.md`) with the arc named at the top, and
-   get it reviewed **before** spending generation credits.
+4. **Write the plan doc first** (`SCRIPT.md` / `scene-plan.md`). It opens with **the why — theirs,
+   then ours — above the arc**, both as single sentences, and where a real person's numbers are
+   published, the risk to them stated alongside. A plan doc that starts at the scene table has
+   skipped the only question the audience cannot see you skip. Get it reviewed **before** spending
+   generation credits.
 5. **QC at every gate.** Verify generated stills for likeness and prop continuity; verify clips
    first/mid/last frame before compositing; lint and inspect the composition; then **read frames out
    of the finished render** — a render returning the right duration is not evidence it looks right.
@@ -204,8 +213,10 @@ consistency" either. The image must depict what the copy's opening line describe
 
 - **Publish + measure:** `recoup-internal-social-ship-posts`. That skill owns copy per platform, the
   connector mechanics, and the ~48h re-pull.
-- **Log it:** one row per post in `posts-log.md`, including the **arc and character** it served and
-  which sign-off line was used. An unlogged arc breaks the serial.
+- **Log it:** one row per post in `posts-log.md`, including the **arc and character** it served,
+  **the why it was built on** (theirs and ours, as written in the plan doc), and which sign-off line
+  was used. An unlogged arc breaks the serial; an unlogged why means the next run cannot tell
+  whether the reason held up.
 - **Capture what you learned:** if the run produced a durable lesson (a new gotcha, a style that
   worked, a hook that landed), write it into the workspace doc that owns it — `HOOKS.md`,
   `VIDEO-STYLES.md`, or `NARRATIVE.md` — not just into the chat.
@@ -234,6 +245,9 @@ a bare `recoupable.dev` or "link in bio" with no tag.
 
 ## Guardrails
 
+- **No why, no build.** Every piece carries a written why for the person in it, not only for us.
+  Permission is not a reason: "they consented" answers whether we *may*, never whether we *should*.
+  A piece that cannot say what its subject gets is an ad using their name, however real its numbers.
 - **Nothing publishes without explicit owner go-ahead.** "My goal is to post X" is a draft
   instruction, not authorization. Build it, then ask.
 - **Never re-trigger a live customer's task to test a change.** Every run emails the customer. Use a
