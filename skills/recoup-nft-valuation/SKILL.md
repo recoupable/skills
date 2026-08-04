@@ -63,14 +63,48 @@ claims real numbers, a number anyone can re-run outranks a number we assert.
 Index inbound value to the confirmed addresses and split contracts, filtered by
 counterparty contract, across every platform and chain the artist named.
 
-**Two traps that will silently corrupt the total:**
+**Three traps that will silently corrupt the total:**
 
+- **Native ETH is invisible to a log-only scan.** ⚠️ *The one that has actually bitten
+  us — it understated a real artist by 2.8×.* ERC-20 transfers emit a `Transfer` event;
+  **plain ETH transfers emit no log at all.** An indexer built on `eth_getLogs` sees
+  every DAI and WETH leg of a sale and silently drops every native-ETH leg. It does not
+  error, it does not warn — it just returns a smaller number.
+
+  This is not an edge case on Zora V1. A sale is split into a **creator share** and an
+  **owner share**, and on a first sale of their own work **the artist is both, so they
+  receive both legs.** Auction settlements route the owner share through the Auction
+  House, which **unwraps WETH to native ETH** before forwarding it — so the larger leg,
+  typically 70–80% of the sale, is exactly the one a log scan cannot see. Mechanism and
+  worked arithmetic: `references/zora-contracts.md` → *The two-leg payment*.
 - **ERC-20 settlement.** Early NFT sales often settled in **DAI, WETH or USDC**, not
   ETH. An ETH-only indexer returns a confidently wrong number and misses the artist's
-  earliest (often largest) sales.
+  earliest (often largest) sales. Note this is the *mirror* of the trap above: token-only
+  and ETH-only scans each miss half of a V1 auction. **You need both.**
 - **Rewards double-counting.** Protocol rewards are *deposited* to an escrow contract
   and later *withdrawn*. Deposits are the earnings; withdrawals are cash movement.
   Counting both doubles the figure.
+
+### The reconciliation gate — a sale total is not final until it closes twice
+
+**Never publish a per-sale figure assembled from token-transfer logs alone.** Close every
+sale by a second, independent method that cannot share the first one's blind spot:
+
+1. **Balance delta.** `eth_getBalance` on the artist's address at `block-1` and `block`.
+   Add back gas (`gasUsed × effectiveGasPrice`) when the artist sent the transaction
+   themselves. This catches native legs by construction.
+2. **The settlement event.** Read the marketplace's own end-of-sale event — for a reserve
+   auction, `AuctionEnded` carries the final `amount` plus `tokenOwner`, `curator` and
+   `curatorFee`, which also tells you whether the proceeds were actually all theirs.
+3. **Sum of legs vs. bid in.** The value entering the marketplace contract must equal the
+   legs leaving it. **If your legs do not sum to the winning bid, you are missing a leg** —
+   that residual is the fastest tell that something settled natively.
+
+A row that fails to reconcile is a **blocker, not a footnote**. Chase it before it enters
+a total.
+
+**Verify the split, do not assume it.** Creator share is set per token at mint and varies
+in practice (20%, 25% and 30% all appear in a single artist's catalog). Read it per sale.
 
 Also reconcile against any public claim the artist has made about their own sales. A
 measured number that lands near their stated figure is a strong story; one that lands
@@ -130,6 +164,14 @@ Always disclose, in the artifact itself:
 
 - **Unconfirmed address = no publication.** No exceptions, including for a candidate
   that looks obviously right.
+- **A total built only from token-transfer logs is unverified.** Native ETH emits no log.
+  Reconcile every sale by balance delta or settlement event before it enters a figure.
+- **Legs must sum to the bid.** An unexplained residual between what entered the
+  marketplace and what you attributed is a missing leg, not a rounding error.
+- **An artist disputing a number is evidence, not an objection.** They know what landed in
+  their wallet. When their recollection and our measurement disagree, re-audit from chain
+  before defending the figure — in the case this skill was corrected from, the artist was
+  right and we were reading 30% of the sale.
 - **Never merge onchain earnings into the streaming valuation as one number.**
 - **Never apply a streaming multiple to primary sales.**
 - **Price at settlement**, never at today's token price.
