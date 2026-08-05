@@ -245,6 +245,9 @@ a bare `recoupable.dev` or "link in bio" with no tag.
 
 ## Guardrails
 
+- **No em dashes in published copy.** `—` and `–` read as AI-written and cost more credibility than
+  the clause is worth. Rewrite the sentence rather than substituting a comma. Applies to captions,
+  tweets, titles, descriptions, first comments and on-screen text; internal docs are exempt.
 - **No why, no build.** Every piece carries a written why for the person in it, not only for us.
   Permission is not a reason: "they consented" answers whether we *may*, never whether we *should*.
   A piece that cannot say what its subject gets is an ad using their name, however real its numbers.
