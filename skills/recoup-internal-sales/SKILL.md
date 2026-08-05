@@ -28,6 +28,10 @@ Define the window up front as UTC `[FROM, TO)` — usually **since the last swee
 (default last 24h). Run the eight pulls in parallel (subagents work well; each is
 self-contained), then synthesize.
 
+**Run the acquisition circuit-breaker check before anything else.** If no new paid
+customer has landed in 14 days, the default priority order will send you into
+retention work again and the sweep will not produce a sale.
+
 ## What this is (and what it is not)
 
 This skill is **forward-looking**: it produces *actions* (who to contact, why,
@@ -96,6 +100,40 @@ eight pulls, and SQL is genuinely the right tool there. The rule is about
 actually serves them. A DB row the API doesn't surface is not something the customer
 can see.
 
+## Check this first — the acquisition circuit-breaker
+
+**Before running the sweep, ask one question: how many new paid customers have we
+added in the last 14 days?** If the answer is zero, the sweep's normal priority order
+is actively wrong and you must switch modes.
+
+Why this exists: **seven of the eight pulls below read our own database.** Every one
+of them requires the person to already be a user. That makes this an excellent
+*farming* motion with almost no *hunting*, and the default ranking (failed payment >
+new customer > warm valuation lead) puts retention ahead of acquisition every single
+time. On a small base with noisy retention signals, **you never reach pull 3.**
+
+That failure mode is not hypothetical. Measured 2026-08-04: two months with zero new
+sales, while **93 distinct accounts ran a catalog valuation in 60 days** (241 runs in
+June, 198 in July) and **56 of them ran exactly once and never returned.** The demand
+was there the whole time. Nobody worked it, because the sweep kept routing the day
+into retention on existing accounts.
+
+**In acquisition mode, do this instead — in this order:**
+
+1. **Work the valuation backlog before anything else.** Pull 3, but over the *whole
+   backlog*, not just the sweep window. Every account that ran a valuation and has no
+   Attio entry is an unworked, hands-raised lead. Prioritize **one-and-done runs**:
+   they got their number and left, which is the sharpest unanswered-question signal
+   we have.
+2. **Look outside the database.** No pull below does this, so it will not happen
+   unless you make it happen: named-account research, inbound-adjacent communities,
+   and the enterprise/custom-dev angle for any label or catalog-holder domain already
+   in Attio. Hunting is not a data pull; it is a decision to spend the day differently.
+3. **Cap retention work.** Timebox existing-account work so it cannot consume the day.
+   A zombie task or a stale follow-up is real, but it will never produce a new sale.
+
+Return to the normal ordering once a new paid customer lands.
+
 ## The eight pulls
 
 Each pull is: **what to read → the sales signal → the action**. Always drop test
@@ -117,6 +155,24 @@ Ranking is a SQL job; qualifying a named lead is an API job.
   dispute** → save-the-account follow-up, today. A **top-up loop** (many identical
   small sessions) → a "let's right-size your plan" conversation.
 - **Action:** log the person in Attio; draft the welcome / recovery note.
+
+> ⚠️ **A raw checkout-session count measures bots, not demand.** `autoRechargeOrFail`
+> mints a Checkout session server-side whenever a scheduled run is short of credits,
+> so the session list is dominated by cron artefacts with no human anywhere near them.
+> Measured 2026-08-04: **100 live sessions over two days, 0 paid, 0 with a
+> `customer_email`, 49% created inside four distinct minutes of the hour, across 22
+> accounts.** Reading that as "people are trying to sign up" is backwards — and reading
+> its absence as "nobody wants us" is equally wrong.
+>
+> **Always filter before you quote a number:** keep only sessions with a non-null
+> `customer_email`, then drop any minute-cluster that lines up with an account's cron
+> schedule. What survives is human intent. If nothing survives, say **"we cannot see
+> human purchase intent"** — not "there is none."
+>
+> The same artefact appears at the *customer* level: a Stripe customer with
+> `email: null`, no payment methods, and a `created` timestamp inside the account's own
+> cron window was minted by the same code path. Never write that up as an "abandoned
+> checkout" — check `created` against the account's task schedule first.
 
 ### 2. Privy — who is signing in
 
@@ -268,6 +324,9 @@ ORDER BY ae.email NULLS LAST, sa.title;
 2. **Rank by opportunity × urgency.** Roughly: failed payment / churn-in-progress
    (save today) > new paid customer (welcome now) > warm valuation or enterprise
    lead (work this week) > expansion / testimonial > zombie-task cleanup.
+   **This ordering assumes a funnel that is converting.** If no new paid customer has
+   landed in 14 days, invert it — warm valuation and enterprise leads come first. See
+   the acquisition circuit-breaker above.
 3. **Correlate across sources** — the cross-checks are where the real finds are:
    - paid in Stripe **but** no Privy login → onboarding never landed; reach out now.
    - valuation run **with no Attio entry** → an unworked lead; create it (step 3).
