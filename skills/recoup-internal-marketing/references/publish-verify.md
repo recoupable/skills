@@ -8,6 +8,24 @@ real run.
 Run this against the final `post.config.mjs` **before** the publish command. It is fast and it has
 already caught a live defect.
 
+- [ ] **No em dashes or en dashes in any published copy.** Owner ruling, 2026-08-04: `—` and `–`
+      are the clearest tell that a post was written by an AI, and one in a caption undoes the
+      credibility the numbers were there to earn. This covers every field that reaches an audience:
+      captions, tweets, YouTube titles and descriptions, LinkedIn bodies and first comments,
+      on-screen text. Internal docs and code comments are exempt; anything a reader sees is not.
+
+      **Rewrite the sentence, do not swap the character.** A comma dropped in where the dash was
+      usually leaves the same over-hedged rhythm that gave it away. Split into two sentences, or use
+      a colon when the second half explains the first.
+
+      ```bash
+      node -e 'const c=(await import("./content/<slug>/post.config.mjs")).default;
+      const bad=/[—–]/; for (const [k,v] of Object.entries(c.copy))
+        console.log(k, bad.test(JSON.stringify(v)) ? "*** DASH PRESENT ***" : "clean");' --input-type=module
+      ```
+
+      Caught late on the LATASHÁ ten-year slate: the Instagram caption shipped with two em dashes
+      before the rule existed. IG captions are editable in-app; X posts are not.
 - [ ] **No placeholders anywhere.** Grep the whole config for `<`…`>` — `<YT link>`, `<COST>`, `TBD`.
       On 2026-07-28 a literal `<YT link>` was in the YouTube description and the X reply and would
       have shipped as visible text. **A placeholder must never ship.** If the thing it points at does
