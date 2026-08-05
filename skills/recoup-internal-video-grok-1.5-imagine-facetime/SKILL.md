@@ -10,7 +10,7 @@ Core discovery: `xai/grok-imagine-video/v1.5/image-to-video` **speaks prompt-scr
 verbatim, with the speaker's own voice and correct lipsync** — no TTS, no lipsync pass (both
 lost the bake-off; a sync pass deadens the face, HeyGen avatars read as studio ads).
 
-Reference build (copy it, don't rebuild): `strategy/recoup-rostrum-baseline/sweetman/content/facetime-call/`
+Reference build (copy it, don't rebuild): the marketing workspace's `content/facetime-call/`
 — `NOTES.md` is the decision log, `index.html` the FaceTime chrome. `FAL_KEY`: `mono/api/.env.local`.
 
 ## ⚠️ Consent gate
@@ -69,7 +69,7 @@ with every word <she> speaks starting immediately from the very first word.
   status bar, no text**" or Grok bakes a fake FaceTime UI into the image. Bars survive → one
   more edit ("extend this exact scene … no black bars"). Strip gibberish clothing text if it appears.
 - **Reuse the same approved frame for all of a character's takes** — that locks face and room.
-- Artist photo sources, in order: workspace `sweetman/content/*/assets/art/`; og:image of their
+- Artist photo sources, in order: workspace `content/*/assets/art/`; og:image of their
   IG post pages (profile avatars are 150px); Spotify oEmbed `thumbnail_url`.
 
 ## Mechanics, assembly, handoff
