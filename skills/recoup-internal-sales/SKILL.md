@@ -112,11 +112,23 @@ of them requires the person to already be a user. That makes this an excellent
 new customer > warm valuation lead) puts retention ahead of acquisition every single
 time. On a small base with noisy retention signals, **you never reach pull 3.**
 
-That failure mode is not hypothetical. Measured 2026-08-04: two months with zero new
-sales, while **93 distinct accounts ran a catalog valuation in 60 days** (241 runs in
-June, 198 in July) and **56 of them ran exactly once and never returned.** The demand
-was there the whole time. Nobody worked it, because the sweep kept routing the day
-into retention on existing accounts.
+That failure mode is not hypothetical. Measured 2026-08-04 and **re-measured 2026-08-05
+after the first figures turned out to be mostly our own test traffic**: two months with
+zero new sales, while **54 external accounts ran a catalog valuation in 8 weeks** and
+**34 of them ran exactly once and never returned. 35 have never been contacted by
+anyone.** The demand was there the whole time. Nobody worked it, because the sweep kept
+routing the day into retention on existing accounts.
+
+> ⚠️ **The first pass at that number was 93 accounts / 56 one-and-done, and it was wrong.**
+> 39 of the 93 were internal test accounts. `sidney+1@` alone had run 134 valuations and
+> `sweetmantech@gmail.com` 117 — **56% of all valuation activity in the table was two
+> founders testing the product.** Nothing in the stack filters test rows, so the raw
+> number overstated real demand by ~72%.
+>
+> The "drop test rows" rule below is not hygiene, it is the difference between a real
+> lead list and a fabricated one. Apply it *before* you quote any figure to anyone, and
+> re-derive rather than trusting a number you or a teammate quoted earlier — including
+> one written into this skill.
 
 **In acquisition mode, do this instead — in this order:**
 
