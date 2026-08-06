@@ -87,7 +87,7 @@ Corollary: argue from **something the customer already did**, never from an assu
 ### House format
 
 - Title, then `prepared by Recoup · <ISO date>`.
-- A **`THE SHORT VERSION`** paragraph before any data — the whole argument in three sentences.
+- A **`THE SHORT VERSION`** paragraph before any data, giving the whole argument in three sentences.
 - Big stat blocks: `EPISODES 116` · `TOTAL RUNTIME 97 hrs` · `AUDIENCE, OWNED 0`.
 - Every claim carries a measured number, its source, and the date it was pulled.
 - **Say what not to do.** Secondhand Talent's monetization doc opens by killing CPM
@@ -96,9 +96,34 @@ Corollary: argue from **something the customer already did**, never from an assu
   paragraph is why the document is trusted.
 - One document, one decision. Do not merge them.
 
+### Brand rules for any PDF we hand a customer
+
+Every one of these was missed on a first attempt and caught in review. Get them right the
+first time.
+
+1. **No em dashes or en dashes anywhere in the copy. This is the one that costs trust.**
+   `—` and `–` read as machine-written and undo the credibility the numbers just bought.
+   Rewrite into real punctuation: a full stop, a comma, a colon, or "and". This applies to
+   **numeric ranges too** — write `$602,423 to $1.23M`, never `$602,423 – $1.23M` — and to
+   the multiplication sign: write `10x to 16x`, not `10–16×`. Grep the rendered PDF text for
+   `[—–]` before sending; the count must be zero. A build that renders a dash is not done.
+2. **Show the artist's face.** Every artist row carries their **Spotify profile image**. It
+   turns an unverifiable table into something a customer can check at a glance, and it is
+   how a wrong artist gets spotted in the room rather than after.
+3. **Show the artwork.** Any track- or release-level table carries **album art per row**,
+   with the release name under the track name. Same reason.
+4. **Hyperlink every platform claim to the exact profile measured.** If the document says a
+   platform was verified, the reader clicks the word and lands on that profile. Claims that
+   cannot be checked in one click are claims the customer has to take on faith.
+5. **Embed all images as base64 data URIs.** The PDF must survive being forwarded with no
+   network access. Never hotlink.
+6. **Render with Chrome headless** (`--headless --print-to-pdf --no-pdf-header-footer`).
+   It preserves `<a href>` as real PDF link annotations; verify with `pypdf` that the
+   annotation count matches the number of links you expect.
+
 ### Name a recurring deliverable with its period, not its contents
 
-"Artist Partner Review — August 2026" implies a September edition. "Roster Report" is a
+`Artist Partner Review: August 2026` implies a September edition. "Roster Report" is a
 one-off. Add a `Next review: <month>` footer. When the goal is a standing cadence, hand them
 a document that has already assumed one.
 
