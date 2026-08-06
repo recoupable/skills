@@ -232,28 +232,11 @@ entries, stages, field slugs, enrich/advance calls), then surface:
 - **Action:** log the follow-up; for a billing-risk account, pair the outreach with
   the plan-fit conversation from step 1.
 
-#### Credits mechanics — read this before you quote anyone's balance
-
-`checkAndResetCredits` refills a stale row to the plan total (`DEFAULT_CREDITS` 333 /
-`PRO_CREDITS` 9999). Three things follow, and all three have bitten:
-
-1. **Refill is lazy, and reading a balance MUTATES it.** It is reachable from exactly one
-   place — the `GET /api/accounts/{id}/credits` handler. The spend path never calls it
-   (`autoRechargeOrFail` reads `remaining_credits` directly and mints a Checkout session on
-   a shortfall). So an account nobody opens never refills, and *your* GET is what finally
-   tops it up. That is the sanctioned one-call comp for a stale account.
-2. **It SETS, it does not add** — and only fires when the row is **> 1 month old**. On a
-   free-tier account sitting above 333 the same read silently **reduces** the balance.
-   Check `timestamp` and `is_pro` *before* you call it on anyone.
-3. **There is no staff-facing way to grant credits.** Every route under
-   `/api/admins/credits` is a GET; only the Stripe webhook and auto-recharge increment. If
-   the row is too fresh to refill, the only options are a deliberate raw DB write (breaks
-   the SQL guardrail — get sign-off and log it) or putting them on a plan.
-
-**`isPro` is derived from Stripe by account id**, so a customer whose Stripe record is
-missing `metadata.accountId` resolves to **free tier while paying** — seen live on a
-$5,000/mo account sitting on 333 credits. Check that linkage before diagnosing anything
-credit-related.
+**Before quoting anyone's balance, read `references/credits-mechanics.md`.** The refill is
+lazy and reading a balance **mutates** it; it SETS rather than adds, so on a free-tier
+account above 333 a read silently *reduces* it; and `isPro` is derived from Stripe by
+account id, so a customer whose Stripe record is missing `metadata.accountId` reads as
+free tier while paying.
 
 ### 6. Tasks — zombie schedules on inactive accounts
 
@@ -409,8 +392,10 @@ cold contacts.
    match the inbox, not the draft.
 4. **Close out every send the same way:** complete the open task the send
    fulfilled; write a sent-log note stating what was promised **and the reply
-   playbook** (what to do for each likely reply); do the keep-a-lead-warm trio,
-   writing the dated follow-up task as a **runbook** — exact ids, API calls,
+   playbook** (what to do for each likely reply); do the **keep-a-lead-warm
+   trio — set `owner`, log the note, create a dated follow-up task** (a
+   Qualified enterprise lead once sat 21 days untouched because none of the
+   three existed), writing that task as a **runbook** — exact ids, API calls,
    decision rules — executable by a cold reader; set the stage to what the
    email actually did (a Pro pitch → Pro Offer Sent; delivering the number →
    Report Delivered; a retention touch → no stage change).
@@ -516,48 +501,8 @@ major-label exec, and a dormant power user. What actually mattered.
   report only when their job makes it relevant — a label exec has no use for a
   catalog valuation of an artist their employer already owns.
 
-### Keeping a lead warm — do all three
+## Reference files
 
-Set `owner`, log a note saying what you sent and what you're waiting for, and
-create a **dated follow-up task**. A Qualified enterprise lead had sat **21 days**
-untouched because none of the three existed.
-
-### Tooling gotchas
-
-- Privy / Spotify / Apify credentials come from the **`api`** submodule
-  (`vercel env pull`); `chat` is not Vercel-linked.
-- **Stripe lookup by login email mostly misses, and the roster alone is not enough.**
-  Pull the active-subscription roster — but **`expand[]=data.customer`** or Stripe returns
-  customer *ids*, not emails, and a paying customer reads as unpaid. That cost a real
-  misdiagnosis: a $20/mo subscriber of 19 months was reported as a cold lead. The reliable
-  join is **`customer.metadata.accountId`**, not the email; a customer's Stripe address is
-  routinely different from their Recoup login (`derekgtaylor@me.com` vs `hello@dddvvv.xyz`).
-- **`usage_events.source` is NOT an auth discriminator.** `source='api'` covers ~28k events
-  across 164 accounts — effectively all traffic since `source='web'` stopped being written
-  on 2026-06-05. It is a transport label. It tells you nothing about whether a call came
-  from a customer's API key, our task runner, or the app, so never infer "they built an
-  integration" from it. To rule the task runner in or out, check `scheduled_actions` and
-  whether a room was created per run.
-- **`account_api_keys.last_used` is never written** (production code never sets it; it
-  appears only in test fixtures). There is no way to tell when a customer last used an API
-  key. Same dead-column class as `scheduled_actions.last_run` / `next_run`.
-- **Privy `latest_verified_at` undercounts actives** (long sessions never re-verify);
-  cross-check with interactive chats. It is trustworthy at *long* range though — a
-  320-day-old value plus zero off-clock user messages is a safe "they have been gone a year".
-- **Attio:** the people query caps at **500** (page it), `stage.active_from` gives
-  days-in-stage for non-responder detection, location writes require *every*
-  sub-field, task `content` is immutable (close and recreate), and creating an
-  attribute needs a `config` key.
-  - **Judge prior contact by `last_interaction` / `first_interaction`, never by note
-    count.** A record with zero notes can still have years of email history; email sync
-    populates the interaction fields, not notes. Calling such a lead "never contacted" in
-    front of the rep who emailed them is the fastest way to lose the room.
-  - **`owner` lives on the list entry, not the person** — a contact on no list has nowhere
-    to hang accountability. Add the entry first, then set `owner`.
-  - **No binary file upload.** `/v2/files` accepts only `folder | connected-folder |
-    connected-file` (pointers to externally hosted files). A valuation PDF has to be
-    dragged onto the record by hand, or the file hosted elsewhere first — which the PII
-    guardrail means you ask before doing.
-- **`socials.profile_url` is lowercased by a DB trigger** — never store a YouTube
-  `/channel/UC…` URL (case-sensitive id, silently corrupted). Resolve and store the
-  `@handle` form instead.
+- `references/meeting-prep.md` — prep for a booked call: the pitch, the meeting plan, the PDFs to deliver.
+- `references/credits-mechanics.md` — how `checkAndResetCredits` behaves, before you quote a balance.
+- `references/tooling-gotchas.md` — Privy / Stripe / Supabase / Attio quirks and dead columns.
