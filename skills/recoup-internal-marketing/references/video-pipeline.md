@@ -2,7 +2,7 @@
 
 Format-agnostic build steps for any short video in this workspace: a product update, an explainer,
 an announcement, a result. The **look** is chosen from the account's style catalog; the **hook** is
-governed by [`hooks.md`](hooks.md); the **voice** by [`voice.md`](voice.md). This file is the
+governed by `references/hooks.md`; the **voice** by `references/voice.md`. This file is the
 plumbing they all sit on.
 
 > **History.** This started as a HeyGen how-to. HeyGen is now the legacy alt path and ElevenLabs is
@@ -15,7 +15,7 @@ plumbing they all sit on.
 - **Voice-forward.** One narration line drives each beat; visuals support the voice.
 - **Dark and achromatic.** Chrome stays black and white; colour comes from the content and from
   status indicators, per the shared design system.
-- **Runtime target ~40s**, and never past it without a stated reason (see `hooks.md`).
+- **Runtime target ~40s**, and never past it without a stated reason (see `references/hooks.md`).
 
 What changes per video is **the hero** — what fills the middle. Pick it from the message:
 
@@ -102,7 +102,7 @@ Rules that hold for any hero:
 
 ## 5. Audio
 
-Generation, voice choice, audio tags, loudness and verification all live in [`voice.md`](voice.md).
+Generation, voice choice, audio tags, loudness and verification all live in `references/voice.md`.
 Read it before generating anything.
 
 The pipeline-level rules:
@@ -136,7 +136,7 @@ fade.
 
 ```bash
 npm run check                                     # lint + validate + inspect. 0 errors required
-npx hyperframes snapshot --at 4.2,26,42.5 .       # ~15s, writes PNGs + a contact sheet
+npx hyperframes@0.7.5 snapshot --at 4.2,26,42.5 .       # ~15s, writes PNGs + a contact sheet
 npm run render                                    # minutes. Only once the stills look right
 ```
 
@@ -207,7 +207,7 @@ and drop the CSS transform.
 
 ## 8. Ship
 
-Publishing mechanics and per-platform traps live in [`publish-verify.md`](publish-verify.md) and in
+Publishing mechanics and per-platform traps live in `references/publish-verify.md` and in
 `recoup-internal-social-ship-posts`. Log the post, declare the attribution state **at publish time**,
 and re-pull engagement at ~48h.
 

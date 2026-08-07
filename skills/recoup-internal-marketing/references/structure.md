@@ -1,6 +1,6 @@
 # Structure — holding a piece together after the hook
 
-[`hooks.md`](hooks.md) buys the first three seconds. This file is about the forty after them.
+`references/hooks.md` buys the first three seconds. This file is about the forty after them.
 
 Written 2026-08-07, after an owner watched a five-item changelog and said it "feels very incohesive.
 Jumping from one feature to the next without presenting it as a changelog with multiple updates."
@@ -24,9 +24,11 @@ Cheap, and they do almost all the work.
    knows the shape of what they are about to watch, and the piece has made a promise it can keep.
 2. **Speak the ordinals.** "One… Two… Three…" A listener should never have to wonder where they are.
    This is the single largest cohesion gain per word spent.
-3. **Show a step counter.** `1/5 … 5/5` on every panel. `hooks.md` already pairs a visible step
-   counter with the list-tease archetype; this is where it earns its place. It also carries the
-   structure for the ~60% of viewers watching sound-off.
+3. **Show a step counter.** `1/5 … 5/5` on every panel. `references/hooks.md` already pairs a visible
+   step counter with the list-tease archetype; this is where it earns its place. It also carries the
+   structure for the ~60% of viewers watching sound-off. A step counter is **structural notation, not
+   a claim** — it is explicitly exempt from the on-screen number audit in `references/hooks.md`, which
+   applies only to evidence.
 4. **Bookend it.** Open on a contents card listing all the items, and return to the same card at the
    end with each one ticking off. The viewer gets the map before the journey and the receipt after,
    and the close lands as completion rather than as a stop.
@@ -57,7 +59,7 @@ the evidence supports.
 
 ## The screen carries the evidence, the voice carries the meaning
 
-The rule lives in [`voice.md`](voice.md) because that is where it bites hardest, but it is a
+The rule lives in `references/voice.md` because that is where it bites hardest, but it is a
 structural decision and belongs in the plan doc, not in the edit:
 
 - **Voice:** "the page where we ask you to pay had text you could not read."

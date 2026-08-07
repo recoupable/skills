@@ -194,15 +194,18 @@ Gate the pick on all of these before building — details in `references/topic-s
    every caption and is a timeline rebuild, not a file swap.
 7. **Climb the QC ladder cheaply. Render is the last rung, not the first.**
    `plan doc → audio approved → stills → render → frames out of the render.`
-   Use **`npx hyperframes snapshot --at <times> .`** (~15s, writes PNGs and a contact sheet) to look
+   Use **`npx hyperframes@0.7.5 snapshot --at <times> .`** (pin the version, same as every
+   other invocation; ~15s, writes PNGs and a contact sheet) to look
    at your work; `npm run render` takes minutes. One run burned **seven full renders** on findings
    that were all visible in a still. Then read frames out of the finished render anyway — a render
    returning the right duration is not evidence it looks right, and `inspect` samples fixed points
    so it misses collisions between them.
-8. **Audit the SCREEN, not only the script.** Run the second half of the `hooks.md` checklist over
-   every panel: does each on-screen number appear in the VO, carry its unit, and come from a
-   customer rather than a test harness? Could two figures on one panel read as a claim you did not
-   make? A run that audited the script twice and the panels never shipped a lab number to camera.
+8. **Audit the SCREEN, not only the script.** Run the second half of the `references/hooks.md`
+   checklist over every panel. It scopes to **claims and measurements** — structural notation (a
+   `1/5` counter, ordinals), dates, prices shown as UI and cited standards are exempt. For each
+   figure presented as evidence: does it appear in the VO, carry its unit, and come from a customer
+   rather than a test harness? Could two figures on one panel read as a claim you did not make? A
+   run that audited the script twice and the panels never shipped a lab number to camera.
 9. **Measure audio, do not blindly normalize.** House rule: measure first, prefer linear gain, and
    reserve dynamic normalization for genuinely quiet sources.
 

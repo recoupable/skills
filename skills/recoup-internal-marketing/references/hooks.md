@@ -44,33 +44,20 @@ our logo on it.
 A specific-number payoff usually belongs **after** the work is shown, not in the cold open. "Eleven of
 eighteen thrown away" is compelling once you have seen the eighteen; used cold it is just a stat.
 
-## Pattern: the two-frame cold open — RETIRED for narrated pieces (2026-08-07)
-
-**The pattern:** when a piece contains a real before/after, open on the hard cut between them inside
-the first 1.6s, two words of text per frame, no voiceover, no logo. First shipped 2026-07-28 on a
-piece where the cut *was* the whole story.
-
-**⛔ Do not use it in front of narration.** An owner watching a 56s narrated changelog said the two
-silent frames "feel like a glitch rather than a real part of the video." The reason is already in
-this file, one section down: on a cold autoplay feed, silence is indistinguishable from a video that
-has not loaded. A silent hard cut in front of narration reads as buffering, not as a pattern
-interrupt.
-
-**Do this instead: put the before/after where the voice explains it.** On the rebuild, the pricing
-card moved into the beat that describes it, and the invisible text tweened *into* legibility while
-the contrast meter climbed. Same evidence, better placed — a payoff instead of a trick — and the
-film opens on voice at t=0.25s.
-
-**The general rule this produced:** a doctrine written for one piece is a **default, not an
-invariant**. When two rules here conflict, the one about the audience's experience beats the one
-about the technique.
-
 ## The cold-feed premise test
 
 **The video itself must state its premise in its first beats — in VO or on-screen text — never by
 relying on the caption.** Feeds autoplay; on IG and Shorts the viewer meets the film *before* any
 caption. A cut whose story only works if the viewer arrived pre-briefed has no story for most of its
 audience.
+
+**Never open a narrated piece on silence.** On a cold autoplay feed, silent frames are
+indistinguishable from a video that has not loaded, so they read as buffering rather than as a
+pattern interrupt. An owner watching a 56s narrated changelog described its two silent opening
+frames as feeling "like a glitch rather than a real part of the video" (2026-08-07). **If a piece
+contains a before/after worth showing, put it where the voice explains it**, not in front of the
+narration: on that rebuild the reveal moved into the beat that describes it and the film opened on
+voice at t=0.25s.
 
 Learned 2026-07-29: a wordless narrative cut (built to the "story you'd watch for free" doctrine)
 failed owner review as "too subtle — the story gets lost." The wordless design had silently delegated
@@ -101,9 +88,14 @@ Added 2026-08-07, after a run that audited the script twice and the panels never
 number defects lived in the graphics: one figure was fixed in the voice and left standing on screen,
 and another appeared on a panel having never been in the voice at all.
 
-- [ ] Does **every number on screen** appear in the VO, or get explained by it? A figure the
-      narration never earns arrives as noise.
-- [ ] Does every on-screen number carry its **unit**? ("155 accounts sat at zero" — zero what?)
+**Scope:** these apply to **claims and measurements** — figures the piece is asserting as evidence.
+**Exempt:** structural notation (a `1/5` step counter, ordinals), dates, prices and other product
+values shown as UI, and external standards being cited (`4.5:1 required`). Those are furniture, not
+claims, and demanding the voice earn each one would forbid the step counter this skill recommends.
+
+- [ ] Does **every number presented as evidence** appear in the VO, or get explained by it? A figure
+      the narration never earns arrives as noise.
+- [ ] Does every measurement carry its **unit**? ("155 accounts sat at zero" — zero what?)
 - [ ] Is any on-screen figure a **lab number** rather than a customer number? One panel showed
       "280s of work survived", which came from a synthetic test harness (seven scripted 40s sleeps),
       not from anyone's real usage. It measured the test, not the product.
