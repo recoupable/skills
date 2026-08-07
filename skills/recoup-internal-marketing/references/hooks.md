@@ -44,18 +44,20 @@ our logo on it.
 A specific-number payoff usually belongs **after** the work is shown, not in the cold open. "Eleven of
 eighteen thrown away" is compelling once you have seen the eighteen; used cold it is just a stat.
 
-## Pattern: the two-frame cold open
-
-When a piece contains a real before/after, **open on the hard cut between them inside the first 1.6s**,
-two words of text per frame, no voiceover, no logo. Pattern interrupt, contrarian claim and payoff
-promise in one gesture, and it survives sound-off. First shipped 2026-07-28.
-
 ## The cold-feed premise test
 
 **The video itself must state its premise in its first beats — in VO or on-screen text — never by
 relying on the caption.** Feeds autoplay; on IG and Shorts the viewer meets the film *before* any
 caption. A cut whose story only works if the viewer arrived pre-briefed has no story for most of its
 audience.
+
+**Never open a narrated piece on silence.** On a cold autoplay feed, silent frames are
+indistinguishable from a video that has not loaded, so they read as buffering rather than as a
+pattern interrupt. An owner watching a 56s narrated changelog described its two silent opening
+frames as feeling "like a glitch rather than a real part of the video" (2026-08-07). **If a piece
+contains a before/after worth showing, put it where the voice explains it**, not in front of the
+narration: on that rebuild the reveal moved into the beat that describes it and the film opened on
+voice at t=0.25s.
 
 Learned 2026-07-29: a wordless narrative cut (built to the "story you'd watch for free" doctrine)
 failed owner review as "too subtle — the story gets lost." The wordless design had silently delegated
@@ -79,6 +81,30 @@ line. Two corollaries:
 - [ ] Every beat **≤6.5s**?
 - [ ] Runtime **≤40s** unless there is a stated reason?
 - [ ] Does it avoid **qualifying the audience**?
+
+### Then audit the SCREEN, not just the script
+
+Added 2026-08-07, after a run that audited the script twice and the panels never. Both of that day's
+number defects lived in the graphics: one figure was fixed in the voice and left standing on screen,
+and another appeared on a panel having never been in the voice at all.
+
+**Scope:** these apply to **claims and measurements** — figures the piece is asserting as evidence.
+**Exempt:** structural notation (a `1/5` step counter, ordinals), dates, prices and other product
+values shown as UI, and external standards being cited (`4.5:1 required`). Those are furniture, not
+claims, and demanding the voice earn each one would forbid the step counter this skill recommends.
+
+- [ ] Does **every number presented as evidence** appear in the VO, or get explained by it? A figure
+      the narration never earns arrives as noise.
+- [ ] Does every measurement carry its **unit**? ("155 accounts sat at zero" — zero what?)
+- [ ] Is any on-screen figure a **lab number** rather than a customer number? One panel showed
+      "280s of work survived", which came from a synthetic test harness (seven scripted 40s sleeps),
+      not from anyone's real usage. It measured the test, not the product.
+- [ ] Could two figures on one panel be read as a **claim you did not make**? "120s cap" beside
+      "280s survived" reads as "we raised the cap from 120 to 280" — the one thing that piece was
+      forbidden from implying.
+- [ ] Does on-screen text **complement** the caption rather than paraphrase it? Paraphrase counts:
+      "The measurement survived." under a caption reading "Deleting keeps the measurement you paid
+      for." is the same waste as printing it verbatim.
 
 ## Sources
 

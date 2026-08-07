@@ -57,7 +57,7 @@ The account workspace holds the durable marketing knowledge. Read in this order:
 |---|---|---|
 | 1 | `README.md` | The workspace map and the daily loop. Start here. |
 | 2 | `NARRATIVE.md` | **Story canon.** Premise, recurring cast, live storylines, serialization rules. |
-| 3 | `HOOKS.md` | **Hook and retention doctrine** + the pre-render checklist. |
+| 3 | `HOOKS.md` | **Hook and retention doctrine** + the pre-render checklist, including the audit of on-screen numbers. |
 | 4 | `VIDEO-STYLES.md` | The style catalog, each pointing at a cloneable reference project. |
 | 5 | `posts-log.md` (tail) | What has already shipped, with performance and the arc each post served. |
 | 6 | `POSTING-PLAYBOOK.md`, `LINKEDIN.md` | Per-platform mechanics and gotchas. Read before publishing, not after. |
@@ -181,10 +181,32 @@ Gate the pick on all of these before building — details in `references/topic-s
    published, the risk to them stated alongside. A plan doc that starts at the scene table has
    skipped the only question the audience cannot see you skip. Get it reviewed **before** spending
    generation credits.
-5. **QC at every gate.** Verify generated stills for likeness and prop continuity; verify clips
-   first/mid/last frame before compositing; lint and inspect the composition; then **read frames out
-   of the finished render** — a render returning the right duration is not evidence it looks right.
-6. **Measure audio, do not blindly normalize.** House rule: measure first, prefer linear gain, and
+5. **Structure the piece, not just the hook** — `references/structure.md`. A multi-item piece
+   (a changelog, a roundup, a list) assembled by writing each item well and running them in order
+   reads as a jumble. State the count in the frame line, speak the ordinals, show a `1/5` step
+   counter, and bookend with a contents card that ticks off. Put any confession in the frame line
+   rather than inside one item.
+6. **Get the AUDIO approved before you composite.** A separate gate from the plan doc, and the
+   cheapest one in the run. Generate the VO, normalise it, concatenate the lines into one review
+   file with short gaps, and have the owner listen. On 2026-08-07 this caught a voice the owner's
+   own family had called mechanical — while the timeline did not yet exist. Compositing first would
+   have made a rejected read invalidate the whole build, because a voice change moves every beat and
+   every caption and is a timeline rebuild, not a file swap.
+7. **Climb the QC ladder cheaply. Render is the last rung, not the first.**
+   `plan doc → audio approved → stills → render → frames out of the render.`
+   Use **`npx hyperframes@0.7.5 snapshot --at <times> .`** (pin the version, same as every
+   other invocation; ~15s, writes PNGs and a contact sheet) to look
+   at your work; `npm run render` takes minutes. One run burned **seven full renders** on findings
+   that were all visible in a still. Then read frames out of the finished render anyway — a render
+   returning the right duration is not evidence it looks right, and `inspect` samples fixed points
+   so it misses collisions between them.
+8. **Audit the SCREEN, not only the script.** Run the second half of the `references/hooks.md`
+   checklist over every panel. It scopes to **claims and measurements** — structural notation (a
+   `1/5` counter, ordinals), dates, prices shown as UI and cited standards are exempt. For each
+   figure presented as evidence: does it appear in the VO, carry its unit, and come from a customer
+   rather than a test harness? Could two figures on one panel read as a claim you did not make? A
+   run that audited the script twice and the panels never shipped a lab number to camera.
+9. **Measure audio, do not blindly normalize.** House rule: measure first, prefer linear gain, and
    reserve dynamic normalization for genuinely quiet sources.
 
 ## Step 5 — Publish
@@ -288,3 +310,4 @@ a bare `recoupable.dev` or "link in bio" with no tag.
 - `references/publish-verify.md` — the pre-publish gate, post-publish verification, platform traps
 - `references/video-pipeline.md` — the shared build recipe: scaffold, rebuilt UI panels, captions, render, frame QC
 - `references/voice.md` — model vs voice vs delivery, the bake-off, audio tags, loudness, the checks before compositing
+- `references/structure.md` — holding a multi-item piece together after the hook: the count, the ordinals, the step counter, the bookend

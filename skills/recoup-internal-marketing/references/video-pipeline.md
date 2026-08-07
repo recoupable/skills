@@ -2,7 +2,7 @@
 
 Format-agnostic build steps for any short video in this workspace: a product update, an explainer,
 an announcement, a result. The **look** is chosen from the account's style catalog; the **hook** is
-governed by [`hooks.md`](hooks.md); the **voice** by [`voice.md`](voice.md). This file is the
+governed by `references/hooks.md`; the **voice** by `references/voice.md`. This file is the
 plumbing they all sit on.
 
 > **History.** This started as a HeyGen how-to. HeyGen is now the legacy alt path and ElevenLabs is
@@ -15,7 +15,7 @@ plumbing they all sit on.
 - **Voice-forward.** One narration line drives each beat; visuals support the voice.
 - **Dark and achromatic.** Chrome stays black and white; colour comes from the content and from
   status indicators, per the shared design system.
-- **Runtime target ~40s**, and never past it without a stated reason (see `hooks.md`).
+- **Runtime target ~40s**, and never past it without a stated reason (see `references/hooks.md`).
 
 What changes per video is **the hero** — what fills the middle. Pick it from the message:
 
@@ -102,7 +102,7 @@ Rules that hold for any hero:
 
 ## 5. Audio
 
-Generation, voice choice, audio tags, loudness and verification all live in [`voice.md`](voice.md).
+Generation, voice choice, audio tags, loudness and verification all live in `references/voice.md`.
 Read it before generating anything.
 
 The pipeline-level rules:
@@ -130,12 +130,25 @@ completion, and most feed viewers are sound-off.
 next fades in 0.04s later puts two captions in the same place for 0.1s. Leave a gap larger than the
 fade.
 
-## 7. Lint, inspect, render, then read frames
+## 7. Lint, snapshot, render, then read frames
+
+**Render is the expensive loop. Do not use it to look at your work.**
 
 ```bash
-npm run check     # lint + validate + inspect. 0 errors required
-npm run render    # renders in the background; heavy styles take minutes
+npm run check                                     # lint + validate + inspect. 0 errors required
+npx hyperframes@0.7.5 snapshot --at 4.2,26,42.5 .       # ~15s, writes PNGs + a contact sheet
+npm run render                                    # minutes. Only once the stills look right
 ```
+
+`hyperframes snapshot` captures key frames as PNGs **and builds a contact sheet for review**, in
+about fifteen seconds against two to four minutes for a render. Use `--at` with the times you care
+about, or `--frames N` for evenly spaced ones. With `GEMINI_API_KEY` set it will also run vision
+analysis on the frames; `--describe 'your question'` overrides the default prompt.
+
+Recorded 2026-08-07 because a run burned **seven full renders** iterating on layout and on-screen
+copy, and every one of those findings was visible in a still. Snapshot first, every time.
+
+Then, and only when the stills are right:
 
 **`inspect` samples a fixed number of points across the timeline and will miss collisions between
 them.** A caption collision survived two full passes because the sampler never landed while both
@@ -153,12 +166,48 @@ both elements are visible, and the tallest scene is the one that collides.
 Verify the render has **both** video and audio streams, the expected duration, and the expected
 dimensions. A render returning the right duration is not evidence it looks right.
 
+### Measure layout complaints, do not eyeball them
+
+When a reviewer says something "feels low" or "feels off", extract frames and compute the content's
+bounding box **across several beats** rather than squinting at a contact sheet. It converts a vague
+impression into a number that names the bug.
+
+On one run, "there's a lot of empty space at the top" became "the card's top edge sits at exactly
+y=960 in a 1920 frame, which is the 50% line" — which immediately identified a lost `translateY(-50%)`
+(see the GSAP trap below). Comparing beats also proved it was systematic rather than local: every
+scene was low, and the reviewer had simply spotted it on the shortest card, where the void was
+largest.
+
+### ⚠️ GSAP overwrites CSS `transform`, so never centre with one
+
+**Centring must live in GSAP (`xPercent: -50, yPercent: -50`), never in a CSS
+`transform: translate(-50%,-50%)` on an element GSAP animates.**
+
+```css
+/* WRONG — GSAP rewrites `transform` the moment it animates y/z/rotation */
+.scene { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+```
+```js
+/* RIGHT */
+gsap.set(".scene", { xPercent: -50, yPercent: -50 });
+```
+
+Cost three renders on 2026-08-07. Because the tweens animated `y`, `z` and `rotationY`, GSAP rebuilt
+the transform matrix and the `translateY(-50%)` silently vanished, so **every** scene rendered with
+its top edge on the 50% line instead of its centre. It hid in plain sight because tall panels fill
+downward and look plausible; it was only obvious on the shortest panel in the film.
+
+It had also produced a **phantom bug**: an earlier caption collision on one beat was this same
+offset pushing a panel down into the caption band, and it got "fixed" with a hand-tuned `top: 42%`
+nudge. When the real cause was fixed the nudge became wrong. **A hand-tuned offset that corrects a
+layout you cannot explain is a symptom — find the cause before shipping the nudge.**
+
 Lint gotcha: CSS `transform: scaleX(0)` plus a GSAP `scaleX` tween conflict. Use `gsap.fromTo(...)`
 and drop the CSS transform.
 
 ## 8. Ship
 
-Publishing mechanics and per-platform traps live in [`publish-verify.md`](publish-verify.md) and in
+Publishing mechanics and per-platform traps live in `references/publish-verify.md` and in
 `recoup-internal-social-ship-posts`. Log the post, declare the attribution state **at publish time**,
 and re-pull engagement at ~48h.
 

@@ -109,7 +109,7 @@ The voice exposes writing faults that read fine as text. Three that have cost us
   and meaningless; a contrast ratio means something to a front-end developer and nothing to a
   manager. **Put the number on screen as evidence and let the voice say what it meant** ("the page
   where we ask you to pay had text you could not read"). This also satisfies the rule in
-  [`hooks.md`](hooks.md) that on-screen text must complement the spoken line, never restate it.
+  `references/hooks.md` that on-screen text must complement the spoken line, never restate it.
 - **Every number needs its unit spoken.** "A hundred and fifty five accounts sat at zero" — zero
   what? Read every line aloud hunting for a bare number.
 - **A list of items needs scaffolding or it reads as a jumble.** State the count up front, then use
