@@ -63,7 +63,8 @@ The account workspace holds the durable marketing knowledge. Read in this order:
 | 6 | `POSTING-PLAYBOOK.md`, `LINKEDIN.md` | Per-platform mechanics and gotchas. Read before publishing, not after. |
 | 7 | `cast/<character>/` | Face guide, **canonical voice**, + **consent status** for any recurring character you plan to use. |
 
-Also read the production pipeline doc (`HEYGEN-HOWTO.md` or equivalent) before generating audio.
+Also read `references/video-pipeline.md` (the shared build recipe) and `references/voice.md`
+(voice choice, audio tags, loudness) before generating audio.
 
 **Output of this step:** name the **arc** and the **character** today's post serves. A post that
 serves no arc is an ad; reframe it or drop it. If the workspace has no `NARRATIVE.md`, say so to the
@@ -166,13 +167,15 @@ Gate the pick on all of these before building — details in `references/topic-s
 2. **Pick a style from `VIDEO-STYLES.md` and clone its reference project's `video/` dir.** Do not
    start from scratch. Route to the matching format skill where one exists (see
    `references/video-formats.md`); a format with no skill yet is built from its reference project.
-3. **A recurring character who speaks gets a canonical voice, chosen once.** Like the face guide:
-   run a small bake-off (3–4 candidate voices × the film's actual first lines, one preview file per
-   voice, owner picks), record the winner — name, voice id, pick date — in `cast/<character>/`, and
-   reuse it in every future piece. For story pieces prefer the character's **first-person inner
-   voice** over a narrator: the character stays the protagonist, and it pairs with no-lip-movement
-   footage. Per-line generation, measure-then-linear-gain (step 6 below). First set: Gatsby Grace →
-   ElevenLabs "Jessa", 2026-07-29.
+3. **Choose the voice deliberately, and check the MODEL before the voice** — `references/voice.md`.
+   Most "the VO sounds robotic" problems are a stale `model_id` inherited from a cloned generator
+   script, not the voice. A real listener called our narration "mechanical, not human" on 2026-08-06
+   and was right: we were on a stock voice driven by a model two generations old. Run a bake-off on
+   the film's actual lines, normalise every candidate to the same loudness before listening, and
+   record the winner (voice id, model, settings, date). A recurring **character** keeps its canonical
+   voice in `cast/<character>/` and prefers a first-person inner voice over a narrator; a **narrator**
+   may change whenever the old one is the problem. Verify every audio tag by transcribing the output
+   back — an unrecognised tag gets spoken aloud.
 4. **Write the plan doc first** (`SCRIPT.md` / `scene-plan.md`). It opens with **the why — theirs,
    then ours — above the arc**, both as single sentences, and where a real person's numbers are
    published, the risk to them stated alongside. A plan doc that starts at the scene table has
@@ -283,3 +286,5 @@ a bare `recoupable.dev` or "link in bio" with no tag.
 - `references/hooks.md` — hook archetypes, retention constraints, the pre-render checklist
 - `references/conversion.md` — tagged CTA links, the capture chain, per-platform caveats
 - `references/publish-verify.md` — the pre-publish gate, post-publish verification, platform traps
+- `references/video-pipeline.md` — the shared build recipe: scaffold, rebuilt UI panels, captions, render, frame QC
+- `references/voice.md` — model vs voice vs delivery, the bake-off, audio tags, loudness, the checks before compositing
