@@ -44,11 +44,26 @@ our logo on it.
 A specific-number payoff usually belongs **after** the work is shown, not in the cold open. "Eleven of
 eighteen thrown away" is compelling once you have seen the eighteen; used cold it is just a stat.
 
-## Pattern: the two-frame cold open
+## Pattern: the two-frame cold open — RETIRED for narrated pieces (2026-08-07)
 
-When a piece contains a real before/after, **open on the hard cut between them inside the first 1.6s**,
-two words of text per frame, no voiceover, no logo. Pattern interrupt, contrarian claim and payoff
-promise in one gesture, and it survives sound-off. First shipped 2026-07-28.
+**The pattern:** when a piece contains a real before/after, open on the hard cut between them inside
+the first 1.6s, two words of text per frame, no voiceover, no logo. First shipped 2026-07-28 on a
+piece where the cut *was* the whole story.
+
+**⛔ Do not use it in front of narration.** An owner watching a 56s narrated changelog said the two
+silent frames "feel like a glitch rather than a real part of the video." The reason is already in
+this file, one section down: on a cold autoplay feed, silence is indistinguishable from a video that
+has not loaded. A silent hard cut in front of narration reads as buffering, not as a pattern
+interrupt.
+
+**Do this instead: put the before/after where the voice explains it.** On the rebuild, the pricing
+card moved into the beat that describes it, and the invisible text tweened *into* legibility while
+the contrast meter climbed. Same evidence, better placed — a payoff instead of a trick — and the
+film opens on voice at t=0.25s.
+
+**The general rule this produced:** a doctrine written for one piece is a **default, not an
+invariant**. When two rules here conflict, the one about the audience's experience beats the one
+about the technique.
 
 ## The cold-feed premise test
 
@@ -79,6 +94,25 @@ line. Two corollaries:
 - [ ] Every beat **≤6.5s**?
 - [ ] Runtime **≤40s** unless there is a stated reason?
 - [ ] Does it avoid **qualifying the audience**?
+
+### Then audit the SCREEN, not just the script
+
+Added 2026-08-07, after a run that audited the script twice and the panels never. Both of that day's
+number defects lived in the graphics: one figure was fixed in the voice and left standing on screen,
+and another appeared on a panel having never been in the voice at all.
+
+- [ ] Does **every number on screen** appear in the VO, or get explained by it? A figure the
+      narration never earns arrives as noise.
+- [ ] Does every on-screen number carry its **unit**? ("155 accounts sat at zero" — zero what?)
+- [ ] Is any on-screen figure a **lab number** rather than a customer number? One panel showed
+      "280s of work survived", which came from a synthetic test harness (seven scripted 40s sleeps),
+      not from anyone's real usage. It measured the test, not the product.
+- [ ] Could two figures on one panel be read as a **claim you did not make**? "120s cap" beside
+      "280s survived" reads as "we raised the cap from 120 to 280" — the one thing that piece was
+      forbidden from implying.
+- [ ] Does on-screen text **complement** the caption rather than paraphrase it? Paraphrase counts:
+      "The measurement survived." under a caption reading "Deleting keeps the measurement you paid
+      for." is the same waste as printing it verbatim.
 
 ## Sources
 
