@@ -176,7 +176,12 @@ Gate the pick on all of these before building — details in `references/topic-s
    voice in `cast/<character>/` and prefers a first-person inner voice over a narrator; a **narrator**
    may change whenever the old one is the problem. Verify every audio tag by transcribing the output
    back — an unrecognised tag gets spoken aloud.
-4. **Write the plan doc first** (`SCRIPT.md` / `scene-plan.md`). It opens with **the why — theirs,
+4. **Name the final act before the hook.** A film that opens well and ends on an unrelated metric
+   loses the viewer at the turn, which is the most expensive place to lose them. Say in one line what
+   the last three beats are *about*, and check that every number in them belongs to something the
+   film already introduced. For a shipped API or feature that means the contract and a runnable CTA,
+   not a benchmark: `references/video-formats.md` → *The third act of a shipped-feature film*.
+5. **Write the plan doc first** (`SCRIPT.md` / `scene-plan.md`). It opens with **the why — theirs,
    then ours — above the arc**, both as single sentences, and where a real person's numbers are
    published, the risk to them stated alongside. A plan doc that starts at the scene table has
    skipped the only question the audience cannot see you skip. Get it reviewed **before** spending
