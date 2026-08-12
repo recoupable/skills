@@ -5,15 +5,17 @@ description: >-
   ONLY when the request explicitly includes "recoup-internal" (e.g.
   "recoup-internal apply to this Upwork job"). Never use for customer-facing or
   artist requests.
-  Find and apply to Upwork contract work end to end: triage the client before
-  writing anything, verify every claim against the actual repositories, draft
-  the cover letter and screening answers, pick the right work-sample pack, set
-  the rate, and log the outcome so the filter improves. Use when asked to
-  "apply to this Upwork job", "write an Upwork proposal", "should I bid on
-  this", "triage this client", "is this job worth connects", "find Upwork jobs
-  worth applying to", or when an Upwork job posting is pasted in. Requires a
-  local workspace directory and read access to the repositories behind any
-  claim being made.
+  Find, win and close Upwork contract work end to end: run the daily pipeline,
+  triage a client before writing anything, verify every claim against the actual
+  repositories, draft the cover letter and screening answers, pick the right
+  work-sample pack, set the rate, then follow up, handle the reply, run the call
+  and convert a trial into ongoing work. Use when asked to "apply to this Upwork
+  job", "write an Upwork proposal", "should I bid on this", "triage this client",
+  "is this job worth connects", "find Upwork jobs worth applying to", "run the
+  Upwork pipeline", "a client replied", "prep for the client call", "follow up on
+  my proposals", "why is nothing converting", or when an Upwork job posting is
+  pasted in. Requires a local workspace directory and read access to the
+  repositories behind any claim being made.
 ---
 
 # Upwork: find work and win it
@@ -52,10 +54,46 @@ If the workspace does not exist yet, create it and populate `PROFILE.md` as you
 verify claims. **`PROFILE.md` is the only source for reusable claims.** Nothing
 enters a letter that is not in it or freshly verified in a repository.
 
+## The daily run
+
+**Order matters, and it is not the order of the steps below.** The steps are the
+procedure for one proposal. A day optimized for *closing* starts with the pipeline
+that already exists, because a live thread converts far better than a new bid and
+costs no connects.
+
+1. **Read `LOG.md` and the connect balance.** Everything else is scoped by these.
+2. **Answer any client reply first, before anything else.** Reply speed is one of
+   the strongest conversion variables on the platform. An hour matters; a day
+   costs you the job. See `references/closing.md`.
+3. **Update the status of every open row.** Viewed, Declined, Job closed. This is
+   the funnel data and it is worthless if backfilled later from memory.
+4. **Follow up anything viewed but quiet past a week**, per the rules in
+   `references/closing.md`.
+5. **Only now** scan, triage and apply, and only if the connect floor allows.
+6. **Log it.**
+
+If the reply rate is zero after five or more proposals, insert a profile audit
+before step 5 and stop applying until it is done. See "Diagnosing a funnel that is
+not converting."
+
+### Connect budget
+
+A proposal costs 15 to 27 connects. **Never let the balance fall below ~27**, one
+job's worth, or a reply-worthy find arrives and you cannot act on it. On
+2026-08-12 the balance hit 1 with five proposals live.
+
+Spending the last of a balance is defensible only when the day's scanning and
+triage produced exactly one job worth bidding on and holding out is a bet on a
+better one appearing. Say that reasoning out loud in `JOB.md` when you do it.
+
 ## Step 0 — Triage gate
 
 **Do this before writing a single word.** The most expensive available mistake is
 a great proposal for a client who was never going to pay. Kill on any red.
+
+**These thresholds are provisional.** They were set from a handful of postings and
+have produced zero outcomes so far. Treat them as strong priors rather than laws,
+log every override, and retune them once `LOG.md` holds ten rows with outcomes.
 
 | Check | Where | Kill criterion |
 |---|---|---|
@@ -230,14 +268,60 @@ why. Update the outcome when it lands.
 
 `Draft` → `Submitted` → `Viewed` / `Interviewing` / `Hired` / `Declined` / `Job closed`
 
+**Record `Viewed` as its own status, every day.** Without it there is no funnel and
+no way to tell whether a losing streak is caused by targeting, by the profile, or
+by the letters. It is the cheapest diagnostic available and it is the one most
+easily skipped.
+
 The open question the log exists to answer: **does client payment history predict
 outcome better than skill fit does?** Record both for every proposal so the answer
 arrives on its own. Until roughly ten rows exist it is noise; after that the
 pattern is readable and the triage thresholds above should be retuned against it.
 
-**Follow-up cadence:** one week. Then a short message referencing something
-specific about their product. Do not follow up sooner on a job with 50+
-proposals; they have not started reading.
+## Step 9 — Follow up, reply, and close
+
+The work is not over at Submitted, and this is where a proposal becomes a
+contract. The full playbook is in `references/closing.md`: reply speed, what the
+first response has to do, running the call as discovery rather than demo, holding
+the rate by moving the scope, the paid trial, converting a trial into ongoing
+work, follow-up craft, and the platform rules that void payment protection.
+
+The three that matter most:
+
+- **Answer within the hour.** Everything else in the playbook is worth less than
+  this one habit.
+- **Hold the rate, move the scope.** When a client pushes on price, reduce what
+  they get, never what an hour costs. A discount is permanent and invisible; a
+  smaller first slice is neither.
+- **Never move off-platform before a contract exists.** It violates the terms and
+  it voids payment protection, which is the only thing standing between you and
+  an unpaid invoice with a stranger.
+
+## Diagnosing a funnel that is not converting
+
+Read the failure at the point it breaks, and fix only that.
+
+| Symptom | Most likely cause | What to do |
+|---|---|---|
+| Not even viewed | Timing, crowding, or a profile filtered out before it is read | Apply to fresher postings with fewer proposals; audit the profile |
+| Viewed, no reply | The letter, the rate, or the profile behind the link | Re-read the last two letters against `TEMPLATE.md`; audit the profile |
+| Replies, no contract | The call, the scope, or the rate | `references/closing.md` |
+| Contracts, no repeat work | Delivery, not sales | Out of scope for this skill |
+
+**The profile audit, when replies are zero after five or more proposals.** Stop
+applying and look at the thing every client looks at and this skill never checks:
+Job Success Score, review count, completed contracts, the headline, the first two
+lines of the overview, the rate against the category, and whether the portfolio
+entries match the work being bid on.
+
+**The cold-start problem, and why it is the owner's call.** A profile with no
+completed contracts and no reviews competes badly against bidders carrying a 100%
+JSS and fifty reviews, regardless of how good the proposal is. The standard remedy
+is to deliberately win one small, cheap, fast job to earn a first five-star
+review, then price back up. **That directly contradicts the rate discipline in
+Step 5**, so the skill does not get to choose. Put the trade to the owner
+explicitly, with the current JSS and review count in hand, and let them decide.
+Do not quietly start bidding low and call it strategy.
 
 ## Finding jobs worth applying to
 

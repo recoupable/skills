@@ -70,6 +70,8 @@
 {"intent": "recoup-internal apply to this Upwork job posting I just pasted", "expected": "recoup-internal-upwork", "not": ["recoup-internal-sales"]}
 {"intent": "recoup-internal is this Upwork client worth spending connects on", "expected": "recoup-internal-upwork", "not": ["recoup-internal-sales"]}
 {"intent": "recoup-internal write the cover letter and screening answers for this contract job", "expected": "recoup-internal-upwork", "not": ["recoup-research-find-contacts"]}
+{"intent": "recoup-internal a client replied to my Upwork proposal, what do I say", "expected": "recoup-internal-upwork", "not": ["recoup-internal-sales"]}
+{"intent": "recoup-internal run the Upwork pipeline, why is nothing converting", "expected": "recoup-internal-upwork", "not": ["recoup-internal-weekly-usage-review"]}
 
 # --- gating invariant: WITHOUT the recoup-internal keyword, internal skills must NOT fire ---
 # Only the internal skills with a plausible customer-facing collision get a negative; the dev/eval
