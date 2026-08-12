@@ -241,19 +241,35 @@ proposals; they have not started reading.
 
 ## Finding jobs worth applying to
 
-The triage gate is also the search filter. Rank a candidate list by, in order:
+Scrape wide, then score locally on **what the client actually pays**. The full
+recipe, including the scoring script and the input schema, is in
+`references/job-search.md`.
 
-1. **Spend per hire** above ~$1,000, and an average hourly paid inside the posted
-   band. This is the single strongest signal available.
-2. **Posted band** at or above the target rate.
-3. **Skill fit** against `PROFILE.md`, favoring postings whose hardest requirement
-   is something already shipped and public.
-4. **Low competition:** few proposals, nobody interviewing yet, cheap connects.
+**The one rule that governs this whole step: filter on behavior, not on the
+posting.** A job board's rate filter matches the *posted band*, which the client
+writes and nothing enforces. In a real scan of seven AI-agent postings, every one
+advertised a respectable band and the clients paid between $5.70 and $47.49 an
+hour. The rate filter excluded zero bad payers, because bad payers post good
+bands. Pull the band filter out of the query and apply it to the client's own
+average paid after the results land.
+
+Rank by, in order:
+
+1. **Average hourly actually paid**, at or above the target rate. This is the
+   whole ballgame and every other signal is secondary to it.
+2. **Ratio of posted-band ceiling to average paid.** Wider than ~3x is a kill.
+3. **Proposal count** under ~50. Over 100 is a lottery ticket bought with
+   connects you do not have.
+4. **Skill fit** against `PROFILE.md`, favoring postings whose hardest
+   requirement is something already shipped and public.
+5. **Total client spend, only in combination with a healthy average paid.**
+
+**Total spend on its own is a trap.** The two largest spenders in that same scan,
+at $2.8M and $98K, paid $10.40 and $19.04 an hour. Any ranking that leads with
+total spend surfaces precisely the clients to avoid.
 
 Prefer few, well-matched, fully verified proposals over volume. Four proposals at
-16 to 27 connects each will exhaust a standard balance in one session.
-
-**Not yet built:** an automated search that pulls postings on a schedule and
-scores them against this filter. Until it exists, this step is manual. When it is
-built, it belongs here and its scoring must be the table in Step 0, not a
-separate set of thresholds.
+16 to 27 connects each will exhaust a standard balance in one session. Write each
+scan to `scans/YYYY-MM-DD-<slug>.md` next to its raw JSON, including the scans
+that surface nothing: a category that reliably returns saturated, low-paying
+postings is worth knowing about before you query it again.
