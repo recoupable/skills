@@ -30,12 +30,9 @@ What follows from it, in order of how often it gets forgotten:
    destination, a broken signup path — the highest-value marketing act that day is to say so and get
    it fixed. Shipping a post into a funnel that converts nobody is activity, not progress.
 
-**Why this is written so bluntly:** on 2026-07-30 a full day went into hooks, frame QC and source
-attribution for a four-platform slate, while `/pricing` — the #2 marketing page, 79 visitors in 30
-days — had produced **zero trials since 2026-06-06**, and a live outreach customer's valuation
-dead-ended on prod ([chat#1902](https://github.com/recoupable/chat/issues/1902),
-[chat#1912](https://github.com/recoupable/chat/issues/1912)). Nothing in this skill would have
-surfaced either fact. Steps 2 and 5 now do.
+**Why this is written so bluntly:** on 2026-07-30 a full day went into craft for a four-platform
+slate while the page it pointed at had produced zero trials in eight weeks, and nothing in this skill
+would have surfaced that. Steps 2a and 5 now do. Full account: `references/conversion.md`.
 
 **Do the steps in order.** Each one exists because skipping it has cost us something specific, noted
 inline. Step 2 is the one most often skipped and the most expensive to skip.
@@ -127,6 +124,11 @@ Three legitimate sources, in preference order:
    storyline, write the arc proposal as its own doc and get an owner ruling before treating it as
    canon.
 
+**Gate zero, before every other gate: name the KIND of piece** — launch, incident, or report — from
+the source, not from what scored last week. Our strongest register is confession, so a shipped
+feature gets pulled toward being a story about our own mistake. That cost a full rebuild on
+2026-08-12. Structures and the beat-budget test: `references/topic-selection.md` → *Gate zero*.
+
 Gate the pick on all of these before building — details in `references/topic-selection.md`:
 
 - **Why named — theirs first, then ours.** One sentence on what the person in the piece gets out of
@@ -176,7 +178,12 @@ Gate the pick on all of these before building — details in `references/topic-s
    voice in `cast/<character>/` and prefers a first-person inner voice over a narrator; a **narrator**
    may change whenever the old one is the problem. Verify every audio tag by transcribing the output
    back — an unrecognised tag gets spoken aloud.
-4. **Write the plan doc first** (`SCRIPT.md` / `scene-plan.md`). It opens with **the why — theirs,
+4. **Name the final act before the hook.** A film that opens well and ends on an unrelated metric
+   loses the viewer at the turn, which is the most expensive place to lose them. Say in one line what
+   the last three beats are *about*, and check that every number in them belongs to something the
+   film already introduced. For a shipped API or feature that means the contract and a runnable CTA,
+   not a benchmark: `references/video-formats.md` → *The third act of a shipped-feature film*.
+5. **Write the plan doc first** (`SCRIPT.md` / `scene-plan.md`). It opens with **the why — theirs,
    then ours — above the arc**, both as single sentences, and where a real person's numbers are
    published, the risk to them stated alongside. A plan doc that starts at the scene table has
    skipped the only question the audience cannot see you skip. Get it reviewed **before** spending
@@ -211,7 +218,11 @@ Gate the pick on all of these before building — details in `references/topic-s
 
 ## Step 5 — Publish
 
-**Run the pre-publish gate first, then publish, then verify.** Full checklists and the per-platform
+**Run the executable pre-flight first; it exits non-zero, so do not publish past it.** A checklist
+validates the copy you can read; only the script validates that the runner will read it. Then publish,
+then verify the published text against the config with a **strict equality check** rather than by
+eye. Both, and the 2026-08-12 empty-tweet-to-the-wrong-account incident behind them:
+`references/publish-verify.md` → *Gate zero*. Full checklists and the per-platform
 traps: `references/publish-verify.md`. The gate is short and it has already caught a live defect
 (a literal `<YT link>` placeholder about to ship inside a YouTube description, 2026-07-28).
 

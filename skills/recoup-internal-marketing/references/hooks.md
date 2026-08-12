@@ -10,7 +10,8 @@ Read this **before** writing a scene table. A hook is not a line you add at the 
 
 | Fact | Consequence |
 |---|---|
-| The scroll decision takes **~1.5–1.7s**; a spoken hook must land in **3s / 10–14 words** | If the first line needs a second sentence to make sense, it has already failed |
+| The scroll decision takes **~1.5–1.7s**; a spoken hook must land in **3s** | If the first line needs a second sentence to make sense, it has already failed |
+| **Word budget depends on the narrator, so measure it.** 10–14 words assumes ~200 wpm. Our current narrator (W. L. Oxley, `eleven_v3`, stability 0.0) runs **~130 wpm and inserts ~0.45s between sentences**, so 3s is **about 8 spoken words and at most two clauses** | Generate the hook line and read its duration **before** writing the scene table |
 | **60%+ of mobile viewers watch sound-off** | The hook must work as picture and on-screen text alone |
 | Captions are worth **~12% more watch time** and **80% higher completion** | Burn in captions on every voiceover line. Not optional |
 | **The first frame IS the visual hook.** No intros, no logos, no silence | Our wordmark does not belong at t=0. Brand after the hook lands |
@@ -74,7 +75,7 @@ line. Two corollaries:
 
 - [ ] Does the **first frame** stop a stranger with no sound and no context?
 - [ ] **No logo and no fade** before ~5s?
-- [ ] Spoken hook lands in **3s, 10–14 words**?
+- [ ] Spoken hook lands in **3s**, measured from the generated audio rather than estimated from the word count?
 - [ ] Which **archetype** is it? (Cannot name one → rewrite.)
 - [ ] **Cold-feed premise test:** does the video state its own premise (VO or on-screen) without the caption?
 - [ ] **Captions burned in** on every line?
@@ -113,3 +114,17 @@ claims, and demanding the voice earn each one would forbid the step counter this
 - [Terra Market Group, 7 hook formulas for 70%+ retention](https://www.terramarketgroup.com/digital-marketing-2/short-form-video-hooks-7-formulas-for-70-retention/)
 - [virvid, the first 3 seconds for faceless Shorts](https://virvid.ai/blog/first-3-seconds-hook-faceless-shorts-2026)
 - [Kapwing, short-form video statistics 2026](https://www.kapwing.com/resources/short-form-video-statistics-tiktok-reels-and-shorts-by-the-numbers-in-2026/)
+
+
+## Generate the hook line before you write the scene table (2026-08-11)
+
+A hook written to the word count and generated afterwards ran **8.16s against a 3s target**, because
+the model adds a dramatic pause at every sentence boundary and three clauses bought three pauses.
+The whole scene table had to be retimed after the fact.
+
+**Cheap fix, and it is now the order of operations:** generate the single hook line first, read its
+duration and its per-word timings out of `audio_meta.json`, and only then write the table. The
+retimed version put "one show" at **1.06s**, inside the scroll decision, on two clauses instead of three.
+
+**What to check in the word timings, not just the total:** the moment the hook's *contradiction*
+lands. A 4.0s line whose surprising word arrives at 1.1s beats a 3.0s line that resolves at 2.9s.

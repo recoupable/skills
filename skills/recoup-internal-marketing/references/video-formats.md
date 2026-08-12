@@ -56,6 +56,56 @@ scratch.
   source files.
 - **Render heavy compositions in the background.** Foreground timeouts kill long renders.
 
+## The third act of a shipped-feature film (2026-08-11)
+
+Owner feedback on a cut that worked for 24 seconds and then lost him: *"38 checked, what does that
+mean? All the numbers on this scene make me confused based on the previous story."*
+
+The film told a single-artist story (one wrong show, one corrected answer) and then cut to a strip
+reading `38 QUERIED · 38 RETURNED · 0 FAILURES · 111 SHOWS`. Every figure was true and measured. It
+still failed, because **38 was a population the story had never introduced.** The viewer had one
+artist in their head and was handed a roster.
+
+**The rule this produces:**
+
+> **Every number in the final act must attach to a noun the film has already put on screen.**
+> A true number about a new subject is a subject change, and a subject change 24 seconds into a
+> 40-second film reads as a different video.
+
+**What the third act should be instead, for a shipped API or feature:** the contract, not the
+benchmark. Three beats that a viewer can act on:
+
+1. **The request.** The literal call, with the real field names. `POST /api/research/events` over
+   `{ "artist_id": "…" }`, captioned "one required field."
+2. **The constraint that makes it safe.** Show the field that does *not* exist. A schema list with
+   `artist_id REQUIRED`, `date OPTIONAL`, and `name` struck as `NOT A FIELD` proves the fix
+   structurally, in a way a success metric never can.
+3. **Every answer it can give**, including the unglamorous ones: real events, an empty list, and the
+   error. The error card is the most persuasive frame in the film, because it is the one a
+   competitor would hide.
+
+**Then end on something the viewer can run.** Not "learn more." The last beat of this one was two
+URLs, `docs.recoupable.dev/llms.txt` and `chat.recoupable.dev/keys`, under the line "give your agent
+the docs and a key." It converts a viewer into a caller in two steps.
+
+### Verify the CTA path before you script it
+
+The obvious CTA here was "tell Claude to use it through our MCP." **The MCP does not expose the
+research endpoints** — it carries `prompt_sandbox` and `run_sandbox_command` and nothing else, so
+that line would have been a confident, checkable lie in a film whose entire subject is not
+fabricating answers.
+
+**Before a CTA goes in a script, curl it.** `llms.txt` 200, `llms-full.txt` 200 and containing the
+endpoint, the keys page 200. All three were checked; the MCP claim was cut on the evidence.
+
+### A CTA can route around a broken destination
+
+`/pricing` hardcodes `utm_campaign=free` on its own free CTA and overwrites the campaign tag on the
+converting click, which is why five consecutive slates were unattributable. Pointing this film at
+`chat.recoupable.dev/keys` instead **sidesteps the defect entirely** — the click never passes through
+the page that eats the tag. Where the film's own logic supports a different destination, prefer the
+one that is not broken, and say in `posts-log.md` which defect you routed around.
+
 ## Handoffs
 
 | Next | Skill |
