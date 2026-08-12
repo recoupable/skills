@@ -6,13 +6,15 @@ description: >-
   "recoup-internal run the sales sweep"). Never use for customer-facing or
   artist requests.
   Run Recoup's daily sales sweep — walk the whole activity surface (Stripe
-  payments, Privy logins, new catalog valuations, the Attio pipeline, Supabase
-  credits, scheduled tasks, and chats), turn each signal into a prioritized
-  follow-up, then act on it: log the follow-up in Attio and draft (never send)
-  outreach. Use when asked to "run the sales sweep", "who should we follow up
-  with", "work the sales pipeline", "any new customers to reach out to", "who
-  signed in / paid / ran a valuation", "who's about to churn", or "find zombie
-  tasks we can turn off". Also covers **meeting prep for a booked call with a
+  payments, Privy logins, new catalog valuations, BOTH Attio funnels (Valuation
+  Leads for subscriptions and Agency Leads for custom-build/advisory work),
+  Supabase credits, scheduled tasks, and chats), turn each signal into a
+  prioritized follow-up, then act on it: log the follow-up in Attio and draft
+  (never send) outreach. Use when asked to "run the sales sweep", "who should we
+  follow up with", "work the sales pipeline", "any new customers to reach out
+  to", "who signed in / paid / ran a valuation", "who's about to churn", "what's
+  in the agency pipeline", or "find zombie tasks we can turn off". Also covers
+  **meeting prep for a booked call with a
   qualified customer** — producing the pitch, the meeting plan, and the PDFs to
   deliver; use when asked to "prep for the call", "what should I bring to the
   meeting", "what's our pitch", or "what docs should we deliver". Requires
@@ -115,6 +117,13 @@ of them requires the person to already be a user. That makes this an excellent
 new customer > warm valuation lead) puts retention ahead of acquisition every single
 time. On a small base with noisy retention signals, **you never reach pull 3.**
 
+**The one exception is the Agency Leads funnel** (pull 4), which is the only surface in
+this sweep where a live lead need never have touched the product. Agency revenue is a
+separate line from subscriptions and it converts on a different clock: a build or
+advisory engagement can close from a warm personal contact in a week, with no signup, no
+credits and no activation. When the product funnel is cold, **the agency board is often
+the fastest path to revenue in the whole sweep** — read it first, not last.
+
 That failure mode is not hypothetical. Measured 2026-08-04: two months with zero new
 sales, while **93 distinct accounts ran a catalog valuation in 60 days** (241 runs in
 June, 198 in July) and **56 of them ran exactly once and never returned.** The demand
@@ -128,11 +137,15 @@ into retention on existing accounts.
    Attio entry is an unworked, hands-raised lead. Prioritize **one-and-done runs**:
    they got their number and left, which is the sharpest unanswered-question signal
    we have.
-2. **Look outside the database.** No pull below does this, so it will not happen
+2. **Work the Agency Leads board.** Pull 4. Anything at `In Conversation` with no time
+   on the calendar is a warm lead one message away from an advancement, and it does not
+   require the person to be a user at all.
+3. **Look outside the database.** No other pull does this, so it will not happen
    unless you make it happen: named-account research, inbound-adjacent communities,
    and the enterprise/custom-dev angle for any label or catalog-holder domain already
    in Attio. Hunting is not a data pull; it is a decision to spend the day differently.
-3. **Cap retention work.** Timebox existing-account work so it cannot consume the day.
+   New agency leads land on `agency_leads` at **New**.
+4. **Cap retention work.** Timebox existing-account work so it cannot consume the day.
    A zombie task or a stale follow-up is real, but it will never produce a new sale.
 
 Return to the normal ordering once a new paid customer lands.
@@ -200,13 +213,56 @@ Ranking is a SQL job; qualifying a named lead is an API job.
 
 ### 4. Attio — the follow-up backlog (the heart of this sweep)
 
-The one pull that is *only* about follow-through. Load
-**`recoup-internal-funnel-valuation-pipeline`** for its Attio funnel recipes (list
-entries, stages, field slugs, enrich/advance calls), then surface:
+The one pull that is *only* about follow-through. **Read BOTH people funnels every
+sweep** — they are separate revenue lines and a sweep that reads one is blind to half
+the pipeline:
+
+| List | `api_slug` | What lives there |
+| --- | --- | --- |
+| **Valuation Leads** | `valuation_leads` | Product/subscription funnel. Someone ran a catalog valuation and could become a Pro subscriber. |
+| **Agency Leads** | `agency_leads` | Services funnel. Custom build, advisory, or retainer work. Usually arrives as a person emailing us, often from the personal network, and frequently has nothing to do with music. |
+
+Load **`recoup-internal-funnel-valuation-pipeline`** for the Valuation Leads funnel
+recipes (list entries, stages, field slugs, enrich/advance calls). The same Attio API
+shapes work for `agency_leads`.
+
+**Never file a lead on the wrong list.** An agency lead parked in Valuation Leads
+inflates the valuation funnel with someone who never ran a valuation, exactly the way a
+wrong `lead_source` does. If the person has no catalog interest, they are an agency lead.
+A person can legitimately appear on both, but only once each side is real.
+
+#### Valuation Leads — stages and SLA
+
+`New → Report Delivered → Qualified → Pro Offer Sent → Pro Active (Won) → Lost`
 
 - **Owed a nudge:** entries at **Report Delivered** or **Pro Offer Sent** whose
   last activity is older than the follow-up SLA (default **3 business days**) with
   no reply/advance — someone we reached out to who went quiet.
+
+#### Agency Leads — stages and SLA
+
+`New → In Conversation → Call Booked → Scoping → Proposal Sent → Won → Nurture → Lost`
+
+Fields: `stage`, `buyer_or_referrer` (Buyer / Referrer / Unknown), `project_type`
+(Build / Advisory / Retainer / Unknown), `owner`, `est_project_value`, `lost_reason`.
+
+- **The stage that matters most is `In Conversation`.** It means they replied but **no
+  time is on the calendar**. `Call Booked` is deliberately separate, because "agreed to a
+  call" and "a time exists" are different states and the gap between them is where this
+  pipeline has historically died — two threads went cold for **four years** and **three
+  and a half years** respectively, both immediately after the lead said yes to a call.
+  Both lapses were ours. **Flag any entry sitting at `In Conversation` for more than 3
+  days as the most urgent item on the agency side**, ahead of anything further down the
+  board.
+- **`Nurture` is where good contacts go to be forgotten** unless policed. Any Nurture
+  entry with no dated follow-up task is a bug: create the task or move it to **Lost**.
+- **Resolve `buyer_or_referrer` before scoping.** Personal-network leads are frequently
+  introductions, not buyers, and treating a referrer as a buyer wastes a cycle.
+- **Leave `est_project_value` empty until the work is scoped.** A guessed number makes an
+  unqualified lead look qualified.
+
+#### Both lists
+
 - **Flagged for follow-up:** any entry whose note / next-step says to circle back.
 - **Signal → action:**
   - Non-responder, < 3 touches → draft the next nudge (new angle, not a resend).
@@ -214,6 +270,9 @@ entries, stages, field slugs, enrich/advance calls), then surface:
     `lost_reason = No response` so the board stays honest.
   - Replied / booked → advance the stage and set the next step.
 - Always set the `owner` so every live lead is accountable to a person.
+- **A personal contact is not a sequence.** Much of the agency list comes from the
+  founder's own network. One light nudge from a personal inbox with a new angle, never
+  an automated cadence.
 
 ### 5. Credits — engagement and billing risk
 
@@ -308,17 +367,24 @@ ORDER BY ae.email NULLS LAST, sa.title;
 1. **Collapse to people.** Key every signal by account/email and merge across the
    eight pulls — one person, all their signals, deduped.
 2. **Rank by opportunity × urgency.** Roughly: failed payment / churn-in-progress
-   (save today) > new paid customer (welcome now) > warm valuation or enterprise
-   lead (work this week) > expansion / testimonial > zombie-task cleanup.
+   (save today) > new paid customer (welcome now) > **agency lead stalled at
+   `In Conversation`** (a booked call is the cheapest advancement available) > warm
+   valuation or enterprise lead (work this week) > expansion / testimonial >
+   zombie-task cleanup.
    **This ordering assumes a funnel that is converting.** If no new paid customer has
-   landed in 14 days, invert it — warm valuation and enterprise leads come first. See
-   the acquisition circuit-breaker above.
+   landed in 14 days, invert it — agency leads, warm valuation leads and enterprise
+   leads come first. See the acquisition circuit-breaker above.
 3. **Correlate across sources** — the cross-checks are where the real finds are:
    - paid in Stripe **but** no Privy login → onboarding never landed; reach out now.
    - valuation run **with no Attio entry** → an unworked lead; create it (step 3).
    - negative credits **and** an enterprise domain → expansion priced as risk.
    - zombie task **on** a went-silent account → one message does double duty
      (re-engage + stop the token drain).
+   - agency lead at **`In Conversation`** with **no dated follow-up task** → the exact
+     shape of every thread this pipeline has lost. Create the task before moving on.
+   - the same person on **both** funnels → decide which is real *now* and work that one;
+     pitching a subscription to someone who is talking to us about a build reads as a
+     sales sequence and costs the warmer thread.
 4. **Act:** write the follow-ups into Attio (create/advance entries, set `owner` +
    next step) and draft each outreach. Present the ranked list + drafts to the
    operator to send. Before drafting for any selected contact, build their
