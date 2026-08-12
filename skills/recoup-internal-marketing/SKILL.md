@@ -30,12 +30,9 @@ What follows from it, in order of how often it gets forgotten:
    destination, a broken signup path — the highest-value marketing act that day is to say so and get
    it fixed. Shipping a post into a funnel that converts nobody is activity, not progress.
 
-**Why this is written so bluntly:** on 2026-07-30 a full day went into hooks, frame QC and source
-attribution for a four-platform slate, while `/pricing` — the #2 marketing page, 79 visitors in 30
-days — had produced **zero trials since 2026-06-06**, and a live outreach customer's valuation
-dead-ended on prod ([chat#1902](https://github.com/recoupable/chat/issues/1902),
-[chat#1912](https://github.com/recoupable/chat/issues/1912)). Nothing in this skill would have
-surfaced either fact. Steps 2 and 5 now do.
+**Why this is written so bluntly:** on 2026-07-30 a full day went into craft for a four-platform
+slate while the page it pointed at had produced zero trials in eight weeks, and nothing in this skill
+would have surfaced that. Steps 2a and 5 now do. Full account: `references/conversion.md`.
 
 **Do the steps in order.** Each one exists because skipping it has cost us something specific, noted
 inline. Step 2 is the one most often skipped and the most expensive to skip.
@@ -127,13 +124,10 @@ Three legitimate sources, in preference order:
    storyline, write the arc proposal as its own doc and get an owner ruling before treating it as
    canon.
 
-**Gate zero, before every other gate: name the KIND of piece.** Launch, incident, or report. Look at
-the source, not at what scored last week. A shipped feature is a **launch** and its structure is
-hook · problem · solution · how it works · how to start, with the majority of beats spent on what the
-viewer gains. Our strongest register is confession, so there is real pull to reframe a feature launch
-as a story about our own mistake. That is exactly what happened on 2026-08-12 and it cost a full
-rebuild. The error is the setup, never the subject:
-`references/topic-selection.md` → *Gate zero*.
+**Gate zero, before every other gate: name the KIND of piece** — launch, incident, or report — from
+the source, not from what scored last week. Our strongest register is confession, so a shipped
+feature gets pulled toward being a story about our own mistake. That cost a full rebuild on
+2026-08-12. Structures and the beat-budget test: `references/topic-selection.md` → *Gate zero*.
 
 Gate the pick on all of these before building — details in `references/topic-selection.md`:
 
@@ -224,19 +218,11 @@ Gate the pick on all of these before building — details in `references/topic-s
 
 ## Step 5 — Publish
 
-**Run the executable pre-flight first. It exits non-zero; do not publish past it.** The written
-checklist validates the copy you can read in the config, and that is not the same as validating that
-the runner will read it. `post.mjs` wants `copy.x` as an **object** (`.text` / `.reply`) and
-`copy.ig` as a **bare string**, and it silently defaults every platform to sweetman when `accounts`
-is missing. On 2026-08-12 a flat string on `x` published a video to the wrong account with an empty
-body, and every written check passed. Script:
-`references/publish-verify.md` → *Gate zero*.
-
-**Then publish, then verify against the public surface.** Compare the published text to the config
-with a strict equality check and print it. A verification you skim is not a verification: the same
-run printed the evidence of its own empty body and read past it.
-
-**Run the pre-publish gate too, then publish, then verify.** Full checklists and the per-platform
+**Run the executable pre-flight first; it exits non-zero, so do not publish past it.** A checklist
+validates the copy you can read; only the script validates that the runner will read it. Then publish,
+then verify the published text against the config with a **strict equality check** rather than by
+eye. Both, and the 2026-08-12 empty-tweet-to-the-wrong-account incident behind them:
+`references/publish-verify.md` → *Gate zero*. Full checklists and the per-platform
 traps: `references/publish-verify.md`. The gate is short and it has already caught a live defect
 (a literal `<YT link>` placeholder about to ship inside a YouTube description, 2026-07-28).
 

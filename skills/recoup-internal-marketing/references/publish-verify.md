@@ -33,8 +33,11 @@ let fail = 0;
 const chk = (l, ok, d='') => { console.log((ok?'  PASS  ':'  FAIL  ')+l+(d?'  '+d:'')); if(!ok) fail++; };
 const c = cfg;
 for (const p of Object.keys(c.copy)) {
-  if (p === 'x')  { chk('copy.x.text', typeof c.copy.x.text==='string' && c.copy.x.text.length>0, '('+(c.copy.x.text?.length||0)+' chars)');
-                    chk('copy.x.text <= 280', (c.copy.x.text?.length||999)<=280); }
+  if (p === 'x')  { const t = c.copy.x.text;
+                    // X weights every URL at 23 chars regardless of literal length
+                    const w = typeof t==='string' ? [...t.replace(/https?:\/\/\S+/g,'x'.repeat(23))].length : 999;
+                    chk('copy.x.text', typeof t==='string' && t.length>0, '('+w+' weighted)');
+                    chk('copy.x.text <= 280 weighted', w<=280); }
   if (p === 'ig') chk('copy.ig is a bare string', typeof c.copy.ig==='string' && c.copy.ig.length>0);
   if (p === 'yt') chk('copy.yt.title/.description', !!c.copy.yt?.title && !!c.copy.yt?.description);
   if (p === 'li') chk('copy.li.body/.firstComment', !!c.copy.li?.body && !!c.copy.li?.firstComment);
@@ -61,41 +64,25 @@ nothing at all. A human reading the file will not see an absence. `process.exit(
 Run this against the final `post.config.mjs` **before** the publish command. It is fast and it has
 already caught a live defect.
 
-- [ ] **No em dashes or en dashes in any published copy.** Owner ruling, 2026-08-04: `—` and `–`
-      are the clearest tell that a post was written by an AI, and one in a caption undoes the
-      credibility the numbers were there to earn. This covers every field that reaches an audience:
-      captions, tweets, YouTube titles and descriptions, LinkedIn bodies and first comments,
-      on-screen text. Internal docs and code comments are exempt; anything a reader sees is not.
+_Dashes, placeholders and the X character count are asserted by the gate-zero script above. What
+follows is the judgement the script cannot make._
 
-      **Rewrite the sentence, do not swap the character.** A comma dropped in where the dash was
-      usually leaves the same over-hedged rhythm that gave it away. Split into two sentences, or use
-      a colon when the second half explains the first.
-
-      ```bash
-      node -e 'const c=(await import("./content/<slug>/post.config.mjs")).default;
-      const bad=/[—–]/; for (const [k,v] of Object.entries(c.copy))
-        console.log(k, bad.test(JSON.stringify(v)) ? "*** DASH PRESENT ***" : "clean");' --input-type=module
-      ```
-
-      Caught late on the LATASHÁ ten-year slate: the Instagram caption shipped with two em dashes
-      before the rule existed. IG captions are editable in-app; X posts are not.
-- [ ] **No placeholders anywhere.** Grep the whole config for `<`…`>` — `<YT link>`, `<COST>`, `TBD`.
-      On 2026-07-28 a literal `<YT link>` was in the YouTube description and the X reply and would
-      have shipped as visible text. **A placeholder must never ship.** If the thing it points at does
-      not exist yet, cut the sentence.
+- [ ] **Dashes: rewrite the sentence, do not swap the character.** A comma dropped where the dash was
+      leaves the same over-hedged rhythm that gave it away. Split in two, or use a colon when the
+      second half explains the first. (Owner ruling 2026-08-04. On-screen text counts; internal docs
+      do not. IG captions are editable in-app afterwards; X posts are not.)
+- [ ] **A placeholder is never "fill it in later".** If the thing it points at does not exist yet,
+      **cut the sentence.** A literal `<YT link>` reached a YouTube description on 2026-07-28.
 - [ ] **Every link resolves.** A link to an asset that is not published yet is a placeholder wearing a
       URL.
 - [ ] **CTA link is tagged** (`references/conversion.md`).
 - [ ] **The destination was opened today, and it pays off this post's promise.** Not "does it return
-      200" — *does the page a convinced viewer lands on continue the story the post told, and can it
-      actually convert?* A homepage that loads fine is still a dead end for a post about one artist's
-      catalog. On 2026-07-30 a four-platform slate shipped with every CTA resolving correctly to a
-      page that had produced **zero trials since 2026-06-06**.
+      200" — *does the page continue the story the post told, and can it convert?* A homepage that
+      loads fine is a dead end for a post about one artist's catalog. Precedent and the standing
+      `/pricing` defect: `references/conversion.md`.
 - [ ] **Attribution declared: readable or not.** If nothing records `utm_campaign` yet, write
       "conversion unreadable for this slate" into `posts-log.md` now, at publish time. Deciding this
       at the re-pull is how two consecutive runs reported engagement in place of conversion.
-- [ ] **X body is under 280 weighted**, computed with URLs counted as 23 characters each regardless of
-      literal length. Compute it; do not eyeball it.
 - [ ] **Artist tagged with the correct per-platform handle** — they differ (`@gatsby.wtf` on IG vs
       `@gatsby_grace` on X). Confirm each rather than reusing one.
 - [ ] **No leading @-tag on X.** A tweet that opens with a mention drops out of the main feed. Put the
