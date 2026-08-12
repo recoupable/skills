@@ -255,3 +255,25 @@ A strike-through bar over its own text trips `text_occluded`; marking the bar ch
 `hyperframes` then dies with `SyntaxError: The requested module 'util' does not provide an export
 named 'styleText'`. Prefix long-running build commands with
 `export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"`.
+
+
+## The QC gap: nothing checks the render against the script (2026-08-11)
+
+Every gate in this pipeline checks the film **against itself**. `lint` checks the timeline, `validate`
+checks the console, `inspect` checks layout, `ebur128` checks loudness, and frame QC checks that what
+rendered is what the composition describes. **None of them check that the composition is what the
+plan doc described.**
+
+So a scene element can be specified, approved by the owner, and silently never built. It happened on
+2026-08-12: the B1 Screen column read "over a dim map", the composition had no map in it, and the
+film passed every gate and was handed over as finished. The owner caught it on playback.
+
+**Add this to the pre-render checks, and it costs about a minute:**
+
+> **Read the plan doc's Screen column back against the composition, one row at a time.** For each
+> beat, name the element in the script and point at the markup that implements it. A row you cannot
+> point at is a row you did not build.
+
+It is the same discipline as reading frames out of the render rather than trusting the duration: the
+artifact has to be checked against the intent, not only against itself. Cheapest at the moment the
+composition is written, and cheap at pre-render. Expensive once it has been sent to the owner as done.
