@@ -30,6 +30,55 @@ storyline**, write the arc proposal as its own doc (premise, why not an existing
 guardrail, episode list) and get an owner ruling before treating it as canon. Do not quietly expand
 the canon inside a post.
 
+## Gate zero: what KIND of piece is this? (2026-08-12)
+
+**Ask this before the arc, because it decides the structure and the arc only decorates it.**
+
+Look at the source, not at the leaderboard:
+
+| The source is | The piece is | Its structure |
+|---|---|---|
+| **A thing we shipped** (a merged PR, a new endpoint, a feature) | a **launch** | hook · the problem it removes · the solution, named · how it works · how to start using it |
+| **A thing that went wrong** (an outage, a bad number, a wrong send) | an **incident** | hook · what happened · why · what changed · what is still not fixed |
+| **A measured result** (an artist's earnings, a weekly delta) | a **report** | hook · the number · how it was measured · what it means · what happens next |
+
+**A launch told as an incident is not a better launch. It is a different film.**
+
+### The trap, and it is a strong one
+
+Our best-performing register is confession: WE WERE WRONG was the best X post of its window and a
+product changelog took 2 views on YouTube six days later. Everything in this workspace celebrates
+that, and `NARRATIVE.md` makes the Integrity Arc canon. So when a **shipped feature** arrives, there
+is real gravity pulling it toward "here is what we got wrong, and here is the fix."
+
+That is how it went wrong on 2026-08-12. A new endpoint existed because a name-based lookup had
+emailed a customer the wrong artist's show. The run picked the incident, cleared every gate below
+(arc named, character named, why-theirs written, numbers verified) and built a film that spent its
+whole runtime on our mistake. Owner ruling:
+
+> It focuses too much on not sending any info which really hyperfocuses on the error rather than
+> highlight the new feature.
+
+It was rebuilt from scratch as a launch and came out **shorter** (34.4s against 46.1s), because
+explaining what a viewer gains takes less time than explaining what we got wrong first.
+
+**The rule:** the register is chosen by the subject, not by what scored last week. An incident that
+produced a feature is a launch whose problem section is one sentence long. Our error is the *setup*,
+never the subject, and it never gets more than one beat.
+
+### The budget test
+
+Count the beats. **A launch spends the majority of them on what the viewer gets** — the solution,
+how it works, how to start. If more beats are about us (our mistake, our process, our correction)
+than about them, it is an incident film wearing a launch's title. Rewrite or relabel it.
+
+### For a launch, name the feature
+
+Use the name the docs use, and check that the docs actually use it. On 2026-08-12 the copy invented
+"Events Finder" for something the docs call "Artist Events", which would have sent every viewer who
+clicked the CTA to a page with a different name on it. Either match the docs or ship a docs PR
+renaming it, but never let a launch introduce a name the product does not answer to.
+
 ## The gates every pick must clear
 
 **Why named — theirs, then ours. This gate comes first.**

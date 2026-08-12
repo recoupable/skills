@@ -127,6 +127,14 @@ Three legitimate sources, in preference order:
    storyline, write the arc proposal as its own doc and get an owner ruling before treating it as
    canon.
 
+**Gate zero, before every other gate: name the KIND of piece.** Launch, incident, or report. Look at
+the source, not at what scored last week. A shipped feature is a **launch** and its structure is
+hook · problem · solution · how it works · how to start, with the majority of beats spent on what the
+viewer gains. Our strongest register is confession, so there is real pull to reframe a feature launch
+as a story about our own mistake. That is exactly what happened on 2026-08-12 and it cost a full
+rebuild. The error is the setup, never the subject:
+`references/topic-selection.md` → *Gate zero*.
+
 Gate the pick on all of these before building — details in `references/topic-selection.md`:
 
 - **Why named — theirs first, then ours.** One sentence on what the person in the piece gets out of
@@ -216,7 +224,19 @@ Gate the pick on all of these before building — details in `references/topic-s
 
 ## Step 5 — Publish
 
-**Run the pre-publish gate first, then publish, then verify.** Full checklists and the per-platform
+**Run the executable pre-flight first. It exits non-zero; do not publish past it.** The written
+checklist validates the copy you can read in the config, and that is not the same as validating that
+the runner will read it. `post.mjs` wants `copy.x` as an **object** (`.text` / `.reply`) and
+`copy.ig` as a **bare string**, and it silently defaults every platform to sweetman when `accounts`
+is missing. On 2026-08-12 a flat string on `x` published a video to the wrong account with an empty
+body, and every written check passed. Script:
+`references/publish-verify.md` → *Gate zero*.
+
+**Then publish, then verify against the public surface.** Compare the published text to the config
+with a strict equality check and print it. A verification you skim is not a verification: the same
+run printed the evidence of its own empty body and read past it.
+
+**Run the pre-publish gate too, then publish, then verify.** Full checklists and the per-platform
 traps: `references/publish-verify.md`. The gate is short and it has already caught a live defect
 (a literal `<YT link>` placeholder about to ship inside a YouTube description, 2026-07-28).
 

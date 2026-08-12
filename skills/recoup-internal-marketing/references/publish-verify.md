@@ -3,6 +3,59 @@
 Two checklists and the platform traps behind them. Every item here exists because it went wrong on a
 real run.
 
+## Gate zero: does the runner actually read your copy? (2026-08-12)
+
+**Every other item on the checklist below validates the copy you can see in the config. None of them
+validates that the runner will ever read it.** That gap shipped a post with an empty body.
+
+`post.mjs` dereferences a specific shape. Get it wrong and the field is `undefined`, the connector
+posts whatever it was handed, and **nothing warns you**:
+
+| Platform | What `post.mjs` reads | Wrong shape gives you |
+|---|---|---|
+| X | `cfg.copy.x.text`, `cfg.copy.x.reply` | a flat string on `x` posts the **video with no text** |
+| Instagram | `cfg.copy.ig` (a bare string) | an object throws `caption must be a valid string` |
+| YouTube | `cfg.copy.yt.title`, `cfg.copy.yt.description` | an untitled upload |
+| LinkedIn | `cfg.copy.li.body`, `cfg.copy.li.firstComment` | an empty share |
+| all | `cfg.accounts[platform]` | **silently defaults to sweetman** |
+
+Note X and Instagram want *opposite* shapes. That has now bitten in both directions: an object on
+`ig` threw on 2026-08-07, and a string on `x` published an empty tweet on 2026-08-12.
+
+### Run this, and do not publish if it exits non-zero
+
+```bash
+node --input-type=module -e "
+import cfg from './content/<slug>/post.config.mjs';
+import { ACCOUNTS } from './lib/post/connectors.mjs';
+import fs from 'fs';
+let fail = 0;
+const chk = (l, ok, d='') => { console.log((ok?'  PASS  ':'  FAIL  ')+l+(d?'  '+d:'')); if(!ok) fail++; };
+const c = cfg;
+for (const p of Object.keys(c.copy)) {
+  if (p === 'x')  { chk('copy.x.text', typeof c.copy.x.text==='string' && c.copy.x.text.length>0, '('+(c.copy.x.text?.length||0)+' chars)');
+                    chk('copy.x.text <= 280', (c.copy.x.text?.length||999)<=280); }
+  if (p === 'ig') chk('copy.ig is a bare string', typeof c.copy.ig==='string' && c.copy.ig.length>0);
+  if (p === 'yt') chk('copy.yt.title/.description', !!c.copy.yt?.title && !!c.copy.yt?.description);
+  if (p === 'li') chk('copy.li.body/.firstComment', !!c.copy.li?.body && !!c.copy.li?.firstComment);
+}
+for (const [p, name] of Object.entries(c.accounts || {}))
+  chk('accounts.'+p+' resolves', !!ACCOUNTS[name], '-> @'+(ACCOUNTS[name]?.xHandle || name));
+chk('accounts set for every platform being posted', Object.keys(c.accounts||{}).length > 0);
+for (const f of [c.video, c.cover, c.liImage].filter(Boolean))
+  chk('asset exists: '+f, fs.existsSync('content/<slug>/'+f));
+const all = JSON.stringify(c.copy);
+chk('no em/en dash', !/[—–]/.test(all));
+chk('no placeholders', !/<[A-Z ]+>|TBD/.test(all));
+console.log(fail ? '\n  '+fail+' FAILURE(S) - DO NOT PUBLISH' : '\n  pre-flight clean');
+process.exit(fail ? 1 : 0);
+"
+```
+
+**Why it must be executable rather than a checklist item.** The account trap and the shape trap are
+both invisible to reading: the config *looks* complete, and the missing `accounts` key looks like
+nothing at all. A human reading the file will not see an absence. `process.exit(1)` will.
+
 ## Pre-publish gate
 
 Run this against the final `post.config.mjs` **before** the publish command. It is fast and it has
@@ -87,11 +140,28 @@ expire. The shared runner's `authHeaders()` prefers the key and falls back to th
 
 ## Post-publish verification
 
-A returned id is not proof the post is correct.
+A returned id is not proof the post is correct. **Neither is a verification you skim.**
+
+Compare the published field to the config **programmatically** and print the result. On 2026-08-12
+the verifier printed `text: https://t.co/wejzAvboDm`, which *was* the evidence the body was empty,
+and the run read past it and reported the post fine. A strict equality check cannot be read past:
+
+```bash
+# example: IG caption must be byte-identical to what the config intended
+node --input-type=module -e "
+import cfg from './content/<slug>/post.config.mjs';
+/* ...fetch published caption into `live`... */
+console.log('matches config exactly:', live === cfg.copy.ig);"
+```
+
+**Prefer the public surface over the connector's read path.** The connector's own detail endpoints
+401 on X and returned an empty envelope for YouTube on 2026-08-12. What is publicly visible is what
+the audience sees, and it is what to verify against: X syndication, the YouTube watch page,
+the IG media endpoint's `permalink` + `caption`.
 
 | Platform | Verify | How |
 |---|---|---|
-| **X** | the **video actually attached** | public syndication endpoint, no auth: `GET https://cdn.syndication.twimg.com/tweet-result?id=<ID>&lang=en&token=a` → `mediaDetails[].type` should be `video`. The connector's read endpoints 401 on our connection. |
+| **X** | the **body text published** AND the **video attached** | public syndication endpoint, no auth: `GET https://cdn.syndication.twimg.com/tweet-result?id=<ID>&lang=en&token=a`. Check `text` is your copy, **not just** that `mediaDetails[].type` is `video`. On 2026-08-12 the media check passed on a tweet whose `text` was nothing but the `t.co` media link, and the run reported success. **A `text` field containing only a `t.co` URL means the body is empty.** |
 | **YouTube** | `privacyStatus: public`, `uploadStatus: processed`, **and the description survived** | read them off the `YOUTUBE_UPDATE_VIDEO` response envelope (`result.data.status` / `result.data.snippet`) |
 | **Instagram** | the reel URL resolves | `curl -o /dev/null -w "%{http_code}"` → 200 |
 | **LinkedIn** | the post URN **and** that the first comment landed | the runner returns `commentId`; a share URN with no `commentId` means the comment failed |
