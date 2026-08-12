@@ -88,6 +88,7 @@
 | "recoup-internal" + run the day's marketing on one of our own accounts / what should we post today / make today's video (workspace canon + socials scrape + topic pick + build) | `recoup-internal-marketing` |
 | "recoup-internal" + draft/ship/measure LinkedIn or X posts | `recoup-internal-social-ship-posts` |
 | "recoup-internal" + FaceTime-call style AI video ad (Grok Imagine 1.5 native-speech clips) | `recoup-internal-video-grok-1.5-imagine-facetime` |
+| "recoup-internal" + find/apply to Upwork contract work: triage the client, verify claims against repos, draft the proposal + screening answers, pick the sample pack, set the rate, log the outcome | `recoup-internal-upwork` |
 
 ---
 

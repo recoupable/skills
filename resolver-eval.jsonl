@@ -67,6 +67,9 @@
 {"intent": "recoup-internal run the weekly usage review, what happened while I was gone", "expected": "recoup-internal-weekly-usage-review", "not": ["recoup-internal-account-health-report"]}
 {"intent": "recoup-internal draft and ship a launch post for LinkedIn and X", "expected": "recoup-internal-social-ship-posts"}
 {"intent": "recoup-internal make a FaceTime-call style AI video ad with Grok Imagine", "expected": "recoup-internal-video-grok-1.5-imagine-facetime", "not": ["recoup-content-make-video"]}
+{"intent": "recoup-internal apply to this Upwork job posting I just pasted", "expected": "recoup-internal-upwork", "not": ["recoup-internal-sales"]}
+{"intent": "recoup-internal is this Upwork client worth spending connects on", "expected": "recoup-internal-upwork", "not": ["recoup-internal-sales"]}
+{"intent": "recoup-internal write the cover letter and screening answers for this contract job", "expected": "recoup-internal-upwork", "not": ["recoup-research-find-contacts"]}
 
 # --- gating invariant: WITHOUT the recoup-internal keyword, internal skills must NOT fire ---
 # Only the internal skills with a plausible customer-facing collision get a negative; the dev/eval
@@ -74,6 +77,7 @@
 {"intent": "what's this catalog worth from public streaming data", "expected": "recoup-catalog-estimate-value", "not": ["recoup-internal-funnel-valuation-pipeline"]}
 {"intent": "write a caption for the artist's instagram post", "expected": "recoup-content-write-caption", "not": ["recoup-internal-social-ship-posts"]}
 {"intent": "how is this artist doing across streaming and socials", "expected": "recoup-research-artist-overview", "not": ["recoup-internal-account-health-report"]}
+{"intent": "pitch this song for a sync placement", "expected": "recoup-song-placement-pitch", "not": ["recoup-internal-upwork"]}
 {"intent": "recoup-internal audit how last night's task emails went", "expected": "recoup-internal-task-email-audit"}
 {"intent": "recoup-internal are we still sending empty footer-only emails from scheduled tasks", "expected": "recoup-internal-task-email-audit"}
 {"intent": "recoup-internal do today's marketing on our own account", "expected": "recoup-internal-marketing", "not": ["recoup-internal-social-ship-posts"]}
