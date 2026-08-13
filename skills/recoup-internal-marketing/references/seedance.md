@@ -504,6 +504,7 @@ parameters and the honest verdict, including the failures.
 | Date | Piece / arc | Endpoint | Duration · ratio · res · audio | Refs | Time | Verdict |
 |---|---|---|---|---|---|---|
 | 2026-08-13 | back-office v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 142s | ❌ **Generated, then REJECTED by output moderation.** `content_policy_violation`, "potential copyright violation", `partner_validation_failed`. Prompt was film-noir styled: night, rain on the window, loosened tie, desk lamp. |
+| 2026-08-13 | PoC: collision `[The Operator]` | fal **ref2v** | 10s · 9:16 · 720p · audio on | **1 face-free scene plate** | 208s | ✅ **Best result yet.** Scene plate transferred completely; the collision read as an accident; the crouch + phone-to-ear + line all landed. Seed `927418445`. |
 | 2026-08-13 | corridor v2 — **first reference call** | fal **ref2v** | 10s · 9:16 · 720p · audio on | 3 images (Nano Banana 2 face plates + env plate) | 210s | ❌ **REJECTED AT INPUT.** `content_policy_violation` — *"The images or videos provided may contain likenesses of real people or other private information that cannot be processed."* Settles the whitelist question: **a Nano Banana 2 face is not trusted.** |
 | 2026-08-13 | corridor v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 180s | ⚠️ **Passed moderation, failed the brief.** Craft up, story down — see *The framing ate the story* below. Seed `746924417`, 3.50MB, -25.8 LUFS. |
 | 2026-08-13 | back-office v2 (same beat, restyled) | fal t2v | 10s · 9:16 · 720p · audio on | none | 162s | ✅ **Passed.** 720x1280, 24fps, 10.08s, 1.55MB, AAC stereo 32kHz, seed `1632188029`. Character consistency across the full take was excellent. One constraint violation — see below. |
@@ -544,6 +545,26 @@ adjective; drop the disclaimer sentence, which has precedent nowhere.
 
 **The ablation worth running** when we next have budget: re-send the v1 prompt with *only* the
 lighting changed to daylight. If it passes, styling is confirmed and every other change was noise.
+
+### ✅ The face-free SCENE PLATE is the highest-leverage control we have
+
+**2026-08-13.** After face references were ruled out, we passed a single **environment** plate —
+an empty, art-directed corridor of an independent record label, generated with Nano Banana 2 — as
+`@Image1`, bound as *"controls the OFFICE ENVIRONMENT ONLY … do not take any person from @Image1."*
+
+**It passed moderation instantly and transferred almost completely.** Scuffed plaster, framed record
+sleeves, gold discs, pendant lights on exposed conduit, worn wooden floor with a runner rug, the
+window light and its direction — all present in the render, and the film stopped looking like a
+generic corporate office.
+
+**Why this matters more than it sounds.** Everything cinematic — location identity, lighting,
+palette, lens character, set dressing, era — lives in the plate, and none of it involves a face, so
+none of it touches the filter that closed the character route. **A scene plate is the cheapest
+cinematic upgrade available on this model.** Generate it deliberately as a still, art-direct it
+properly, and let Seedance populate it.
+
+The corollary: **invest in the plate, not in adjectives.** Two lines of art direction inside an image
+outperformed a paragraph of styling language in the prompt.
 
 ### 🔴 SETTLED: a third-party generated face is rejected as a reference
 
