@@ -504,6 +504,7 @@ parameters and the honest verdict, including the failures.
 | Date | Piece / arc | Endpoint | Duration · ratio · res · audio | Refs | Time | Verdict |
 |---|---|---|---|---|---|---|
 | 2026-08-13 | back-office v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 142s | ❌ **Generated, then REJECTED by output moderation.** `content_policy_violation`, "potential copyright violation", `partner_validation_failed`. Prompt was film-noir styled: night, rain on the window, loosened tie, desk lamp. |
+| 2026-08-13 | corridor v2 — **first reference call** | fal **ref2v** | 10s · 9:16 · 720p · audio on | 3 images (Nano Banana 2 face plates + env plate) | 210s | ❌ **REJECTED AT INPUT.** `content_policy_violation` — *"The images or videos provided may contain likenesses of real people or other private information that cannot be processed."* Settles the whitelist question: **a Nano Banana 2 face is not trusted.** |
 | 2026-08-13 | corridor v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 180s | ⚠️ **Passed moderation, failed the brief.** Craft up, story down — see *The framing ate the story* below. Seed `746924417`, 3.50MB, -25.8 LUFS. |
 | 2026-08-13 | back-office v2 (same beat, restyled) | fal t2v | 10s · 9:16 · 720p · audio on | none | 162s | ✅ **Passed.** 720x1280, 24fps, 10.08s, 1.55MB, AAC stereo 32kHz, seed `1632188029`. Character consistency across the full take was excellent. One constraint violation — see below. |
 
@@ -543,6 +544,40 @@ adjective; drop the disclaimer sentence, which has precedent nowhere.
 
 **The ablation worth running** when we next have budget: re-send the v1 prompt with *only* the
 lighting changed to daylight. If it passes, styling is confirmed and every other change was noise.
+
+### 🔴 SETTLED: a third-party generated face is rejected as a reference
+
+**2026-08-13, tested directly.** We passed three plates to `reference-to-video` — two character
+plates generated with **Nano Banana 2** plus a face-free environment plate. Result after 210s:
+
+```
+422 content_policy_violation · partner_validation_failed
+"The images or videos provided may contain likenesses of real people or other
+ private information that cannot be processed."
+```
+
+**What this establishes:**
+
+1. **The filter cannot distinguish a generated face from a real one.** It rejects *any*
+   face-containing reference whose provenance it does not trust. "It's AI-generated" is not a
+   defence and does not need to be true to be irrelevant.
+2. **Nano Banana 2 output is not on the trust whitelist.** That is Google's model; the whitelist is
+   reported to cover ByteDance's own image models (Seedream). Our house
+   `faceguide-model-workflow` — Nano Banana 2 builds the guide, another model consumes it — **does
+   not transfer to Seedance.**
+3. **The "trusted model output" route is narrower than we hoped.** It is not "any AI-generated
+   face"; it is "a face this vendor's own pipeline produced, unedited."
+
+**What still works:** face-free reference images. An environment, product, style or layout plate has
+no likeness to object to. Character identity has to come from either the prompt text or a
+ByteDance-native generator.
+
+**Untested and now the obvious next experiment:** generate the character plates with **Seedream**
+(ByteDance's own text-to-image, reported on the trust whitelist) and retry. That is the one
+remaining path to reference-controlled recurring characters on this model.
+
+**Note the cost of failing:** 210 seconds, the same as a successful generation. Input rejection is
+not fast — budget for it like a full run.
 
 ### 🔴 A generated "ordinary man" can be a real actor, and you will not see it until you crop in
 
@@ -637,9 +672,9 @@ Priced and specced questions are answered above. These are the ones only a gener
    for a full 30s take.
 2. **Does 9:16 at 720p hold up on a phone** next to our 1080p HyperFrames masters, or is the
    softness obvious in-feed? This decides whether Seedance can ever carry a full canon post.
-3. **Does the "trusted model output" route actually clear the real-face filter?** If yes, the
-   recurring-cast pipeline is alive and this is the single highest-value thing to test. If no,
-   Seedance stays limited to invented characters — still most of what we would want it for.
+3. ~~Does the "trusted model output" route clear the real-face filter?~~ **PARTLY ANSWERED
+   2026-08-13: a Nano Banana 2 face is rejected.** Third-party generators are not trusted. The
+   remaining question is narrower and worth one run: **does a Seedream-generated face pass?**
 4. ~~Is output really 24fps?~~ **Answered: yes**, confirmed from the file.
 5. **Does an audio reference carry a cast voice's timbre**, or does it drift like the reported
    accent failures?
