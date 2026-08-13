@@ -328,6 +328,7 @@ parameters and the honest verdict, including the failures.
 | Date | Piece / arc | Endpoint | Duration · ratio · res · audio | Refs | Time | Verdict |
 |---|---|---|---|---|---|---|
 | 2026-08-13 | back-office v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 142s | ❌ **Generated, then REJECTED by output moderation.** `content_policy_violation`, "potential copyright violation", `partner_validation_failed`. Prompt was film-noir styled: night, rain on the window, loosened tie, desk lamp. |
+| 2026-08-13 | corridor v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 180s | ⚠️ **Passed moderation, failed the brief.** Craft up, story down — see *The framing ate the story* below. Seed `746924417`, 3.50MB, -25.8 LUFS. |
 | 2026-08-13 | back-office v2 (same beat, restyled) | fal t2v | 10s · 9:16 · 720p · audio on | none | 162s | ✅ **Passed.** 720x1280, 24fps, 10.08s, 1.55MB, AAC stereo 32kHz, seed `1632188029`. Character consistency across the full take was excellent. One constraint violation — see below. |
 
 ### 🔴 New failure mode: output moderation, after the generation completes
@@ -367,10 +368,45 @@ adjective; drop the disclaimer sentence, which has precedent nowhere.
 **The ablation worth running** when we next have budget: re-send the v1 prompt with *only* the
 lighting changed to daylight. If it passes, styling is confirmed and every other change was noise.
 
+### 🔴 The framing ate the story — twice, the same way
+
+Two runs, two different subjects, **the same root failure: the thing carrying the story was not
+visible enough to read.**
+
+- **back-office v2:** the interruption was a phone *buzz*. Audio-only, so the cause was invisible,
+  and the paper falling read as the man sweeping it off the desk in anger rather than knocking it
+  by accident.
+- **corridor v1:** the interruptions were *people*, which should have fixed it. They did not read
+  either. The prompt asked three colleagues to step into the corridor and try to speak to him; in
+  the render they stay at their desks, small, deep in the background and out of focus. Ten seconds
+  of a man walking down a corridor, and nothing else.
+
+**The cause the second time was the camera, and it was chosen badly on purpose.** A backward
+tracking shot retreating ahead of the subject puts him large in the centre of a 9:16 frame and
+everyone else far away at desk level. Optimising the shot to show *his* face structurally guaranteed
+that the people who make the scene mean something would be background. The instruction "steps out
+from between two desks" cannot beat a lens that is thirty feet away and pointed at someone else.
+
+**Rules this produces:**
+
+1. **Name what the viewer must SEE, not what happens.** "The phone buzzes" and "she begins to speak"
+   are events, not images. Both got honoured in some invisible sense and neither reached the frame.
+2. **Put the story element between the subject and the lens, or at the frame edge close to camera.**
+   In a vertical frame anything past the mid-ground is set dressing. FAL's bodega prompt has the
+   messenger *walk around* a stationary customer — an interaction inside the near field.
+3. **A camera choice is a story choice.** Decide which the shot is about — the subject's face or what
+   is happening to him — before picking the camera, because one lens cannot serve both in 9:16.
+4. **Count the beats against the seconds.** Three interruptions in ten seconds at a fast walking pace
+   is roughly three seconds each including approach and recovery. That is not enough room; the model
+   quietly dropped them rather than rushing.
+
 ### ⚠️ Negative constraints are not reliably honoured for brand marks
 
 The prompt said **"no logos"** and the render still put a clearly readable **Apple logo** on the
-laptop lid, on screen for roughly half the take. Do not trust a negative instruction to keep brands
+laptop lid, on screen for roughly half the take. **The corridor run fixed this** by saying *how*
+rather than only forbidding it — "no brand marks or logos on any laptop, phone, wall or clothing;
+all laptops closed or turned away from camera" — and no logo appeared. Prescribe the staging, do not
+just ban the outcome. Do not trust a negative instruction to keep brands
 out of frame. Either compose so the object is turned away, or plan to patch it in post. This matters
 beyond tidiness: an unlicensed brand mark in a published piece is a real problem, and it is exactly
 the class of defect that survives review because the frame otherwise looks finished.
