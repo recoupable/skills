@@ -547,6 +547,37 @@ adjective; drop the disclaimer sentence, which has precedent nowhere.
 **The ablation worth running** when we next have budget: re-send the v1 prompt with *only* the
 lighting changed to daylight. If it passes, styling is confirmed and every other change was noise.
 
+### Compositing a Seedance plate in HyperFrames — four things that bite
+
+Learned building the first composite, 2026-08-13.
+
+1. **🔴 Render at `--fps 24`. HyperFrames defaults to 30.** Seedance outputs 24fps, so the default
+   duplicates every fifth frame and puts judder into exactly the thing Seedance is best at — a long
+   continuous camera move. `npx hyperframes@0.7.5 render --fps 24`.
+2. **The plate needs `data-has-audio="true"`.** Lint rejects an unmuted `<video>` without it, and
+   the alternative it suggests — mute the video, add a separate `<audio>` — throws away the native
+   audio that is half the point of the model.
+3. **Every fade needs a `tl.set` hard kill at its end**, or seeking past an exit leaves stale text
+   on screen. Lint catches it; the render would not have.
+4. **Time captions from a transcript, never by ear or from the prompt.** Our prompt said a line
+   landed at 7.9s; Parakeet put it at **6.45s** — a 1.5s drift that would have shipped. Run
+   `media-use`'s `transcribe.mjs --input <file>` for word-level timings.
+
+**Transcription also reveals lines the model improvised.** Ours added collision reactions and an
+unscripted *"That's it."* on the final beat that appear in no prompt. Worth knowing before you write
+copy that claims what the film says.
+
+### Audio: measure the LRA before reaching for a target loudness
+
+Our 30s film measured **-22.3 LUFS integrated with a 17.2 LRA** — a very wide range, because the
+collision is a transient spike against quiet room tone. **A linear gain to the -15.9 house target
+would have clipped**, since true peak was already -1.68 dBTP.
+
+What worked: **linear gain plus a true-peak limiter catching only the transient** —
+`volume=6.5dB,alimiter=limit=0.84` — landing at **-17.8 LUFS / -1.3 dBTP / LRA 15.3**. Slightly
+under target, dynamics essentially intact. Prefer being 2 LU quiet over flattening the one moment
+the film is built around.
+
 ### ✅ 30 seconds, three acts and a hard location change hold together
 
 **2026-08-13.** The full episode generated in one pass: office corridor → collision → crouch and a
