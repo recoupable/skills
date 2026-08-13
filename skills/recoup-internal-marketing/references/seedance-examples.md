@@ -129,8 +129,10 @@ Do not copy [pose, background, lighting, camera angle, or text] from @Image1.
 
 > 16-second continuous automotive tracking shot. @Image1 controls only the exact fictional silver sports car: preserve its body shape, silver paint, front light signature, black roof, wheel-spoke design, proportions, vents, and ride height. Do not copy @Image1's sunny San Francisco waterfront or parked composition. @Video1 controls only the low side-tracking camera height, parallel motion, subject framing, and real-time movement rhythm. Do not copy the skater, skateboard, cone, clothing, beach, or concrete setting from @Video1. Place the car on a rain-wet downtown Seattle avenue at blue hour. 0-4 seconds: the car waits at a red traffic light while the camera holds a low front-side angle. 4-11 seconds: the light turns green and the car accelerates smoothly; the camera tracks parallel at door height while keeping the full car centered and sharp. Wheels rotate at the correct speed, suspension settles under acceleration, reflections move across the exact silver body, and water sprays backward from the tires. 11-16 seconds: the car eases into the right lane and maintains speed while the camera falls half a car length behind into a rear three-quarter view. Preserve one car and the same design in every frame. No cuts, no redesign, no extra spoiler, no logo, no copied human subject, no skateboard, no cone, no slow motion. Audio: wet tire noise, restrained electric motor whine, distant traffic, rain on road, no music.
 
-Note the car is described as **"fictional"** — the same defensive move that got our own run past
-the output moderation filter.
+Note the car is described as **"fictional"** — one adjective on the subject. This is the *only*
+precedent in any published example for defensive identity language. Nothing in this library says
+"must not resemble any real or famous person" or "this is not a scene from any film"; we invented
+that sentence, and there is no evidence it does anything. Keep the adjective, skip the sentence.
 
 ### UGC travel cup, dialogue as performance
 *Teaches: block dialogue with start and end times, and say when the mouth is closed. Also our only **9:16 vertical** example.*
@@ -349,7 +351,8 @@ desk lamp — a film-noir register.
 > 10-second continuous single take, vertical 9:16, natural real-time speed, no cuts. A cramped independent record-label back office, late at night. One man in his forties sits at a desk: rolled shirtsleeves, collar open, tie pulled loose. An open laptop faces away from camera. To his left, a leaning stack of paper contracts. A phone lies face-up beside the laptop. Overhead fluorescent light mixed with cool spill from the laptop screen. Rain runs down a window behind him. 0-3 seconds: he is mid-work, both hands on the keyboard, eyes down, jaw tight. The phone buzzes once against the desk and lights up. He does not look at it. 3-6 seconds: the phone buzzes a second time, longer. He exhales, reaches right for it without looking, and his forearm catches the stack of contracts; the top third slides off the desk and falls past the front of frame. 6-8 seconds: he stops. He looks at the fallen paper on the floor, then at the still-buzzing phone, then back at the laptop. He picks up nothing. 8-10 seconds: he sits back in the chair, drags one hand down his face, and lets it fall into his lap. The phone stops buzzing on its own. He says quietly, "Yeah. I know." The shot ends on him still. Camera: locked-off medium shot at seated eye level, the man held in the centre third with headroom above him. Starting at 6 seconds only, a very slow push in of about fifteen centimetres. The camera never pans, never cuts, and never leaves the room. Keep the same man, shirt, tie, desk layout, laptop position and phone from first frame to last. Paper falls downward under gravity and stays on the floor; the amount of paper never increases. Audio: quiet office room tone, rain on the window behind him, two phone vibrations against a wooden desk, paper sliding and landing, one chair creak, and one line of male American-accented dialogue, "Yeah. I know." No music. No cuts, no slow motion, no repeated action, no duplicated paper or phones, no second person entering frame. No text anywhere in frame: no readable laptop screen, no phone screen content, no signage, no labels, no subtitles, no captions, no logos, no watermark.
 
 ### v2 — PASSED
-Same beats, restyled to plain daylight plus an explicit fictional-person statement. Seed
+Same beats, restyled to plain daylight. Five things changed at once, so which one cleared the
+filter is unknown — see the confounding note in `seedance.md`. Seed
 `1632188029`, 162s. **Defects observed:** an Apple logo rendered despite "no logos"; the phone
 buzz read as invisible so the paper fall looked like anger rather than distraction.
 
@@ -387,7 +390,8 @@ buzz read as invisible so the paper fall looked like anger rather than distracti
 4. **`@ImageN controls only … Do not copy … from @ImageN.`** The two-clause reference binding.
 5. **"natural real-time speed"** — appears in every FAL prompt, and is the counter to the model's
    drift toward slow motion.
-6. **Calling a subject "fictional"** — used by FAL for the car and by us to clear moderation.
+6. **Calling a subject "fictional"** — one adjective, used by FAL for the car. Cheap, precedented.
+   Do **not** inflate it into a disclaimer sentence; that has precedent nowhere and no evidence.
 7. **A named frame position** ("the left third", "the centre third with headroom") rather than
    "centred" or "dynamic".
 8. **State what a camera move waits for**: "the camera does not pan until the ball has fully left

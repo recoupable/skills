@@ -345,12 +345,27 @@ What flipped it from rejected to passed, changing only styling and keeping every
 | "cinematic" framing language | "Plain documentary realism, no cinematic stylisation, no film-noir look" |
 | No statement about the character's identity | "a fictional, unremarkable person… **must not resemble any real, famous or public figure, and this is not a scene from any film or television programme**" |
 
-**Rules this produces.** Noir and prestige-TV styling is the highest-risk register — night plus rain
-plus a loosened tie plus a desk lamp is a look the filter appears to associate with protected work.
-State explicitly that the character is fictional and resembles no public figure, and that the shot is
-not from any film or programme. Prefer plain, documentary, daylit description. Budget for a rejection
-on any stylised first attempt, and change **styling first** when one happens — the story beats
-survived untouched.
+**⚠️ This experiment is CONFOUNDED — do not read a cause out of it.** Five things changed between
+v1 and v2 at once, so we do not know which one mattered. FAL's guide says plainly *"change one thing
+when a generation misses"*, and we did not. An earlier version of this section asserted that the
+identity disclaimer "got our run past the filter"; **that claim was unfounded and has been removed.**
+
+**What is actually reasonable to believe.** The rejection fired on the *generated output*
+(`partner_validation_failed`, "the generated output was rejected"), which means a classifier looked
+at frames. A sentence in the prompt cannot change pixels the way lighting can. So the **styling
+change is the plausible lever** — night, rain, desk lamp and a loosened tie produce a recognisably
+noir image; flat daylight does not. **The identity disclaimer is probably inert**, and possibly
+counterproductive, since it injects the words "famous", "public figure" and "film or television
+programme" into a prompt for no mechanical benefit.
+
+**Working rules, held loosely until someone runs the ablation.** Prefer plain, documentary, daylit
+description over noir and prestige-TV styling. Budget for a rejection on any stylised first attempt.
+When one happens, **change styling first, and change ONE thing** so the next result is readable.
+Calling a subject "fictional" is cheap and has real precedent (FAL uses it for the car), so keep the
+adjective; drop the disclaimer sentence, which has precedent nowhere.
+
+**The ablation worth running** when we next have budget: re-send the v1 prompt with *only* the
+lighting changed to daylight. If it passes, styling is confirmed and every other change was noise.
 
 ### ⚠️ Negative constraints are not reliably honoured for brand marks
 
