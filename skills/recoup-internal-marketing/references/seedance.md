@@ -22,28 +22,39 @@ npx --yes skills@latest add \
 # then: /sd25-pe <your prompt>
 ```
 
-## 🔴 The blocker: no real human faces as input
+## The face restriction — read it precisely, it is narrower than it sounds
 
 > **"Seedance 2.5 does not support directly uploading reference images/videos containing real human
 > faces."** — [BytePlus docs](https://docs.byteplus.com/en/docs/ModelArk/2607688)
 
-This is documented policy, not a rumour, and it came out of the 2026 Disney / Netflix / Warner Bros.
-Discovery / Paramount cease-and-desist wave against Seedance 2.0 (ByteDance added C2PA watermarking
-and face filters on 2026-03-30).
+**This restricts what you may UPLOAD as a reference. It does not restrict what the model may
+GENERATE.** Every ByteDance demo is full of faces — the singer walking from dressing room to stage,
+the Peking Opera trio, the grandmother and the robot — and so is every worked example in the fal
+guide (the bodega messenger, the diner customer, the UGC presenter). Text-to-video with an invented
+character is completely unaffected. **Do not read this rule as "make faceless videos."** An early
+draft of this doc did, and it nearly cost us a good idea.
 
-**It breaks our main cast pipeline.** The Nano Banana 2 face guide → i2v route we use for
-brauxelion and Gatsby Grace feeds a real face at input, and Seedance will reject it. So does any
-photo of a real artist. **Do not plan a cast piece around Seedance until one of the three sanctioned
-routes is tested** ([doc 2608626](https://docs.byteplus.com/en/docs/ModelArk/2608626)):
+What it actually blocks: uploading a **photograph of a real person** as a reference. That is the
+2026 Disney / Netflix / WBD / Paramount cease-and-desist fallout — ByteDance added C2PA watermarking
+and real-face filters on 2026-03-30.
 
-1. **Reuse trusted model outputs** — face-containing frames *your own account generated* with certain
-   models can be fed back in without tripping input moderation. Most promising for us; untested.
-2. **The preset digital-characters library** — free compliant portrait assets. Off-canon faces.
+| You want to | Status |
+|---|---|
+| Generate an invented character with a face, via t2v | ✅ Unaffected. This is what the demos do. |
+| Generate a character and keep them consistent across a 30s take | ✅ Native (imperfect — see failure modes) |
+| Upload a real artist's photo as a subject reference | ❌ Rejected at input |
+| Upload our Nano Banana 2 face guide of a real person (brauxelion, Gatsby Grace) | ❌ Rejected — it is a real face |
+
+So the **cast pipeline** is the part that is blocked, not the medium. Three sanctioned routes exist
+([doc 2608626](https://docs.byteplus.com/en/docs/ModelArk/2608626)), none tested by us:
+
+1. **Reuse trusted model outputs** — face-containing frames *your own account generated* can be fed
+   back in without tripping input moderation. Most promising; test this first.
+2. **The preset digital-characters library** — free compliant portrait assets, but off-canon faces.
 3. **Authorized real-person assets** — a formal licensing path we have not explored.
 
-Consequence for a first run: **make the first piece faceless.** Landscape, object, product,
-environment, hands, or a location we could never shoot. That also sidesteps likeness consent
-entirely, which is the right way to spend a first experiment.
+**Practical rule:** an original character invented in the prompt is fully available today. A
+recurring cast member whose likeness is a real person is not, until route 1 is proven.
 
 ## The constraints that will bite us
 
@@ -51,7 +62,7 @@ Read these before planning a shot. Every one changes what we can promise.
 
 | Constraint | Value | Why it matters to us |
 |---|---|---|
-| **Real faces at input** | **Rejected.** See above. | Kills the face-guide → i2v cast route until a workaround is proven. |
+| **Real faces as INPUT** | Rejected. Generating faces is fine. | Blocks the face-guide → i2v *cast* route until route 1 is proven. Invented characters are unaffected. |
 | **Max resolution** | **480p or 720p. No 1080p, no 4K.** | **Our slate renders 1080x1920.** At 9:16 that's **720x1280** — needs a 1.5x upscale or an accepted softer master. The "native 4K" headlines belong to Seedance **2.0** (which does do 1080p/4K); 2.5 traded resolution for length and reference control. |
 | **No draft mode** | `draft` is unsupported on 2.5 | **This breaks our cheap-QC-ladder doctrine.** There is no preview pass — every attempt is full price. Budget for iterations up front and get the prompt reviewed before spending. |
 | Duration | 4–30s, every integer; `-1`/`auto` lets the model choose | A 30s single take can carry a whole canon post (ours run 30–46s). |
@@ -185,8 +196,8 @@ From hands-on reviews, worth believing before we spend money rediscovering them:
 **Legal context worth knowing as a company that publishes.** Seedance 2.0 drew cease-and-desist
 letters from Disney, Netflix, Warner Bros. Discovery and Paramount, plus MPA allegations about
 training data. 2.5 ships with C2PA watermarking, face filters and a licensed-IP revenue-share
-program. Disputes are not settled. Our exposure is low if we generate original, faceless,
-non-IP scenes — which is another argument for that as the first run.
+program. Disputes are not settled. Our exposure is low when we generate original characters and
+non-IP scenes, which is what an invented-character prompt does by construction.
 
 ## How to write the prompt
 
@@ -324,9 +335,9 @@ Priced and specced questions are answered above. These are the ones only a gener
 1. **How long does a 30s generation actually take?** No source gives a measured figure.
 2. **Does 9:16 at 720p hold up on a phone** next to our 1080p HyperFrames masters, or is the
    softness obvious in-feed? This decides whether Seedance can ever carry a full canon post.
-3. **Does the "trusted model output" route actually clear the real-face filter?** If yes, the cast
-   pipeline is alive and this is the single highest-value thing to test. If no, Seedance is
-   permanently a faceless-plate tool for us.
+3. **Does the "trusted model output" route actually clear the real-face filter?** If yes, the
+   recurring-cast pipeline is alive and this is the single highest-value thing to test. If no,
+   Seedance stays limited to invented characters — still most of what we would want it for.
 4. **Is output really 24fps?** Inferred from fal's billing formula only; confirm against the file.
 5. **Does an audio reference carry a cast voice's timbre**, or does it drift like the reported
    accent failures?
