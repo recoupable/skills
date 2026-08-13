@@ -544,6 +544,33 @@ adjective; drop the disclaimer sentence, which has precedent nowhere.
 **The ablation worth running** when we next have budget: re-send the v1 prompt with *only* the
 lighting changed to daylight. If it passes, styling is confirmed and every other change was noise.
 
+### 🔴 A generated "ordinary man" can be a real actor, and you will not see it until you crop in
+
+**2026-08-13.** We generated character plates with Nano Banana 2, using frames from our own approved
+corridor clip as the identity reference. The resulting studio headshot is a **clear likeness of a
+well-known actor** — same face across both variants and both plates. Nothing in the chain asked for
+a celebrity: the Seedance prompt said "an ordinary man in his early forties, plain everyday face."
+
+**Why it hid.** In a 10-second walking shot, at distance, with motion blur, the face read as
+"generic man" and passed review. Isolated as a clean 1792×2400 portrait, it is unmistakably
+somebody. **The defect was present in the video the whole time; the crop only revealed it.**
+
+**Two consequences:**
+
+1. **Audit the FACE, not just the frame.** Before any generated character is reused or published,
+   crop a tight headshot from the plate and look at it cold. A likeness that is invisible at walking
+   distance is still a likeness, and the still frames we publish alongside a video are exactly the
+   crop that exposes it.
+2. **It gives a much better hypothesis for the v1 moderation rejection.** We blamed "noir styling"
+   abstractly. The stronger explanation: a night office scene with a man in a loosened tie pulled the
+   model toward *a specific show*, and generated a face from it — which is precisely what an
+   output-side copyright classifier would catch. Styling did not trip the filter as an aesthetic;
+   it steered the casting. That reframes the working rule from "avoid noir" to **"avoid prompts that
+   evoke a specific production, because the model will cast it."**
+
+**Do not feed a plate like this back into Seedance as a reference.** It stacks a likeness problem on
+top of a filter that is explicitly looking for one.
+
 ### 🔴 The framing ate the story — twice, the same way
 
 Two runs, two different subjects, **the same root failure: the thing carrying the story was not
