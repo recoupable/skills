@@ -324,25 +324,76 @@ credit-metered, so it never runs for our own accounts; **`hyperframes-media`** w
 One row per generation. This is the section that makes the doc worth keeping — record the cost, the
 parameters and the honest verdict, including the failures.
 
-| Date | Piece / arc | Endpoint | Duration · ratio · res · audio | Refs | Cost | Verdict |
+| Date | Piece / arc | Endpoint | Duration · ratio · res · audio | Refs | Time | Verdict |
 |---|---|---|---|---|---|---|
-| _(first run pending — 2026-08-13)_ | | | | | | |
+| 2026-08-13 | back-office v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 142s | ❌ **Generated, then REJECTED by output moderation.** `content_policy_violation`, "potential copyright violation", `partner_validation_failed`. Prompt was film-noir styled: night, rain on the window, loosened tie, desk lamp. |
+| 2026-08-13 | back-office v2 (same beat, restyled) | fal t2v | 10s · 9:16 · 720p · audio on | none | 162s | ✅ **Passed.** 720x1280, 24fps, 10.08s, 1.55MB, AAC stereo 32kHz, seed `1632188029`. Character consistency across the full take was excellent. One constraint violation — see below. |
+
+### 🔴 New failure mode: output moderation, after the generation completes
+
+**The filter judges the generated FRAMES, not just the prompt.** The first run ran to `COMPLETED`
+and was then rejected — you pay the wall-clock, and possibly the credits, for a video you never see.
+There is no way to preview this, because there is no draft mode.
+
+What flipped it from rejected to passed, changing only styling and keeping every story beat:
+
+| v1 (rejected) | v2 (passed) |
+|---|---|
+| Night, rain running down the window, desk lamp, overhead fluorescent | Ordinary weekday afternoon, flat daylight through half-open venetian blinds |
+| Rolled shirtsleeves, collar open, tie pulled loose | Plain grey crew-neck t-shirt |
+| "cinematic" framing language | "Plain documentary realism, no cinematic stylisation, no film-noir look" |
+| No statement about the character's identity | "a fictional, unremarkable person… **must not resemble any real, famous or public figure, and this is not a scene from any film or television programme**" |
+
+**Rules this produces.** Noir and prestige-TV styling is the highest-risk register — night plus rain
+plus a loosened tie plus a desk lamp is a look the filter appears to associate with protected work.
+State explicitly that the character is fictional and resembles no public figure, and that the shot is
+not from any film or programme. Prefer plain, documentary, daylit description. Budget for a rejection
+on any stylised first attempt, and change **styling first** when one happens — the story beats
+survived untouched.
+
+### ⚠️ Negative constraints are not reliably honoured for brand marks
+
+The prompt said **"no logos"** and the render still put a clearly readable **Apple logo** on the
+laptop lid, on screen for roughly half the take. Do not trust a negative instruction to keep brands
+out of frame. Either compose so the object is turned away, or plan to patch it in post. This matters
+beyond tidiness: an unlicensed brand mark in a published piece is a real problem, and it is exactly
+the class of defect that survives review because the frame otherwise looks finished.
+
+### What the first runs settled
+
+- **Generation time: ~142–162s for a 10s 720p clip.** Not "near real-time"; budget ~3 minutes per
+  attempt, and remember a rejection costs the same wait.
+- **Output is 24 fps** — confirmed from the file, so the inference from fal's billing formula was
+  right. Duration came out **10.08s** for a requested 10, so do not assume frame-exact length.
+- **Native audio works and is quiet.** AAC stereo, 32 kHz, measured **-21.8 LUFS integrated /
+  -1.4 dBTP**, against our ~-15.9 LUFS publish target. It needs gain, so measure before normalising
+  per the house rule rather than reaching for dynamic normalization.
+- **Character consistency over 10s was genuinely good** — same face, build and wardrobe in every
+  sampled frame, with the physical beats (the arm sweep, the paper falling, the hand down the face)
+  all landing where the timeline asked.
+- **The no-text instruction held.** No readable screen, signage or caption anywhere. Only the logo
+  leaked.
 
 ### Open questions to answer with the first runs
 
 Priced and specced questions are answered above. These are the ones only a generation can settle:
 
-1. **How long does a 30s generation actually take?** No source gives a measured figure.
+1. ~~How long does a generation take?~~ **Answered:** ~142–162s for 10s at 720p. Still unmeasured
+   for a full 30s take.
 2. **Does 9:16 at 720p hold up on a phone** next to our 1080p HyperFrames masters, or is the
    softness obvious in-feed? This decides whether Seedance can ever carry a full canon post.
 3. **Does the "trusted model output" route actually clear the real-face filter?** If yes, the
    recurring-cast pipeline is alive and this is the single highest-value thing to test. If no,
    Seedance stays limited to invented characters — still most of what we would want it for.
-4. **Is output really 24fps?** Inferred from fal's billing formula only; confirm against the file.
+4. ~~Is output really 24fps?~~ **Answered: yes**, confirmed from the file.
 5. **Does an audio reference carry a cast voice's timbre**, or does it drift like the reported
    accent failures?
 6. **Can it render any legible text**, or is compositing mandatory? (Assume mandatory.)
-7. **What does it refuse** beyond faces? Moderation behaviour for music-industry content is undocumented.
+7. ~~What does it refuse?~~ **Partly answered:** an output-side copyright filter rejects finished
+   generations; noir styling tripped it, plain daylight did not. Still unknown whether music-industry
+   specifics (artist names, venue names, label imagery) trip it.
+8. **Does a rejected generation still cost credits?** Unverified — check the fal usage page against
+   the two runs on 2026-08-13.
 
 ### Where the numbers came from
 
