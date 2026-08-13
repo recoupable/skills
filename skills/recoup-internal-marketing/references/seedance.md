@@ -504,6 +504,7 @@ parameters and the honest verdict, including the failures.
 | Date | Piece / arc | Endpoint | Duration · ratio · res · audio | Refs | Time | Verdict |
 |---|---|---|---|---|---|---|
 | 2026-08-13 | back-office v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 142s | ❌ **Generated, then REJECTED by output moderation.** `content_policy_violation`, "potential copyright violation", `partner_validation_failed`. Prompt was film-noir styled: night, rain on the window, loosened tie, desk lamp. |
+| 2026-08-13 | **THE OPERATOR ep1, full 30s** | fal **ref2v** | **30s** · 9:16 · 720p · audio on | 1 face-free scene plate | **292s** | ✅ **All three acts, one cut, identity held across a hard location change.** Seed `39363830`, 7.68MB, -22.3 LUFS. |
 | 2026-08-13 | PoC: collision `[The Operator]` | fal **ref2v** | 10s · 9:16 · 720p · audio on | **1 face-free scene plate** | 208s | ✅ **Best result yet.** Scene plate transferred completely; the collision read as an accident; the crouch + phone-to-ear + line all landed. Seed `927418445`. |
 | 2026-08-13 | corridor v2 — **first reference call** | fal **ref2v** | 10s · 9:16 · 720p · audio on | 3 images (Nano Banana 2 face plates + env plate) | 210s | ❌ **REJECTED AT INPUT.** `content_policy_violation` — *"The images or videos provided may contain likenesses of real people or other private information that cannot be processed."* Settles the whitelist question: **a Nano Banana 2 face is not trusted.** |
 | 2026-08-13 | corridor v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 180s | ⚠️ **Passed moderation, failed the brief.** Craft up, story down — see *The framing ate the story* below. Seed `746924417`, 3.50MB, -25.8 LUFS. |
@@ -545,6 +546,33 @@ adjective; drop the disclaimer sentence, which has precedent nowhere.
 
 **The ablation worth running** when we next have budget: re-send the v1 prompt with *only* the
 lighting changed to daylight. If it passes, styling is confirmed and every other change was noise.
+
+### ✅ 30 seconds, three acts and a hard location change hold together
+
+**2026-08-13.** The full episode generated in one pass: office corridor → collision → crouch and a
+phone call → **one declared cut** → a beach eight seconds later. It worked, and the part we most
+expected to fail did not: **the same man survives the cut into a completely different location**,
+with build, hair and wardrobe intact.
+
+Three things that made it work, all cheap to repeat:
+
+1. **Declare the cut explicitly and forbid every other one.** Every prior prompt said "no cuts."
+   A location change needs exactly one, so name it — *"exactly ONE cut, at 21 seconds, and no other
+   cut anywhere"* — and match it on a prop the film already owns (here, the phone). Left open, the
+   model either refuses the change or cuts wherever it likes.
+2. **Six beats in thirty seconds**, each picking up the physical state the last one left. That is
+   the bodega density, and it is the difference between a story and a man waiting.
+3. **The scene plate carried acts 1 and 2; the prompt carried act 3.** Binding the plate as
+   *"controls the OFFICE ENVIRONMENT ONLY for the first 21 seconds … do not use @Image1 for the
+   final beach shot"* worked cleanly — a reference can be scoped to part of a film.
+
+**Cost check:** 292s for 30s against ~208s for 10s, so wall-clock is far from linear — a 3x longer
+film took only 1.4x longer to make. Combined with there being no draft mode, **a single long
+generation is better value than blocks whenever character continuity matters**, which reverses the
+block-first plan we started with.
+
+**Still true:** audio landed at -22.3 LUFS and needs gain, and printed text appeared on prop
+documents despite an explicit ban.
 
 ### ✅ The face-free SCENE PLATE is the highest-leverage control we have
 
