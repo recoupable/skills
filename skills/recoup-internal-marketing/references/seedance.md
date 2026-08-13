@@ -54,6 +54,13 @@ So the **cast pipeline** is the part that is blocked, not the medium. Three sanc
 2. **The preset digital-characters library** — free compliant portrait assets, but off-canon faces.
 3. **Authorized real-person assets** — a formal licensing path we have not explored.
 
+**🔴 Routes 2 and 3 appear to be consumer-app flows, not API flows.** Published guides describe them
+as: registering your own face as a verified asset (**分身**, a digital twin) inside the Jimeng app
+via liveness check; ByteDance's **XYQ** character library; or a third-party front end. **None of
+those is reachable from an API key.** For an API-based pipeline like ours, **route 1 is the only
+candidate**, which raises the stakes on testing it. Sourced from community guides written against
+Seedance **2.0**, so verify before relying on it.
+
 **Practical rule:** an original character invented in the prompt is fully available today. A
 recurring cast member whose likeness is a real person is not, until route 1 is proven.
 
@@ -277,8 +284,59 @@ use the separate `image-to-video` endpoint, or go direct to ModelArk, if you nee
 first/last-frame locking. Note also fal spells the adaptive value **`aspect_ratio: "auto"`** where
 ModelArk uses **`ratio: "adaptive"`**.
 
+**`image-to-video` input schema, verified from fal's API page 2026-08-13:**
+
+| Field | Type | Notes |
+|---|---|---|
+| `image_url` | string | **single**, not a list — the first frame |
+| `end_image_url` | string | **the last frame.** "the generated video will transition from the starting image to this ending image" |
+| `duration` | string | `auto`, `"4"`–`"30"` |
+| `resolution` | string | `480p` \| `720p` |
+| `aspect_ratio` | string | **fixed at `auto`** — the lock, confirmed |
+| `generate_audio` | boolean | default `true` |
+
+**Turning audio off saves nothing:** fal states *"The cost of video generation is the same regardless
+of whether audio is generated or not."* So `generate_audio: false` is a creative choice, never a
+cost one.
+
 **BytePlus ModelArk** is the canonical API: model `dreamina-seedance-2-5-260628`, base
 `https://ark.ap-southeast.bytepluses.com/api/v3`, async create-task → poll or `callback_url`.
+
+**Exact request body, read off the live API reference 2026-08-13:**
+
+```bash
+curl -X POST https://ark.ap-southeast.bytepluses.com/api/v3/contents/generations/tasks \
+  -H "Content-Type: application/json" -H "Authorization: Bearer $ARK_API_KEY" \
+  -d '{
+    "model": "dreamina-seedance-2-5-260628",
+    "content": [
+      { "type": "text",  "text": "… refers to @Image1 … camera movement of @Video1 …" },
+      { "type": "image_url", "image_url": { "url": "https://…" }, "role": "reference_image" },
+      { "type": "video_url", "video_url": { "url": "https://…" }, "role": "reference_video" }
+    ],
+    "generate_audio": true,
+    "ratio": "16:9",
+    "duration": 15
+  }'
+```
+
+Note the nesting: `image_url` is an **object with a `url` key**, not a bare string, and `role` sits
+as a sibling of `type`. `duration` is an **integer** here where fal takes a **string**. The example
+sets an explicit `ratio` on a multimodal-reference task, which confirms reference tasks are
+*unlocked*. Response is `{ id }`; poll it. There are also documented variants for edit, extend,
+first-frame, **first-and-last-frames**, base64 image input, and plain t2v.
+
+Full body params: `model` · `content[]` · `callback_url` · `return_last_frame` · `service_tier` ·
+`execution_expires_after` · `generate_audio` · `draft` · `safety_identifier` · `priority` ·
+`resolution` · `ratio` · `duration` · `omni_reference_task_type` · `frames` · `output_format` ·
+`seed` · `camera_fixed` · `watermark`.
+
+**⚠️ Unresolved conflict on `seed`, `camera_fixed` and `draft`.** They are all listed on ModelArk's
+create-task page, which is the **generic** endpoint shared by every video model — a listed parameter
+is not proof a given model honours it, and the Seedance 2.5 capability matrix reportedly marks
+draft mode unsupported. What we know for certain: **fal does not accept `seed` as an input for
+Seedance 2.5** (its schema says output-only) and **our two runs confirm it**. Do not assume a
+reproducibility or draft lever exists until someone tests it on ModelArk directly.
 It exposes fields the wrappers do not: `content[].role`
 (`first_frame` · `last_frame` · `reference_image` · `reference_video` · `reference_audio`),
 `camera_fixed`, `watermark`, `return_last_frame`, `omni_reference_task_type`, `service_tier`.
