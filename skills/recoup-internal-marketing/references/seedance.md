@@ -57,6 +57,44 @@ So the **cast pipeline** is the part that is blocked, not the medium. Three sanc
 **Practical rule:** an original character invented in the prompt is fully available today. A
 recurring cast member whose likeness is a real person is not, until route 1 is proven.
 
+### 🔴 Do NOT composite a character sheet — it breaks trust AND causes duplicate people
+
+The obvious move is to generate four angles of a character, stitch them into one 2×4 plate, and pass
+that as a subject reference. **That is wrong on Seedance 2.5, for two independent reasons.** An
+earlier version of this doc recommended exactly that; it is retracted.
+
+**1. Compositing voids the face-trust exemption.** The "trusted model output" route only covers a
+model's *original* artifact: *"仅信任模型原始产物，二次剪辑或超过有效期后均不可使用"* — only the
+model's original product is trusted; secondary editing, or expiry, invalidates it. **Stitching four
+generated images into one plate is secondary editing.** The composite gets rejected by the face
+filter while the four originals would each pass on their own. The English docs say the same thing
+more vaguely: *"Compressing or forwarding files may invalidate trust verification."*
+
+**2. Multi-view plates cause the "twin problem."** ByteDance names it — **双胞胎问题** — and gives
+the mechanism the English docs never explain: **人脸占比过小**, the face region occupies too little
+of the frame for the model to weight its features. *"以人物三视图/多视图作为参考素材时，易造成模型
+人物识别混淆，从而生成重复同款人物"* — using three- or multi-view sheets as reference confuses
+identity and makes the model **emit duplicate copies of the character**. A 2×4 contact sheet
+mechanically drops the face to about an eighth of the frame.
+
+**What to do instead:** pass the angles as **separate images**, each an unedited original from the
+generator, and bind them individually in the prompt ("Images 1–3 are the same man from three
+angles"). Pair a **tight headshot** as its own reference alongside any wider plate, so at least one
+asset carries a large face region. This is also what ARK's own "split viewpoints into separate
+images" guidance says — the two findings agree.
+
+_The Chinese-language sourcing here is second-hand and one tier below our English-verified facts,
+but it is specific, it is mechanistic, and it agrees with ARK's published English guidance. Treat as
+a strong prior, and if you ever test the composite route, expect to lose the generation._
+
+### Are rejected generations billed? Apparently not
+
+*"仅对成功生成的视频计费。因审核等原因导致生成失败的，不收取费用。"* — only successfully generated
+videos are billed; failures caused by moderation are not charged. If true this materially de-risks
+iteration against an aggressive face filter, and it means our 2026-08-13 spend was **$13.87 for
+three runs, not $18.49**. **Spot-check the fal dashboard before relying on it** — this is CN-sourced
+and unverified by us, and fal is a reseller whose billing may not mirror ByteDance's.
+
 ## The constraints that will bite us
 
 Read these before planning a shot. Every one changes what we can promise.
@@ -100,6 +138,60 @@ references**: fal *discounts* them 0.6x (720p → $0.2838/s) while Replicate cha
 text-to-video** — and with no draft mode, that gap is the main cost lever. BytePlus sells prepaid
 resource packs and its USD rate could not be verified; Together AI still shows "launching soon"
 despite publishing a model string.
+
+## Reference assets — how many, how long, how to bind them
+
+ARK publishes tuning guidance that is easy to miss and directly changes hit rate. **These are
+stability thresholds, not hard limits** — you may exceed them, but expect to re-roll.
+
+| Question | ARK's recommendation |
+|---|---|
+| Hard caps | ≤30 images (up to 4K), ≤10 videos (combined ≤30s), ≤10 audio (combined ≤30s), ≤50 assets total |
+| How many subjects via **image** reference | **1–8 works well.** 9–12 possible, stability drops, expect retries |
+| How many subjects via **audio/video** reference | **1–5 works well.** 6–10 possible, less stable |
+| How long should a subject audio/video ref be | **5–10 seconds.** Longer reduces stability |
+| Multi-view character sheets | Supported for 1–5 subjects (new in 2.5; 2.0 discouraged it). Above 5 subjects prefer single-view. If you need several angles, **split them into separate images — do not put multiple viewpoints inside one image** |
+| Storyboard panels | **≤15.** More causes still frames or wrong ordering. Prefer stick-figure / line art, and **never put text on the storyboard image** |
+| 3D clay-model granularity | **Coarse beats fine.** Simple geometric primitives for people and objects read better than detailed models |
+| Video length for an **edit** task | **≤20 seconds.** Longer is less stable |
+| Reference images alongside a video edit | **1–5.** 6–8 possible with reduced stability |
+| Extension format | Use **`mov`** for both input and output to preserve colour, brightness and audio continuity |
+
+### Do not fill the slots, and mind the order
+
+Two pieces of official guidance that contradict the instinct to use the full 50:
+
+- **"不建议用满素材上限" — do not use the full asset limit.** The recommended working set is
+  **4–5 assets**: 1–2 character images, 1 scene, 1 camera-motion video, 1 audio.
+- **"重要素材前置" — put the most important assets first.** Upload order is not just addressing;
+  earlier assets get more precise adherence. Order is load-bearing by design.
+- Minor but relevant to us: **landscape output produces spurious subtitles noticeably less often
+  than vertical.** We shoot 9:16, so budget for an unwanted subtitle appearing and keep saying
+  "no subtitles" in the prompt.
+
+_Source: CN-language Volcengine docs, read second-hand. One confidence tier below the English
+sources; worth re-verifying before it drives an expensive decision._
+
+### Binding assets in the prompt — the part that actually fails
+
+Numbering follows **upload order**: `@Image1`, `@Video1`, `@Audio1`. ARK's guidance on getting the
+mapping right, all of which is about avoiding character confusion:
+
+- **Bind every asset explicitly in the text.** Do not rely on information *inside* the image.
+  ARK's own anti-pattern: writing "John" on the protagonist's picture and then saying "John is at
+  school…" in the prompt. That reliably causes duplicated or swapped characters.
+- **List mappings one by one** when there are several subjects, as a list rather than prose.
+  *"Images 1-2 are Character 1 and correspond to Audio 1; Images 3-4 are Character 2 and correspond
+  to Audio 2."*
+- **State what each asset is a reference FOR**, and which part of it if only part applies.
+  *"Refer to the action of casting the spell in Video 1 and the wrap-around camera movement in
+  Video 2."* · *"Refer to Image 1 for lighting and filters."*
+- **When the asset is already accurate, just point at it.** Do not re-describe a scene the reference
+  already carries — say "strictly refer to the actions and camera movements in Video 1" and stop.
+- **First/last frame has two modes.** Setting `role` to `first_frame`/`last_frame` is strict but
+  **locks the output aspect ratio** to the first frame's. Passing the same images as
+  `reference_image` and naming them in the prompt ("Image 1 is the first frame") does **not** lock
+  the ratio, but the result only approximates them.
 
 ## The mental model: locked vs unlocked
 
@@ -165,11 +257,37 @@ fal exposes exactly **three** endpoints — `text-to-video`, `image-to-video`, `
 There is no dedicated edit or extend endpoint; both are folded into `reference-to-video` and
 selected by prompt intent.
 
+**`reference-to-video` input schema, verified from fal's API page 2026-08-13:**
+
+| Field | Type | Notes |
+|---|---|---|
+| `image_urls` | string[] | addressed in the prompt as `@Image1`, `@Image2`… |
+| `video_urls` | string[] | `@Video1`… |
+| `audio_urls` | string[] | `@Audio1`… |
+| `duration` | string | `auto`, or `"4"`–`"30"` |
+| `resolution` | string | `480p` \| `720p` |
+| `aspect_ratio` | string | `auto` \| `21:9` \| `16:9` \| `4:3` \| `1:1` \| `3:4` \| `9:16` |
+| `generate_audio` | boolean | |
+
+Files may be supplied as **public URLs, base64 data URIs, or via `fal.storage.upload()`**.
+
+**🔴 fal has NO `role` / `reference_type` field.** Assets are bound *only* by index in the prompt
+text. So `first_frame` / `last_frame` roles are **not reachable through fal's reference-to-video** —
+use the separate `image-to-video` endpoint, or go direct to ModelArk, if you need strict
+first/last-frame locking. Note also fal spells the adaptive value **`aspect_ratio: "auto"`** where
+ModelArk uses **`ratio: "adaptive"`**.
+
 **BytePlus ModelArk** is the canonical API: model `dreamina-seedance-2-5-260628`, base
 `https://ark.ap-southeast.bytepluses.com/api/v3`, async create-task → poll or `callback_url`.
 It exposes fields the wrappers do not: `content[].role`
 (`first_frame` · `last_frame` · `reference_image` · `reference_video` · `reference_audio`),
 `camera_fixed`, `watermark`, `return_last_frame`, `omni_reference_task_type`, `service_tier`.
+
+**⚠️ `seed` is NOT an input on Seedance 2.5 — it is output only.** fal's schema says so explicitly
+and **our own runs confirm it**: we never sent a seed and got one back on both runs
+(`1632188029`, `746924417`). An earlier version of this doc listed `seed` as a settable parameter on
+every provider; that was wrong. **There is no reproducibility lever.** A CN-language Volcengine
+source says `camera_fixed` is likewise unsupported on 2.5 — unverified by us, treat as likely.
 It requires a **prepaid resource pack** before the model activates. **Replicate**
 (`bytedance/seedance-2.5`) is one endpoint for all modes and the cheapest for plain t2v, but
 truncates prompts at 2000 characters.
