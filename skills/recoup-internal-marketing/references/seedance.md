@@ -12,6 +12,7 @@ everything above the run log is *sourced*, not *earned*. Mark earned findings as
 | Canonical | [ByteDance Seed launch post](https://seed.bytedance.com/seedance2_5) (07-31) | What the model is for, capability claims |
 | Canonical | [BytePlus ModelArk prompt guide](https://docs.byteplus.com/en/docs/ModelArk/2607689) | Locked/unlocked task rules, reference budgets, `content.role`, official prompt doctrine |
 | High | [fal prompting guide](https://fal.ai/learn/devs/seedance-2-5-prompting-guide) (08-07) | Exact fal endpoints and params, 10 worked techniques, the prompt template |
+| Ours | **`seedance-examples.md`** — every worked example prompt verbatim, with source links | Steal structure from a prompt that already works. Read it before writing one. |
 | **Ignore** | `skillsllm.com/skill/seedance-2-5-skill` | Affiliate listing (0 stars, `?ref=` links). **Its specs are wrong** — claims 1080p and only three aspect ratios. Both refuted below. |
 
 There is an **official ByteDance prompt-engineering skill**. Prefer it over any third-party one:
