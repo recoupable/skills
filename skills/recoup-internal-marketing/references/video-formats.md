@@ -14,6 +14,7 @@ project to clone. This page is the **routing table** from a brief to a format, p
 | A two-person conversation / talking-head ad with real dialogue | **FaceTime call** | `recoup-internal-video-grok-1.5-imagine-facetime` |
 | Explain a **method** — how something was made, how a number was derived | **Recipe / BTS artifact walk** | Clone the reference project |
 | Captions or graphic overlays onto existing footage | hyperframes caption / overlay workflows | `embedded-captions`, `talking-head-recut` |
+| A **scene we could never shoot** carries the beat: a character in a place, a physical action, a location | **Generated plate** (Seedance 2.5), our typography composited over it | `references/seedance.md`. Invented characters are fine; a **real person's photo** cannot be used as a reference |
 
 **The concrete-versus-stylish rule:** for a feature or product announcement, concreteness beats
 styling. Show the real interface and the real change. A beautiful abstract treatment that hides the
