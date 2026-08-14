@@ -339,7 +339,116 @@ Note the **occlusion-as-transition** trick: the back flags sweep past the lens t
 
 ---
 
-## OURS — back office
+## OURS — THE OPERATOR ep1, the first film we shipped on this model
+
+**Published 2026-08-13** to [YouTube](https://youtube.com/shorts/vfI1aYBz6Vs) ·
+[X @recoupai](https://x.com/recoupai/status/2088057350821216632) ·
+[LinkedIn](https://www.linkedin.com/feed/update/urn:li:share:7493824522991669248) ·
+[Instagram](https://www.instagram.com/reel/DcACIbukU5A/).
+30.0s · 1080x1920 · 24fps · -17.9 LUFS. Seed `39363830`, 292s to generate.
+
+**The shape that worked, in three artifacts.** Read them in order, because each depends on the one
+before it: an art-directed **scene plate** (a face-free image doing all the cinematic work), a
+**10s proof of concept** that de-risked the expensive run, then the **30s single generation**.
+
+---
+
+### 1. The scene plate — Nano Banana 2, face-free, the highest-leverage asset
+
+This image is the style bible. Location, lighting, palette, lens character and set dressing all live
+in it, and because it contains no face, none of that control touches the moderation filter that
+rejects character references. **Two lines of art direction inside an image outperformed a paragraph
+of styling language in the prompt.**
+
+Model `fal-ai/nano-banana-2`, `aspect_ratio: "9:16"`, `resolution: "2K"`, `num_images: 4` — generate
+several and pick the cleanest corridor recession.
+
+> A photorealistic empty interior photograph.
+>
+> THE PLACE: the central corridor of a small, slightly cramped independent RECORD LABEL office — a converted older building, not a corporate tower. Scuffed painted brick or plaster on one side, half-height mismatched desk partitions on the other. Framed record sleeves and a few gold and platinum discs hanging slightly crooked on the wall. Stacks of vinyl and cardboard mailers on the floor against the wall. A guitar case leaning. Mismatched second-hand desks, a cheap office chair with a coat over the back, a small stack of flight cases. Worn wooden floor with a thin runner rug. Windows down the left side with venetian blinds half open, flat afternoon daylight coming through. A suspended ceiling is NOT present — exposed painted ceiling with surface conduit and a few hanging pendant lights.
+>
+> PHOTOGRAPHIC STYLE (this image defines the look of the finished film): shot on a 35mm cinema prime at eye level, mild natural wide-angle perspective down the length of the corridor, deep focus, subtle film grain, restrained naturalistic colour grade, slightly warm daylight falling off into cooler shadow at the far end. Documentary realism. Not glossy, not an advertisement, not a prestige-television set.
+>
+> STRICT: the corridor is COMPLETELY EMPTY — absolutely no people, no figures, no silhouettes, no reflections of people anywhere in frame. Vertical 9:16 framing, camera at chest height looking straight down the corridor so the corridor recedes to a vanishing point. Photorealistic. No text anywhere: no readable signage, no posters with legible words, no whiteboard writing, no name plates, no album titles. No brand marks or logos of any kind. No watermark, no caption.
+
+---
+
+### 2. The 10s proof of concept — test what is unproven, not the opening
+
+**Do not test the first 10 seconds of the film.** Test the 10 seconds that stress what is unknown.
+Walking down a corridor was already proven; what was not was whether a text-only character
+description held without a face reference, whether the scene plate transferred, and above all
+**whether a collision would read as an accident rather than temper** — the exact beat that had
+already failed once.
+
+**74% of this prompt is verbatim from the 30s below**, deliberately. Reword the test and it stops
+validating the thing you are about to buy.
+
+`bytedance/seedance-2.5/reference-to-video`, one image reference (the scene plate),
+`duration: "10"`, `aspect_ratio: "9:16"`, `resolution: "720p"`, `generate_audio: true`.
+208s, about $4.62.
+
+> 10-second continuous single take, vertical 9:16, natural real-time speed, no cuts. Plain documentary realism, ordinary available light, handheld-steady camera. Not glossy, not an advertisement, not a scene from any film or television programme.
+>
+> @Image1 controls the OFFICE ENVIRONMENT ONLY: the corridor layout, scuffed painted walls, framed record sleeves and gold discs, stacked vinyl and cardboard mailers, mismatched desks, worn wooden floor and runner rug, windows with venetian blinds, pendant lights on exposed conduit, and the warm afternoon daylight. Do not take any person from @Image1.
+>
+> THE MAN, the same person in every frame: an ordinary man of about 42 with a ROUND soft face and a WEAK rounded jawline, noticeably THINNING dark-brown hair receding at both temples and cut short with no styling, plain WIRE-FRAME glasses with thin metal rims, a SHORT UNEVEN slightly unkempt dark beard, small deep-set brown eyes with tired shadows beneath them, a slightly heavy soft build with a small belly and rounded shoulders, pale ordinary skin with visible pores. He wears a plain grey crew-neck t-shirt and dark trousers. He is plain and unglamorous, an ordinary office worker, not a handsome leading man and not a model. He carries a phone in his LEFT hand from the first frame until he drops it, and never puts it in a pocket.
+>
+> 0-3 seconds: he walks fast toward camera down the middle of the corridor from @Image1, glancing down at the phone in his left hand. He then turns his head back over his right shoulder to look at something behind him. The camera retreats ahead of him at chest height, matching his speed and holding him in the centre third of frame.
+>
+> 3-6 seconds: still facing away from where he is going, he walks shoulder-first into a woman stepping out of a doorway with an armful of loose paper. The impact happens first. Only after the contact does the paper fly up and scatter, and both people stumble sideways. The phone leaves his left hand and lands face-up on the floor. Neither of them falls completely.
+>
+> 6-10 seconds: he stops. He crouches down among the scattered paper, one hand held out toward the woman in apology, and stays there. He picks up his own phone from the floor with his left hand, looks at it for a moment, then raises it to his ear and says quietly, "Hey. I need help." He stays crouched on the floor as the shot ends.
+>
+> Camera: a single continuous backward tracking shot at chest height, retreating ahead of him, never overtaking him and never turning around; it lowers with him as he crouches.
+>
+> Continuity: the same man with the same face, glasses, beard, thinning hair, grey t-shirt and dark trousers from the first frame to the last. The same phone throughout. Exactly one other person appears, the woman he collides with, and nobody else approaches him. The scattered paper stays on the floor and never increases in quantity.
+>
+> Audio: office room tone, keyboards, a muffled phone ringing somewhere, his footsteps on the runner rug, the impact of the collision and paper landing. One spoken line only, male American-accented, "Hey. I need help." Nobody else speaks. No music.
+>
+> Constraints: no cuts, no slow motion, no repeated action, no duplicated people, no duplicate copies of the main man, no crowd, no one entering frame twice, nobody falling to the ground completely, no anger and no deliberate pushing or throwing of the paper. No subtitles and no captions of any kind. No text anywhere in frame: no readable screens, no phone screen content, no signage, no legible posters or album titles, no whiteboard writing, no name plates. No brand marks or logos on any laptop, phone, wall or clothing; all laptops closed or turned away from camera.
+
+---
+
+### 3. The 30s film, as shipped
+
+Same endpoint and settings, `duration: "30"`. 292s, about $14.19.
+
+Three things here are why it held together. **The cut is declared explicitly and every other cut
+forbidden**, matched on a prop the film already owns. **Six beats in thirty seconds**, each picking
+up the physical state the last one left. And **the reference is scoped to part of the film** —
+"controls the OFFICE ENVIRONMENT ONLY for the first 21 seconds ... do not use @Image1 for the final
+beach shot" — which works cleanly.
+
+> 30-second continuous vertical 9:16 film at natural real-time speed. Plain documentary realism, ordinary available light, handheld-steady camera. Not glossy, not an advertisement, not a scene from any film or television programme.
+>
+> @Image1 controls the OFFICE ENVIRONMENT ONLY for the first 21 seconds: the corridor layout, scuffed painted walls, framed record sleeves and gold discs, stacked vinyl and cardboard mailers, mismatched desks, worn wooden floor and runner rug, windows with venetian blinds, pendant lights on exposed conduit, and the warm afternoon daylight. Do not take any person from @Image1. Do not use @Image1 for the final beach shot.
+>
+> THE MAN, the same person in every frame: an ordinary man of about 42 with a ROUND soft face and a WEAK rounded jawline, noticeably THINNING dark-brown hair receding at both temples and cut short with no styling, plain WIRE-FRAME glasses with thin metal rims, a SHORT UNEVEN slightly unkempt dark beard, small deep-set brown eyes with tired shadows beneath them, a slightly heavy soft build with a small belly and rounded shoulders, pale ordinary skin with visible pores. He wears a plain grey crew-neck t-shirt and dark trousers. He is plain and unglamorous, an ordinary office worker, not a handsome leading man and not a model. He carries a phone in his LEFT hand from the first frame until he drops it, and never puts it in a pocket.
+>
+> 0-6 seconds: he walks fast toward camera down the middle of the corridor from @Image1, glancing down at the phone in his left hand then up ahead. The camera retreats ahead of him at chest height, matching his speed and holding him in the centre third of frame. A woman working at a desk on the left sees him coming, stands up, takes half a step into the corridor and begins to speak, lifting a paper folder toward him. He does not slow and does not turn his head. He passes her; behind him she lowers the folder and sits back down.
+>
+> 6-11 seconds: a man on the right steps out from between two desks holding a closed laptop and says, "Hey, you got two minutes?" Without stopping and without looking at him the walking man answers, "Not now," and keeps going. The camera keeps retreating at the same speed.
+>
+> 11-16 seconds: still walking, he turns his head back over his right shoulder to look at the man he has just passed. Facing away from where he is going, he walks shoulder-first into a woman stepping out of a doorway with an armful of loose paper. The impact happens first. Only after the contact does the paper fly up and scatter, and both people stumble sideways. The phone leaves his left hand and lands face-up on the floor. Neither of them falls completely.
+>
+> 16-21 seconds: he stops. He crouches down among the scattered paper, one hand out toward the woman in apology, and stays there. He picks up his own phone from the floor with his left hand, looks at it for a moment, then raises it to his ear and says quietly, "Hey. I need help." He stays crouched on the floor.
+>
+> 21-22 seconds: ONE single cut, matched on the phone. Cut from the phone held at his ear on the office floor to the same phone lying face-down on sand.
+>
+> 22-30 seconds: a beach in late afternoon. The same man sits on the sand in the same grey t-shirt beside a young child, both looking out at the water, the sea breeze moving his hair. His phone lies FACE-DOWN on the sand beside his right hand. At about 25 seconds the phone buzzes once against the sand. He looks down at it, picks it up, turns it face-down again WITHOUT reading it, and sets it back on the sand. He turns back to the child and says something we cannot hear over the surf. Hold on the two of them from behind as the shot ends.
+>
+> Camera: for the first 21 seconds a single continuous backward tracking shot at chest height, retreating ahead of him, never overtaking him and never turning around; it lowers with him as he crouches. After the cut, a slow wide handheld shot on the beach that settles and holds.
+>
+> Continuity: the same man with the same face, glasses, beard, thinning hair, grey t-shirt and dark trousers from the first frame to the last, in the office and on the beach. The same phone throughout. Exactly four other people appear in the office, one at a time in the order described, and nobody else approaches him. The scattered paper stays on the floor and never increases in quantity. Only ONE child on the beach.
+>
+> Audio: office room tone, keyboards, a muffled phone ringing somewhere, his footsteps on the runner rug, the impact of the collision and paper landing; then surf, wind and distant gulls on the beach. Three spoken lines only, all male American-accented except the first speaker: "Hey, you got two minutes?" then "Not now," then "Hey. I need help." Nobody else speaks and no line is repeated. No music anywhere.
+>
+> Constraints: exactly ONE cut, at 21 seconds, and no other cut anywhere. No slow motion, no repeated action, no duplicated people, no duplicate copies of the main man, no crowd, no one entering frame twice, nobody falling to the ground completely, no anger and no deliberate pushing or throwing of the paper. No subtitles and no captions of any kind. No text anywhere in frame: no readable screens, no phone screen content, no signage, no legible posters or album titles, no whiteboard writing, no name plates. No brand marks or logos on any laptop, phone, wall or clothing; all laptops closed or turned away from camera.
+
+---
+
+## OURS — back office (the first two runs, kept for the moderation lesson)
 
 Full context in `seedance.md` → Run log. Both 10s, 9:16, 720p, audio on, t2v via fal.
 
