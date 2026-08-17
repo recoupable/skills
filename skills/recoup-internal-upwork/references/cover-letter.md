@@ -46,10 +46,24 @@ in one sentence, with his experience as the grammatical subject:
 Only when the gap is **verified**, never when it is merely absent from the facts
 bank. See Step 2 of `SKILL.md`.
 
-- **State it early, in its own sentence, plainly.** A gap in paragraph one with a
-  plan attached reads as honesty. The same gap in bullet four reads as something
-  you hoped they would miss.
+- **State it early and short. One clause is the budget.** Early still matters: a
+  gap buried in bullet four reads as something you hoped they would miss. But
+  "early" was never a licence to elaborate, and in practice elaboration is the
+  failure that actually happens. Early *and* brief. Then move.
 - **Attach a bounded commitment**, a timeline you would accept being held to.
+- **Never add meta-commentary about your own honesty.** "I want to be straight
+  about that," "I will not stretch to claim one," "rather than have you find it
+  in week two." These read as a candidate seeking credit for candour, and they
+  double the number of words the reader spends on your weakest point. The
+  concession earns the credit by existing. Saying it once is the whole of it.
+- **Never state what a better-suited candidate would find easier.** It is a real
+  temptation because it feels fair. It is also, literally, drafting a competitor's
+  proposal inside your own.
+- **The ramp is the frame, and it needs a number.** "I learn quickly" is an
+  adjective and this file bans adjectives. Use a named zero-to-shipped instance
+  (Solidity from nothing to 19 public repos) or a costed estimate you would be held
+  to ("documented REST with app-token auth, so a day of ramp rather than a week").
+  A number converts a gap into a commitment; an adjective leaves it a gap.
 - **Never be clever in the gap sentence.** It is the one line that must land on
   first read. Rejected: "You are hiring a full stack dev and a designer. I am the
   first one." The reader has to solve a riddle in sentence two, which spends the
