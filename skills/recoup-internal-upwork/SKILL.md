@@ -213,6 +213,57 @@ their project.** Conceding "I have not used Firebase in production" is a fact ab
 you and belongs in the letter early. Rewriting it as "Firestore's data modeling
 traps are where projects like yours fail" is the banned move wearing a disguise.
 
+### You are writing to win the contract, not to document your limits
+
+**A verified gap gets one clause. Never a paragraph, never a second mention.** The
+rule against overclaiming is about truth and it does not move. This rule is about
+*proportion*, and it has been violated far more often than the truth rule ever was.
+
+Measure it before submitting. On a five-question proposal in 2026, **three answers
+opened with the word "No"** and a fourth spent its closing paragraph explaining
+what a better-suited candidate would find easier. Every individual sentence was
+true. The proposal still read like a list of reasons to hire someone else.
+
+**Banned, because each one doubles the space the negative occupies:**
+
+- **Meta-commentary about your own honesty.** "I want to be straight about that."
+  "I will not stretch to claim one." "Rather than have you find it in week two."
+  You are not paid for announcing that you are honest. You are paid for the fact,
+  which is shorter.
+- **Arguing the other candidate's case.** "Where a fan would be faster than me is
+  knowing without looking which venue a team plays at." That is writing a
+  competitor's proposal inside your own.
+- **Explaining why the gap matters to them.** They wrote the requirement. They know.
+  Restating it adds weight to the one thing you want to weigh least.
+- **Repeating a gap already conceded elsewhere** in the letter or another answer.
+  Once. That is the whole budget.
+
+**Where the negative sits depends on the question:**
+
+| Question type | Handling |
+|---|---|
+| **Binary and personal** ("are you a sports fan", "are you US-based") | Answer with the bare word and stop. Burying it reads evasive. Then pivot immediately to what they said actually matters |
+| **Capability** ("do you have experience with X") | **Lead with the adjacent thing you have shipped**, and locate the boundary in a clause near the end. "I run my development through Claude as a production platform, [evidence]. Lovable itself I have not used" beats "No, I have not used Lovable." Identical honesty, inverted emphasis |
+
+**When a gap must be named, the frame is the ramp, and the ramp needs evidence.**
+"I learn quickly" is an adjective and the voice rules already ban those. The
+evidenced forms:
+
+- **A named zero-to-shipped instance.** Solidity from nothing to 19 public repos.
+- **A costed estimate you would be held to.** "Helix is documented REST with
+  app-token auth, so a day of ramp rather than a week." A number a client can hold
+  you to beats any adjective, and it converts the gap into a commitment.
+
+**The pre-submit check, worth thirty seconds:** read only the *first sentence* of
+every answer, in order, and nothing else. If that sequence would not make someone
+want to hire you, restructure before you send. Then count how many answers open on
+a negative word. More than one in four means the proposal is documenting instead of
+selling.
+
+**This rule never licenses a false claim.** A gap asked about directly is still
+answered truthfully in the same breath. What changes is the word count and the
+running order, not the facts.
+
 Full voice rules, the gap-handling pattern, and the anti-patterns produced by
 Upwork's own AI draft generator are in `references/cover-letter.md`.
 
