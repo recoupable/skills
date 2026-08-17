@@ -185,6 +185,34 @@ projects into "wrapper" and "not a wrapper" read as a critique of the buyer, and
 the reader could not tell whether the writer was applying or auditing them.
 Reference their requirements only as the thing your experience answers.
 
+**Do not warn them about their own project, and do not explain the craft to them.**
+No lists of pitfalls, traps, risks or "things people usually get wrong here." No
+tutorial on how the thing they already built works. A client who has shipped a
+product has already met the complexities, and a proposal that recites them reads
+as either a pitch for a rescue they did not ask for or a lecture from someone who
+assumes they are naive. One buyer put it directly in their posting:
+
+> "Please don't approach your proposal by telling us about all of the pitfalls and
+> traps waiting for us. We've had great developers and product managers working
+> extremely hard to build a great product, and we haven't overlooked the
+> complexities and nuances. We need someone to take a really well-built product and
+> build on top of it, not tell us how they're going to save it from assured
+> collapse... Better to focus on why your experience is a good fit, rather than
+> explaining coding to us."
+
+**Treat that as the house rule on every proposal, whether or not the posting says
+it.** Most buyers who feel this way never write it down; this one did, which is the
+only reason we know how it lands. The permitted version is a single clause showing
+you have met the same difficulty in your own work — *"ICS feeds disagree about
+timezones, which I have dealt with"* — never a paragraph about what might go wrong
+in theirs. Difficulty is evidence when it is in your history and an insult when it
+is in their future.
+
+This has one deliberate exception: **a stated gap of your own is not a warning about
+their project.** Conceding "I have not used Firebase in production" is a fact about
+you and belongs in the letter early. Rewriting it as "Firestore's data modeling
+traps are where projects like yours fail" is the banned move wearing a disguise.
+
 Full voice rules, the gap-handling pattern, and the anti-patterns produced by
 Upwork's own AI draft generator are in `references/cover-letter.md`.
 

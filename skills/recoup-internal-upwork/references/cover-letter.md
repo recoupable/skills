@@ -76,6 +76,25 @@ bank. See Step 2 of `SKILL.md`.
   system you built is credibility. The same detail written as "here is what an X
   actually requires" is a lecture, and it reads as auditioning to be their
   consultant rather than their contractor.
+- **Never list the pitfalls, traps or risks waiting in their project.** This is the
+  same rule one step further, and it is the one buyers complain about out loud. A
+  client who has shipped something has already met the complexities. Reciting them
+  reads as a pitch for a rescue nobody requested. A sports-media client wrote it
+  into their posting in 2026: *"please don't approach your proposal by telling us
+  about all of the pitfalls and traps waiting for us... Better to focus on why your
+  experience is a good fit, rather than explaining coding to us."* **Apply it
+  universally.** Most buyers who feel this never say so; this one did, which is the
+  only reason the rule is written down.
+  - **Permitted:** one clause locating the difficulty inside your own history.
+    *"ICS feeds disagree about timezones, which I have dealt with."*
+  - **Banned:** the same idea aimed at their future. *"Timezone handling in ICS
+    feeds is where calendar products usually break."*
+  - The tell is the tense and the subject. Difficulty in your past is evidence.
+    Difficulty in their future is an insult.
+  - **A gap of your own is not a warning about their project.** "I have not used
+    Firestore in production" is a fact about you and belongs early. "Firestore's
+    modeling traps are where projects like yours fail" is this anti-pattern
+    wearing a concession as a disguise.
 
 ## Anti-patterns from Upwork's AI draft generator
 
