@@ -69,7 +69,7 @@ Songstats — the web is the alternative.
 
 - **No invented numbers.** Missing metric → `—`.
 - **No causation without evidence.** Name a driver only if it appears in the data.
-- **Credits:** on `{ "error": "insufficient_credits" }`, surface the `checkoutUrl`.
+- **Credits:** on `{ "error": "insufficient_credits" }`, surface the `billingUrl` (a static link to the Recoup app; no Stripe object is created by the 402).
 - **Snapshots, not history.** Deltas come from diffing a prior file.
 - Don't overwrite `context/artist.md` with dynamic research; save to `research/` dated.
 

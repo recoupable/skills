@@ -297,7 +297,7 @@ A `metrics` call may return `202` with `{ status: "pending", state:
 
 Some endpoints cost more credits than others. If the account returns
 `{ "error": "insufficient_credits" }`, the response includes `remaining_credits`,
-`required_credits`, and a `checkoutUrl` for the user to add credits.
+`required_credits`, and a static `billingUrl` the user can visit to add credits.
 
 | Cost tier | Endpoints |
 | --------- | --------- |
