@@ -9,6 +9,20 @@ real listener told us ours did.
 > right on both counts, and neither was a taste problem: we were on a **stock voice** that thousands
 > of other videos use, driven by a **model two generations old**.
 
+## Install the official ElevenLabs skills first
+
+ElevenLabs publishes agent skills for its own API. Install once per workspace and load the
+`text-to-speech` skill before generating — it carries the current model list, `voice_settings`
+semantics (stability / similarity / style / speed), output formats, and request stitching, so none
+of that gets guessed from a cloned script:
+
+```bash
+npx skills add elevenlabs/skills --skill text-to-speech
+```
+
+Verified in use 2026-08-17 (the Jessa bake-off ran on it). The house rules in this file — bake-off,
+tag verification, loudness — sit on top of it, not instead of it.
+
 ## The three axes, in the order they matter
 
 Most "the VO sounds robotic" problems are blamed on the voice. Usually it is the model.
@@ -56,6 +70,26 @@ The procedure, which takes minutes and costs a rounding error in characters:
 
 Consistency across videos matters, but **not more than sounding human**. A recurring character keeps
 its canonical voice; a narrator can change when the old one is the problem.
+
+### Current default narrator: Jessa (owner ruling, 2026-08-17)
+
+**Jessa** `yj30vwTGJxSHezdAGsv9` · `eleven_v3` · stability 0.0 · similarity 0.75. Won a
+loudness-matched three-way against Sarah and Clara on the apple-songs-launch film's real lines;
+the owner approved the delivery and ruled her the default going forward. First female narrator on
+the account. Prior defaults for the record: Brian (through 08-06), W. L. Oxley (08-07 to 08-12).
+
+What transfers with her, measured on 2026-08-17:
+
+- **She is fast.** The same hook line landed its payoff at 1.74s in her read vs 2.08s in the male
+  take. Still generate the hook first and measure — pace is voice-specific and does not transfer.
+- **Her raw output is quiet with hot peaks** (~-19 LUFS at ~0 dBTP), so a straight gain to target
+  clips. Use the gain + true-peak limiter chain from the Loudness section; on her material the
+  working values were `volume=+4.4dB, alimiter=limit=0.84:attack=1:release=80:level=disabled` at
+  96k oversample, landing -16.5 LUFS / -1.5 dBTP with LRA preserved.
+- `[matter-of-fact]` is Scribe-verified consumed in her voice.
+
+A film may still bake off a different narrator when the register calls for it; recurring
+characters keep their canonical voices regardless.
 
 ### Consider the clone
 
