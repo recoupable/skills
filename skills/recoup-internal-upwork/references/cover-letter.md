@@ -5,32 +5,55 @@ paragraph twice; a client can search a name.
 
 ## Shape
 
-**1. Say you want the work.** One plain sentence. Not "I'm excited to apply,"
-which everyone writes, and not a verdict on their posting.
+**The open and the close are fixed sentences; the middle is built per job.**
+Owner ruling 2026-08-18, set on proposal 16 (restaurant finance support engineer).
 
-**2. Credibility that answers their stated requirement.** Concrete and checkable:
+**1. Greeting.** "Good morning," or "Good afternoon," plus the client's name when
+the posting or client panel supplies one. Morning vs afternoon is decided by the
+**client's** local clock, which the client panel displays next to their city, not
+by the writer's. Most postings carry no name; "Good morning," alone is the norm.
+
+**2. The fixed identity sentence, verbatim.**
+
+> I am Patrick Sweetman. A Sr Software Engineer from the USA with 12+ years of
+> experience.
+
+One permitted slot: the role word may match the posting's own title (Fullstack,
+Frontend, Backend — proposal 16 shipped "Sr Fullstack Engineer" against a
+full-stack posting). Nothing else in the sentence changes.
+
+**3. Credibility that answers their stated requirement.** Concrete and checkable:
 named stack, named scale, a number they can count themselves. No adjective a
 weaker candidate could also write. "Strong communicator" is not a claim, it is a
 wish.
 
-**3. The next step that starts the project.** A named first deliverable, what
+**4. The next step that starts the project.** A named first deliverable, what
 they inspect at the end of it, and the order the rest of the work would follow.
 This is the highest-leverage paragraph in the letter, because it converts your
 risk into their option. Most clients hiring contractors have been burned by
 someone who billed 200 hours and delivered little, so a small checkable first
 week beats another adjective.
 
-**4. Coverage sweep.** One tight paragraph confirming the rest of their required
+**5. Coverage sweep.** One tight paragraph confirming the rest of their required
 list, in their words, so keyword scanning lands.
 
-**5. Logistics.** Rate, hours, timezone. Plain, no negotiation-signaling.
+**6. Logistics.** Rate, hours, timezone. Plain, no negotiation-signaling.
 
-**6. Sign off.** Name and GitHub. Nothing else.
+**7. The fixed availability close, verbatim.**
 
-## Openers that worked
+> I am available any time for an interview call to discuss the next steps.
 
-Each answers the client's hardest stated requirement with the owner's own work,
-in one sentence, with his experience as the grammatical subject:
+**8. Sign off.** Name and GitHub. Nothing else.
+
+Concise over complete. Every sentence is either a checkable claim or a next step,
+or it gets cut. **The letter carries no shortcomings** — see "Handling a real
+gap" below for the only place a gap may appear at all.
+
+## The line after the identity sentence
+
+The first substantive line still answers the client's hardest stated requirement
+with the owner's own work, with his experience as the grammatical subject. It now
+sits immediately after the fixed identity sentence instead of opening the letter:
 
 > Your posting specifies Rails 6.1.x. That is the version I shipped.
 
@@ -43,13 +66,21 @@ in one sentence, with his experience as the grammatical subject:
 
 ## Handling a real gap
 
+**Gaps do not go in the cover letter. At all.** (Owner ruling 2026-08-18: "avoid
+talking about my shortcomings." This tightens the 08-17 one-clause rule: the
+clause survives only where the client forces the question.) A verified gap is
+addressed in exactly one place: **the screening answer that explicitly asks about
+it.** If no question asks, the gap is simply not claimed — absence of a claim is
+not a lie, and proposal 16 shipped with OCR, Toast and Drizzle unclaimed rather
+than conceded. The never-overclaim rule in Step 2 of `SKILL.md` is untouched:
+verify before claiming, and never claim what is absent.
+
+When a screening question does force it, the rules below apply to that answer.
 Only when the gap is **verified**, never when it is merely absent from the facts
 bank. See Step 2 of `SKILL.md`.
 
-- **State it early and short. One clause is the budget.** Early still matters: a
-  gap buried in bullet four reads as something you hoped they would miss. But
-  "early" was never a licence to elaborate, and in practice elaboration is the
-  failure that actually happens. Early *and* brief. Then move.
+- **One clause is the budget.** State it, attach the ramp, move to what you do
+  have. Elaboration is the failure that actually happens.
 - **Attach a bounded commitment**, a timeline you would accept being held to.
 - **Never add meta-commentary about your own honesty.** "I want to be straight
   about that," "I will not stretch to claim one," "rather than have you find it
@@ -106,7 +137,8 @@ bank. See Step 2 of `SKILL.md`.
   - The tell is the tense and the subject. Difficulty in your past is evidence.
     Difficulty in their future is an insult.
   - **A gap of your own is not a warning about their project.** "I have not used
-    Firestore in production" is a fact about you and belongs early. "Firestore's
+    Firestore in production" is a fact about you and belongs in the screening
+    answer that asked. "Firestore's
     modeling traps are where projects like yours fail" is this anti-pattern
     wearing a concession as a disguise.
 
