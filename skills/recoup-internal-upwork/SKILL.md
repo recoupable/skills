@@ -165,19 +165,32 @@ path-scoped count or a main-branch count, and say which one you are quoting.
 their checklists, the letters. Skipping this produced two discarded drafts in one
 session. The house voice lives in those files.
 
-The shape:
+The shape. **The open and the close are fixed sentences (owner ruling 2026-08-18,
+set immediately after submitting proposal 16); the middle is built per job:**
 
-1. **State plainly that you want the work.** One sentence.
-2. **Credibility that answers their stated requirement**, in numbers they can
+1. **Greeting:** "Good morning," or "Good afternoon," plus the client's name when
+   the posting or client panel supplies one. Pick morning vs afternoon by the
+   **client's** local clock, which the client panel displays, not by yours.
+2. **The fixed identity sentence, verbatim:** "I am Patrick Sweetman. A Sr
+   Software Engineer from the USA with 12+ years of experience." One permitted
+   slot: the role word may match the posting's own title (Fullstack, Frontend,
+   Backend). Nothing else in the sentence changes.
+3. **Credibility that answers their stated requirement**, in numbers they can
    check. Their exact version number, their hardest project, the thing you have
    already shipped that matches.
-3. **A concrete next step that starts the project.** A named first deliverable,
+4. **A concrete next step that starts the project.** A named first deliverable,
    what they get to inspect at the end of it, and the order the rest would follow.
-4. **Coverage sweep** of their remaining requirements, in their words.
-5. **Rate, hours, timezone.** Plain.
-6. **Sign off:** name and GitHub. No LinkedIn, it is off-platform.
+5. **Coverage sweep** of their remaining requirements, in their words.
+6. **Rate, hours, timezone.** Plain.
+7. **The fixed availability close, verbatim:** "I am available any time for an
+   interview call to discuss the next steps."
+8. **Sign off:** name and GitHub. No LinkedIn, it is off-platform.
 
-300 to 400 words. Under 250 reads thin for senior work; over 500 does not get read.
+Concise over complete: every sentence is either a checkable claim or a next step,
+or it goes. **The letter carries no shortcomings.** Strengths only. A verified gap
+is addressed only where the posting explicitly asks about it, and it is addressed
+in that screening answer in one clause with a number, never in the letter. See
+`references/cover-letter.md`. 250 to 400 words; over 500 does not get read.
 
 **You are applying, not reviewing.** Never grade, rank or diagnose the client's
 posting or their project list. A draft that opened by sorting the client's three
@@ -209,9 +222,10 @@ in theirs. Difficulty is evidence when it is in your history and an insult when 
 is in their future.
 
 This has one deliberate exception: **a stated gap of your own is not a warning about
-their project.** Conceding "I have not used Firebase in production" is a fact about
-you and belongs in the letter early. Rewriting it as "Firestore's data modeling
-traps are where projects like yours fail" is the banned move wearing a disguise.
+their project.** "I have not used Firebase in production" is a fact about you, and it
+belongs in the screening answer that asked about Firebase (never the letter, per Step
+3). Rewriting it as "Firestore's data modeling traps are where projects like yours
+fail" is the banned move wearing a disguise.
 
 ### You are writing to win the contract, not to document your limits
 
@@ -272,7 +286,8 @@ Upwork's own AI draft generator are in `references/cover-letter.md`.
 Many postings reuse the same three: recent experience, frameworks, testing and QA.
 `ANSWERS.md` holds the current best versions with job-specific paragraphs marked.
 Re-scope those, keep the rest. They are often read *before* the letter, so each
-must stand alone; repeat a key concession even if the letter carries it.
+must stand alone. Since the letter carries no gaps (Step 3), the screening answer
+that asks about a gap is that gap's only home; make it complete there.
 
 Check whether the posting actually asks any. Several do not.
 
