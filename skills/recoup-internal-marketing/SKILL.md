@@ -78,9 +78,11 @@ Then state, in one line each:
 
 - **trials/subscriptions since the last run** — the result;
 - **whether the destination for today's likely CTA converts at all** — see the gate in step 5;
-- **whether conversion is currently readable** — if `utm_campaign` capture is not live, every
-  "tagged" link is *tagged but unreadable*, and today's post will not be attributable. Write that
-  down rather than discovering it at the re-pull.
+- **whether conversion is currently readable** — visit capture IS live (verified 2026-08-18):
+  Vercel Web Analytics records `utm_*` on both properties automatically. Run the attributed-visits
+  pull in `references/conversion.md` → *The attributed-visits pull* for the per-campaign numbers.
+  What stays unreadable is the visit→**signup** join (chat#1889 row 29) — declare that gap in
+  writing rather than discovering it at the re-pull.
 
 If trials have been flat at zero across several runs, **that is the finding**, and it outranks
 today's post. Say so, and see the funnel guardrail below.

@@ -99,16 +99,79 @@ Four pieces, because the click and the signup happen on different hosts:
    api once, on account creation.
 4. **`api` + `database`** persist one row per account.
 
-**Check before building:** Vercel Analytics may already capture `utm_*` on the marketing site. If it
-does, pieces 1–2 may reduce to reading an existing dashboard, and only the **signup join** (3–4) is
-new work. Verify rather than assume — it changes the size of the job.
+**Resolved 2026-08-18: Vercel Analytics DOES capture `utm_*` automatically, on both properties, with
+no app code.** Pieces 1–2 are already a readable dashboard; only the **signup join** (3–4) is new
+work. The pull is below — run it, don't rebuild it.
+
+## The attributed-visits pull (verified 2026-08-18)
+
+Attributed visits are read from the Vercel Web Analytics query API, authenticated with the local
+Vercel CLI's login token. No dashboard needed, no app code involved.
+
+```bash
+# Auth: the Vercel CLI's token (team `recoup`; `vercel whoami` to confirm login)
+TOKEN=$(python3 -c "import json;print(json.load(open('$HOME/Library/Application Support/com.vercel.cli/auth.json'))['token'])")
+
+# Time range MUST be epoch milliseconds in `since`/`until` — ISO `from`/`to` errors with
+# "missing required property `since`".
+SINCE=$(python3 -c "import datetime;print(int(datetime.datetime(2026,7,20).timestamp()*1000))")
+UNTIL=$(python3 -c "import datetime;print(int(datetime.datetime.now().timestamp()*1000))")
+
+# One call per property; run for BOTH, then split by source.
+#   chat.recoupable.dev (where /keys CTAs land): prj_6X7T8B99hcyA8fVwVhk4Z6mnTiZo
+#   recoupable.dev (marketing site):             prj_UxIFrlvr1a6XOs15Wu5szHh4iauI
+curl -sS "https://api.vercel.com/v1/query/web-analytics/visits/aggregate?projectId=<PRJ_ID>&teamId=recoup&since=$SINCE&until=$UNTIL&by=utmCampaign&limit=50" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+Gotchas that cost time the first run:
+
+- **`limit` defaults to 10** and silently truncates — always pass `limit=50` or campaigns vanish.
+- **Allowed `by` values** (anything else 400s): `hour, day, week, month, year, country, deviceType,
+  environment, requestPath, referrerHostname, osName, browserName, route, utmSource, utmMedium,
+  utmCampaign, utmContent, utmTerm, flags`. Use `utmCampaign` for per-post, `utmSource` for
+  per-platform, `referrerHostname` to catch **untagged** social clicks (`t.co`, `l.instagram.com`,
+  `linkedin.com`) that the utm read misses.
+- **Query both projects every time.** `/keys` CTAs land on the chat project; homepage/`/pricing`
+  CTAs land on marketing. Reading only one undercounts the slate.
+- Read this at **step 2a** (is conversion readable?) and again at the **~48h re-pull**.
+
+What this pull cannot see: signups. Visits stop at the pageview until the join (pieces 3–4, row 29
+of [chat#1889](https://github.com/recoupable/chat/issues/1889)) ships — keep declaring signups
+unreadable until it does.
+
+## What the first pull taught (2026-08-18) — read before weighting today's platforms
+
+The first month of readable data (07-20 → 08-18, every slate in the window) refuted several
+assumptions the runs had been operating on. Re-run the pull before trusting these — they are
+findings, not laws — but do not rebuild the old assumptions without new data:
+
+1. **The whole funnel top is ~1–7 tagged visits per slate** (~31 visitors across a month of
+   4-platform slates). Asset polish is not the constraint at this scale; audience size and
+   distribution are. Calibrate effort accordingly: an extra render pass buys nothing, a
+   collaborator's audience or an SEO surface buys reach.
+2. **Clicks do not follow views — YouTube converts best per view.** yt delivered the most tagged
+   visitors of any source (20, vs ig 7, li 5, x 3) from the *lowest* view counts (2–63/Short).
+   The description link is the only social CTA surface people reliably click. A platform whose
+   views collapsed can still be the best click channel — check clicks before writing a platform
+   off as dead distribution.
+3. **The tagged read structurally undercounts X (~8×).** `t.co` referrals were 23 visitors against
+   3 tagged `utm_source=x` — the no-link-in-body doctrine routes X clicks through bio and replies,
+   which arrive untagged. Always read `referrerHostname` next to `utmCampaign` before declaring a
+   platform's contribution zero.
+4. **Google organic outdrew all social combined** (70 visitors to recoupable.dev vs ~31 tagged
+   social). SEO surfaces compound daily; feed posts spike and vanish. This is standing evidence
+   for SEO-first titles and for public, indexable pages (artist profiles) as marketing assets.
+5. **The best-converting campaigns were an incident piece and a character piece**
+   (`changelog-0807` 6, `the-operator-ep1` 7) — not the launches. Same register the engagement
+   data favors; now conversion agrees.
 
 ## What to read at the re-pull
 
 In this order, because each is closer to revenue than the last:
 
 1. **Engagement** — the leading indicator (`references/learn-from-socials.md`).
-2. **Attributed visits** — per `utm_source` / `utm_campaign`.
+2. **Attributed visits** — per `utm_source` / `utm_campaign`, via the pull above.
 3. **Signups** — accounts created from those visits. `recoup-internal-sales` and
    `recoup-internal-funnel-valuation-pipeline` own the Privy / Stripe / credits / Attio reads.
 4. **Funnel stage** — did any become an Attio **Valuation Leads** row? That stage is created
