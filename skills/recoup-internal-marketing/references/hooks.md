@@ -40,10 +40,15 @@ Killed on 2026-07-28: *"Your roster posts every day. Your content budget does no
 the audience, carried no number and no contradiction, and its first frame was a grid of dim tiles with
 our logo on it.
 
-## Where the numbers go
+## One flat figure
 
-A specific-number payoff usually belongs **after** the work is shown, not in the cold open. "Eleven of
-eighteen thrown away" is compelling once you have seen the eighteen; used cold it is just a stat.
+The hook number is **ONE precise figure, stated flat.** No band, no "maybe", no second number, no
+"estimated" — a hedge in the first seconds reads as not knowing your own number, and it kills trust
+before the premise lands (owner, 2026-08-19: the flat "$662K" cold open was ruled excellent; the
+hedged "$454K... maybe $931K" it replaced was killed for "losing all trust"). Ranges, "estimated",
+and methodology get **one later beat, once** — the copy sells the idea; the minutiae live on the
+page it links to. (A process payoff like "eleven of eighteen thrown away" still reads best after
+the work is shown.)
 
 ## The cold-feed premise test
 
