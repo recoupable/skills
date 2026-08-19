@@ -140,6 +140,32 @@ What this pull cannot see: signups. Visits stop at the pageview until the join (
 of [chat#1889](https://github.com/recoupable/chat/issues/1889)) ships — keep declaring signups
 unreadable until it does.
 
+## What the first pull taught (2026-08-18) — read before weighting today's platforms
+
+The first month of readable data (07-20 → 08-18, every slate in the window) refuted several
+assumptions the runs had been operating on. Re-run the pull before trusting these — they are
+findings, not laws — but do not rebuild the old assumptions without new data:
+
+1. **The whole funnel top is ~1–7 tagged visits per slate** (~31 visitors across a month of
+   4-platform slates). Asset polish is not the constraint at this scale; audience size and
+   distribution are. Calibrate effort accordingly: an extra render pass buys nothing, a
+   collaborator's audience or an SEO surface buys reach.
+2. **Clicks do not follow views — YouTube converts best per view.** yt delivered the most tagged
+   visitors of any source (20, vs ig 7, li 5, x 3) from the *lowest* view counts (2–63/Short).
+   The description link is the only social CTA surface people reliably click. A platform whose
+   views collapsed can still be the best click channel — check clicks before writing a platform
+   off as dead distribution.
+3. **The tagged read structurally undercounts X (~8×).** `t.co` referrals were 23 visitors against
+   3 tagged `utm_source=x` — the no-link-in-body doctrine routes X clicks through bio and replies,
+   which arrive untagged. Always read `referrerHostname` next to `utmCampaign` before declaring a
+   platform's contribution zero.
+4. **Google organic outdrew all social combined** (70 visitors to recoupable.dev vs ~31 tagged
+   social). SEO surfaces compound daily; feed posts spike and vanish. This is standing evidence
+   for SEO-first titles and for public, indexable pages (artist profiles) as marketing assets.
+5. **The best-converting campaigns were an incident piece and a character piece**
+   (`changelog-0807` 6, `the-operator-ep1` 7) — not the launches. Same register the engagement
+   data favors; now conversion agrees.
+
 ## What to read at the re-pull
 
 In this order, because each is closer to revenue than the last:
