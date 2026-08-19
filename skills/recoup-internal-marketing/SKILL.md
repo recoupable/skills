@@ -150,9 +150,10 @@ Gate the pick on all of these before building — details in `references/topic-s
   collaborator, and have they been invited? "None" is an allowed answer that costs reach.
 - **Consent.** Internal roster artists need no per-piece permission. External artists need explicit
   likeness consent, and their real numbers are a *separate* gate. Check `cast/<character>/`.
-- **Numbers.** Any figure attributed to a real artist must be measured and verified, with
-  measured-vs-estimated disclosed. Never publish a number you cannot audit, including numbers about
-  ourselves.
+- **Numbers.** Any figure attributed to a real artist must be measured and verified. Never publish
+  a number you cannot audit, including numbers about ourselves. Measured-vs-estimated disclosure is
+  **one later beat in the piece, never part of the opening figure** — see `references/hooks.md` →
+  *One flat figure*.
 - **NO AI disclosure in body copy.** Owner ruling, 2026-07-28: never spend caption, tweet,
   description or on-screen text saying the visuals are AI generated. It is already obvious to the
   audience, and the characters are worth more spent on substance. Where platform-policy labelling is
