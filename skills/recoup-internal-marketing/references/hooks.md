@@ -78,7 +78,9 @@ line. Two corollaries:
 
 ## Checklist before rendering
 
-- [ ] Does the **first frame** stop a stranger with no sound and no context?
+- [ ] Does the **first frame** stop a stranger with no sound and no context, and carry the
+      subject's image? The poster frame IS the thumbnail; a bare number is not recognizable (owner,
+      2026-08-19).
 - [ ] **No logo and no fade** before ~5s?
 - [ ] Spoken hook lands in **3s**, measured from the generated audio rather than estimated from the word count?
 - [ ] Which **archetype** is it? (Cannot name one → rewrite.)

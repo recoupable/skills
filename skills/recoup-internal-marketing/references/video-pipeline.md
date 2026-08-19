@@ -5,9 +5,6 @@ an announcement, a result. The **look** is chosen from the account's style catal
 governed by `references/hooks.md`; the **voice** by `references/voice.md`. This file is the
 plumbing they all sit on.
 
-> **History.** This started as a HeyGen how-to. HeyGen is now the legacy alt path and ElevenLabs is
-> the default audio stack. The name is gone; the pipeline survived.
-
 ## What stays constant
 
 - **Vertical 9:16, 1080x1920** for Reels / Shorts / TikTok. Some older feed-first pieces are 4:5
@@ -16,6 +13,8 @@ plumbing they all sit on.
 - **Dark and achromatic.** Chrome stays black and white; colour comes from the content and from
   status indicators, per the shared design system.
 - **Runtime target ~40s**, and never past it without a stated reason (see `references/hooks.md`).
+- **Content fills the frame: cards and imagery occupy ~40% of frame height.** A small floating card
+  reads weak on a phone. Three of six re-renders on 2026-08-19 were the owner asking for bigger.
 
 What changes per video is **the hero** — what fills the middle. Pick it from the message:
 
@@ -50,7 +49,9 @@ message, so lock it first.
 - **No em dashes or en dashes** in anything published, including on-screen text.
 - **Spell numbers and URLs for TTS**: "ten point one million", "recoupable **dot dev**".
 - Ranges as "ten to sixteen times", not `10-16x`.
-- **Every claim verified.** No number goes on screen that cannot be traced to a source today.
+- **Every claim verified, every derived figure computed.** Sums and totals are computed from the
+  saved source file, never typed from memory (an invented catalog-plays total shipped to a render
+  on 2026-08-19 before the frame-pull caught it).
 - Read every line aloud hunting for a **bare number with no unit**.
 
 ## 2. Scaffold
@@ -99,6 +100,13 @@ Rules that hold for any hero:
   from:"center"}` is fine; `from:"random"` is forbidden.
 - Cap display font sizes so text stays inside the canvas. `hyperframes inspect` catches overflow.
 - Set all initial hidden states with `gsap.set` at `t=0` so seeking stays correct.
+- **Reveals resolve in place, in one continuous scene.** Never cut to a duplicate card to show the
+  same content updated, and never put filler ("--", "...") in a data cell: a loading state is a
+  skeleton bar kept alive by timeline-driven motion (sheen, pulse), resolving into the real value.
+- **No dead frames.** The next scene enters as the prior exits; rows land with their panel; a
+  counter's initial DOM text equals its tween's start value (it mounts, then moves, never jumps).
+- **Stack vertically what would wrap horizontally** (flows, roster rows). Socials show brand
+  glyphs, never written platform names.
 
 ## 5. Audio
 
@@ -140,13 +148,9 @@ npx hyperframes@0.7.5 snapshot --at 4.2,26,42.5 .       # ~15s, writes PNGs + a 
 npm run render                                    # minutes. Only once the stills look right
 ```
 
-`hyperframes snapshot` captures key frames as PNGs **and builds a contact sheet for review**, in
-about fifteen seconds against two to four minutes for a render. Use `--at` with the times you care
-about, or `--frames N` for evenly spaced ones. With `GEMINI_API_KEY` set it will also run vision
-analysis on the frames; `--describe 'your question'` overrides the default prompt.
-
-Recorded 2026-08-07 because a run burned **seven full renders** iterating on layout and on-screen
-copy, and every one of those findings was visible in a still. Snapshot first, every time.
+`hyperframes snapshot` writes key-frame PNGs **and a contact sheet** in ~15s against minutes for a
+render; pass `--at` with the times you care about. (Why this is law: SKILL.md's QC ladder — one run
+burned seven renders on findings all visible in a still.)
 
 Then, and only when the stills are right:
 
@@ -168,15 +172,9 @@ dimensions. A render returning the right duration is not evidence it looks right
 
 ### Measure layout complaints, do not eyeball them
 
-When a reviewer says something "feels low" or "feels off", extract frames and compute the content's
-bounding box **across several beats** rather than squinting at a contact sheet. It converts a vague
-impression into a number that names the bug.
-
-On one run, "there's a lot of empty space at the top" became "the card's top edge sits at exactly
-y=960 in a 1920 frame, which is the 50% line" — which immediately identified a lost `translateY(-50%)`
-(see the GSAP trap below). Comparing beats also proved it was systematic rather than local: every
-scene was low, and the reviewer had simply spotted it on the shortest card, where the void was
-largest.
+"Feels low / feels off" gets answered by extracting frames and computing the content's bounding box
+across several beats. One run: "empty space at the top" measured as every card's top edge at exactly
+y=960 of 1920 (the 50% line), which named the lost `translateY(-50%)` (the GSAP trap below).
 
 ### ⚠️ GSAP overwrites CSS `transform`, so never centre with one
 
@@ -192,15 +190,9 @@ largest.
 gsap.set(".scene", { xPercent: -50, yPercent: -50 });
 ```
 
-Cost three renders on 2026-08-07. Because the tweens animated `y`, `z` and `rotationY`, GSAP rebuilt
-the transform matrix and the `translateY(-50%)` silently vanished, so **every** scene rendered with
-its top edge on the 50% line instead of its centre. It hid in plain sight because tall panels fill
-downward and look plausible; it was only obvious on the shortest panel in the film.
-
-It had also produced a **phantom bug**: an earlier caption collision on one beat was this same
-offset pushing a panel down into the caption band, and it got "fixed" with a hand-tuned `top: 42%`
-nudge. When the real cause was fixed the nudge became wrong. **A hand-tuned offset that corrects a
-layout you cannot explain is a symptom — find the cause before shipping the nudge.**
+Cost three renders on 2026-08-07: tweens animating `y`/`z`/`rotationY` rebuilt the transform matrix
+and the CSS `translateY(-50%)` silently vanished. **A hand-tuned offset that corrects a layout you
+cannot explain is a symptom — find the cause before shipping the nudge.**
 
 Lint gotcha: CSS `transform: scaleX(0)` plus a GSAP `scaleX` tween conflict. Use `gsap.fromTo(...)`
 and drop the CSS transform.
