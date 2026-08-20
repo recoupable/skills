@@ -452,6 +452,16 @@ cold contacts.
    | Re-run or check a catalog valuation | `https://chat.recoupable.dev/catalogs` |
    | Set up or edit a scheduled report | `https://chat.recoupable.dev/tasks` |
    | Anything else / general return visit | `https://chat.recoupable.dev` |
+
+   **Then run the draft through the `unslop` skill before presenting it.**
+   Every customer-facing draft gets an unslop pass — it strips the AI tells
+   (em dashes, puffery, "not just X but Y", AI vocabulary) that make outreach
+   read machine-written, and its no-em-dash rule enforces this skill's own
+   standing rule for customer email. If `unslop` is not installed, get it from
+   [skills.sh/cursor/plugins/unslop](https://www.skills.sh/cursor/plugins/unslop)
+   (`npx skills add` — it installs at user level and applies to all writing).
+   The pass edits the draft in place; meaning and commitments must survive it
+   unchanged.
 3. **The operator sends; diff what actually went out.** Read the sent copy
    (from the CRM email sync) against your draft. Any commitment the operator
    added or changed becomes the follow-up task's content — the record must
