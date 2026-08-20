@@ -281,6 +281,23 @@ running order, not the facts.
 Full voice rules, the gap-handling pattern, and the anti-patterns produced by
 Upwork's own AI draft generator are in `references/cover-letter.md`.
 
+### The unslop pass
+
+If the `unslop` skill is installed (`npx skills add`; it removes AI tells from
+prose), run it over the finished letter and every screening answer as the last
+drafting step, before Step 7. It generalizes the em-dash rule to the whole
+catalog of tells: AI vocabulary, "not just X, but Y", rule-of-three padding,
+filler phrases, hedging.
+
+Two of its instructions are subordinate to this skill and do not apply:
+
+- **The fixed frame outranks it.** The greeting, the identity sentence, and the
+  availability close are verbatim by owner ruling. Unslop edits the middle only.
+- **"Add soul" never adds claims.** Unslop asks for opinions and mess; a cover
+  letter's voice comes from specific verified numbers, not from invented
+  personality. If an unslop rewrite introduces a sentence that is not a checkable
+  claim or a next step, revert it. Cutting tells: yes. Adding color: no.
+
 ## Step 4 — Screening questions
 
 Many postings reuse the same three: recent experience, frameworks, testing and QA.
@@ -348,6 +365,8 @@ claims in an answer. Keep paragraphs unwrapped to single lines in the file so th
 web textarea does not inherit hard line breaks.
 
 - [ ] No em dashes anywhere customer-facing. They are the loudest AI tell
+- [ ] The unslop pass ran over every customer-facing field (Step 3, "The unslop
+      pass") and the fixed-frame sentences survived it verbatim
 - [ ] American spellings if the client is US
 - [ ] Rate in the letter matches the rate in the bid field
 - [ ] Every claim traceable to `PROFILE.md` or a repository
