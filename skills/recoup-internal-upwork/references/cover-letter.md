@@ -106,6 +106,12 @@ bank. See Step 2 of `SKILL.md`.
 ## Voice rules
 
 - **No em dashes.** Grep for them before submitting. Loudest AI tell there is.
+- **Run the `unslop` skill over the draft when installed** (see SKILL.md Step 3,
+  "The unslop pass"). It catches the rest of the tell catalog this list does not
+  enumerate: AI vocabulary, filler, hedging, rule-of-three padding. Its em-dash
+  rule matches this one. Its "add soul" instruction is subordinate here: no
+  rewrite may touch the fixed-frame sentences or introduce a line that is not a
+  checkable claim or a next step.
 - No "I'm excited to apply." No "I'm a strong fit." Show it or cut it.
 - Bullets are for facts, never for adjectives.
 - Prefer numbers to intensifiers. "144 of its 323 commits" beats "extensive
