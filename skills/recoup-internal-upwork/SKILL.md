@@ -283,9 +283,9 @@ Upwork's own AI draft generator are in `references/cover-letter.md`.
 
 ### The unslop pass
 
-If the `unslop` skill is installed (`npx skills add`; it removes AI tells from
-prose), run it over the finished letter and every screening answer as the last
-drafting step, before Step 7. It generalizes the em-dash rule to the whole
+If the `unslop` skill is installed (https://www.skills.sh/cursor/plugins/unslop,
+via `npx skills add`; it removes AI tells from prose), run it over the finished
+letter and every screening answer as the last drafting step, before Step 7. It generalizes the em-dash rule to the whole
 catalog of tells: AI vocabulary, "not just X, but Y", rule-of-three padding,
 filler phrases, hedging.
 
