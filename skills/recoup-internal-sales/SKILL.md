@@ -422,6 +422,38 @@ actually *done* with Recoup, in their own timeline:
 | **Artists** | Roster: each artist + every connected social (platform, handle/URL, followers, scrape freshness). | `GET /api/artists?account_id=` — socials embedded as `account_socials`; the social's `updated_at` is the scrape date. A one-platform roster (e.g. Spotify only) is itself an outreach hook: nothing else is connected. |
 | **Valuation / catalog** | Run count + dates, claimed vs unclaimed, the value on file, what's in the catalog (songs / albums / total streams), and the crown jewels (top songs by plays). | `playcount_snapshots` by `account` (the column is `account`, not `account_id`) → `song_measurements.snapshot = ps.id`, join `songs ON songs.isrc = song_measurements.song`; `value` is the play count. The dollar value is **not** in the DB (never persisted) — read it off the Attio auto-note or the valuation email. Repeat runs of the same catalog in one sitting = they're trying to answer a question; find out which one. |
 
+## The lead workspace — where every email lives
+
+Each lead gets one folder in the operator's private workspace (`workspace/sales/<lead>/`,
+its own git repo, never a product submodule). Two things in it are load-bearing for the
+send loop; everything else (notes, PDFs, call transcripts, task prompts) sits beside them.
+
+```
+workspace/sales/<lead>/
+  EMAILS.md            chronological index: every send + receipt, the read, the reply playbook
+  emails/
+    README.md          the four lines below, so a cold reader knows the rule
+    sent/              verbatim final text of each send, one file, with its reply playbook
+    received/          verbatim inbound emails, one file each
+    threads/           verbatim multi-message Gmail threads (secrets redacted)
+    drafts/            every draft and revision; never the sent version
+```
+
+Files are `YYYY-MM-DD-slug.md`. Rules that keep the record trustworthy:
+
+- **`EMAILS.md` is the index, `emails/` is the evidence.** The index entry links to the
+  file; the file holds the words. Never let a loose `DRAFT-*.md` sit at the folder root.
+- **The sent file is the operator's copy, not the draft.** Step 3 of the send loop
+  ("diff what actually went out") ends by writing the sent text to `emails/sent/`; a
+  draft promoted to "sent" without the diff is how the record and the inbox drift apart.
+- **Every inbound reply gets a `received/` file the day it arrives**, even a one-liner.
+  The 2026-08-25 reorg of two live accounts found one sent email that existed only in
+  Attio and two replies that existed only in Gmail; the reorg is what surfaced them.
+- **Secrets never enter the files.** API tokens that ride inside task prompts get
+  redacted before the prompt or thread is copied in.
+- **Attio mirrors, it does not replace.** Each send/receipt still becomes an Attio note
+  (the CRM's email sync misses bodies), and the note names the local file path.
+
 ## The send loop — dossier to closed-out record
 
 The per-contact motion that converts. Run it identically for every send;
@@ -463,9 +495,10 @@ cold contacts.
    The pass edits the draft in place; meaning and commitments must survive it
    unchanged.
 3. **The operator sends; diff what actually went out.** Read the sent copy
-   (from the CRM email sync) against your draft. Any commitment the operator
-   added or changed becomes the follow-up task's content — the record must
-   match the inbox, not the draft.
+   (from the CRM email sync, or the operator's paste) against your draft. Any
+   commitment the operator added or changed becomes the follow-up task's
+   content — the record must match the inbox, not the draft. Write the sent
+   text to `emails/sent/` (see The lead workspace) before closing out.
 4. **Close out every send the same way:** complete the open task the send
    fulfilled; write a sent-log note stating what was promised **and the reply
    playbook** (what to do for each likely reply); do the **keep-a-lead-warm
