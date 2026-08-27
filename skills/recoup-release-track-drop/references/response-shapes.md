@@ -75,7 +75,7 @@ array. Their exact inner field names are **not pinned here** — run
 the live response actually shows.
 
 - **`milestones`** — `status: "success"` with `milestones: []` is common and legit; don't retry. Fall back to `insights` / `career`.
-- **`tracks` / `track`** — track objects carry an `id` you pass to `/research/track` and `/research/track/playlists`. Per-song TikTok fields may or may not be present per track; if absent, report "no data" (never fabricate — see `recoup-research-artist-overview` tiktok mode).
+- **`tracks` / `track`** — track objects carry an `id` you pass to `/research/track` and `/research/track/playlists`. Per-song TikTok fields may or may not be present per track; if absent, report "no data" (never fabricate).
 - **`playlists`** (artist-level) — has no editorial/indie filter flags; use `platform` + `status`. For editorial/indie filtering and pagination, use `/research/track/playlists` per track.
 
 ## The discipline
