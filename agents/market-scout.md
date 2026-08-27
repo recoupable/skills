@@ -38,7 +38,6 @@ obvious.
 The `recoup-research-*` skills:
 
 - `recoup-research-find-talent` — primary tool: emerging artists, viral songs
-- `recoup-research-artist-overview` — deep dive on top candidates (+ audience sizing)
 - `recoup-research-the-web` — cultural context
 
 ## Output standards

@@ -34,7 +34,6 @@ the Recoup research API into clear, actionable briefs.
 
 The `recoup-research-*` skills:
 
-- `recoup-research-artist-overview` — full sweep on one artist (overview, audience, competition, TikTok)
 - `recoup-research-find-talent` — emerging/unsigned discovery + viral autopsy
 - `recoup-research-playlist-targets` — playlist strategy + placement gaps
 - `recoup-research-find-contacts` — managers/A&R/press + drafted outreach
