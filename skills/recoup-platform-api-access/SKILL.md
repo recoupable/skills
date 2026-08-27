@@ -67,7 +67,7 @@ report and an empty/omitted one.
 
 ## Docs map (pull the section you need; don't guess paths)
 
-Account & Identity · Artists & Content · Research (Songstats + Web) · Social
+Account & Identity · Artists & Content · Research (Web + measurement store) · Social
 Integrations · Chat & Agents · Developer/Infra. Find the exact path/params by
 grepping `llms-full.txt` or pulling the OpenAPI JSON for the area, e.g.:
 

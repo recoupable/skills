@@ -33,7 +33,7 @@ Auth: `x-api-key: $RECOUP_API_KEY` (or `Authorization: Bearer $RECOUP_ACCESS_TOK
 
 - **Album art comes free** from step 2 (`images[]`) — no DOM parsing.
 - **Store-served, no 429.** Album measurements return `data_source: "apify_spotify_playcount"` —
-  they read Recoup's measurement store, **not** Songstats, so they don't hit the Songstats quota
+  they read Recoup's measurement store, so there is no third-party quota to hit
   that 429s the artist-name research endpoints.
 - **More accurate than a UI snapshot.** The live UI can render a release as "0 streams" if its
   measurement job hasn't finished yet. The store backfills within minutes — re-read and it's there.
