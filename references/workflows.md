@@ -460,7 +460,7 @@ Every chain you'll ever build is one of three shapes:
 | ------- | ----- | ------- |
 | **Data → Data** | Workflow A's output feeds Workflow B's input | `/similar` (W9) returns peer list → for each peer, run playlist gap analysis (W1) |
 | **Data → Draft** | Research output becomes a deliverable the user can act on | Peer research (W9) + people search (W11) → drafted outreach email the user reviews and sends themselves |
-| **Skill → Skill** | Finish with this skill, hand off to another | Research sweep (W4) → hand off to a `recoup-content-*` skill for a one-sheet; or to `recoup-release-plan-rollout` for timing; or to `recoup-research-artist-overview` for growth analysis |
+| **Skill → Skill** | Finish with this skill, hand off to another | Research sweep (W4) → hand off to a `recoup-content-*` skill for a one-sheet; or to `recoup-release-plan-rollout` for timing |
 
 Most real deliverables are all three stacked: compose several workflows (Data →
 Data), turn the result into a draft (Data → Draft), then hand off whatever
@@ -477,8 +477,7 @@ Beyond the `/research/*` endpoints, the agent running this skill typically produ
 - **Artist workspace writes** — save synthesized research to `context/artist.md`,
   `research/{date}.md`, `releases/{slug}/RELEASE.md`. See "Saving research" above.
 - **Handoffs to other skills** — the `recoup-content-*` skills (promo content,
-  captions, one-sheets), `recoup-release-plan-rollout` (release lifecycle),
-  `recoup-research-artist-overview` (growth analysis), the `recoup-roster-*`
+  captions, one-sheets), `recoup-release-plan-rollout` (release lifecycle), the `recoup-roster-*`
   skills (workspace setup/lookup), `recoup-content-reactive-post` (turn a
   cultural moment into a post).
 
@@ -561,12 +560,10 @@ Step 2 — Diagnose the gap (Workflow 1: playlist pitching)
   Call: /research/similar (peers) → /research/playlists (each peer)
   Output: playlists peers are on that Artist X isn't → pitch targets
 
-Step 3 — HANDOFF to recoup-research-artist-overview
-  Context to pass:
-    - Current monthly listeners + recent milestones from Step 1
-    - Editorial gap from Step 2
-  recoup-research-artist-overview owns: which lever to pull first
-  (playlist push vs social-to-DSP ads vs organic content)
+Step 3 — Decide the lever
+  Inputs: the snapshot from Step 1, the editorial gap from Step 2
+  Pick which lever to pull first (playlist push vs social-to-DSP ads vs
+  organic content) and say why, in this skill's output.
 
 Step 4 — HANDOFF to recoup-release-plan-rollout
   If Step 3 recommends a new release:

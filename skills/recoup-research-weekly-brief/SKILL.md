@@ -1,6 +1,6 @@
 ---
 name: recoup-research-weekly-brief
-description: The recurring "what changed this week" update for an artist — streaming/social deltas vs the last run, milestones, and a spike/drop check. Use for "weekly brief", "what's new this week", "what changed for [artist]", or "are streams spiking or dropping". Recurring and dated; diffs against your own prior file. For a one-time full sweep use recoup-research-artist-overview.
+description: The recurring "what changed this week" update for an artist — streaming/social deltas vs the last run, milestones, and a spike/drop check. Use for "weekly brief", "what's new this week", "what changed for [artist]", or "are streams spiking or dropping". Recurring and dated; diffs against your own prior file.
 ---
 
 # Recoup Research — Weekly Brief

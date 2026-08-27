@@ -36,7 +36,7 @@ bundled references first: `references/workspace-context.md`,
 `insufficient_credits` surface `checkoutUrl`) — no silent 30-asset fan-outs. A
 ~20-asset default: 6–10 video clips across looks (each led by a recoup-song-find-hook
 hook), 4–6 quote cards, 1 carousel, 1 visualizer, captions per asset. **Theme to the
-audience** (via recoup-research-artist-overview audience data) — bias looks/copy to
+audience** (via recoup-research-the-web audience research) — bias looks/copy to
 where the fans are. Analyze-gate every asset; assemble a `pack-manifest.md`.
 Cohesion: a clip *family*, one look + voice.
 

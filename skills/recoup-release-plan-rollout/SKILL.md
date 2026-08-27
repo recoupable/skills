@@ -52,7 +52,7 @@ workspace is populated (brief + campaign + RELEASE.md exist) or a hard blocker h
    `assumptions.yaml` + the brief, never from memory.
 5. **Playlist targeting (chained)** → call recoup-research-playlist-targets (targets +
    gaps) and recoup-research-find-contacts (curator + drafted pitch — draft only); if
-   audience is thin, recoup-research-artist-overview (audience). Land in `targeting/`.
+   audience is thin, recoup-research-the-web (audience). Land in `targeting/`.
 6. **Arm monitoring** → note standing watches: recoup-release-track-drop (drop +
    launch alert) and recoup-research-weekly-brief (recurring + streaming spikes).
 7. **Review + completion gate (do not skip).** Run
