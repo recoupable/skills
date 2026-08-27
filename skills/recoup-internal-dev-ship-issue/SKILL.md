@@ -78,7 +78,7 @@ Turn every **Done-when** criterion into a live check against the real preview UR
 
 The **live response is ground truth.** Compare it field-by-field and code-by-code against the documented contract:
 
-- If the live response carries fields or status codes the docs **missed**, add them to the docs. (In the reference slice, the live response carried a top-level `source_ids` and a `track_info.songstats_track_id` the spec lacked — the docs were patched to match.)
+- If the live response carries fields or status codes the docs **missed**, add them to the docs. (In the reference slice, the live response carried two envelope fields the spec lacked — the docs were patched to match.)
 - If the docs claim something the API **doesn't do**, fix whichever is wrong — usually the docs, sometimes the code (e.g. the contract said "exactly one identifier" but the validator allowed several → tighten the validator).
 
 All three must agree before you call it done. This step is the entire point of the loop — it's what prevents the doc-drift the stop endpoint had.

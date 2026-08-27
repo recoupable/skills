@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
 Catalog Value Estimator — core.
-Given recordings (Spotify track IDs / ISRCs) or whole albums (Spotify album IDs),
-pull streams from the Recoup Research API, annualize, and model
+Given recordings (ISRCs) or whole albums (Spotify album IDs), pull play counts
+from the Recoup measurement store, annualize, and model
 gross -> NLS -> value with labeled assumptions. Outputs estimate.json + summary.md.
 
 Two measurement modes:
-  • Track mode (--ids/--isrcs/--ids-file): per-track stats + historic-stats.
-    Spotify counts are store-served (Apify-first) and carry provenance.
+  • Track mode (--isrcs/--ids-file, ISRCs only): per-track stats + historic-stats
+    from the measurement store (Spotify only, provenance-labeled). A track that
+    has never been captured is reported with sp=0 / ttm_source=none — capture its
+    album first (portfolio mode does this automatically).
   • Portfolio mode (--album-ids/--album-ids-file): snapshot-first. Reads
     GET /research/playcounts per album (one row per track, provenance-labeled),
     auto-triggers POST /research/snapshots for uncaptured albums, and derives
@@ -62,10 +64,11 @@ def num(x):
     try: return float(str(x))
     except Exception: return 0.0
 
-def id_param(ident):
-    s = ident.strip()
-    if len(s) == 12 and s[:2].isalpha(): return ("isrc", s)
-    return ("spotify_track_id", s)
+def isrc_of(ident):
+    s = ident.strip().upper()
+    if len(s) == 12 and s[:2].isalpha(): return s
+    sys.exit(f"ERROR: '{ident}' is not an ISRC. Track mode takes ISRCs only "
+             "(GET /spotify/album lists external_ids.isrc per track); for Spotify ids use --album-ids.")
 
 # ---------------- TTM via snapshot deltas (shared) ----------------
 def ttm_from_deltas(isrc, asof, cfg):
@@ -86,26 +89,17 @@ def ttm_from_deltas(isrc, asof, cfg):
 
 # ---------------- track mode ----------------
 def track_current(ident):
-    key, val = id_param(ident)
-    j = api("research/track/stats", {key: val, "source": "all"})
-    d = {"id": ident, "title": ident, "isrc": val if key == "isrc" else "", "sp": 0, "yt": 0,
+    isrc = isrc_of(ident)
+    j = api("research/track/stats", {"isrc": isrc})   # 404 (empty dict) when nothing is stored
+    d = {"id": isrc, "title": isrc, "isrc": isrc, "sp": 0, "yt": 0,
          "sc": 0, "tt": 0, "labels": [], "distributors": [],
          "data_source": None, "captured_at": None}
-    ti = j.get("track_info", {}) or {}
-    d["title"] = ti.get("title", ident)
-    d["labels"] = [l.get("name") for l in ti.get("labels", []) if isinstance(l, dict)]
-    d["distributors"] = [x.get("name") for x in ti.get("distributors", []) if isinstance(x, dict)]
-    for ln in ti.get("links", []) or []:
-        if ln.get("isrc"): d["isrc"] = ln["isrc"]; break
     for s in j.get("stats", []) or []:
-        src, data = s.get("source"), s.get("data", {}) or {}
-        if src == "spotify":
+        if s.get("source") == "spotify":
+            data = s.get("data", {}) or {}
             d["sp"] = num(data.get("streams_total"))
             d["data_source"] = s.get("data_source")
             d["captured_at"] = s.get("captured_at")
-        elif src == "youtube": d["yt"] = num(data.get("video_views_total")) + num(data.get("short_views_total"))
-        elif src == "soundcloud": d["sc"] = num(data.get("streams_total"))
-        elif src == "tiktok": d["tt"] = num(data.get("views_total"))
     return d
 
 def nearest(history, target):
@@ -121,10 +115,9 @@ def nearest(history, target):
 
 def track_history(d, asof, years, cfg):
     """Fills sp_ttm, ttm_source, anniversaries on dict d (track mode)."""
-    key, val = id_param(d["id"])
     start = (asof - dt.timedelta(days=365 * years + 5)).isoformat()
     j = api("research/track/historic-stats",
-            {key: val, "source": "spotify", "start_date": start, "end_date": asof.isoformat()},
+            {"isrc": d["isrc"], "start_date": start, "end_date": asof.isoformat()},
             timeout=25)
     hist = []
     for s in j.get("stats", []) or []:
@@ -201,7 +194,8 @@ def portfolio_tracks(album_ids, asof, cfg, snapshot=True, wait_mins=6, skip_ttm=
 def main():
     ap = argparse.ArgumentParser()
     g = ap.add_mutually_exclusive_group(required=True)
-    g.add_argument("--ids"); g.add_argument("--isrcs"); g.add_argument("--ids-file")
+    g.add_argument("--ids", help="comma-separated ISRCs (alias of --isrcs)")
+    g.add_argument("--isrcs", help="comma-separated ISRCs"); g.add_argument("--ids-file", help="one ISRC per line")
     g.add_argument("--album-ids", help="comma-separated Spotify album ids (snapshot-first portfolio mode)")
     g.add_argument("--album-ids-file")
     ap.add_argument("--asset-name", default="Catalog")

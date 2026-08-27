@@ -1,82 +1,89 @@
-# Response shapes (production `api.recoupable.dev`, songstats-based)
+# Response shapes (production `api.recoupable.dev`)
 
-The research backend is **songstats-based**. When you need a field not verified
-below, **dump it first** rather than guessing:
+When you need a field not verified below, **dump it first** rather than
+guessing:
 
 ```bash
-curl -s "$RECOUP_API/research/<ep>?artist=..." -H "x-api-key: $RECOUP_API_KEY" | jq 'keys'
-curl -s "$RECOUP_API/research/<ep>?artist=..." -H "x-api-key: $RECOUP_API_KEY" | jq '.<array>[0] | keys'
+curl -s "$RECOUP_API/<path>" -H "x-api-key: $RECOUP_API_KEY" | jq 'keys'
+curl -s "$RECOUP_API/<path>" -H "x-api-key: $RECOUP_API_KEY" | jq '.<array>[0] | keys'
 ```
 
 ## The common envelope
 
-Most endpoints return a wrapper, the data in a named array, and an `artist_info`
-identity block:
-
-```jsonc
-{
-  "status": "success",
-  "result": "success",
-  "message": "Data Retrieved.",
-  "<data>": [ ... ],          // results | artists | audience | stats | playlists | tracks | ...
-  "artist_info": {
-    "songstats_artist_id": "1l65tk4s",
-    "id": "1l65tk4s",
-    "name": "Wiz Khalifa",
-    "avatar": "https://...",
-    "site_url": "https://songstats.com/artist/1l65tk4s/wiz-khalifa"
-  },
-  "source_ids": []            // platform source ids the data was drawn from (often empty)
-}
-```
-
-`status: "success"` with an **empty data array is a valid, common response** —
-treat it as "no data for this artist/platform," not an error or a zero.
+Every endpoint returns `status: "success"` plus flat top-level fields (no `data`
+wrapper). `status: "success"` with an **empty array is a valid, common
+response** — treat it as "no data," not an error or a zero.
 
 ## Verified shapes
 
-### `GET /research` (search) → `results[]`
+### Spotify endpoints → Spotify Web API objects
+
+`GET /spotify/search?q=&type=artist` returns `artists.items[]`; `type=track`
+returns `tracks.items[]`. `GET /spotify/artist?id=` returns the artist object:
+
 ```jsonc
-{ "status": "success", "results": [
-  { "songstats_artist_id": "1l65tk4s", "id": "1l65tk4s", "name": "Wiz Khalifa", "avatar": "...", "site_url": "..." }
-] }
+{ "id": "137W8MRPWKqSmrBGDBFSop", "name": "Wiz Khalifa",
+  "followers": { "total": 12345678 }, "popularity": 78,
+  "genres": ["hip hop", "pittsburgh rap"], "images": [{ "url": "...", "width": 640, "height": 640 }] }
 ```
-The `id` (== `songstats_artist_id`) is what you pass as `id=` to the artist
-endpoints, or `artist_id=` to `/research/albums`. No score/`match_strength` — the
-first sensible result is the match; disambiguate by `name`/`avatar` if needed.
 
-### `GET /research/similar` → `artists[]`
-Same per-artist shape as search (`songstats_artist_id`, `id`, `name`, `avatar`,
-`site_url`) — no scores or follower counts. To compare peers, fetch each peer's
-`/research/metrics` / `/research/profile` separately.
+`GET /spotify/artist/albums` returns `items[]` of albums with `id`, `name`,
+`release_date`, `album_type`, `images`; `GET /spotify/album?id=` returns the
+album with `tracks.items[]` (each with `id`, `name`, `external_ids.isrc`),
+`label` and `copyrights`. There is **no** monthly-listener field anywhere.
 
-### `GET /research/profile` → `artist_info{}`
-`artist_info` carries `name`, `country`, `bio`, `avatar`, `site_url`, genres/label
-where available. There is **no** top-level `sp_followers`. For follower/listener
-numbers use `/research/metrics`.
+### `GET /artists/{id}/socials` → `socials[]`
+One entry per connected profile: platform, profile URL, follower count, and
+the row id used by the scrape endpoint. A `0`/`null` follower count means
+"not stored" — omit it.
 
-### `GET /research/audience` → `audience[]`
-`{ ..., "audience": [], "artist_info": {...}, "source_ids": [] }`. The `audience`
-array is **frequently empty even for major artists**. Empty = no demographic
-data; do not invent demographics — fall back to `/research/similar` behavior +
-`POST /research/web`.
+### `GET /research/playcounts?spotify_album_id=` → `album{}` + `playcounts[]`
+```jsonc
+{ "status": "success",
+  "album": { "spotify_album_id": "4GtuTU…", "name": "Knock Knock", "label": null, "copyright": null },
+  "playcounts": [
+    { "isrc": "USA2P2015962", "spotify_track_id": "1yBPcg…", "name": "Good Evening",
+      "platform_displayed_play_count": 18604195, "captured_at": "2026-08-27T22:52:00Z",
+      "data_source": "apify_spotify_playcount" }
+  ] }
+```
+404 when the album has never been captured — create a `current` measurement job.
 
-### `GET /research/metrics` → `stats[]`
-Requires `source*`. Returns `{ ..., "stats": [ ... ], "artist_info": {...},
-"source_ids": [] }` — `stats` is the time-series/metric payload for that source.
-Take the latest entry for the current value; introspect with `jq '.stats[0]'`.
+### `GET /research/track/stats?isrc=` → `stats[]`
+```jsonc
+{ "status": "success", "result": "success",
+  "stats": [ { "source": "spotify", "data": { "streams_total": 1412349476 },
+               "data_source": "apify_spotify_playcount", "captured_at": "2026-08-27T22:51:34Z" } ] }
+```
+One entry, Spotify only. 404 when nothing is stored for the ISRC and no album
+mapping exists to refresh from.
 
-## Not-yet-introspected (same envelope — confirm inner fields with `jq keys`)
+### `GET /research/track/historic-stats?isrc=` → `stats[].data.history[]`
+`history[]` of `{ date, streams_total, data_source }`, ascending, one point per
+capture date, bounded by `start_date` / `end_date`. Older points may carry a
+legacy `data_source`; new points are `apify_spotify_playcount`.
 
-`urls`, `career`, `insights`, `milestones`, `tracks`, `playlists`, `albums`,
-`track`, `track/playlists` all return the common envelope with their own data
-array. Their exact inner field names are **not pinned here** — run
-`jq '.<array>[0] | keys'` once before coding against them, and prefer the names
-the live response actually shows.
+### `GET /research/tracks/{isrc}/measurements` → `series[]`
+`{ status, id, platform: "spotify", metric: "platform_displayed_play_count",
+series: [ { date, value, data_source } ] }`, capped at 1,000 points.
 
-- **`milestones`** — `status: "success"` with `milestones: []` is common and legit; don't retry. Fall back to `insights` / `career`.
-- **`tracks` / `track`** — track objects carry an `id` you pass to `/research/track` and `/research/track/playlists`. Per-song TikTok fields may or may not be present per track; if absent, report "no data" (never fabricate).
-- **`playlists`** (artist-level) — has no editorial/indie filter flags; use `platform` + `status`. For editorial/indie filtering and pagination, use `/research/track/playlists` per track.
+### `GET /research/track/playcount-deltas?isrc=&since=` → `deltas[]`
+`{ platform, metric, since, until, delta, days, run_rate_annualized }` between
+the nearest captures. Empty `deltas` = not enough history (needs two captures
+≥7 days apart), not zero.
+
+### `POST /research/measurement-jobs` → 202
+`{ status, source: "current", id, state: "queued", album_count,
+estimated_cost_usd }` — `id` is the snapshot id; `reused: true` appears when an
+existing fresh capture was handed back.
+
+### `POST /research/web` → `results[]` + `formatted`
+`results[]` of `{ title, url, snippet }` plus a `formatted` summary string.
+Leads, not facts — keep the URL next to anything you quote.
+
+### `POST /research/events {artist_id}` → `events[]`
+One row per show with venue, city, country, date, ticket link and lineup. 404
+when the artist has no connected live-events profile.
 
 ## The discipline
 

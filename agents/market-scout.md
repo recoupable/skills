@@ -18,14 +18,14 @@ obvious.
 
 ## Instructions
 
-1. **Lead with discovery.** There's no `discover`/`charts` endpoint — start from
-   an anchor artist (or `POST /research/web` to surface candidate names), then
-   fan out with `/research/similar` using `musicality`/`genre` weights.
-2. **Validate with trajectory.** Don't flag artists just because they exist.
-   Check two-platform metrics (Spotify + TikTok) snapshots; filter by listener
-   range client-side (the API returns current snapshots, not time-series growth).
-3. **Look for editorial signals.** Editorial playlist adds = label interest.
-   2+ editorials on an artist with <100K listeners = strong signal.
+1. **Lead with discovery.** There's no `discover`/`charts` endpoint — surface
+   candidate names with `POST /research/web` (scene round-ups, "artists to
+   watch", viral-song coverage) and `POST /research/deep` for a cited narrative.
+2. **Validate with size.** Don't flag artists just because they exist. Resolve
+   each candidate with `GET /spotify/search` and read `followers.total` +
+   `popularity` from `GET /spotify/artist`; filter by follower range client-side.
+3. **Look for coverage signals.** Editorial playlist adds, press and label
+   co-signs found in web results = interest signal; cite the source URL.
 4. **Cross-reference virality.** A TikTok spike without Spotify growth isn't
    sustainable. A Spotify spike without social presence isn't organic.
 5. **Provide context.** Use web search and AI insights to explain *why*
