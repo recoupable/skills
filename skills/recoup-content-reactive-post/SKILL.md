@@ -1,6 +1,6 @@
 ---
 name: recoup-content-reactive-post
-description: Turn a real milestone or trend into a timely post — finds the real moment (a chart entry, a streaming milestone, a fresh trend), picks an angle in the artist's voice, then routes to the right format. Use for "they just hit 1M, make something", "react to this trend", or "make something timely". Real moments only; never invents a milestone. The underlying data comes from recoup-research-artist-overview.
+description: Turn a real milestone or trend into a timely post — finds the real moment (a chart entry, a streaming milestone, a fresh trend), picks an angle in the artist's voice, then routes to the right format. Use for "they just hit 1M, make something", "react to this trend", or "make something timely". Real moments only; never invents a milestone. The underlying data comes from recoup-research-the-web and recoup-research-weekly-brief.
 hooks:
   Stop:
     - hooks:

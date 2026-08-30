@@ -1,9 +1,11 @@
 # Endpoints reference (matches production `api.recoupable.dev`)
 
-The live `/api/research/*` surface, verified against the OpenAPI spec at
-`docs.recoupable.dev/api-reference/openapi/research.json` and live calls.
-**The research backend is songstats-based** — responses wrap data in an
-`artist_info` envelope and use `songstats_artist_id` / `id`.
+The endpoints this skill uses, verified against the OpenAPI specs at
+`docs.recoupable.dev/api-reference/openapi/` and live calls. Artist and
+catalog facts come from the Spotify endpoints; measured play counts from the
+Apify-backed measurement store; narrative from web research. There is no
+structured artist-stats provider (no monthly listeners, demographics, or
+playlist feeds) — say so rather than estimate.
 
 ```bash
 export RECOUP_API_KEY="recoup_sk_..."
@@ -12,64 +14,62 @@ export RECOUP_API="https://api.recoupable.dev/api"
 
 ## The two-step pattern: resolve, then look up
 
-Most artist endpoints take **either** `artist=` (a name) **or** `id=` (the
-songstats artist id from search). For ambiguous names, search first to get the
-`id`, then pass `id=` for stable results.
+Resolve the artist once to a Spotify artist id, then reuse it for catalog and
+sizing calls. For a rostered artist, the Recoup `account_id` (from `RECOUP.md`
+or `GET /api/artists`) is what socials and events take.
 
 ```bash
-# 1. Search → returns results[] with id / songstats_artist_id
-curl -s "$RECOUP_API/research?q=Wiz%20Khalifa&type=artists" -H "x-api-key: $RECOUP_API_KEY" | jq '.results[0]'
-# -> { "songstats_artist_id": "1l65tk4s", "name": "Wiz Khalifa", "id": "1l65tk4s", "avatar": "...", "site_url": "..." }
+# 1. Search → results[].artists.items[] with id, name, followers.total, popularity, genres
+curl -s "$RECOUP_API/spotify/search?q=Wiz%20Khalifa&type=artist&limit=5" -H "x-api-key: $RECOUP_API_KEY" | jq '.artists.items[0] | {id, name, followers, popularity, genres}'
 
-# 2. Pass the name OR the id into any artist endpoint
-curl -s "$RECOUP_API/research/profile?id=1l65tk4s" -H "x-api-key: $RECOUP_API_KEY" | jq '.artist_info'
+# 2. Pass the id into the artist endpoints
+curl -s "$RECOUP_API/spotify/artist?id=137W8MRPWKqSmrBGDBFSop" -H "x-api-key: $RECOUP_API_KEY" | jq '{name, followers, popularity, genres, images}'
 ```
 
-## Search
-
-`GET /api/research` — the discovery primitive.
-
-- Params: `q*`, `type` (`artists` | `tracks` | `labels`; default `artists`), `limit`, `offset`.
-- `q` may be a name or a streaming URL.
-
-## Artist endpoints (all accept `artist=`name OR `id=`songstats-id)
+## Artist + catalog (Spotify)
 
 ```bash
-curl -s "$RECOUP_API/research/profile?artist=Wiz%20Khalifa"     -H "x-api-key: $RECOUP_API_KEY" | jq   # bio, country, genres, label
-curl -s "$RECOUP_API/research/urls?artist=Wiz%20Khalifa"        -H "x-api-key: $RECOUP_API_KEY" | jq   # social + streaming URLs
-curl -s "$RECOUP_API/research/similar?artist=Wiz%20Khalifa&limit=20" -H "x-api-key: $RECOUP_API_KEY" | jq  # related artists
-curl -s "$RECOUP_API/research/audience?artist=Wiz%20Khalifa&platform=instagram" -H "x-api-key: $RECOUP_API_KEY" | jq  # demographics (may be empty)
-curl -s "$RECOUP_API/research/metrics?artist=Wiz%20Khalifa&source=spotify" -H "x-api-key: $RECOUP_API_KEY" | jq  # source REQUIRED
-curl -s "$RECOUP_API/research/career?artist=Wiz%20Khalifa"      -H "x-api-key: $RECOUP_API_KEY" | jq   # career timeline / stage
-curl -s "$RECOUP_API/research/insights?artist=Wiz%20Khalifa"    -H "x-api-key: $RECOUP_API_KEY" | jq   # AI-surfaced observations
-curl -s "$RECOUP_API/research/milestones?artist=Wiz%20Khalifa"  -H "x-api-key: $RECOUP_API_KEY" | jq   # activity feed (date, summary, star rating)
-curl -s "$RECOUP_API/research/tracks?artist=Wiz%20Khalifa"      -H "x-api-key: $RECOUP_API_KEY" | jq   # all tracks w/ popularity + track ids
-curl -s "$RECOUP_API/research/playlists?artist=Wiz%20Khalifa&platform=spotify&status=current&limit=50" -H "x-api-key: $RECOUP_API_KEY" | jq
+curl -s "$RECOUP_API/spotify/artist?id=$SPOTIFY_ARTIST_ID" -H "x-api-key: $RECOUP_API_KEY" | jq                       # followers.total, popularity, genres, images
+curl -s "$RECOUP_API/spotify/artist/albums?id=$SPOTIFY_ARTIST_ID&include_groups=album,single&limit=50" -H "x-api-key: $RECOUP_API_KEY" | jq   # release history with release_date
+curl -s "$RECOUP_API/spotify/artist/topTracks?id=$SPOTIFY_ARTIST_ID" -H "x-api-key: $RECOUP_API_KEY" | jq             # what carries them today
+curl -s "$RECOUP_API/spotify/album?id=$ALBUM_ID" -H "x-api-key: $RECOUP_API_KEY" | jq                                  # tracks.items[] with ids + ISRCs, label, copyrights
 ```
 
-- **`similar`** supports weighting (`audience`/`genre`/`mood`/`musicality` = `high|medium|low`) **when the backend supports it**; otherwise it returns the closest related set. Don't depend on the weights.
-- **`metrics`** — `source*` is REQUIRED. Enum: `spotify, instagram, tiktok, twitter, facebook, youtube_channel, youtube_artist, soundcloud, deezer, twitch, line, melon, wikipedia, bandsintown, radio, sxm`. For YouTube use `youtube_channel`/`youtube_artist`, never plain `youtube`.
-- **`audience`** — `platform` is `instagram|tiktok|youtube` only. The `audience` array is **frequently empty** even for big artists; treat empty as "no demographic data," not zero.
-- **`playlists`** (artist-level) — params are `artist`/`id`, `platform` (`spotify|applemusic|deezer|amazon|youtube`), `status` (`current|past`), `limit`. **There are NO `editorial`/`indie`/`majorCurator` filter flags at the artist level** — those live only on `track/playlists`.
+- `followers.total` and `popularity` (0–100) are current snapshots — store a
+  reading and diff it against a prior one to see change.
+- Albums paginate (`limit`/`offset`); `include_groups` selects
+  `album,single,appears_on,compilation`.
 
-## ID-based detail endpoints
+## Connected socials (rostered artists)
 
 ```bash
-# Albums — needs artist_id (the songstats id), not a name
-curl -s "$RECOUP_API/research/albums?artist_id=1l65tk4s&is_primary=true&limit=50" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Full track metadata — needs a track id (from /research/tracks or search type=tracks)
-curl -s "$RECOUP_API/research/track?id=TRACK_ID" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Playlists featuring a track (5 credits; paginates; supports filter flags)
-curl -s "$RECOUP_API/research/track/playlists?id=TRACK_ID&platform=spotify&editorial=true" -H "x-api-key: $RECOUP_API_KEY" | jq
-
-# Lookup an artist by platform URL or Spotify id
-curl -s "$RECOUP_API/research/lookup?url=https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4" -H "x-api-key: $RECOUP_API_KEY" | jq
-curl -s "$RECOUP_API/research/lookup?spotifyId=3TVXtAsR1Inumwj472S9r4" -H "x-api-key: $RECOUP_API_KEY" | jq
+curl -s "$RECOUP_API/artists/$ARTIST_ACCOUNT_ID/socials" -H "x-api-key: $RECOUP_API_KEY" | jq    # per-platform profile + follower count
+curl -s -X POST "$RECOUP_API/artist/socials/scrape" -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
+  -d '{"artist_account_id":"'$ARTIST_ACCOUNT_ID'","posts":12}'                                   # refresh counts + recent posts (credits per profile)
 ```
 
-## Web intelligence (POST — `Content-Type: application/json`)
+- `0`/`null` follower counts mean "not stored" — omit the platform, never print zero.
+
+## Measured play counts (measurement store)
+
+```bash
+# Capture present counts for whole albums (202; minutes; ~$0.003 per album)
+curl -s -X POST "$RECOUP_API/research/measurement-jobs" -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" \
+  -d '{"scope":{"album_ids":["'$ALBUM_ID'"]},"source":"current"}'
+
+curl -s "$RECOUP_API/research/playcounts?spotify_album_id=$ALBUM_ID" -H "x-api-key: $RECOUP_API_KEY" | jq            # latest count per track
+curl -s "$RECOUP_API/research/track/stats?isrc=$ISRC" -H "x-api-key: $RECOUP_API_KEY" | jq                           # one track, current (refreshes if stale)
+curl -s "$RECOUP_API/research/track/historic-stats?isrc=$ISRC&start_date=2026-01-01" -H "x-api-key: $RECOUP_API_KEY" | jq   # dated series
+curl -s "$RECOUP_API/research/tracks/$ISRC/measurements" -H "x-api-key: $RECOUP_API_KEY" | jq                         # every capture
+curl -s "$RECOUP_API/research/track/playcount-deltas?isrc=$ISRC&since=2026-01-01" -H "x-api-key: $RECOUP_API_KEY" | jq   # delta + annualized run-rate
+```
+
+- `source` on `track/stats` / `historic-stats` is optional and must be `spotify`.
+- 404 on a track means nothing is stored and there is no album mapping — run a
+  `current` measurement job on its album first. There is no historical backfill.
+- Counts are platform-displayed play counts, not royalty-bearing streams.
+
+## Web intelligence + events (POST — `Content-Type: application/json`)
 
 ```bash
 curl -s -X POST "$RECOUP_API/research/web"     -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" -d '{"query":"...","max_results":10,"country":"US"}'
@@ -77,13 +77,17 @@ curl -s -X POST "$RECOUP_API/research/deep"    -H "x-api-key: $RECOUP_API_KEY" -
 curl -s -X POST "$RECOUP_API/research/people"  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" -d '{"query":"A&R reps at Atlantic","num_results":10}'
 curl -s -X POST "$RECOUP_API/research/extract" -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" -d '{"urls":["https://..."],"objective":"...","full_content":false}'
 curl -s -X POST "$RECOUP_API/research/enrich"  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" -d '{"input":"...","schema":{"type":"object","properties":{}},"processor":"core"}'
+curl -s -X POST "$RECOUP_API/research/events"  -H "x-api-key: $RECOUP_API_KEY" -H "Content-Type: application/json" -d '{"artist_id":"'$ARTIST_ACCOUNT_ID'"}'
 ```
 
 - `enrich.schema` MUST include `"type":"object"` at the top level. `processor` ∈ `base|core|ultra`.
 - **Latency:** `enrich` 60–90s, `deep` 2+ min; set client timeouts ≥3 min or they look "hung."
+- `events` resolves through the artist's connected live-events profile; 404 = none connected.
 
 ## Credits
 
 On `insufficient_credits` the response carries `remaining_credits`,
-`required_credits`, and a `checkoutUrl`. `track`, `track/playlists`, `albums`,
-`lookup` cost more; surface the checkout link rather than retrying.
+`required_credits`, and a `checkoutUrl`; surface the link rather than retrying.
+Web search is 1 credit; the measurement-store reads are 5 credits each and only
+charge when they answer (a 404 is free); measurement jobs are uncharged but
+capped per organization per month (429 at the cap).

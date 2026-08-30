@@ -1,6 +1,6 @@
 ---
 name: recoup-research-find-talent
-description: Find emerging or unsigned artists you don't already track — A&R scouting that fans out from an anchor artist and sizes candidates, plus "why did this song go viral". Use for "find emerging artists", "A&R scouting", "who should we sign", "scout new talent in [genre]", or "why did [song] go viral". For research on an artist you already have, use recoup-research-artist-overview.
+description: Find emerging or unsigned artists you don't already track — A&R scouting that fans out from an anchor artist and sizes candidates, plus "why did this song go viral". Use for "find emerging artists", "A&R scouting", "who should we sign", "scout new talent in [genre]", or "why did [song] go viral". For research on an artist you already have, use recoup-research-the-web.
 ---
 
 # Recoup Research — Find Talent

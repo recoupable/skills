@@ -47,12 +47,6 @@
       ]
     },
     {
-      "canonical": "references/endpoints.md",
-      "copies": [
-        "skills/recoup-research-artist-overview/references/endpoints.md"
-      ]
-    },
-    {
       "canonical": "references/flamingo-api.md",
       "copies": [
         "skills/recoup-song-analyze-audio/references/flamingo-api.md",
@@ -77,12 +71,6 @@
       ]
     },
     {
-      "canonical": "references/response-shapes.md",
-      "copies": [
-        "skills/recoup-research-artist-overview/references/response-shapes.md"
-      ]
-    },
-    {
       "canonical": "references/song-sourcing.md",
       "copies": [
         "skills/recoup-content-asset-pack/references/song-sourcing.md",
@@ -92,7 +80,6 @@
     {
       "canonical": "references/workflows.md",
       "copies": [
-        "skills/recoup-research-artist-overview/references/workflows.md",
         "skills/recoup-research-find-contacts/references/workflows.md",
         "skills/recoup-research-find-talent/references/workflows.md",
         "skills/recoup-research-playlist-targets/references/workflows.md",

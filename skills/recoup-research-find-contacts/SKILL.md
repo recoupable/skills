@@ -1,6 +1,6 @@
 ---
 name: recoup-research-find-contacts
-description: Find music-industry people — managers, A&R, press, label and booking contacts — and draft outreach you can send. Use for "find the manager for [artist]", "who's the A&R at [label]", "find press contacts", or "draft outreach to [person]". Drafts only; never sends. To research an artist's metrics and audience use recoup-research-artist-overview.
+description: Find music-industry people — managers, A&R, press, label and booking contacts — and draft outreach you can send. Use for "find the manager for [artist]", "who's the A&R at [label]", "find press contacts", or "draft outreach to [person]". Drafts only; never sends. To research an artist use recoup-research-the-web.
 ---
 
 # Recoup Research — Find Contacts

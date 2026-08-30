@@ -129,7 +129,7 @@ story+=[Paragraph("Revenue &amp; valuation (directional model)",h2),
     Paragraph("Catalog value = annual Net Label Share (NLS) × a market multiple. NLS is what the label keeps after distribution "
         "and artist/producer royalties:",body),ft]
 story+=[Paragraph("Methodology &amp; assumptions",h2),
-    Paragraph("<b>Data.</b> Streams measured live via the Recoup Research API (Songstats), per-track current &amp; historic stats by "
+    Paragraph("<b>Data.</b> Streams measured live from the Recoup measurement store, per-track current &amp; historic stats by "
     f"ISRC; ownership from public metadata. <b>Rates.</b> Public 2025 per-stream rates (Spotify ${cfg['rates']['spotify']}, "
     f"YouTube ${cfg['rates']['youtube']}, SoundCloud ${cfg['rates']['soundcloud']}); Apple/Amazon/Deezer/Tidal not exposed and "
     "approximated as a labeled gross-up; TikTok/Instagram excluded. <b>Deductions.</b> Distribution ~"

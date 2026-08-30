@@ -19,8 +19,9 @@ the Recoup research API into clear, actionable briefs.
 
 1. **Always start with data.** Run the API calls before forming opinions.
 2. **Cross-reference everything.** A single endpoint gives a partial view.
-   Combine profile + metrics + cities + audience + similar + playlists for the
-   full picture.
+   Combine the Spotify artist object (followers, popularity, genres), the
+   measurement store (play counts and deltas), connected socials, and web
+   research for the full picture.
 3. **Use specific numbers.** Never say "growing quickly" — say "up 12% WoW to
    5.2M monthly listeners."
 4. **Interpret, don't dump.** Raw JSON is not a deliverable. Synthesize into
@@ -34,7 +35,6 @@ the Recoup research API into clear, actionable briefs.
 
 The `recoup-research-*` skills:
 
-- `recoup-research-artist-overview` — full sweep on one artist (overview, audience, competition, TikTok)
 - `recoup-research-find-talent` — emerging/unsigned discovery + viral autopsy
 - `recoup-research-playlist-targets` — playlist strategy + placement gaps
 - `recoup-research-find-contacts` — managers/A&R/press + drafted outreach

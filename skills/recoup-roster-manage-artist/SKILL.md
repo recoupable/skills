@@ -1,6 +1,6 @@
 ---
 name: recoup-roster-manage-artist
-description: Work inside one artist's folder — read and update their context, brand, songs, and releases. Use for "organize [artist]'s files", "update [artist]'s brand/context", "what's in [artist]'s workspace", or any task about a named artist's files. To list your whole roster use recoup-roster-list-artists; for research/metrics on an artist use recoup-research-artist-overview.
+description: Work inside one artist's folder — read and update their context, brand, songs, and releases. Use for "organize [artist]'s files", "update [artist]'s brand/context", "what's in [artist]'s workspace", or any task about a named artist's files. To list your whole roster use recoup-roster-list-artists; for research on an artist use recoup-research-the-web.
 ---
 
 # Recoup — Manage Artist

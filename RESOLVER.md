@@ -23,7 +23,6 @@
 ### research — intelligence
 | Intent | Skill |
 |---|---|
-| research [artist], overview, audience/markets, compare artists, collaborators, which songs on TikTok | `recoup-research-artist-overview` |
 | find emerging/unsigned artists, A&R scouting, why a song went viral | `recoup-research-find-talent` |
 | which playlists to target, placement gaps, editorial vs algorithmic | `recoup-research-playlist-targets` |
 | find managers/A&R/press + draft outreach | `recoup-research-find-contacts` |
@@ -108,7 +107,7 @@
   A pre-release creative brief → `recoup-release-plan-rollout` (brief mode).
 - **"Make something for a milestone."** The reactive post →
   `recoup-content-reactive-post`. The underlying milestone *data* →
-  `recoup-research-artist-overview`.
+  `recoup-research-the-web`.
 - **Roster vs platform.** Add/list/manage artists → the `recoup-roster-*` skills.
   First-run connect/scaffold → `recoup-platform-connect-account` /
   `recoup-platform-build-os`. A raw REST/connector call →

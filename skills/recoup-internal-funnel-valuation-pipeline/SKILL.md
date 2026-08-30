@@ -41,7 +41,7 @@ to prove that quickly enough that the lead converts.
 - `ATTIO_API_KEY` — an Attio access token (read-write on records + list entries).
 - `RECOUP_API_KEY` (`recoup_sk_…`) — for catalog sizing via the Research API; mint one
   with `POST https://api.recoupable.dev/api/agents/signup`. Load the
-  `recoup-research-artist-overview` and `recoup-catalog-estimate-value` skills for endpoint detail.
+  `recoup-catalog-estimate-value` skill for endpoint detail.
 - `reportlab` for the PDF: `pip install reportlab --break-system-packages`.
 - Scripts ship in this skill's `scripts/`; run them from the skill directory as
   `python3 scripts/<name>.py`.
@@ -134,9 +134,9 @@ For a pursued lead, write back to the Attio record/entry (`references/attio-funn
   (see `fixtures/example-lead.json` for the shape).
 - Attach the artist's **verified socials** to the lead JSON `socials` block (Spotify, Instagram,
   TikTok, YouTube, X) so the report renders a clickable "Artist channels" line. Get them from
-  `research/lookup?spotifyId=` / `research/metrics` when available; when those are Songstats-rate-
-  limited (429) or fail, verify from the artist's **official release upload description or label
-  page**, cross-checking the **same Spotify artist id** so you don't attach a same-name impostor.
+  `GET /api/artists/{id}/socials` when the artist is rostered; otherwise verify from the artist's
+  **official release upload description or label page**, cross-checking the **same Spotify artist
+  id** so you don't attach a same-name impostor.
 - Draft the first email from `templates/outreach-email.md`: personal, references the
   specific artist + their number, **delivers the PDF**, gives one free specific insight
   (a playlist gap, a likely-uncollected royalty source, a concentration note), and ends

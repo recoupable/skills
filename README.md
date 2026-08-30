@@ -42,7 +42,6 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 
 | Skill | What it does |
 |-------|-------------|
-| recoup-research-artist-overview | Full research sweep on one artist |
 | recoup-research-find-talent | A&R scouting for emerging/unsigned artists |
 | recoup-research-playlist-targets | Catalog-wide playlist strategy & placement gaps |
 | recoup-research-find-contacts | Find managers/A&R/press + draft outreach |

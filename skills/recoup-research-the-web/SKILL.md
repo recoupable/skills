@@ -1,6 +1,6 @@
 ---
 name: recoup-research-the-web
-description: Research anything on the open web — quick ranked search, deep cited narrative, read specific URLs, and enrich any entity (label, venue, brand, person) into structured facts. Use for "search the web", "deep research [topic]", "what does this URL say", "enrich [company/label/person]", or as the fallback when structured artist data is thin. Not artist-only. For metrics on a known artist use recoup-research-artist-overview.
+description: Research anything on the open web — quick ranked search, deep cited narrative, read specific URLs, and enrich any entity (label, venue, brand, person) into structured facts. Use for "search the web", "deep research [topic]", "what does this URL say", "enrich [company/label/person]", or as the fallback when structured artist data is thin. Not artist-only.
 ---
 
 # Recoup Research — The Web
