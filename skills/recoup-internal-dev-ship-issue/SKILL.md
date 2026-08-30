@@ -28,6 +28,8 @@ Only start when the issue is a proper spec — it should carry a **Goal**, a **p
 
 Run it in order. Docs-first and tests-first are not optional — they are the method.
 
+**After every push that changes behavior — including review fixes, UI tweaks, and follow-up commits on an open PR — re-run steps 4→7 on that new commit before you say the work is done.** Unit tests alone are not enough. Do not hand back "fixed" or "addressed feedback" until the preview for *that* SHA is Ready, exercised live, and the results (with screenshots for app PRs) are posted on the PR. Skipping preview after a mid-PR change is the same failure mode as shipping untested code.
+
 ## 1. Read the issue + the ground
 
 - **Extract from the issue:** the exact contract (path, params, response envelope, status codes), the merge order, every Done-when checkbox (these are your test plan), and the source references (verify any external API doc the issue cites is still accurate). If a cited doc is **client-side-rendered** (`WebFetch` returns an empty JS shell), read it with a **browser MCP** — e.g. Chrome DevTools `navigate_page` then `evaluate_script` to pull the rendered params/response — not `WebFetch`.
@@ -60,6 +62,8 @@ Then: the implementation must match the **documented** contract exactly (params,
 
 ## 4. Wait for the preview deployment
 
+This step is not one-and-done for the PR. **Every time you push a commit that changes runtime behavior or UI, start again here** for that commit's SHA — even if you already preview-tested an earlier SHA on the same branch.
+
 - Find the preview for **your pushed commit** — `gh api repos/<owner>/<repo>/deployments?sha=<sha>` → its `/statuses` → `environment_url`, or the Vercel CLI (`vercel ls <project> --scope <team>` / `vercel inspect`).
 - **Confirm it's built from your commit**, not a stale earlier preview — verify the deployment's sha. Testing a stale preview is a classic false-positive/false-negative trap.
 - Poll until `Ready`. Background the poll on long builds; don't block.
@@ -67,12 +71,13 @@ Then: the implementation must match the **documented** contract exactly (params,
 
 ## 5. Test the PR against the preview
 
-Turn every **Done-when** criterion into a live check against the real preview URL:
+Turn every **Done-when** criterion into a live check against the real preview URL (and re-check any criterion your latest push could have regressed — for UI/positioning changes, measure on mobile and desktop viewports):
 
 - **Happy path** — the documented success response, with a real fixture (real id/ISRC/etc.).
 - **Every status code** — including a **deliberately bad input** to confirm each 4xx (a non-UUID, an unknown id, a missing required param). This is how you confirm the documented error codes are real.
 - **Auth** — 401 without a key; confirm no secret/env value is echoed in any response.
 - **Cross-check the source of truth** — when it sharpens the assertion, query the DB / upstream directly (e.g. confirm a row's state, or that a per-item number is materially smaller than an aggregate). Capture **hard numbers**, not "looks right."
+- **App / UI PRs** — drive the changed surface in a real browser (agent-browser or equivalent). For layout claims (centered modal, mobile sheet, etc.), capture screenshots and, when useful, element bounding boxes vs viewport — not "looks fine locally."
 
 ## 6. Reconcile docs ↔ API ↔ reality
 
@@ -85,8 +90,8 @@ All three must agree before you call it done. This step is the entire point of t
 
 ## 7. Comment on the PR as you test
 
-- Post your verification as a **results table on the PR** — *documented* vs *actual* for each path, with the hard numbers and status codes you observed. Do this on the api PR; comment on the docs PR too when you reconciled it.
-- **Reply on review threads** when you address them, citing the commit.
+- Post your verification as a **results table on the PR** — *documented* vs *actual* for each path, with the hard numbers and status codes you observed. For **app PR preview testing**, always include screenshots in the PR comment alongside the results. Do this on the api PR; comment on the docs PR too when you reconciled it. After a follow-up push, post a **new** comment for the new SHA (or clearly update) — do not leave only the old SHA's results.
+- **Reply on review threads** when you address them, citing the commit **and** the preview verification for that commit.
 - **Triage bot review findings critically — validate before applying.** A bot's "P1" can be a false positive (a suggested revert that would reintroduce a bug; a "missing 501" the endpoint never emits). Confirm against the code/live behavior, then either fix it or reply with the reasoning for not. Don't rubber-stamp, don't blanket-dismiss.
 
 ## 8. Hand off in merge order
@@ -118,7 +123,8 @@ gh pr comment <n> --repo recoupable/api --body-file results.md
 - [ ] Every opened PR's **matrix row updated** (`#TBD` → live ref + status) in the same session it was opened.
 - [ ] Every api unit was **RED before GREEN**; full domain suite + `tsc` + lint all clean.
 - [ ] Preview confirmed **built from your commit**; **every Done-when criterion** exercised against it with real data.
+- [ ] **Every behavior-changing push** (including review-fix rounds) was re-preview-tested on **that** SHA — not only the first implementation push.
 - [ ] Docs ↔ API ↔ live results **agree** (reconciled and re-pushed if not).
-- [ ] Verification **posted on the PR**; bot findings **triaged** (validated, not rubber-stamped).
+- [ ] Verification **posted on the PR** with screenshots for app previews; bot findings **triaged** (validated, not rubber-stamped).
 - [ ] No secret value echoed anywhere — env-var names only.
 - [ ] On merge: tracking issue moved to **Done** (recoup-internal-dev-issue-tracker).
