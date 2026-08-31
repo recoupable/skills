@@ -2,7 +2,7 @@
 
 The end-to-end workflow for a **customer-facing 9:16 music video for a real artist's own song** — the job Tomas Mika asked for (`Hx2b6Q0i6Z4` "Movamos el Mundo") and the job we shipped last week for brauxelion (`content/letal-xlug/`, 27.0s, 2026-08-28). This is the **missing subskill** in the marketing marketing skill: `VIDEO-STYLES.md` Style F is an invented-character /music launch, and `recoup-content-make-video` is API-metered for the roster product. Neither covers a real artist's master cut to their own release. Until a dedicated skill ships, this doc *is* the spec — clone `letal-xlug` and never rebuild from scratch.
 
-> **Status:** proposal, not yet a skill. Reference project: `content/letal-xlug/` (SCRIPT.md + video/). Cost on the reference: ~$9.50 generation (NB2 + OmniHuman + Wan 3.0 + H3 Max), 27.0s at -14.1 LUFS.
+> **Status:** proposal, not yet a skill. Reference project: `content/letal-xlug/` (SCRIPT.md + video/). Cost on the reference: ~$9.50 generation (Nano Banana 2 + OmniHuman + H3 Max), 27.0s at -14.1 LUFS.
 
 ## When to use
 
@@ -59,21 +59,20 @@ Get owner sign-off on the plan before generating.
 ## 3. Art direction + face guide
 
 - Continuity with the artist's own world (braux: Metal Slug 3D game → racing level of same city). Pull the official thumbnail / cover as style ref.
-- Face guide: `cast/<artist>/faceguide.png` white-bg expression sheet (Nano Banana 2, not Grok; seed from real room). Braux guide `cast/brauxelion/braux-faceguide.png` + `frontal-04.jpg` + official thumb + masked persona (`braux-masked-persona.jpg`) seeded every NB2 call.
+- Face guide: `cast/<artist>/faceguide.png` white-bg expression sheet (Nano Banana 2, not Grok; seed from real room). Braux guide `cast/brauxelion/braux-faceguide.png` + `frontal-04.jpg` + official thumb + masked persona (`braux-masked-persona.jpg`) seeded every Nano Banana 2 call.
 
 ## 4. Stills → Motion → Composite (the cost ledger)
 
 | Stage | Tool | When | Braux spend |
 |---|---|---|---|
-| Stills 19 + ~6 re-rolls | `fal-ai/nano-banana-2/edit`  | All beats, reviewed on CONTACT-SHEET before any motion | ~$2.00 |
+| Stills 19 + ~6 re-rolls | `fal-ai/nano-banana-2/edit` (Nano Banana 2) | All beats, reviewed on CONTACT-SHEET before any motion | ~$2.00 |
 | Rap shots (lip-synced) | `fal-ai/omnihuman-1.5` image+audio, 1080p, $0.16/s | Any shot with mouth shapes, fed exact slice of wav | ~$2.70 for 4 shots |
-| Silent face / push-ins | `alibaba/wan-3.0/image-to-video` 720p $0.10/s, any duration | Cleanest hold per bake-off `BAKEOFF-silent-s2.jpg` |  |
-| Plates / no-face / car | `minimax/h3-max/image-to-video` 768P $0.04/s (promo to Sep 1) | Energy but hallucinates letters/women on wide streets → use Wan for those |  |
+| All non-lip motion (silent face, push-ins, plates, car, city) | `minimax/h3-max/image-to-video` 768P $0.04/s (promo to Sep 1) — **exclusively H3 Max** | Every shot without a mouth, including silent face / push-ins (ex-Wan 3.0) — see note below |  |
 | Reject table | Kling Avatar v2 Pro burns subtitles; Sync Lipsync viable fallback $5/min; LTX drifts; InfiniteTalk drops | — | — |
 
-**Gotchas codified from braux bake-offs (3 rounds, `SCRIPT.md:148-182`):**
-- Re-roll grins on stress beats, fix physics at the still (window half-up → hand through glass), never animate text with CSS `filter:invert` (headless ignores it — type it), never let NB2 "two-shot" become a split grid (prompt: ONE continuous frame).
-- Silent face = Wan 3.0; hallucinated anime woman / signage = H3 on wide streets → move to Wan 3.0.
+**Gotchas codified from braux bake-offs (3 rounds, `SCRIPT.md:148-182`, now H3 Max-only):**
+- Re-roll grins on stress beats, fix physics at the still (window half-up → hand through glass), never animate text with CSS `filter:invert` (headless ignores it — type it), never let Nano Banana 2 "two-shot" become a split grid (prompt: ONE continuous frame).
+- H3 Max hallucinated signage / anime woman on wide street plates in the braux run — was moved to Wan 3.0 then; now H3 Max is the sole vendor, so add negative prompts (`no text, no signage, no letters, no people in background`) and re-roll until clean; the CONTACT-SHEET gate catches it.
 - Cut headroom: never cut within ~0.15s of clip end (black frame at 4.6s, fixed to 0.18s headroom, verified by brightness).
 
 ## 5. HyperFrames composite

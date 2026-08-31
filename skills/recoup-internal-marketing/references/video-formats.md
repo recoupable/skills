@@ -15,7 +15,7 @@ project to clone. This page is the **routing table** from a brief to a format, p
 | Explain a **method** — how something was made, how a number was derived | **Recipe / BTS artifact walk** | Clone the reference project |
 | Captions or graphic overlays onto existing footage | hyperframes caption / overlay workflows | `embedded-captions`, `talking-head-recut` |
 | A **scene we could never shoot** carries the beat: a character in a place, a physical action, a location | **Generated plate** (Seedance 2.5), our typography composited over it | `references/seedance.md`. Invented characters are fine; a **real person's photo** cannot be used as a reference |
-| A **real artist's own song** cut to a finished 9:16 music video (real face, real master) | **Artist music video** — NB2 stills → OmniHuman lip-sync / Wan 3.0 / H3 Max → HyperFrames (Brauxelion 27s, ~$9.50) | `references/video-music-artist.md` (clone `content/letal-xlug/`; YT transcript via `yt-dlp --write-auto-sub` es.vtt, see §1b) |
+| A **real artist's own song** cut to a finished 9:16 music video (real face, real master) | **Artist music video** — Nano Banana 2 stills → OmniHuman lip-sync / H3 Max → HyperFrames (Brauxelion 27s, ~$9.50) | `references/video-music-artist.md` (clone `content/letal-xlug/`; YT transcript via `yt-dlp --write-auto-sub` es.vtt, see §1b) |
 
 **The concrete-versus-stylish rule:** for a feature or product announcement, concreteness beats
 styling. Show the real interface and the real change. A beautiful abstract treatment that hides the
