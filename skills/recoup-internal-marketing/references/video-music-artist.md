@@ -1,6 +1,6 @@
 # Artist music video — the Brauxelion recipe (codified 2026-08-31)
 
-The end-to-end workflow for a **customer-facing 9:16 music video for a real artist's own song** — the job Tomas Mika asked for (`Hx2b6Q0i6Z4` "Movamos el Mundo") and the job we shipped last week for brauxelion (`content/letal-xlug/`, 27.0s, 2026-08-28). This is the **missing subskill** in the marketing marketing skill: `VIDEO-STYLES.md` Style F is an invented-character /music launch, and `recoup-content-make-video` is API-metered for the roster product. Neither covers a real artist's master cut to their own release. Until a dedicated skill ships, this doc *is* the spec — clone `letal-xlug` and never rebuild from scratch.
+Make a finished 9:16 music video from a real artist's own song. Pull the audio and lyrics, build a word-timed scene table, generate Nano Banana 2 stills from a face guide, animate the singing shots with OmniHuman and everything else with H3 Max, then cut it in HyperFrames to the actual track. Clone `content/letal-xlug/` and work from that. The 27 second Brauxelion cut we shipped on 2026-08-28 is the reference, Tomas Mika `Hx2b6Q0i6Z4` is the next run.
 
 > **Status:** proposal, not yet a skill. Reference project: `content/letal-xlug/` (SCRIPT.md + video/). Cost on the reference: ~$9.50 generation (Nano Banana 2 + OmniHuman + H3 Max), 27.0s at -14.1 LUFS.
 
