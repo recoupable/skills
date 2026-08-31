@@ -15,6 +15,7 @@ project to clone. This page is the **routing table** from a brief to a format, p
 | Explain a **method** — how something was made, how a number was derived | **Recipe / BTS artifact walk** | Clone the reference project |
 | Captions or graphic overlays onto existing footage | hyperframes caption / overlay workflows | `embedded-captions`, `talking-head-recut` |
 | A **scene we could never shoot** carries the beat: a character in a place, a physical action, a location | **Generated plate** (Seedance 2.5), our typography composited over it | `references/seedance.md`. Invented characters are fine; a **real person's photo** cannot be used as a reference |
+| A **real artist's released song** is the whole story, cut to 9:16 with their real face and real master | **Artist music video** (face guide → stills → OmniHuman for mouths, H3 Max for everything else → composite to the track) | `references/music-video.md`. Clone `content/letal-xlug/`. Three separate rights gates, and the artist approves the look, the cut and the credit |
 
 **The concrete-versus-stylish rule:** for a feature or product announcement, concreteness beats
 styling. Show the real interface and the real change. A beautiful abstract treatment that hides the
