@@ -194,25 +194,31 @@ logo, no fade, no title card. State the premise visually by the end of the intro
 - Put the negative list **inside** `STYLE`: `ABSOLUTELY NO text, letters, numbers, logos, signs with
   words, watermarks, or user interface. NO weapons, NO guns, NO drugs, NO cash, NO other people.`
 
-### 5. Motion — the three-model split
+### 5. Motion — two models
 
-This is the part the run gets wrong if it reaches for one model. **All three earned their place in
-head-to-head bake-offs, and the split below is what actually shipped** (`gen-motion.mjs`: 3 shots
-OmniHuman, 8 Wan 3.0, 8 H3 Max).
+**Owner ruling 2026-08-31: MiniMax H3 Max is the house image-to-video model.** Everything that does
+not have to mouth the words goes to H3 Max, at every price point, regardless of shot type. Do not
+bake off a third vendor; the split below is the whole decision.
 
 | The shot | Model | Price | Call shape |
 |---|---|---|---|
 | **Mouth visible** — he raps or sings on camera | `fal-ai/bytedance/omnihuman/v1.5` | $0.16/s | `image_url`, `audio_url` = **the exact slice of the song for that window**, `prompt`, `resolution: "1080p"` |
-| **Face, no mouth** — held portrait, push-in, a blink, a head turn | `alibaba/wan-3.0/image-to-video` | $0.10/s | `prompt`, `start_image_url`, `duration` (any integer), `resolution: "720p"`, `aspect_ratio: "9:16"`, `audio: false` |
-| **No face at all** — car, hands, city, plates, cutaways | `minimax/h3-max/image-to-video` | $0.04/s promo, $0.08/s after | `prompt`, `image_url`, `duration` (min 5), `resolution: "768P"`, `prompt_expansion_mode: "disabled"` |
+| **Everything else** — held portrait, push-in, blink, car, hands, city, cutaways | `minimax/h3-max/image-to-video` | $0.04/s promo, $0.08/s after | `prompt`, `image_url`, `duration` (min 5), `resolution: "768P"`, `prompt_expansion_mode: "disabled"` |
 
-**H3 Max is the cheapest and the least trustworthy. Do not promote it out of its lane.** In the
-reference run it invented, in separate takes: lettering on a pendant it added to his chain, numbered
-gauges on a blank dashboard, storefront signage reading "Crolate", Japanese shop signs, and — on a
-wide street plate — **an entire anime woman who was not in the still**. Two of those survived a
-re-roll and the shot was moved to Wan 3.0 instead. Negative prompts (`no text, no signage, no
-letters, no people in background`) reduce it; the contact sheet is what catches it. On a stylised
-world, wide street plates belong to Wan 3.0 regardless of price.
+**H3 Max invents things, and driving it is part of the job.** In the reference run it produced, in
+separate takes: lettering on a pendant it added to the chain, numbered gauges on a blank dashboard,
+storefront signage reading "Crolate", Japanese shop signs, an anime woman who was not in the still,
+and a face morph on a slow push-in. None of that is a reason to reach for another model; it is the
+budget line you plan for. Four things keep it in hand:
+
+1. **Carry the full negative list in every motion prompt**, not just the still prompt: `no text, no
+   signage, no letters, no numbers, no logos, no people in the background`.
+2. **Name the prop you do not want.** "Plain chain, no pendant" fixed the invented pendant. H3
+   embellishes whatever it finds ambiguous, so close the ambiguity by name.
+3. **Wide street plates and slow push-ins are its two weak shots.** Budget two takes for each,
+   and prefer a tighter frame or a held camera over a wide one where the composition allows.
+4. **Review every clip, then re-roll.** Re-rolls at $0.04 to $0.08 per second are cheap enough that
+   the answer to a bad take is always another take.
 
 **Rejected, with the reason, so nobody re-runs the bake-off:**
 
@@ -222,8 +228,6 @@ world, wide street plates belong to Wan 3.0 regardless of price.
 | Kling LipSync | strong mouth, but inherits every artifact of the clip underneath |
 | Sync Lipsync v2 Pro | works, $5/min — keep as the **cheap way to re-sync a clip you already rendered**, not as the primary |
 | LTX-2.3 | drifts the face |
-| Wan 2.6 | near-static, and added background pedestrians |
-| Wan 3.0 Prime ($0.14/s) | wrote letters onto clothing and signage |
 | InfiniteTalk | did not return inside 10 minutes |
 
 ### 6. Composite, render, mux
@@ -253,17 +257,22 @@ Measured on the reference (27.0s finished, from a 112s scene table):
 | Bake-off 1 — motion, 3 models on one shot | ~$1.10 *(wasted: wrong question, see Gate 3)* |
 | Bake-off 2 — lip-sync, 5 models on one shot against real audio | ~$3.00 |
 | Bake-off 3 — silent face, 4 models on one shot | ~$2.20 |
-| Final motion, 19 shots across the three models | ~$9.50 |
-| Re-rolls after review (still fix, 2 H3, 2 Wan, 1 OmniHuman) | remainder |
+| Final motion, 19 shots | ~$9.50 |
+| Re-rolls after review | remainder |
 | **Session total** | **≈ $30** |
 
-**The bake-offs are per-visual-world, not per-video.** A second video for the same artist in the same
-art direction skips all three and lands nearer **$10**. Budget the first film in a new world at ~$30
-and say so before you start.
+**Two of those three bake-offs no longer run.** Bake-off 1 asked the wrong question (Gate 3) and
+bake-off 3 chose a silent-face model that the 08-31 ruling has since settled — H3 Max takes those
+shots. What a new film actually pays for is stills, motion and re-rolls, so a first film in a new
+visual world should now come in **well under the ~$30 the reference cost**, and a second film in the
+same world nearer **$8 to $10**.
 
-Prices move fast and some are promotional — the H3 Max $0.04/s rate was a launch promo running to
-2026-09-01, reverting to $0.08/s, which roughly doubles the cheapest third of the ledger. **Re-check every price on fal before quoting a budget**, and pull real spend from the api
-project's production `FAL_KEY` account, not a local key.
+Estimating a fresh film from the two-model split: ~16 non-mouth shots at ~5.5s is ~88s of H3 Max
+(**~$3.50 at the promo rate, ~$7 after**), plus ~16s of OmniHuman at $0.16/s (**~$2.60**), plus ~$2
+of stills. The $0.04/s H3 rate is a launch promo running to 2026-09-01. Treat all of it as the
+shape of the budget, not a quote — re-check both prices on fal before
+committing, and pull real spend from the api project's production `FAL_KEY` account, not a local
+key.
 
 ## Publish
 
