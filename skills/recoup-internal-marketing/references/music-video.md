@@ -259,18 +259,50 @@ State the headcount **positively** and declare the background empty **by categor
 > EMPTY all the way to the horizon: no other figures, no distant walkers, no specks of people,
 > no vehicles, no animals.
 
-**2. fal's content filter rejects innocuous prompts, and only a reword clears it.** Retrying the same
-text never works. Six rejections on one film, all `content_policy_violation`, none of them risqué:
+**2. fal's content filter rejects innocuous prompts — and it is NON-DETERMINISTIC, so RETRY BEFORE
+YOU REWORD.** This corrects the advice that shipped in #129, which said only a reword clears a
+rejection. It does not: on a 31-shot film **11 shots failed on the first pass and 9 of them succeeded
+on retry with the prompt unchanged**. The same prompt was submitted twice back to back and passed
+both times after failing minutes earlier, which means the checker is also judging something other
+than your text — most likely the generated image as well.
+
+> **The order is: retry up to ~4 times with backoff, and only reword what survives that.** Rewording
+> first means rewriting good prompts for no reason and losing the shot you actually wanted. Build the
+> retry into the generator, not into your patience:
+
+```js
+let res, lastErr;
+for (let attempt = 1; attempt <= 4; attempt++) {
+  try { res = await fal.subscribe(model, { input, logs: false }); break; }
+  catch (err) { lastErr = err; if (attempt < 4) await new Promise(r => setTimeout(r, 1500 * attempt)); }
+}
+if (!res) throw lastErr;
+```
+
+Lower concurrency helps too; four in flight rejected noticeably more than two.
+
+**What survives retry is a real trigger, and it is almost never the subject.** Fire is fine — a whole
+hillside alight passes first time. What trips it is the *vocabulary* around the subject:
 
 | Rejected | Passed |
 |---|---|
+| the fire has **SPREAD**; "nothing **destroyed**, nothing **charred**, no smoke **damage**" | "more small calm flames… like candles… everything intact" |
+| **sparks** climbing, **embers** drifting, anything *rising* off a fire | "small bright points of light", "warm haze" |
+| rain **hammering**, droplets **bursting** | "rain running over the paintwork", "raindrops catching the light" |
+| people **dancing** | "out in the street together, celebrating, arms raised" |
+| hands **gripping** a wheel | "two hands rest on the wheel" |
 | two people **kissing** | "standing facing each other, foreheads touching, eyes closed" |
-| a woman **wading** into the sea in her coat, anatomy spelled out ("hips, thighs, submerged") | "walks out into the shallow sea, water at knee height, upright at full height" |
+| anatomy spelled out — "**hips**, thighs, submerged" | "water at knee height, upright at full height" |
 | "two long **human shadows**" | "two long narrow parallel bands of shade" |
-| a "**shaft**" of gold light | "a band of gold light" |
+| a "**shaft**" of light | "a band of light" |
 | a petal "**hanging** suspended" | "a petal floats in the air" |
 
-Budget a minute and a penny per rejection; none of them cost a shot.
+Two patterns cover almost all of it: **language of destruction or spreading**, even when you are
+negating it, and **body-part or force words** on a human subject. Describe things as calm, contained
+and decorative and the same shot passes.
+
+Budget a minute and a penny per rejection. Across two films none of them cost a shot — but do not
+reword a prompt that has not yet been retried.
 
 ### 6. Motion — two models
 
