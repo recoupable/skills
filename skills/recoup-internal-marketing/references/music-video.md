@@ -101,7 +101,8 @@ move, they look plausible frozen, and they are not saying the words.
 
 **Review the contact sheet before any motion spend.** Stills are cents; motion is dollars. Generate
 every still, assemble `scenes/CONTACT-SHEET.jpg` and read the whole sheet in one look for character
-consistency, hands, props, stray text and brand-safety violations. **Fix physics at the still, never
+consistency, hands, props, stray text, background people and brand-safety violations. Review the
+plates and the character portraits on their own sheets first, before any shot is generated at all. **Fix physics at the still, never
 at the clip** — a half-open car window survived two OmniHuman takes with a hand through the glass
 before the still itself was regenerated, and re-rolling a clip to fix a still costs five to ten times
 more.
@@ -205,15 +206,73 @@ pay 30 to 40 times per film, so re-rolls stop being something to ration.
 file. There is **no resolution field** (the aspect ratio sets the dimensions) and **no negative
 prompt field**, so the negative list stays inside the `STYLE` string as above.
 
-`image_urls` taking up to ten references is what the casting workflow runs on: the first approved
-still of each character is the seed for every later shot they appear in, alongside the world and
-wardrobe references.
+`image_urls` taking up to ten references is what the whole workflow below runs on.
 
-**Unverified at the time of the swap:** the resolution it returns, how tightly it holds a character
-across 30 prompts, and whether it honours "ABSOLUTELY NO text". Four shots of one character costs
-four cents, so prove all three on the first film rather than mid-build.
+**Verified 2026-09-01** on a 33-shot film: it holds a character across 30 prompts, returns 1152x2048
+at 9:16, and honours "ABSOLUTELY NO text". It does **not** reliably follow layout or wardrobe
+instructions that contradict a reference image, so name those harder than feels necessary.
 
-### 5. Motion — two models
+### 5. Build the film in three layers: plates, then people, then camera
+
+Do these in order. Skipping straight to shots cost two complete scene passes on the reference film.
+
+**Layer 1 — the empty plates.** One still per location with **nobody in frame**, generated
+text-to-image and approved before a single character shot exists. Where two plates are the same place
+at different times (a roof at dawn and at sunrise, a field by day and at night), generate the second
+as an **edit of the first** so it is demonstrably the same place: *"EXACTLY the same rooftop as the
+reference image, same parapet, same water tank, same camera position. The only change is the light."*
+
+Why: independently generated shots of "a kitchen at night" are a different kitchen every time. The
+reference film shipped a contact sheet where two consecutive shots of the same room did not match.
+
+**Layer 2 — camera coverage, and this is the step everyone skips.** Plate-seeding locks the
+*composition* as well as the location, so every shot in an act comes back as the same photograph with
+different content dropped in. For each location generate **two more angles as edits of its master**
+— a medium and a low or detail angle — then seed each shot on the angle it actually needs. At $0.01
+a plate this is the cheapest quality in the pipeline.
+
+> **A camera-coverage plate carries an implied camera POSITION, not just a framing.** A beach plate
+> with the dunes at the top means the camera stands in the sea looking landward, so nothing seeded on
+> it can walk away from camera out to sea. Check where the camera *is* before assigning a plate.
+
+**Layer 3 — the shots.** Every character shot seeds on **its angle plate first, then the character
+portraits**, and the prompt says which reference is which, because the model cannot guess:
+
+```
+The FIRST reference image is the LOCATION. Reproduce that place exactly: same architecture,
+same objects, same light, same colour. Do not invent a different place.
+The OTHER reference images are the two people. Same faces, same bone structure, same hair,
+same age. Do not beautify them, do not change their age, do not swap the faces.
+```
+
+**Age a character by chaining edits.** Young via `text-to-image`, then middle and old as edits seeded
+on the young portrait. That is what makes three ages read as one person instead of three lookalikes.
+
+### The two prompt failures that will happen to you
+
+**1. The blanket negative does not stop stray background people at extreme wide.** `NO other people
+in frame beyond those described` sat in the shared `STYLE` string and an extreme-wide road shot still
+grew two extra figures near the horizon, where a person is a few pixels and costs the model nothing.
+State the headcount **positively** and declare the background empty **by category**:
+
+> EXACTLY TWO people are in this photograph and nobody else. The road beyond them is COMPLETELY
+> EMPTY all the way to the horizon: no other figures, no distant walkers, no specks of people,
+> no vehicles, no animals.
+
+**2. fal's content filter rejects innocuous prompts, and only a reword clears it.** Retrying the same
+text never works. Six rejections on one film, all `content_policy_violation`, none of them risqué:
+
+| Rejected | Passed |
+|---|---|
+| two people **kissing** | "standing facing each other, foreheads touching, eyes closed" |
+| a woman **wading** into the sea in her coat, anatomy spelled out ("hips, thighs, submerged") | "walks out into the shallow sea, water at knee height, upright at full height" |
+| "two long **human shadows**" | "two long narrow parallel bands of shade" |
+| a "**shaft**" of gold light | "a band of gold light" |
+| a petal "**hanging** suspended" | "a petal floats in the air" |
+
+Budget a minute and a penny per rejection; none of them cost a shot.
+
+### 6. Motion — two models
 
 **Owner ruling 2026-08-31: MiniMax H3 Max is the house image-to-video model.** Everything that does
 not mouth words goes to H3 Max. Do not bake off a third vendor.
@@ -237,7 +296,7 @@ Rejected once, so nobody re-runs the bake-off: **Kling Avatar** burns garbled su
 **LTX-2.3** drifts the face, **InfiniteTalk** did not return. **Sync Lipsync v2 Pro** ($5/min) is
 worth keeping as the cheap way to re-sync a clip you already rendered.
 
-### 6. Composite, render, mux
+### 7. Composite, render, mux
 
 Clone `content/letal-xlug/video/`, place the clips on the song map by word time, **mute every clip**
 (the master is muxed after render), and type any wordmark as HTML text.
@@ -256,8 +315,13 @@ Clone `content/letal-xlug/video/`, place the clips on the song map by word time,
 ## Cost
 
 Quoted rates, 2026-09-01: **stills $0.01 each** (Muse Image), **$0.16/s of sung shot** (OmniHuman
-1.5), **$0.08/s of everything else** (H3 Max). Motion is now essentially the entire budget: a ~160s
-film with 8 sung shots is about **$0.35 of stills against ~$16 of motion**.
+1.5), **$0.08/s of everything else** (H3 Max). Motion is essentially the entire budget.
+
+Measured on a 33-shot, 159s film: **$1.75 for every image in the project** — face-guide bake-off,
+six character portraits, 24 plates, all 33 stills, and two complete scene passes that were thrown
+away. The first 30 seconds of motion, six shots including one OmniHuman, came to **$3.13**. Stills
+are now cheap enough that the expensive mistake is spending motion money on a shot list the artist
+has not seen.
 
 Two lines disappeared with this revision: the face guide and its failed attempts, and Nano Banana 2
 at 2K, which took the stills line from ~$4.70 to ~$0.35 on a 33-shot film. Re-check every price on
