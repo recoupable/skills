@@ -1,13 +1,12 @@
-# Artist music video — a real artist's own song, cut to 9:16
+# Artist music video — their released song, the story they could not afford to shoot
 
-Make a finished vertical music video from a song a real artist has already released, using their real
-face and their real master. Codified 2026-08-31 from the one build that has shipped this way:
-**LETAL XLUG (brauxelion's verse), 27.0s, four platforms, artist-approved** —
-`content/letal-xlug/` in the account workspace, whose `SCRIPT.md` is the full build log.
+Make a finished vertical video cut to a song a real artist has already released. Two builds inform
+this: **LETAL XLUG (brauxelion's verse)**, shipped and artist-approved 2026-08-28, and **Movamos el
+Mundo (Tomás Mika)**, stopped mid-build on 2026-09-01 by the artist's own feedback. The second one
+rewrote this document, so read the first section before anything else.
 
-**Clone `content/letal-xlug/` and work from it.** Every script in that folder (`gen-scene.mjs`,
-`gen-motion.mjs`, the three `bakeoff-*.mjs`, the `reroll-*.mjs`) is written to be re-pointed at a new
-artist by swapping the refs, the style string and the scene table.
+**Clone `content/letal-xlug/` and work from it.** `gen-scene.mjs`, `gen-motion.mjs` and `video/` are
+written to be re-pointed at a new artist by swapping the refs, the style string and the scene table.
 
 ## Route here when
 
@@ -17,140 +16,135 @@ screen.
 
 | Not this | Go here instead |
 |---|---|
-| Invented characters singing a `/music` generation | Style F, `content/rough-draft/` |
+| The song itself is generated (a `/music` track), not a released master | Style F, `content/rough-draft/` |
 | A number or weekly result is the hero | Style A, data-in-motion |
 | A shipped feature, real UI | Style B, 3D product reveal |
 | A customer-facing asset billed to an artist's org | `recoup-content-make-video` (credit-metered, analyze-gated) |
-| A scene with no real person in it | `references/seedance.md` |
+| A scene with no person in it at all | `references/seedance.md` |
 
-## Why we make these at all
+## Gate 0 — ask what they would make with no limits, and build THAT
 
-Not as a favour and not as a portfolio piece. Two measured reasons, both worth restating in the plan
-doc:
+This document used to say *continue the artist's own world, do not invent one*. On 2026-09-01 that
+rule took a 159-second film 33 stills deep into a faithful reproduction of the artist's existing
+video — same field, same wardrobe — before he was asked what he actually wanted:
 
-1. **The collaborator lever is the largest one we have.** Featuring an artist and getting invited to
-   co-post took the 2026-07-22 collab reel to **45 likes against 1 to 3** for every non-collab reel
-   around it. A music video is the strongest possible version of that ask, because the artist
-   genuinely wants to post it.
-2. **It is the demo we send the next label.** The reference build is the first piece where the artist
-   is the **customer, not the subject** — which is the thing the roster pitch has never had a sample
-   of. That is commercial, and the plan doc says so plainly rather than dressing it as a gift.
+> "le pediría algo totalmente distinto al video que ya tengo filmado.. o sea estar cantando ahí en un
+> campo fue justamente por falta de recursos jjajaj ... como una historia tal vez, o en distintas
+> locaciones.. tal vez una pareja.. viviendo cosas juntos"
 
-The film itself is a **trust and awareness beat, not a conversion post.** Say that in the plan doc.
-The link that matters is the artist's, not ours; ours goes in the YouTube description only.
+**An artist's existing video is evidence of their budget, not their taste.** One person alone in a
+field is what a song gets when there is no money; rebuilding it faithfully hands them back their own
+constraint at higher resolution. We have no locations, no crew, no second-actor fee and no weather.
+The version they could not afford is the only thing we have that nobody else offered them.
 
-## The five gates, in the order they bite
+**A polite yes is not a brief.** That same message opened "obvio que está buenísimo lo que estás
+haciendo" and closed "sea lo que sea que puedas hacer voy a estar agradecido". Gratitude is what an
+artist says to a gift; it carries no direction, and reading it as approval is how a build goes 33
+stills deep in the wrong film. The real answer only appeared because someone asked the counterfactual.
 
-Each one below cost real money or a real rebuild on the reference run. They are ordered by how early
-they fire, and every one of them fires **before** the expensive step it protects.
+**So, in the first message, before any paid pixel:** *if you could have any video for this song, with
+no budget and no limits, what would it be?* Then build their answer, not their back catalogue. No
+answer is also an answer and frees you to invent — but ask, because the question costs one message
+and the wrong world costs the film.
 
-### Gate 1 — confirm which track, with the artist, before the song map
+## Cast the film; do not clone the artist
 
-The reference run built a 20-shot scene table, generated 19 stills and started motion on *Drift* —
-then the artist's lyric sheet turned out to be for the **title track**, and the film was recut to his
-verse of a different song (08-28 15:40). Everything upstream of the audio survived only because the
-art direction was shared between the two.
+**There is no face-guide step and no `cast/<artist>/` requirement.** That was inherited from the
+cinematic-narrative format, where a recurring Recoup character must look the same across episodes. A
+music video has no such obligation, and the guide costs two to four generations before the first
+scene still exists, must be seeded into every later call, and drags the likeness gate along with it.
 
-**So:** get the track confirmed in writing, and get the artist's own lyric sheet, before you write the
-song map. Then transcribe the audio you will actually cut and diff it against that sheet. A lyric
-sheet that does not match the waveform is the cheapest possible catch and the most expensive miss.
+**Default: cast the film with invented characters.** One identity paragraph per character, reused
+verbatim in every still prompt, each character locked by its first approved still, which seeds the
+rest. Same consistency mechanism, minus the guide. It also frees the story from the artist's body: a
+song about two people can show two people, a song spanning years can span locations and ages.
 
-Also settle at this point which **section** you are cutting. Their verse only is usually the right
-answer for a featured artist, and it is what the artist asked for on the reference
-("dale foco a mi parte"). It also sidesteps the featured-vocalist consent problem below.
+**Put the artist on camera only when the film needs them there** — they asked, or the song is
+first-person and performance is the concept. Then the likeness gate applies, you need photos supplied
+by them (not frames scraped off their video), and the sung shots go to OmniHuman.
 
-### Gate 2 — the why, and the three rights gates, before any paid pixels
+**A second person on screen is allowed** (owner ruling 2026-09-01, overriding the earlier
+no-second-face rule): a generated character is not a real person whose consent we bypassed. Never
+seed one from a real photograph, and never imply a real person.
 
-`references/topic-selection.md` applies in full, and the "why theirs" sentence carries more weight
-here than anywhere else, because we are spending our money on someone else's release. The reference
-doc's version is the model: *his EP is seven days old, this version has no video, he gets a finished
-vertical cut in the world he already built, at zero cost, his to post first, and nothing leaves the
-folder until he says yes.*
+## The rights gates that still bite
 
-Rights are **three separate gates**, not one, and they fail independently:
+They fail independently. Check each, write the status in the plan doc.
 
-| Gate | What it covers | How it failed on the reference |
+| Gate | When it applies | The trap |
 |---|---|---|
-| **Likeness** | permission to depict this face | already cleared as a recurring cast member; still added a per-cut approval |
-| **The recording** | permission for *us* to post *their* master on *our* channels | never assume: the artist posting it is their call, us posting it needs their explicit written yes, plus the label or producer if they say those own it |
-| **Featured voice** | a co-credited vocalist we have no consent from | the reference shot verse 2 **masked** so no unconsented face appeared, then dropped it entirely when the artist confirmed the feature sings it |
+| **The recording** | **always** | The artist posting it is their call; **us** posting their master on **our** channels needs their explicit written yes, plus the label or producer if they say those own it |
+| **Likeness** | only if the artist is depicted | Their own supplied photos, and a per-cut approval even for a consented recurring character |
+| **Featured voice** | only if you show a face for a co-credited vocalist you have no consent from | Cut to their verse, or keep the feature off screen |
 
-**Brand-safety lock, decided here and written down.** Drill lyrics do not have to become drill
-visuals. The reference locked *no weapons, no substances, no cash* into the negative prompt string of
-every single still, so the same file could go on Recoup's channels without an edit — while the
-artist's own artwork carries guns, which is his choice for his channel. If the artist asks for the
-harder cut, that is a different file and their post only.
+**Brand-safety lock, decided here and written into the negative prompt string of every still.** Drill
+lyrics do not have to become drill visuals: the reference locked *no weapons, no substances, no cash*
+so the same file could go on Recoup's channels unedited, while the artist's own artwork carries guns,
+which is his choice for his channel. If the artist wants the harder cut, that is a different file and
+their post only.
 
-**No figure appears on screen**, so there is nothing to audit. Any stats you gathered about the
-artist stay in the plan doc.
+**No figure appears on screen**, so there is nothing to audit. Stats about the artist stay in the
+plan doc.
 
-### Gate 3 — decide lip-sync BEFORE the motion bake-off
+## The three gates that cost money
 
-The single most expensive process error on the reference: a full three-model motion bake-off ran and
-was reviewed before the owner noticed that **none of the takes were lip-synced**. Image-to-video
-mouths are prompt-driven; they move, they look plausible in a still frame, and they are not saying
-the words. That bake-off (~$1.10) was spent to answer the wrong question.
+**Confirm the track and the lyric sheet before the song map.** The reference run built a 20-shot
+table, generated 19 stills and started motion on the wrong song: the lyric sheet was for the title
+track. Get the track in writing, get their sheet, transcribe the audio you will actually cut and diff
+the two. Settle the **section** here too; a featured artist's own verse is usually right and it
+sidesteps the featured-voice gate.
 
-> **Rule: an i2v mouth is never synced to real audio.** Split the scene table into
-> *mouth-visible* and *no-mouth* shots on the day you write it, and bake off the two groups
-> separately, against the real audio slice.
+**Decide lip-sync before the motion bake-off.** A three-model bake-off ran on the reference before
+anyone noticed **none of the takes were lip-synced**. Image-to-video mouths are prompt-driven: they
+move, they look plausible frozen, and they are not saying the words.
 
-### Gate 4 — the contact sheet, before any motion spend
+> **An i2v mouth is never synced to real audio.** Split the scene table into *mouth-visible* and
+> *no-mouth* rows on the day you write it, and assign the model per row.
 
-Stills are cents; motion is dollars. Generate every still, assemble `scenes/CONTACT-SHEET.jpg`, and
-review the whole sheet in one look for likeness, hands, props, stray text and brand-safety
-violations. The reference caught a wrong facial expression this way (S7 came out grinning on the
-stress verse; re-rolled, and the reject kept as `scenes/s7-grin-rejected.png`).
+**Review the contact sheet before any motion spend.** Stills are cents; motion is dollars. Generate
+every still, assemble `scenes/CONTACT-SHEET.jpg` and read the whole sheet in one look for character
+consistency, hands, props, stray text and brand-safety violations. **Fix physics at the still, never
+at the clip** — a half-open car window survived two OmniHuman takes with a hand through the glass
+before the still itself was regenerated, and re-rolling a clip to fix a still costs five to ten times
+more.
 
-**Fix physics at the still, never at the clip.** S2's still had the car window half up. Both
-OmniHuman takes rolled it further and put his hand through the glass; the owner caught it twice
-before the still itself was regenerated with the window fully down and his hand on the sill. A
-motion model will animate whatever ambiguity you hand it, and re-rolling a clip to fix a still costs
-5 to 10 times more.
+## Artist approval — three gates, in sequence
 
-### Gate 5 — artist approval is three gates, arriving in sequence
+Not one "do you like it". They land hours apart and each changes the build: **the look** (stills or
+the first 30 seconds, where a wrong world is still cheap), **the cut** (finished render, and nothing
+posts before this one in writing), **the credit** (the reference artist asked for a personal credit;
+the owner ruled **"VIDEO BY Recoup"**).
 
-Not one "do you like it." On the reference they landed hours apart and each changed the build:
-
-1. **The look** (stills, 14:25) — "está superduro", plus a direction that reshaped the whole cut.
-2. **The cut** (finished render, 15:54) — "durísimo". Nothing posts before this one, in writing.
-3. **The credit** (16:45) — he asked for a personal credit, the owner ruled **"VIDEO BY Recoup"** on
-   the title card.
-
-Send the approval message in the artist's own language, with no em dashes, and use it to ask for the
-two things you still need: the **master WAV** and whether the beat or the label has anything to say
-about us reposting. The reference's Spanish draft is in `content/letal-xlug/SCRIPT.md`.
+Send it in the artist's own language, with no em dashes, and use it to ask for the **master WAV** and
+whether the label or producer has anything to say about us reposting.
 
 ## The pipeline
 
 ### 1. Audio
 
-Prefer the **master WAV** from the artist; ask for it in the approval message. Until it arrives, a
-YouTube rip is the approval cut only:
+Prefer the **master WAV** from the artist. Until it arrives a YouTube rip is the approval cut only:
 
 ```bash
 yt-dlp -f 18 --extractor-args "youtube:player_client=android" -o audio/src.mp4 "<video url>"
 ffmpeg -i audio/src.mp4 -vn -c:a pcm_s16le audio/song.wav
 ```
 
-**Measure before you touch it.** The reference rip was **-5.9 LUFS / +1.9 dBTP** — already
-brickwalled. A released master usually is. Mux with **linear gain only, never `loudnorm`**: the
-reference shipped at -6.5 dB linear gain, landing at -14.1 LUFS / -4.8 dBTP.
+**Measure before you touch it, and use linear gain only, never `loudnorm`.** Masters differ: the
+reference rip was brickwalled at -5.9 LUFS and needed -6.5 dB to land at -14.1; the Tomás master had
+real dynamic range at -16.6 LUFS and needed roughly +2.5 dB. Measure again on the finished render.
 
-If you are cutting a section, snap the in and out points to gaps in the transcript, not to bar
-positions, and crossfade ~60 ms if you are joining two non-adjacent sections. Keep the full WAV.
+If you cut a section, snap the in and out points to gaps in the transcript, not to bar positions, and
+crossfade ~60 ms when joining non-adjacent sections. Keep the full WAV.
 
-### 2. Words and word times
+### 2. Word times
 
-Two different problems. **Auto-captions give you the words; you need word times to cut.**
+Auto-captions give you the words; you need word **times** to cut.
 
-- **You have the master WAV** → transcribe it. `npx hyperframes transcribe`, or the Scribe pass in
-  the project's `scripts/audio.mjs`. The reference's `assets/drift.scribe.json` is 412 words with
-  per-word times, and every scene window in the scene table is snapped to it.
-- **All you have is their YouTube upload** → auto-captions via `yt-dlp`. The Recoup **YouTube
-  connector 403s** on `YOUTUBE_LOAD_CAPTIONS` for videos you do not own, and the Apify scraper's
-  `subtitles` field comes back `null` on channel-list scrapes (verified 2026-08-31 on a five-video
-  batch). This is the working path:
+- **You have the master WAV** → transcribe it (`npx hyperframes transcribe`, or the Scribe pass in
+  `scripts/audio.mjs`).
+- **All you have is their YouTube upload** → the Recoup YouTube connector 403s on
+  `YOUTUBE_LOAD_CAPTIONS` for videos you do not own and the Apify `subtitles` field comes back null
+  on channel-list scrapes, so:
 
   ```bash
   yt-dlp --skip-download --write-auto-sub --sub-langs "es,es-419,en" \
@@ -158,138 +152,94 @@ Two different problems. **Auto-captions give you the words; you need word times 
     -o "sub.%(ext)s" "<video url>"
   ```
 
-  The VTT carries `<c>` word tags, so word-level timing survives. Clean it: strip `<[^>]+>`, drop
-  timestamp lines and `[Music]` / `[Música]`, and **dedupe consecutive repeats** — auto-subs repeat
-  each line about three times for the karaoke roll-up.
+  The VTT carries `<c>` word tags, so word-level timing survives. **The roll-up format repeats each
+  line**: only cues containing `<c>` carry new words, and only their *last* line is new. Naive
+  extraction scrambles the lyric.
 
-Do not burn time on local whisper. `whisper-cpp 0.15.3` against `ggml-large-v3-turbo.bin` failed
-`expected 587 tensors got 111` on 2026-08-31; the hosted paths above are faster and free.
+Do not burn time on local whisper; `whisper-cpp 0.15.3` fails on `ggml-large-v3-turbo.bin`.
 
 ### 3. Song map and scene table
 
-Turn the word times into sections (`Intro / Verse / Hook / Break / Tail`) with a lyric anchor per
-section, then a scene table on top of it. **Every beat ≤6.5s** (`references/hooks.md`). The reference
-was 19 generated shots plus one HTML title card over 112s.
+Sections (`Intro / Verse / Hook / Break / Tail`) with a lyric anchor each, then a scene table on top.
+**Every beat ≤6.8s** (`references/hooks.md`). Each row carries: window, beat, still prompt, motion
+prompt, **and which model owns it** — deciding that in the table is what makes the lip-sync gate
+automatic.
 
-Each row carries: window, beat, the still prompt, the motion prompt, **and which of the three motion
-models owns it** (below). Deciding the model in the table is what makes Gate 3 automatic.
+The hook is a **specific image**, not a spoken line; a music video's VO is the song. First frame, no
+logo, no fade, no title card.
 
-The hook is a **specific image**, not a spoken line — a music video's VO is the song. First frame, no
-logo, no fade, no title card. State the premise visually by the end of the intro.
+Write one long `STYLE` string and one identity paragraph per character, and interpolate them into
+every prompt. Consistency across 30 shots comes from the strings being literally identical, not from
+describing the look 30 times. Put the negative list **inside** `STYLE`: `ABSOLUTELY NO text, letters,
+numbers, logos, signs with words, watermarks, or user interface.`
 
-### 4. Art direction and the face guide
+**Name the camera move, do not describe the effect.** "The horizon tilts" produced a hillside; **DUTCH
+ANGLE** plus "NOT a hill, NOT a slope" produced the shot. And a corrective re-roll silently drops
+whatever the prompt stops repeating — the tilt fix came back with warm blue-sky light and broke the
+film's grade arc, so re-assert the grade in every corrective prompt.
 
-- **Continue the artist's own world**, do not invent one. The reference read the EP's official video
-  as a stylised 3D Metal Slug homage and made this one *the racing level of the same game* — same
-  city, same rain, same neon, the tank swapped for a drift car (and parked in the far background of
-  one shot as an easter egg). Pull the official artwork or thumbnail in as a style reference on
-  every call.
-- **Face guide** in `cast/<artist>/`: a white-background expression sheet built with **Nano Banana 2**
-  (`fal-ai/nano-banana-2/edit`, multi-reference fusion), plus a real frontal photo, plus the official
-  artwork, plus any alternate persona (the reference has a masked one). Seed **all** of them into
-  every still call. See the `faceguide-model-workflow` notes for how the guide itself is built.
-- Write one long `STYLE` string and one long identity string and interpolate them into every prompt,
-  as `gen-scene.mjs` does. Consistency across 19 shots comes from the strings being literally
-  identical, not from describing the look 19 times.
-- Put the negative list **inside** `STYLE`: `ABSOLUTELY NO text, letters, numbers, logos, signs with
-  words, watermarks, or user interface. NO weapons, NO guns, NO drugs, NO cash, NO other people.`
-
-### 5. Motion — two models
+### 4. Motion — two models
 
 **Owner ruling 2026-08-31: MiniMax H3 Max is the house image-to-video model.** Everything that does
-not have to mouth the words goes to H3 Max, at every price point, regardless of shot type. Do not
-bake off a third vendor; the split below is the whole decision.
+not mouth words goes to H3 Max. Do not bake off a third vendor.
 
 | The shot | Model | Price | Call shape |
 |---|---|---|---|
-| **Mouth visible** — he raps or sings on camera | `fal-ai/bytedance/omnihuman/v1.5` | $0.16/s | `image_url`, `audio_url` = **the exact slice of the song for that window**, `prompt`, `resolution: "1080p"` |
-| **Everything else** — held portrait, push-in, blink, car, hands, city, cutaways | `minimax/h3-max/image-to-video` | $0.04/s promo, $0.08/s after | `prompt`, `image_url`, `duration` (min 5), `resolution: "768P"`, `prompt_expansion_mode: "disabled"` |
+| **Mouth visible**, singing to camera | `fal-ai/bytedance/omnihuman/v1.5` | $0.16/s | `image_url`, `audio_url` = **the exact slice of the song for that window**, `prompt`, `resolution: "1080p"` |
+| **Everything else** | `minimax/h3-max/image-to-video` | $0.08/s (the $0.04 promo ran to 2026-09-01) | `prompt`, `image_url`, `duration` (min 5), `resolution: "768P"`, `prompt_expansion_mode: "disabled"` |
 
-**H3 Max invents things, and driving it is part of the job.** In the reference run it produced, in
-separate takes: lettering on a pendant it added to the chain, numbered gauges on a blank dashboard,
-storefront signage reading "Crolate", Japanese shop signs, an anime woman who was not in the still,
-and a face morph on a slow push-in. None of that is a reason to reach for another model; it is the
-budget line you plan for. Four things keep it in hand:
+OmniHuman's fetcher 400s on multi-megabyte 2K PNG stills while H3 takes the same file; hand it a
+1080-wide JPEG proxy.
 
-1. **Carry the full negative list in every motion prompt**, not just the still prompt: `no text, no
-   signage, no letters, no numbers, no logos, no people in the background`.
-2. **Name the prop you do not want.** "Plain chain, no pendant" fixed the invented pendant. H3
-   embellishes whatever it finds ambiguous, so close the ambiguity by name.
-3. **Wide street plates and slow push-ins are its two weak shots.** Budget two takes for each,
-   and prefer a tighter frame or a held camera over a wide one where the composition allows.
-4. **Review every clip, then re-roll.** Re-rolls at $0.04 to $0.08 per second are cheap enough that
-   the answer to a bad take is always another take.
+**H3 Max invents things, and driving it is part of the job.** Across the two builds it added a
+lettered pendant, numbered dashboard gauges, storefront signage, Japanese shop signs and an anime
+woman who was not in the still. That is a budget line, not a reason to change model:
 
-**Rejected, with the reason, so nobody re-runs the bake-off:**
+1. **Carry the full negative list in every motion prompt**, not just the still prompt.
+2. **Name the prop you do not want.** "Plain chain, no pendant" fixed the pendant. Close the
+   ambiguity by name.
+3. **Wide plates and slow push-ins are its two weak shots.** Budget two takes for each.
+4. **Re-roll freely.** At $0.08/s the answer to a bad take is another take.
 
-| Model | Why not |
-|---|---|
-| Kling Avatar v2 Pro | burned garbled subtitles into the frame, plus a chest logo |
-| Kling LipSync | strong mouth, but inherits every artifact of the clip underneath |
-| Sync Lipsync v2 Pro | works, $5/min — keep as the **cheap way to re-sync a clip you already rendered**, not as the primary |
-| LTX-2.3 | drifts the face |
-| InfiniteTalk | did not return inside 10 minutes |
+Rejected once, so nobody re-runs the bake-off: **Kling Avatar** burns garbled subtitles into frame,
+**LTX-2.3** drifts the face, **InfiniteTalk** did not return. **Sync Lipsync v2 Pro** ($5/min) is
+worth keeping as the cheap way to re-sync a clip you already rendered.
 
-### 6. Composite, render, mux
+### 5. Composite, render, mux
 
-Clone `content/letal-xlug/video/`, place the clips on the song map by word time, **mute every clip
-except the lip-sync sources**, and type any wordmark as HTML text.
+Clone `content/letal-xlug/video/`, place the clips on the song map by word time, **mute every clip**
+(the master is muxed after render), and type any wordmark as HTML text.
 
-- `npx hyperframes@0.7.5 snapshot --at <times> .` at ~6 points before you ever run `npm run render`.
-  Pin the version.
-- **Never cut a clip within ~0.15s of its file end.** The reference's first render had a black frame
-  at 4.6s because the cut sat two frames from the end of a 4.68s file, where the decoder returns
-  black. Fix is 0.18s of headroom; verify by sampling frame brightness across the cut, not by eye.
-- **The headless renderer ignores CSS `filter: invert` on JPEGs.** A wordmark image rendered as a
-  white box. Type the wordmark.
-- Nano Banana 2 will turn "two shots of him" into a **split grid** if you let it. Prompt one
-  continuous frame.
-- Mux the song at measured linear gain, then read frames back out of the finished render. A render
-  returning the right duration is not evidence it looks right.
+- Pin every invocation: `npx hyperframes@0.7.5 snapshot --at <times> .` at ~6 points **before** you
+  ever run `npm run render`.
+- **Never cut a clip within ~0.15s of its file end** — the decoder returns black there. Verify by
+  sampling frame brightness across the cut, not by eye.
+- Where a generator returns a clip fractionally shorter than its window, clone the last frame
+  (`tpad=stop_mode=clone`) rather than reflowing the timeline. **Lip-synced starts are absolute.**
+- **The headless renderer ignores CSS `filter: invert` on JPEGs.** Type the wordmark.
+- Nano Banana 2 turns "two shots of him" into a split grid. Prompt one continuous frame.
+- Mux at measured linear gain, then read frames back out of the finished render. A render returning
+  the right duration is not evidence it looks right.
 
-## Cost — budget the bake-offs, they are not optional
+## Cost
 
-Measured on the reference (27.0s finished, from a 112s scene table):
-
-| Item | Spend |
-|---|---|
-| Nano Banana 2 stills, 19 + ~6 re-rolls | ~$2.00 |
-| Bake-off 1 — motion, 3 models on one shot | ~$1.10 *(wasted: wrong question, see Gate 3)* |
-| Bake-off 2 — lip-sync, 5 models on one shot against real audio | ~$3.00 |
-| Bake-off 3 — silent face, 4 models on one shot | ~$2.20 |
-| Final motion, 19 shots | ~$9.50 |
-| Re-rolls after review | remainder |
-| **Session total** | **≈ $30** |
-
-**Two of those three bake-offs no longer run.** Bake-off 1 asked the wrong question (Gate 3) and
-bake-off 3 chose a silent-face model that the 08-31 ruling has since settled — H3 Max takes those
-shots. What a new film actually pays for is stills, motion and re-rolls, so a first film in a new
-visual world should now come in **well under the ~$30 the reference cost**, and a second film in the
-same world nearer **$8 to $10**.
-
-Estimating a fresh film from the two-model split: ~16 non-mouth shots at ~5.5s is ~88s of H3 Max
-(**~$3.50 at the promo rate, ~$7 after**), plus ~16s of OmniHuman at $0.16/s (**~$2.60**), plus ~$2
-of stills. The $0.04/s H3 rate is a launch promo running to 2026-09-01. Treat all of it as the
-shape of the budget, not a quote — re-check both prices on fal before
-committing, and pull real spend from the api project's production `FAL_KEY` account, not a local
-key.
+Stills are ~$0.09 each; motion is the whole budget: **$0.16/s of sung shot + $0.08/s of everything
+else**. A ~160s film with 8 sung shots is roughly **$19**. Casting instead of face-guiding removes
+the guide line (~$0.60 and its failed attempts) entirely. Re-check both prices on fal before
+committing, and pull real spend from the api project's production `FAL_KEY` account, not a local key.
 
 ## Publish
 
 1. **The artist posts first**, on their channels, in their language, with their own caption.
-2. **IG Collab invite** to `@recoupableai` / sweetman, so it lives on both profiles. This is the
-   whole distribution plan — see "Why we make these" above.
-3. Then our four-platform cut via `recoup-internal-social-ship-posts`:
-   `utm_campaign=<artist-slug>`, tagged link in the **YouTube description only**, LinkedIn gets an
-   **image** not the video, and the X body carries no link.
-4. Log it in `posts-log.md` with the arc, the character, both halves of the why, and the sign-off
-   used. Instagram cannot carry a per-post link, so record it as **unattributable** rather than as a
-   zero.
+2. **IG Collab invite** to `@recoupableai` / sweetman so it lives on both profiles. This is the whole
+   distribution plan, and the measured reason we make these at all: the 2026-07-22 collab reel took
+   **45 likes against 1 to 3** for every non-collab reel around it.
+3. Then our four-platform cut via `recoup-internal-social-ship-posts`: `utm_campaign=<artist-slug>`,
+   tagged link in the **YouTube description only**, LinkedIn gets an **image** not the video, X body
+   carries no link.
+4. Log it in `posts-log.md` with both halves of the why. Instagram cannot carry a per-post link, so
+   record it as **unattributable** rather than as a zero.
 
-## Open items from the reference run
-
-- The master WAV never arrived; the shipped cut uses a YouTube Topic rip. If it lands, re-mux and
-  consider re-uploading YouTube only.
-- The artist's other two versions of the track have no video, and 19 usable clips for one of them
-  already exist in `content/letal-xlug/clips/`.
-- `embeddable` cannot be set through the YouTube connector — it is a manual Studio flip.
+The film is a **trust and awareness beat, not a conversion post**, and also the demo we send the next
+label — the piece where the artist is the customer, not the subject. Say both plainly in the plan doc
+rather than dressing the commercial half as a gift.
