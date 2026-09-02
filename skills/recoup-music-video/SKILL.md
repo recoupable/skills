@@ -1,29 +1,79 @@
-# Artist music video — their released song, the story they could not afford to shoot
+---
+name: recoup-music-video
+description: Make a finished vertical music video for an artist — generate the song, then build the film around it. Use for "make a music video", "turn this into a music video", "make me a video for my song", or "I want a music video about X". v1 generates the song; bringing your own released master (audio file, Spotify or YouTube URL) is v2. Composes a complete short piece on the free tier and a full-length film on Pro. Verifies the render before claiming done; stops at the asset.
+hooks:
+  Stop:
+    - hooks:
+        - type: prompt
+          timeout: 30
+          prompt: |
+            You are the analyze-gate reviewer for the recoup-music-video skill. The main agent is about to stop. Decide whether to block.
 
-Make a finished vertical video cut to a song a real artist has already released. Two builds inform
-this: **LETAL XLUG (brauxelion's verse)**, shipped and artist-approved 2026-08-28, and **Movamos el
-Mundo (Tomás Mika)**, stopped mid-build on 2026-09-01 by the artist's own feedback. The second one
-rewrote this document, so read the first section before anything else.
+            The rule: the agent must NOT claim a video is finished — 'ready', 'done', 'here's your music video', 'final', 'good to go', or any equivalent — unless an analyze-gate result for THAT render appears in the conversation. A render returning the right duration is NOT evidence it looks right; the agent cannot see motion without analyzing.
 
-**Clone `content/letal-xlug/` in the account workspace and work from it.** `gen-scene.mjs`,
-`gen-motion.mjs` and `video/` are written to be re-pointed at a new artist by swapping the refs, the
-style string and the scene table.
+            Decide:
 
-## Route here when
+            1. If the agent produced or is presenting a generated VIDEO asset AND is claiming it is finished/ready AND there is no analyze-gate pass (or explicit visual inspection of read frames) for that asset in the conversation, block:
+            {"decision": "block", "reason": "video presented as ready without an analyze-gate pass", "systemMessage": "Read frames from the finished render (or POST /api/content/analyze) and review the result before claiming it's ready. If it fails, regenerate and re-analyze; if borderline, surface the analysis to the user instead of asserting success."}
 
-A real artist owns a **released recording** and the deliverable is a finished vertical video cut to
-**that recording**. The song is the story; there is no Recoup story inside the film and no number on
-screen.
+            2. Otherwise approve:
+            {"decision": "approve"}
+---
 
-| Not this | Go here instead |
-|---|---|
-| The song itself is generated (a `/music` track), not a released master | Style F, `content/rough-draft/` |
-| A number or weekly result is the hero | Style A, data-in-motion |
-| A shipped feature, real UI | Style B, 3D product reveal |
-| A customer-facing asset billed to an artist's org | `recoup-content-make-video` (credit-metered, analyze-gated) |
-| A scene with no person in it at all | `references/seedance.md` |
+# Music video — build the film the song deserves
 
-## Where the story comes from
+Make a finished vertical video cut to a song. **v1 generates the song**; bringing an existing
+master is v2 (see "Not yet" at the bottom).
+
+Two real builds inform the craft below: **LETAL XLUG (brauxelion's verse)**, shipped and
+artist-approved 2026-08-28, and **Movamos el Mundo (Tomás Mika)**, stopped mid-build 2026-09-01 by
+the artist's own feedback. Everything here that costs money was learned by spending it.
+
+## Scaffold — you start from nothing
+
+There is no reference project to clone. Stand the project up in the sandbox:
+
+```bash
+ffmpeg -version                        # in the base image; fail loudly if absent
+npx --yes hyperframes@0.7.5 init video # PIN 0.7.5
+```
+
+**Pin `hyperframes@0.7.5`.** A fresh `init` scaffolds a newer version whose renderer needs a newer
+Chrome than the cached headless shell, and every render fails with
+`ctx.drawElementImage is not a function`. Lint and inspect work on either.
+
+Never put an API key in the sandbox. Every paid call goes through the Recoup API with
+`$RECOUP_ACCESS_TOKEN`, which meters credits and keeps our fal key server-side.
+
+## Length — compose FOR the budget, never truncate to it
+
+Free-tier accounts are capped at **15 seconds** of generated output. A music video is three to four
+minutes, so on a free account **build a deliberate 15-second piece** — one section, its own in and
+out, a real ending — not the first 15 seconds of a film that stops mid-phrase.
+
+A truncated film is the worst possible first impression. Check the account's plan before writing the
+scene table, and say which you are building in the plan doc.
+
+## 1. The song
+
+Generate it, then poll:
+
+```bash
+curl -sS -X POST "$RECOUP_API/api/music" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"<style, mood, vocals, instrumentation, BPM, key>","lyrics":"[verse]\n...","duration":15}'
+# -> 202 { generation: { id } }, Location: /api/music/{id}
+curl -sS "$RECOUP_API/api/music/<ID>" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"
+# poll until status is complete, then read the audio url
+```
+
+Structure tags (`[intro]`, `[verse]`, `[chorus]`, `[outro]`) each go on their own line. The lyric you
+write **is** the brief for the film — read it back for images before writing a scene table.
+
+**Measure the audio before touching it, and use linear gain only, never `loudnorm`.** Measure again
+on the finished render.
+
+## 2. Where the story comes from
 
 **If the artist gives direction, follow it. Otherwise write the story yourself, from the lyrics and
 what you know about them.** Never reproduce the video they already have.
@@ -46,7 +96,7 @@ The lyric is the brief: Tomás's song names an earthquake of kindness, fire fall
 sky, salt petals on the wind and living in freedom, and every one of those is a shot. Read the whole
 lyric for images before writing a scene table.
 
-## Cast the film; do not clone the artist
+## 3. Cast the film
 
 **There is no face-guide step and no `cast/<artist>/` requirement.** That was inherited from the
 cinematic-narrative format, where a recurring Recoup character must look the same across episodes. A
@@ -65,26 +115,7 @@ by them (not frames scraped off their video), and the sung shots go to OmniHuman
 Cast as many characters as the story needs. Never seed one from a photograph of a real person, and
 never imply a real person.
 
-## The rights gates that still bite
-
-They fail independently. Check each, write the status in the plan doc.
-
-| Gate | When it applies | The trap |
-|---|---|---|
-| **The recording** | **always** | The artist posting it is their call; **us** posting their master on **our** channels needs their explicit written yes, plus the label or producer if they say those own it |
-| **Likeness** | only if the artist is depicted | Their own supplied photos, and a per-cut approval even for a consented recurring character |
-| **Featured voice** | only if you show a face for a co-credited vocalist you have no consent from | Cut to their verse, or keep the feature off screen |
-
-**Brand-safety lock, decided here and written into the negative prompt string of every still.** Drill
-lyrics do not have to become drill visuals: the reference locked *no weapons, no substances, no cash*
-so the same file could go on Recoup's channels unedited, while the artist's own artwork carries guns,
-which is his choice for his channel. If the artist wants the harder cut, that is a different file and
-their post only.
-
-**No number appears on screen**, so there is nothing to audit. Stats about the artist stay in the
-plan doc.
-
-## The three gates that cost money
+## 4. The three gates that cost money
 
 **Confirm the track and the lyric sheet before the song map.** The reference run built a 20-shot
 table, generated 19 stills and started motion on the wrong song: the lyric sheet was for the title
@@ -107,70 +138,7 @@ at the clip** — a half-open car window survived two OmniHuman takes with a han
 before the still itself was regenerated, and re-rolling a clip to fix a still costs five to ten times
 more.
 
-## Artist approval — three gates, in sequence
-
-Not one "do you like it". They land hours apart and each changes the build: **the look** (stills or
-the first 30 seconds, where a wrong world is still cheap), **the cut** (finished render, and nothing
-posts before this one in writing), **the credit** (the reference artist asked for a personal credit;
-the owner ruled **"VIDEO BY Recoup"**).
-
-Send it in the artist's own language, with no em dashes and run through the `unslop` skill, and use
-it to ask for the **master WAV** and whether the label or producer has anything to say about us
-reposting.
-
-## The pipeline
-
-### 1. Audio
-
-Prefer the **master WAV** from the artist. Until it arrives a YouTube rip is the approval cut only:
-
-```bash
-yt-dlp -f 18 --extractor-args "youtube:player_client=android" -o audio/src.mp4 "<video url>"
-ffmpeg -i audio/src.mp4 -vn -c:a pcm_s16le audio/song.wav
-```
-
-**Measure before you touch it, and use linear gain only, never `loudnorm`.** Masters differ: the
-reference rip was brickwalled at -7.6 LUFS and needed -6.5 dB to land at -14.1; the Tomás master had
-real dynamic range at -16.6 LUFS and needed roughly +2.5 dB. Measure again on the finished render.
-
-If you cut a section, snap the in and out points to gaps in the transcript, not to bar positions, and
-crossfade ~60 ms when joining non-adjacent sections. Keep the full WAV.
-
-### 2. Word times
-
-Auto-captions give you the words; you need word **times** to cut.
-
-- **You have the master WAV** → transcribe it (`npx hyperframes transcribe`, or the Scribe pass in
-  `scripts/audio.mjs`).
-- **All you have is their YouTube upload** → scrape it through Recoup. `subtitles=true` is YouTube
-  only and downloads each returned video's captions; the field is only populated when you ask for it,
-  which is why a plain channel-list scrape comes back with none. Get the social `id` from
-  `GET /api/artist/socials`, then:
-
-  ```bash
-  curl -sS -X POST "https://api.recoupable.dev/api/socials/<SOCIAL_ID>/scrape?posts=5&subtitles=true" \
-    -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"
-  # -> { runId, datasetId }; poll GET /api/apify/runs/<RUN_ID> until SUCCEEDED,
-  #    then read the video's subtitles[0].plaintext
-  ```
-
-  That gives you the **words**. The Recoup YouTube connector separately 403s on
-  `YOUTUBE_LOAD_CAPTIONS` for videos you do not own. For word **times** on a video you cannot
-  transcribe, fall back to the auto-caption VTT:
-
-  ```bash
-  yt-dlp --skip-download --write-auto-sub --sub-langs "es,es-419,en" \
-    --sub-format vtt --extractor-args "youtube:player_client=android" \
-    -o "sub.%(ext)s" "<video url>"
-  ```
-
-  The VTT carries `<c>` word tags, so word-level timing survives. **The roll-up format repeats each
-  line**: only cues containing `<c>` carry new words, and only their *last* line is new. Naive
-  extraction scrambles the lyric.
-
-Do not burn time on local whisper; `whisper-cpp 0.15.3` fails on `ggml-large-v3-turbo.bin`.
-
-### 3. Song map and scene table
+## 5. Song map and scene table
 
 Sections (`Intro / Verse / Hook / Break / Tail`) with a lyric anchor each, then a scene table on top.
 **Every beat ≤6.5s** (`references/hooks.md`). Each row carries: window, beat, still prompt, motion
@@ -190,7 +158,7 @@ ANGLE** plus "NOT a hill, NOT a slope" produced the shot. And a corrective re-ro
 whatever the prompt stops repeating — the tilt fix came back with warm blue-sky light and broke the
 film's grade arc, so re-assert the grade in every corrective prompt.
 
-### 4. Stills — Meta Muse Image
+## 6. Stills
 
 **Owner ruling 2026-09-01: `meta/muse-image` is the house still model, replacing Nano Banana 2.** It
 is quoted at **$0.01 per image** against Nano Banana 2's $0.08, and NB2 bills 2K output at 1.5x
@@ -212,7 +180,7 @@ prompt field**, so the negative list stays inside the `STYLE` string as above.
 at 9:16, and honours "ABSOLUTELY NO text". It does **not** reliably follow layout or wardrobe
 instructions that contradict a reference image, so name those harder than feels necessary.
 
-### 5. Build the film in three layers: plates, then people, then camera
+## 7. Build the film in three layers: plates, then people, then camera
 
 Do these in order. Skipping straight to shots cost two complete scene passes on the reference film.
 
@@ -304,7 +272,7 @@ and decorative and the same shot passes.
 Budget a minute and a penny per rejection. Across two films none of them cost a shot — but do not
 reword a prompt that has not yet been retried.
 
-### 6. Motion — two models
+## 8. Motion — two models
 
 **Owner ruling 2026-08-31: MiniMax H3 Max is the house image-to-video model.** Everything that does
 not mouth words goes to H3 Max. Do not bake off a third vendor.
@@ -328,9 +296,9 @@ Rejected once, so nobody re-runs the bake-off: **Kling Avatar** burns garbled su
 **LTX-2.3** drifts the face, **InfiniteTalk** did not return. **Sync Lipsync v2 Pro** ($5/min) is
 worth keeping as the cheap way to re-sync a clip you already rendered.
 
-### 7. Composite, render, mux
+## 9. Composite, render, mux
 
-Clone `content/letal-xlug/video/`, place the clips on the song map by word time, **mute every clip**
+In the `video/` project you scaffolded, place the clips on the song map by word time, **mute every clip**
 (the master is muxed after render), and type any wordmark as HTML text.
 
 - Pin every invocation: `npx hyperframes@0.7.5 snapshot --at <times> .` at ~6 points **before** you
@@ -359,19 +327,24 @@ Two lines disappeared with this revision: the face guide and its failed attempts
 at 2K, which took the stills line from ~$4.70 to ~$0.35 on a 33-shot film. Re-check every price on
 fal before committing, and pull real spend from the api project's production `FAL_KEY` account.
 
-## Publish
 
-1. **The artist posts first**, on their channels, in their language, with their own caption.
-2. **IG Collab invite** to `@recoupableai` / sweetman so it lives on both profiles. This is the whole
-   distribution plan, and the measured reason we make these at all: the 2026-07-22 collab reel took
-   **45 likes against 1 to 3** for every non-collab reel around it.
-3. Then our four-platform cut via `recoup-internal-social-ship-posts`, **after clearing the gate in
-   `references/publish-verify.md`** (it exits non-zero; do not publish past it):
-   `utm_campaign=<artist-slug>`, tagged link in the **YouTube description only**, LinkedIn gets an
-   **image** not the video, X body carries no link.
-4. Log it in `posts-log.md` with both halves of the why. Instagram cannot carry a per-post link, so
-   record it as **unattributable** rather than as a zero.
+## Hand back the URL on stdout
 
-The film is a **trust and awareness beat, not a conversion post**, and also the demo we send the next
-label — the piece where the artist is the customer, not the subject. Say both plainly in the plan doc
-rather than dressing the commercial half as a gift.
+The chat renders a player from the media URL **in the tool result's stdout**, so the last thing this
+skill does is print it as JSON on one line:
+
+```bash
+echo "{\"videoUrl\": \"$FINAL_URL\"}"
+```
+
+Piping the final step through `jq`, redirecting it to a file, or only mentioning the URL in prose
+means no player renders and the person is handed a bare link. See recoupable/app#2052.
+
+## Not yet (v2)
+
+**Bringing your own song** — an audio file, a Spotify URL or a YouTube URL — is v2. It restores the
+word-timing sources (`hyperframes transcribe`, the `subtitles=true` scrape, the `yt-dlp` auto-caption
+VTT and its roll-up trap) and the rights gates that come with a real master: the recording itself,
+likeness when the artist is depicted, and any featured voice. **Do not improvise those gates here.**
+If someone asks for a video over a released track, say that is coming and offer the generated-song
+route.
