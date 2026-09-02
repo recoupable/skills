@@ -227,7 +227,15 @@ reference film shipped a contact sheet where two consecutive shots of the same r
 
 **Layer 2 — camera coverage, and this is the step everyone skips.** Plate-seeding locks the
 *composition* as well as the location, so every shot in an act comes back as the same photograph with
-different content dropped in. For each location generate **two more angles as edits of its master**
+different content dropped in.
+
+> **Test this before you spend on it (2026-09-02).** On `meta/muse-image` the plate does **not**
+> lock the camera when the move is stated explicitly and emphatically: a top-down floor shot came
+> straight out of a wide eye-level hall plate, first try, and four planned angle plates turned out
+> to be unnecessary. Spend one image finding out which behaviour you are getting. And note a plate
+> earns its place only when two or more shots share it; a plate for one shot is ceremony.
+> Also read `video-pipeline.md` → *Reference discipline*: a plate transmits PLACE, a character
+> transmits MEDIUM, and you cannot edit a photoreal plate into another medium at all. For each location generate **two more angles as edits of its master**
 — a medium and a low or detail angle — then seed each shot on the angle it actually needs. At $0.01
 a plate this is the cheapest quality in the pipeline.
 
@@ -249,6 +257,11 @@ same age. Do not beautify them, do not change their age, do not swap the faces.
 on the young portrait. That is what makes three ages read as one person instead of three lookalikes.
 
 ### The two prompt failures that will happen to you
+
+> **Filter triggers confirmed so far:** kissing, wading, "human shadows", a "shaft" of light, a petal
+> "hanging", anatomy language, and **"dead"** in any form ("hundreds of dead moths" was rejected;
+> "hundreds of empty paper moth wings" passed and reads better). Reword around the trigger. Retrying
+> identical text never works.
 
 **1. The blanket negative does not stop stray background people at extreme wide.** `NO other people
 in frame beyond those described` sat in the shared `STYLE` string and an extreme-wide road shot still
