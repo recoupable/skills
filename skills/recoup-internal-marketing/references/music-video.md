@@ -46,24 +46,41 @@ The lyric is the brief: Tomás's song names an earthquake of kindness, fire fall
 sky, salt petals on the wind and living in freedom, and every one of those is a shot. Read the whole
 lyric for images before writing a scene table.
 
-## Cast the film; do not clone the artist
+## Cast the film — and ASK FOR PHOTOS IN THE FIRST MESSAGE
 
-**There is no face-guide step and no `cast/<artist>/` requirement.** That was inherited from the
-cinematic-narrative format, where a recurring Recoup character must look the same across episodes. A
-music video has no such obligation, and the guide costs two to four generations before the first
-scene still exists, must be seeded into every later call, and drags the likeness gate along with it.
+**#128 said to cast invented characters and skip the face guide. The next artist rejected that
+outright.** Shown a well-built invented lead, Alex Paul replied *"el sujeto no se parece mucho a
+mi"*: he did not want an actor, he wanted to be in his own video. Building the invented character
+first, then his likeness, then correcting the likeness, took **nine rounds of his notes** — about
+80% of all iteration on that film, against two rounds on the film itself.
 
-**Default: cast the film with invented characters.** One identity paragraph per character, reused
-verbatim in every still prompt, each character locked by its first approved still, which seeds the
-rest. Same consistency mechanism, minus the guide. It also frees the story from the artist's body: a
-song about two people can show two people, a song spanning years can span locations and ages.
+**So the default is now the artist's likeness, and the first message asks for the photos:**
 
-**Put the artist on camera only when the film needs them there** — they asked, or the song is
-first-person and performance is the concept. Then the likeness gate applies, you need photos supplied
-by them (not frames scraped off their video), and the sung shots go to OmniHuman.
+> Mándame 5 fotos de tu cara y 3 de cuerpo completo, para que el personaje se parezca a ti.
+> ¿Qué ropa usas normalmente, qué zapatos, alguna cadena o reloj que siempre traes, algún corte
+> o detalle tuyo?
 
-Cast as many characters as the story needs. Never seed one from a photograph of a real person, and
-never imply a real person.
+Those two sentences would have removed five of the nine rounds. Each thing they answer is a thing
+you would otherwise infer wrongly and be corrected on, one detail per round.
+
+**Ask for FULL-LENGTH photos explicitly, and never infer a body from a face.** Given only
+head-and-shoulders, the reference build described him as "heavy-set through the neck and shoulders",
+which propagated into the guide, the character kit and every shot prompt, and came back as
+*"creo que me hizo muy gordo"*. Nine body photos settled it in one round: he is an ordinary build.
+Seed the figure on the body photos, not on the face guide alone.
+
+**Wardrobe is part of the identity, so ask once rather than discovering it.** Cargos, then a watch,
+then a bracelet, then a looser top, then Timberlands arrived as four separate rounds, each a single
+detail he volunteered unprompted.
+
+**Invented characters remain right when the story needs people the artist is not** — a partner, a
+crowd, a second life. Seed none of them from a real person's photograph.
+
+> ### A character has SEVERAL seeds. A correction must be applied to EVERY one.
+> The reference film keeps `alex-portrait.png` and `alex-figure.png`, both built from the same
+> guide. The build correction was applied to the figure and not the portrait, and two hours later
+> every performance still came back heavy again, because they seeded on the stale portrait. **After
+> any change to a character, regenerate all its seeds and check their timestamps against the fix.**
 
 ## The rights gates that still bite
 
@@ -92,12 +109,19 @@ track. Get the track in writing, get their sheet, transcribe the audio you will 
 the two. Settle the **section** here too; a featured artist's own verse is usually right and it
 sidesteps the featured-voice gate.
 
-**Decide lip-sync before the motion bake-off.** A three-model bake-off ran on the reference before
-anyone noticed **none of the takes were lip-synced**. Image-to-video mouths are prompt-driven: they
-move, they look plausible frozen, and they are not saying the words.
+**Lip sync is OPT-IN, and you prototype it on ONE shot before designing it into the film.**
+An i2v mouth is never synced to real audio, so a singing shot needs OmniHuman — which bills at
+**$0.16/s, the only model that charges full list, and 13x the per-second cost of H3 Max**. On the
+2026-09-01 film four performance stills were built and re-rolled before a single one was synced, and
+the artist then rejected the technique outright: *"siento que el movimiento de labios no se ve muy
+natural, ¿podemos omitirlo?"* One prototype clip cost $0.88 and answered the question; the full set
+would have cost $3.50 to reach the same answer.
 
-> **An i2v mouth is never synced to real audio.** Split the scene table into *mouth-visible* and
-> *no-mouth* rows on the day you write it, and assign the model per row.
+> **Default to no singing.** If the artist asks for it, sync ONE shot, show them, and only then
+> write the rest into the scene table. The same rule covers any technique the artist has not seen.
+
+Where lip sync is out, mark every shot of the artist **mouth closed or turned away** in the table, so
+nothing silently needs a sync later.
 
 **Review the contact sheet before any motion spend.** Stills are cents; motion is dollars. Generate
 every still, assemble `scenes/CONTACT-SHEET.jpg` and read the whole sheet in one look for character
@@ -107,12 +131,16 @@ at the clip** — a half-open car window survived two OmniHuman takes with a han
 before the still itself was regenerated, and re-rolling a clip to fix a still costs five to ten times
 more.
 
-## Artist approval — three gates, in sequence
+## Artist approval — three gates, and how to actually show the work
 
 Not one "do you like it". They land hours apart and each changes the build: **the look** (stills or
 the first 30 seconds, where a wrong world is still cheap), **the cut** (finished render, and nothing
-posts before this one in writing), **the credit** (the reference artist asked for a personal credit;
-the owner ruled **"VIDEO BY Recoup"**).
+posts before this one in writing), **the credit** (one artist asked for a personal credit; the owner
+ruled **"VIDEO BY Recoup"**).
+
+**Do not ask an artist to reference a contact sheet by shot number.** On a phone a 30-tile grid is
+unreadable, and the 2026-09-01 artist said "S25" and "S26" meaning s19 and s20 — a full round burned
+resolving it. Send shots individually, or ask them to send back the image they mean.
 
 Send it in the artist's own language, with no em dashes and run through the `unslop` skill, and use
 it to ask for the **master WAV** and whether the label or producer has anything to say about us
@@ -346,18 +374,23 @@ Clone `content/letal-xlug/video/`, place the clips on the song map by word time,
 
 ## Cost
 
-Quoted rates, 2026-09-01: **stills $0.01 each** (Muse Image), **$0.16/s of sung shot** (OmniHuman
-1.5), **$0.08/s of everything else** (H3 Max). Motion is essentially the entire budget.
+**Measured on the production key, 2026-09-01 — list prices predicted two of four wrong:**
 
-Measured on a 33-shot, 159s film: **$1.75 for every image in the project** — face-guide bake-off,
-six character portraits, 24 plates, all 33 stills, and two complete scene passes that were thrown
-away. The first 30 seconds of motion, six shots including one OmniHuman, came to **$3.13**. Stills
-are now cheap enough that the expensive mistake is spending motion money on a shot list the artist
-has not seen.
+| Model | Measured | List | |
+|---|---|---|---|
+| Muse Image, per still | **$0.0100** | $0.01 | as listed |
+| MiniMax H3 Max, per second of finished clip | **$0.0196** | $0.08/s | ~1/4 of list |
+| OmniHuman 1.5, per second | **$0.1600** | $0.16/s | as listed |
+| Nano Banana 2, per still at 2K | **~$0.24** | ~$0.12 | 2x list, it bills per megapixel |
 
-Two lines disappeared with this revision: the face guide and its failed attempts, and Nano Banana 2
-at 2K, which took the stills line from ~$4.70 to ~$0.35 on a 33-shot film. Re-check every price on
-fal before committing, and pull real spend from the api project's production `FAL_KEY` account.
+A finished 161s film with 32 shots came to **about $6**, including eight rounds of artist revisions
+and a discarded lip-sync experiment. Stills were $0.80 of it; one rejected 5.5-second sync clip cost
+$0.88 — more than every still combined.
+
+**Run every generator on a key whose spend you can query**, or you cannot do any of this. Pull the
+production `FAL_KEY` with `vercel env pull` and read
+`GET https://api.fal.ai/v1/models/usage?start_time=...`; a local key may sit on a different account
+and 403 on the usage API, which is how a whole film got built with its cost unknowable.
 
 ## Publish
 
