@@ -45,6 +45,11 @@ Chrome than the cached headless shell, and every render fails with
 Never put an API key in the sandbox. Every paid call goes through the Recoup API with
 `$RECOUP_ACCESS_TOKEN`, which meters credits and keeps our fal key server-side.
 
+**Call `$RECOUP_API`, never a hardcoded host.** The sandbox is handed the base of the deployment
+that spawned it; production resolves to `https://api.recoupable.dev`, a preview to its own
+deployment. Hardcoding prod 401s from a preview, because a preview's token is minted against a
+different Privy app (recoupable/api#891). Every call below defaults to prod if the var is missing.
+
 ## Length — compose FOR the budget, never truncate to it
 
 Free-tier accounts are capped at **15 seconds** of generated output. A music video is three to four
@@ -59,11 +64,11 @@ scene table, and say which you are building in the plan doc.
 Generate it, then poll:
 
 ```bash
-curl -sS -X POST "$RECOUP_API/api/music" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+curl -sS -X POST "${RECOUP_API:-https://api.recoupable.dev}/api/music" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"<style, mood, vocals, instrumentation, BPM, key>","lyrics":"[verse]\n...","duration":15}'
 # -> 202 { generation: { id } }, Location: /api/music/{id}
-curl -sS "$RECOUP_API/api/music/<ID>" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"
+curl -sS "${RECOUP_API:-https://api.recoupable.dev}/api/music/<ID>" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"
 # poll until status is complete, then read the audio url
 ```
 
@@ -174,7 +179,7 @@ All stills go through `POST $RECOUP_API/api/content/image` — never call fal di
 send a `model` field; the endpoint is pinned to Muse Image server-side:
 
 ```bash
-curl -sS -X POST "$RECOUP_API/api/content/image" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+curl -sS -X POST "${RECOUP_API:-https://api.recoupable.dev}/api/content/image" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"<the shot>","aspect_ratio":"9:16","num_images":1,"output_format":"png"}'
 # -> 200 { imageUrl, images: [...] }
@@ -268,7 +273,7 @@ than your text — most likely the generated image as well.
 ```js
 let res, lastErr;
 for (let attempt = 1; attempt <= 4; attempt++) {
-  const r = await fetch(`${RECOUP_API}/api/content/image`, {
+  const r = await fetch(`${RECOUP_API ?? "https://api.recoupable.dev"}/api/content/image`, {
     method: "POST",
     headers: { Authorization: `Bearer ${RECOUP_ACCESS_TOKEN}`, "Content-Type": "application/json" },
     body: JSON.stringify(input),
@@ -312,7 +317,7 @@ reword a prompt that has not yet been retried.
 no `model` field to set and no lip-sync route (see the gate above).
 
 ```bash
-curl -sS -X POST "$RECOUP_API/api/content/video" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+curl -sS -X POST "${RECOUP_API:-https://api.recoupable.dev}/api/content/video" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"<the motion>","image_url":"<still url>","duration":5,"resolution":"768P"}'
 # -> 200 { videoUrl }
