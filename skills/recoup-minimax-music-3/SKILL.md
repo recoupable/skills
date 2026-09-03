@@ -116,8 +116,9 @@ the scene table exists is a rebuild, not a fix.
 
 - The song is **downstream of the concept**, never upstream. Genre, length and structure all follow
   from what the film is. Generating a song first locks the timing before the story exists.
-- Hand the approved audio and its word times to `recoup-internal-marketing` →
-  `references/video-pipeline.md`, which owns scene windows, stills, motion and the composite.
+- Hand the approved audio and its word times to `recoup-internal-marketing` (its video pipeline
+  reference owns scene windows, stills, motion and the composite) or to `recoup-music-video` for an
+  artist film built around a generated song.
 - The audio approval gate is the cheapest gate in a film build. A song change after compositing
   moves every beat and every caption; before it, it costs 22 cents.
 

@@ -33,6 +33,7 @@
 ### song — single-song audio
 | Intent | Skill |
 |---|---|
+| generate an original song / track / score (no existing recording) | `recoup-minimax-music-3` |
 | analyze a song's audio: BPM/key/genre/mood, lyrics, mix critique | `recoup-song-analyze-audio` |
 | find the hook, best 5–15s to clip | `recoup-song-find-hook` |
 | playlist pitch + sync brief from the audio | `recoup-song-placement-pitch` |

@@ -32,6 +32,7 @@
 {"intent": "enrich this record label with structured facts and recent news", "expected": "recoup-research-the-web"}
 
 # --- song (audio-grounded) ---
+{"intent": "generate an original song for this ad, no existing recording", "expected": "recoup-minimax-music-3", "not": ["recoup-music-video", "recoup-song-analyze-audio"]}
 {"intent": "analyze this track's audio, bpm key genre and a mix critique", "expected": "recoup-song-analyze-audio"}
 {"intent": "find the best 15 seconds of this song to clip", "expected": "recoup-song-find-hook", "not": ["recoup-content-make-video"]}
 {"intent": "write a playlist pitch and sync brief for this single from the audio", "expected": "recoup-song-placement-pitch", "not": ["recoup-research-playlist-targets"]}
