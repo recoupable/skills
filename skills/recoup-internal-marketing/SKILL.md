@@ -177,8 +177,9 @@ the cost was never the money, it was that no shot could be judged while the targ
 
 Each stage is approved before the next begins, because each one is the *seed* for the next and a
 mistake compounds. Full mechanics live in `references/video-pipeline.md` → *Reference discipline*.
-This order used to be documented only in `references/music-video.md`, which a run for our own
-channels never opens; that is why it was skipped. It is a general rule, not a music-video rule.
+This order used to be documented only in the artist-music-video reference (now its own skill,
+`recoup-music-video`), which a run for our own channels never opens; that is why it was skipped. It
+is a general rule, not a music-video rule.
 
 1. **Clear the `HOOKS.md` checklist before writing the scene table.** Hook first, not last. Name
    which archetype the hook is (specific number, contrarian claim, list tease); if you cannot name
@@ -344,4 +345,4 @@ a bare `recoupable.dev` or "link in bio" with no tag.
 - `references/seedance.md` — Seedance 2.5 (generated live-action plates): hard constraints, locked-vs-unlocked tasks, the fal call, prompt doctrine, which existing skill owns each downstream step, and the run log we grow
 - `references/seedance-examples.md` — every Seedance 2.5 example prompt we have, verbatim and sourced (ByteDance Seed, BytePlus ModelArk, fal, plus our own runs); read it before writing a prompt
 - `references/structure.md` — holding a multi-item piece together after the hook: the count, the ordinals, the step counter, the bookend
-- `references/music-video.md` — **artist music video**: a real artist's released song cut to 9:16. Where the story comes from (their direction if they give it, otherwise the lyrics and what we know about them, never a remake of the video they already have), casting invented characters instead of building a face guide, the rights gates that survive, Muse Image for stills, the plates-then-people-then-camera build order, the two-model motion split (OmniHuman for mouths, MiniMax H3 Max for everything else) and how to keep H3 from inventing props, word-timing sources, and the cost shape
+- **artist music video** — split out into its own customer-facing skill, `recoup-music-video`. Route there; do not rebuild the pipeline here.

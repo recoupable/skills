@@ -33,6 +33,7 @@
 ### song — single-song audio
 | Intent | Skill |
 |---|---|
+| generate an original song / track / score (no existing recording) | `recoup-minimax-music-3` |
 | analyze a song's audio: BPM/key/genre/mood, lyrics, mix critique | `recoup-song-analyze-audio` |
 | find the hook, best 5–15s to clip | `recoup-song-find-hook` |
 | playlist pitch + sync brief from the audio | `recoup-song-placement-pitch` |
@@ -42,6 +43,7 @@
 |---|---|
 | write a caption in the artist's voice | `recoup-content-write-caption` |
 | cover art / thumbnail / carousel / promo / quote card | `recoup-content-make-graphics` |
+| music video for a song (generate the song, then the film) | `recoup-music-video` |
 | short video / lyric video / visualizer / reformat for platforms | `recoup-content-make-video` |
 | a whole content pack (15–30 assets) for one song | `recoup-content-asset-pack` |
 | react to a milestone/trend, make something timely | `recoup-content-reactive-post` |
