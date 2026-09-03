@@ -15,7 +15,7 @@ project to clone. This page is the **routing table** from a brief to a format, p
 | Explain a **method** — how something was made, how a number was derived | **Recipe / BTS artifact walk** | Clone the reference project |
 | Captions or graphic overlays onto existing footage | hyperframes caption / overlay workflows | `embedded-captions`, `talking-head-recut` |
 | A **scene we could never shoot** carries the beat: a character in a place, a physical action, a location | **Generated plate** (Seedance 2.5), our typography composited over it | `references/seedance.md`. Invented characters are fine; a **real person's photo** cannot be used as a reference |
-| A song is the whole story, cut to 9:16 | **Music video** (generate or source the song → cast characters → Muse Image stills → OmniHuman for mouths, H3 Max for everything else → composite to the track) | **`recoup-music-video`** — its own skill now, customer-facing. Scaffolds from scratch; no face guide; the artist is on camera only if the film needs them |
+| A song is the whole story, cut to 9:16 | **Music video** (generate or source the song → cast characters → Muse Image stills → H3 Max motion → composite to the track; no lip-sync yet) | **`recoup-music-video`** — its own skill now, customer-facing. Scaffolds from scratch; no face guide; the artist is on camera only if the film needs them |
 
 **The concrete-versus-stylish rule:** for a feature or product announcement, concreteness beats
 styling. Show the real interface and the real change. A beautiful abstract treatment that hides the

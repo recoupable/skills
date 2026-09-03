@@ -177,8 +177,9 @@ the cost was never the money, it was that no shot could be judged while the targ
 
 Each stage is approved before the next begins, because each one is the *seed* for the next and a
 mistake compounds. Full mechanics live in `references/video-pipeline.md` → *Reference discipline*.
-This order used to be documented only in `references/music-video.md`, which a run for our own
-channels never opens; that is why it was skipped. It is a general rule, not a music-video rule.
+This order used to be documented only in the artist-music-video reference (now its own skill,
+`recoup-music-video`), which a run for our own channels never opens; that is why it was skipped. It
+is a general rule, not a music-video rule.
 
 1. **Clear the `HOOKS.md` checklist before writing the scene table.** Hook first, not last. Name
    which archetype the hook is (specific number, contrarian claim, list tease); if you cannot name
