@@ -109,8 +109,9 @@ rest. Same consistency mechanism, minus the guide. It also frees the story from 
 song about two people can show two people, a song spanning years can span locations and ages.
 
 **Put the artist on camera only when the film needs them there** — they asked, or the song is
-first-person and performance is the concept. Then the likeness gate applies, you need photos supplied
-by them (not frames scraped off their video), and the sung shots go to OmniHuman.
+first-person and performance is the concept. Then the likeness gate applies, and you need photos
+supplied by them (not frames scraped off their video). There is no lip-sync path in v1 (see the
+gate below), so keep performance shots to framing where an unsynced mouth doesn't read as wrong.
 
 Cast as many characters as the story needs. Never seed one from a photograph of a real person, and
 never imply a real person.
@@ -123,12 +124,16 @@ track. Get the track in writing, get their sheet, transcribe the audio you will 
 the two. Settle the **section** here too; a featured artist's own verse is usually right and it
 sidesteps the featured-voice gate.
 
-**Decide lip-sync before the motion bake-off.** A three-model bake-off ran on the reference before
-anyone noticed **none of the takes were lip-synced**. Image-to-video mouths are prompt-driven: they
-move, they look plausible frozen, and they are not saying the words.
+**There is no lip-sync path in v1 — `/api/content/video` is pinned to H3 Max only.** A lip-sync
+model (fal's OmniHuman) was bake-off'd on the reference film, but that route isn't exposed through
+the API and isn't caller-selectable — every motion call goes to the same house model regardless of
+whether the mouth is visible. H3 Max's mouths are prompt-driven: they move, they look plausible
+frozen, and they are **never synced to real audio**.
 
-> **An i2v mouth is never synced to real audio.** Split the scene table into *mouth-visible* and
-> *no-mouth* rows on the day you write it, and assign the model per row.
+> **Write the scene table around that limit, don't fight it.** Mark *mouth-visible* rows on the day
+> you write the table and favor framing that doesn't put an unsynced mouth in focus for those beats
+> — profile, distance, cutaways, the mouth out of frame. Full lip-sync is a v2 item once the API
+> supports it, not something to work around per shot.
 
 **Review the contact sheet before any motion spend.** Stills are cents; motion is dollars. Generate
 every still, assemble `scenes/CONTACT-SHEET.jpg` and read the whole sheet in one look for character
@@ -142,8 +147,8 @@ more.
 
 Sections (`Intro / Verse / Hook / Break / Tail`) with a lyric anchor each, then a scene table on top.
 **Every beat ≤6.5s** (`references/hooks.md`). Each row carries: window, beat, still prompt, motion
-prompt, **and which model owns it** — deciding that in the table is what makes the lip-sync gate
-automatic.
+prompt, and whether the mouth is visible — deciding that in the table is what keeps unsynced,
+mouth-visible framing out of the shot list before any motion spend, not after.
 
 The hook is a **specific image**, not a spoken line; a music video's VO is the song. First frame, no
 logo, no fade, no title card.
@@ -160,19 +165,28 @@ film's grade arc, so re-assert the grade in every corrective prompt.
 
 ## 6. Stills
 
-**Owner ruling 2026-09-01: `meta/muse-image` is the house still model, replacing Nano Banana 2.** It
-is quoted at **$0.01 per image** against Nano Banana 2's $0.08, and NB2 bills 2K output at 1.5x
+**Owner ruling 2026-09-01: Muse Image is the house still model, replacing Nano Banana 2.** It is
+quoted at **$0.01 per image** against Nano Banana 2's $0.08, and NB2 bills 2K output at 1.5x
 ($0.12) — which is what our generators were actually set to. That is a 12x difference on a line we
 pay 30 to 40 times per film, so re-rolls stop being something to ration.
 
-| Call | Endpoint | Input |
-|---|---|---|
-| The first still of a character or world | `meta/muse-image/text-to-image` | `prompt`, `aspect_ratio: "9:16"`, `num_images`, `output_format` |
-| Every still after it | `meta/muse-image/edit` | the same, plus `image_urls` — **1 to 10** reference images |
+All stills go through `POST $RECOUP_API/api/content/image` — never call fal directly, and never
+send a `model` field; the endpoint is pinned to Muse Image server-side:
+
+```bash
+curl -sS -X POST "$RECOUP_API/api/content/image" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"<the shot>","aspect_ratio":"9:16","num_images":1,"output_format":"png"}'
+# -> 200 { imageUrl, images: [...] }
+```
+
+The first still of a character or world omits `image_urls` (text-to-image). Every still after it
+adds `image_urls` — **1 to 10** reference images — to seed on what already exists (edit).
 
 `output_format` defaults to **webp**; set `"png"` or `"jpeg"` so ffmpeg and the renderer take the
 file. There is **no resolution field** (the aspect ratio sets the dimensions) and **no negative
-prompt field**, so the negative list stays inside the `STYLE` string as above.
+prompt field**, so the negative list stays inside the `STYLE` string as above. `prompt` must be
+non-empty — an empty string is rejected with a 400 before it ever reaches fal.
 
 `image_urls` taking up to ten references is what the whole workflow below runs on.
 
@@ -241,10 +255,16 @@ than your text — most likely the generated image as well.
 ```js
 let res, lastErr;
 for (let attempt = 1; attempt <= 4; attempt++) {
-  try { res = await fal.subscribe(model, { input, logs: false }); break; }
-  catch (err) { lastErr = err; if (attempt < 4) await new Promise(r => setTimeout(r, 1500 * attempt)); }
+  const r = await fetch(`${RECOUP_API}/api/content/image`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${RECOUP_ACCESS_TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  if (r.ok) { res = await r.json(); break; }
+  lastErr = await r.text();
+  if (attempt < 4) await new Promise(r => setTimeout(r, 1500 * attempt));
 }
-if (!res) throw lastErr;
+if (!res) throw new Error(lastErr);
 ```
 
 Lower concurrency helps too; four in flight rejected noticeably more than two.
@@ -272,29 +292,36 @@ and decorative and the same shot passes.
 Budget a minute and a penny per rejection. Across two films none of them cost a shot — but do not
 reword a prompt that has not yet been retried.
 
-## 8. Motion — two models
+## 8. Motion — one model
 
-**Owner ruling 2026-08-31: MiniMax H3 Max is the house image-to-video model.** Everything that does
-not mouth words goes to H3 Max. Do not bake off a third vendor.
+**Owner ruling 2026-08-31: MiniMax H3 Max is the house image-to-video model, and it's the only one
+`/api/content/video` exposes.** Every motion call — mouth visible or not — goes through it; there is
+no `model` field to set and no lip-sync route (see the gate above).
 
-| The shot | Model | Price | Call shape |
-|---|---|---|---|
-| **Mouth visible**, singing to camera | `fal-ai/bytedance/omnihuman/v1.5` | $0.16/s | `image_url`, `audio_url` = **the exact slice of the song for that window**, `prompt`, `resolution: "1080p"` |
-| **Everything else** | `minimax/h3-max/image-to-video` | $0.08/s (the $0.04 promo ran to 2026-09-01) | `prompt`, `image_url`, `duration` (min 5), `resolution: "768P"`, `prompt_expansion_mode: "disabled"` |
+```bash
+curl -sS -X POST "$RECOUP_API/api/content/video" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"<the motion>","image_url":"<still url>","duration":5,"resolution":"768P"}'
+# -> 200 { videoUrl }
+```
 
-OmniHuman's fetcher 400s on multi-megabyte PNG stills while H3 takes the same file; hand it a
-1080-wide JPEG proxy.
+`duration` is an integer **5-15 seconds**; `resolution` is `"480P"` or `"768P"` (billing scales with
+768P, not a flat per-second rate — see below). `end_image_url` pins a second frame for a defined
+start/end pair. `prompt_expansion_mode` is `"balanced"` (default) or `"quality"` — no `"disabled"`
+value exists; omit the field to take the default.
+
+**Pricing is per billable unit, not a flat $/s.** fal bills 768P at 1.6x the unit count of 480P for
+the same duration, not a different per-second rate. At the **standing (post-promo) rate that's an
+effective $0.08/s at 768P, $0.05/s at 480P** — fal is running a launch promo at $0.02/s at 768P
+($0.0125/s at 480P) that **ends 2026-09-07**; after that the standing rate applies. Use the standing
+figure for budgeting past that date.
 
 **H3 Max invents things, and driving it is part of the job.** Across the two builds it added a
 lettered pendant, numbered dashboard gauges, storefront signage and an anime woman who was not in the
 still. So: carry the full negative list in **every motion prompt**, not just the still prompt; **name
 the prop you do not want** ("plain chain, no pendant" fixed the pendant); budget two takes on wide
-plates and slow push-ins, its two weak shots; and re-roll freely, because at $0.08/s the answer to a
-bad take is another take.
-
-Rejected once, so nobody re-runs the bake-off: **Kling Avatar** burns garbled subtitles into frame,
-**LTX-2.3** drifts the face, **InfiniteTalk** did not return. **Sync Lipsync v2 Pro** ($5/min) is
-worth keeping as the cheap way to re-sync a clip you already rendered.
+plates and slow push-ins, its two weak shots; and re-roll freely — at $0.08/s the answer to a bad
+take is another take.
 
 ## 9. Composite, render, mux
 
@@ -314,14 +341,18 @@ In the `video/` project you scaffolded, place the clips on the song map by word 
 
 ## Cost
 
-Quoted rates, 2026-09-01: **stills $0.01 each** (Muse Image), **$0.16/s of sung shot** (OmniHuman
-1.5), **$0.08/s of everything else** (H3 Max). Motion is essentially the entire budget.
+Verified rates: **stills $0.01 each** (Muse Image), **$0.08/s of motion at 768P, $0.05/s at 480P**
+(H3 Max, standing rate — a promo through 2026-09-07 halves both to $0.02/s and $0.0125/s). v1 has
+one motion model for every shot, mouth-visible or not (see the lip-sync gate above), so this is the
+whole motion budget — no separate sung-shot rate. Motion is still essentially the entire budget.
 
 Measured on a 33-shot, 159s film: **$1.75 for every image in the project** — face-guide bake-off,
 six character portraits, 24 plates, all 33 stills, and two complete scene passes that were thrown
-away. The first 30 seconds of motion, six shots including one OmniHuman, came to **$3.13**. Stills
-are now cheap enough that the expensive mistake is spending motion money on a shot list the artist
-has not seen.
+away. The first 30 seconds of motion, six shots, came to **$3.13** on the reference build (which
+predates the API-only cutover and included one shot on a lip-sync model no longer available through
+`/api/content/video` — a v1 build swaps that shot for an H3 Max take instead, at the rate above).
+Stills are now cheap enough that the expensive mistake is spending motion money on a shot list the
+artist has not seen.
 
 Two lines disappeared with this revision: the face guide and its failed attempts, and Nano Banana 2
 at 2K, which took the stills line from ~$4.70 to ~$0.35 on a 33-shot film. Re-check every price on
@@ -348,3 +379,7 @@ VTT and its roll-up trap) and the rights gates that come with a real master: the
 likeness when the artist is depicted, and any featured voice. **Do not improvise those gates here.**
 If someone asks for a video over a released track, say that is coming and offer the generated-song
 route.
+
+**Lip-sync** — `/api/content/video` has no lip-sync route today (see §8). If the artist wants
+sustained, mouth-visible singing shots synced to the track, say that's not available yet rather than
+approximating it with H3 Max's unsynced motion.

@@ -111,6 +111,12 @@
       ]
     },
     {
+      "canonical": "skills/recoup-internal-marketing/references/hooks.md",
+      "copies": [
+        "skills/recoup-music-video/references/hooks.md"
+      ]
+    },
+    {
       "canonical": "skills/recoup-catalog-estimate-value/references/methodology.md",
       "copies": [
         "skills/recoup-catalog-review-deal/references/methodology.md"
