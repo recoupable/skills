@@ -108,6 +108,79 @@ Rules that hold for any hero:
 - **Stack vertically what would wrap horizontally** (flows, roster rows). Socials show brand
   glyphs, never written platform names.
 
+## 4b. Reference discipline: what a seed image actually transmits
+
+Learned the expensive way on 2026-09-02, across four separate failures in one build. Every one of
+them was the same misunderstanding, so it is worth stating as a law:
+
+> **A PLATE image transmits PLACE. A CHARACTER image transmits MEDIUM.**
+> Pass both, but **never let two references disagree about the medium.**
+
+What that predicts, and what actually happened:
+
+| Attempt | Result |
+|---|---|
+| photoreal plate + clay character, plate first | photoreal moth in a photoreal room |
+| photoreal plate + clay character, character first | same, reordering changed almost nothing |
+| "rebuild this photoreal image in claymation" | photoreal with faint thumbprint texture |
+| "redraw this photoreal image as 8-bit" | only the light beam pixelated |
+| **styled character alone + the room described in words** | **correct medium, correct composition** |
+
+**So you cannot edit a photoreal image into another medium.** The source image anchors realism
+harder than any instruction in the prompt. To build the same location in another medium, seed on
+**that medium's character** and describe the room in words, holding the composition constant with a
+shared `ROOM` string reused verbatim across all media. Once the plate and the character are both
+already in the medium, passing both together is safe and is what locks place and character at once.
+
+**Corollary — declare the medium globally.** Medium is a property of the whole frame, so put it in
+the first sentence of the prompt ("EVERY element in this image is modelling clay, including the
+moth"), not implied by a reference. Do the same for the character's own style variants: a shared
+plate string ending "a reference photograph of the object" silently forced photorealism and defeated
+the felt, watercolour and clay variants until it was removed from the edit path.
+
+**Corollary — say LESS for an empty frame.** A long prompt gives the model room to populate an empty
+plate. An empty-field-under-stars shot came back twice with an invented woman walking through it,
+the second time *after* the prompt was hardened with an explicit no-people paragraph. What fixed it
+was cutting the prompt to two sentences. This is the opposite of the fix for populated plates, where
+naming the unwanted prop does work.
+
+**Test whether you need angle plates; do not assume.** `music-video.md` says plate-seeding locks the
+camera and you must generate angle plates. On `meta/muse-image` that is **not true** if the camera
+move is stated explicitly and emphatically: a top-down floor shot came straight out of a wide
+eye-level hall plate on the first try, and four planned angle plates turned out to be unnecessary.
+One image tells you which world you are in. Spend it before spending four.
+
+**A plate earns its place only when two or more shots share it.** A plate for a single shot is
+ceremony: it is a scene generation with the character left out, then re-edited to put it back. Two
+generations to do one thing.
+
+## 4c. Keyframed camera moves: `end_image_url`
+
+The image-to-video models take a **first frame and a last frame** and fly the camera between them
+(`minimax/h3-max-turbo`: `image_url` + `end_image_url`, `duration` 5 to 15). This is the single
+biggest precision lever in the pipeline and it is free.
+
+**Cost is per second of video, not per clip.** Ninety seconds costs the same as twenty clips or as
+thirteen. So fewer, longer, keyframed shots cost nothing extra and buy:
+
+- **Precision.** You are specifying where the shot starts *and* ends instead of hoping a prompt
+  lands. Two near-identical wide stills stop being a repetitive cut and become the endpoints of one
+  travelling shot.
+- **Fewer seams.** Fewer cut-headroom bugs, fewer joins to get wrong.
+- **Movement instead of repetition.** On the 2026-09-02 build, eight near-interchangeable wide shots
+  collapsed into three continuous moves and the middle of the film stopped being static.
+
+**Check consecutive stills as PAIRS before you spend motion on them.** A keyframed move interpolates
+between them, so any discontinuity becomes a visible morph, which is the failure mode these models
+are worst at. On the same build, a moth was a crumpled wreck in the start frame and pristine and
+serene in the end frame, so a 10s move had to visibly repair it. Check scale, position and the
+subject's state across every pair, and fix it at the still, not in the clip.
+
+**Budget re-rolls on long moves.** Drift grows with duration. A 10s descent read "the camera falls
+with it" literally, went *through* the floor and invented a mirrored upside-down warehouse below,
+with two subjects on screen. The fix was pinning the geometry in the prompt: the floor is solid,
+the camera never goes below it, there is no space beneath it, exactly one subject at all times.
+
 ## 5. Audio
 
 Generation, voice choice, audio tags, loudness and verification all live in `references/voice.md`.

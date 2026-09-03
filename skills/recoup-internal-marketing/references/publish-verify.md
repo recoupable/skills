@@ -125,6 +125,28 @@ token lives ~1 hour, and the documented failure is a human review pause — the 
 unlisted → eyeball → public flip — outlasting it and 401ing the final call. The API key does not
 expire. The shared runner's `authHeaders()` prefers the key and falls back to the token.
 
+## A success response is NOT evidence that your copy shipped (2026-09-02)
+
+Two tweets went out with a video and **no text at all**, and the runner reported success both times.
+X permits a media-only post, so it returned a real tweet id and no error. The cause was a latent bug
+in the shared runner: it read `cfg.copy.x.text` while every config in the workspace writes `copy.x`
+as a **string**, so the body resolved to `undefined` and was never sent. The path had never been
+exercised because earlier films used their own per-project `post-x.mjs` that passed the string.
+
+Three rules follow, and they are cheap:
+
+1. **Read the published text back and compare it to the config**, every platform, every time. The
+   syndication read is what caught this; the API said success. Do not compare by eye.
+2. **Refuse to post an empty body.** The runner now throws if the resolved text is empty rather than
+   letting the platform accept it silently.
+3. **Beware a diagnosis that fits the symptom.** The first theory was "the body is over 280 chars",
+   which was plausible, wrong, and cost a second empty tweet. A 273-char body failed identically.
+   When a fix does not work, the theory is wrong, not the dose. Check what the code actually sends
+   before changing what you send it.
+
+Weighted length still matters and is now in the pre-flight: URLs count as 23 characters regardless
+of real length, emoji and CJK count as 2.
+
 ## Post-publish verification
 
 A returned id is not proof the post is correct. **Neither is a verification you skim.**
