@@ -45,12 +45,11 @@ Chrome than the cached headless shell, and every render fails with
 Never put an API key in the sandbox. Every paid call goes through the Recoup API with
 `$RECOUP_ACCESS_TOKEN`, which meters credits and keeps our fal key server-side.
 
-**Call `$RECOUP_API`, never a hardcoded host.** The sandbox is handed the base of the deployment
-that spawned it; production resolves to `https://api.recoupable.dev`, a preview to its own
-deployment. Hardcoding prod 401s from a preview, because a preview's token is minted against a
-different Privy app. Every call below defaults to prod if the var is missing.
+The base is `https://api.recoupable.dev`, spelled out at every call below — the same way
+`recoup-platform-api-access` does it. There is no env var for it: a sandbox is handed
+`RECOUP_ACCESS_TOKEN` and `RECOUP_ORG_ID` and nothing else.
 
-**And let each API response's JSON reach stdout** — that is what makes the song, the stills and the
+**Let each API response's JSON reach stdout** — that is what makes the song, the stills and the
 clips play inline in the chat instead of arriving as bare links. See "Print every media URL to
 stdout as JSON" at the bottom; it applies to every media step, not just the final render.
 
@@ -68,11 +67,11 @@ scene table, and say which you are building in the plan doc.
 Generate it, then poll:
 
 ```bash
-curl -sS -X POST "${RECOUP_API:-https://api.recoupable.dev}/api/music" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+curl -sS -X POST "https://api.recoupable.dev/api/music" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"<style, mood, vocals, instrumentation, BPM, key>","lyrics":"[verse]\n...","duration":15}'
 # -> 202 { generation: { id } }, Location: /api/music/{id}
-curl -sS "${RECOUP_API:-https://api.recoupable.dev}/api/music/<ID>" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"
+curl -sS "https://api.recoupable.dev/api/music/<ID>" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"
 # poll until status is complete, then read the audio url
 ```
 
@@ -179,11 +178,11 @@ quoted at **$0.01 per image** against Nano Banana 2's $0.08, and NB2 bills 2K ou
 ($0.12) — which is what our generators were actually set to. That is a 12x difference on a line we
 pay 30 to 40 times per film, so re-rolls stop being something to ration.
 
-All stills go through `POST $RECOUP_API/api/content/image` — never call fal directly, and never
+All stills go through `POST https://api.recoupable.dev/api/content/image` — never call fal directly, and never
 send a `model` field; the endpoint is pinned to Muse Image server-side:
 
 ```bash
-curl -sS -X POST "${RECOUP_API:-https://api.recoupable.dev}/api/content/image" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+curl -sS -X POST "https://api.recoupable.dev/api/content/image" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"<the shot>","aspect_ratio":"9:16","num_images":1,"output_format":"png"}'
 # -> 200 { imageUrl, images: [...] }
@@ -277,7 +276,7 @@ than your text — most likely the generated image as well.
 ```js
 let res, lastErr;
 for (let attempt = 1; attempt <= 4; attempt++) {
-  const r = await fetch(`${RECOUP_API ?? "https://api.recoupable.dev"}/api/content/image`, {
+  const r = await fetch("https://api.recoupable.dev/api/content/image", {
     method: "POST",
     headers: { Authorization: `Bearer ${RECOUP_ACCESS_TOKEN}`, "Content-Type": "application/json" },
     body: JSON.stringify(input),
@@ -321,7 +320,7 @@ reword a prompt that has not yet been retried.
 no `model` field to set and no lip-sync route (see the gate above).
 
 ```bash
-curl -sS -X POST "${RECOUP_API:-https://api.recoupable.dev}/api/content/video" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+curl -sS -X POST "https://api.recoupable.dev/api/content/video" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"<the motion>","image_url":"<still url>","duration":5,"resolution":"768P"}'
 # -> 200 { videoUrl }
@@ -395,10 +394,10 @@ So let the API's own JSON reach stdout:
 
 ```bash
 # ✅ the response body lands on stdout as JSON — the player renders
-curl -sS -X POST "${RECOUP_API:-https://api.recoupable.dev}/api/content/video" ... 
+curl -sS -X POST "https://api.recoupable.dev/api/content/video" ... 
 
 # ✅ same for the song, after polling to completion
-curl -sS "${RECOUP_API:-https://api.recoupable.dev}/api/music/$ID" ...
+curl -sS "https://api.recoupable.dev/api/music/$ID" ...
 
 # ❌ renders nothing: not JSON
 echo "attempt 1 OK"; echo "$URL"
