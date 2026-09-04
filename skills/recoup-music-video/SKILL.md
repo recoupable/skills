@@ -48,7 +48,11 @@ Never put an API key in the sandbox. Every paid call goes through the Recoup API
 **Call `$RECOUP_API`, never a hardcoded host.** The sandbox is handed the base of the deployment
 that spawned it; production resolves to `https://api.recoupable.dev`, a preview to its own
 deployment. Hardcoding prod 401s from a preview, because a preview's token is minted against a
-different Privy app (recoupable/api#891). Every call below defaults to prod if the var is missing.
+different Privy app. Every call below defaults to prod if the var is missing.
+
+**And let each API response's JSON reach stdout** — that is what makes the song, the stills and the
+clips play inline in the chat instead of arriving as bare links. See "Print every media URL to
+stdout as JSON" at the bottom; it applies to every media step, not just the final render.
 
 ## Length — compose FOR the budget, never truncate to it
 
@@ -377,17 +381,35 @@ at 2K, which took the stills line from ~$4.70 to ~$0.35 on a 33-shot film. Re-ch
 fal before committing, and pull real spend from the api project's production `FAL_KEY` account.
 
 
-## Hand back the URL on stdout
+## Print every media URL to stdout as JSON
 
-The chat renders a player from the media URL **in the tool result's stdout**, so the last thing this
-skill does is print it as JSON on one line:
+The chat renders an inline player from the media URL **in a bash result's stdout**, and it only
+reads well-known JSON fields — `audio_url`, `videoUrl`, `imageUrl` and friends. It parses stdout as
+JSON, so a bare URL on its own line renders **nothing**.
+
+**This applies at every step that produces media, not just the last one.** Verified 2026-09-03: a
+full run generated a real song, still and clip and rendered no players at all, because each
+generator printed `attempt 1 OK` and a bare URL instead of the API's response.
+
+So let the API's own JSON reach stdout:
 
 ```bash
-echo "{\"videoUrl\": \"$FINAL_URL\"}"
+# ✅ the response body lands on stdout as JSON — the player renders
+curl -sS -X POST "${RECOUP_API:-https://api.recoupable.dev}/api/content/video" ... 
+
+# ✅ same for the song, after polling to completion
+curl -sS "${RECOUP_API:-https://api.recoupable.dev}/api/music/$ID" ...
+
+# ❌ renders nothing: not JSON
+echo "attempt 1 OK"; echo "$URL"
+
+# ❌ renders nothing: redirected away from stdout
+curl -sS ... -o response.json
 ```
 
-Piping the final step through `jq`, redirecting it to a file, or only mentioning the URL in prose
-means no player renders and the person is handed a bare link. See recoupable/app#2052.
+If a step must post-process the response, print the raw JSON **as well**, on its own. Piping the
+final line through `jq -r`, redirecting it to a file, or only mentioning the URL in prose means no
+player renders and the person is handed a bare link. See recoupable/app#2052.
 
 ## Not yet (v2)
 
