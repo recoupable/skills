@@ -45,6 +45,14 @@ Chrome than the cached headless shell, and every render fails with
 Never put an API key in the sandbox. Every paid call goes through the Recoup API with
 `$RECOUP_ACCESS_TOKEN`, which meters credits and keeps our fal key server-side.
 
+The base is `https://api.recoupable.dev`, spelled out at every call below — the same way
+`recoup-platform-api-access` does it. There is no env var for it: a sandbox is handed
+`RECOUP_ACCESS_TOKEN` and `RECOUP_ORG_ID` and nothing else.
+
+**Let each API response's JSON reach stdout** — that is what makes the song, the stills and the
+clips play inline in the chat instead of arriving as bare links. See "Print every media URL to
+stdout as JSON" at the bottom; it applies to every media step, not just the final render.
+
 ## Length — compose FOR the budget, never truncate to it
 
 Free-tier accounts are capped at **15 seconds** of generated output. A music video is three to four
@@ -59,11 +67,11 @@ scene table, and say which you are building in the plan doc.
 Generate it, then poll:
 
 ```bash
-curl -sS -X POST "$RECOUP_API/api/music" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+curl -sS -X POST "https://api.recoupable.dev/api/music" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"<style, mood, vocals, instrumentation, BPM, key>","lyrics":"[verse]\n...","duration":15}'
 # -> 202 { generation: { id } }, Location: /api/music/{id}
-curl -sS "$RECOUP_API/api/music/<ID>" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"
+curl -sS "https://api.recoupable.dev/api/music/<ID>" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"
 # poll until status is complete, then read the audio url
 ```
 
@@ -170,11 +178,11 @@ quoted at **$0.01 per image** against Nano Banana 2's $0.08, and NB2 bills 2K ou
 ($0.12) — which is what our generators were actually set to. That is a 12x difference on a line we
 pay 30 to 40 times per film, so re-rolls stop being something to ration.
 
-All stills go through `POST $RECOUP_API/api/content/image` — never call fal directly, and never
+All stills go through `POST https://api.recoupable.dev/api/content/image` — never call fal directly, and never
 send a `model` field; the endpoint is pinned to Muse Image server-side:
 
 ```bash
-curl -sS -X POST "$RECOUP_API/api/content/image" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+curl -sS -X POST "https://api.recoupable.dev/api/content/image" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"<the shot>","aspect_ratio":"9:16","num_images":1,"output_format":"png"}'
 # -> 200 { imageUrl, images: [...] }
@@ -268,7 +276,7 @@ than your text — most likely the generated image as well.
 ```js
 let res, lastErr;
 for (let attempt = 1; attempt <= 4; attempt++) {
-  const r = await fetch(`${RECOUP_API}/api/content/image`, {
+  const r = await fetch("https://api.recoupable.dev/api/content/image", {
     method: "POST",
     headers: { Authorization: `Bearer ${RECOUP_ACCESS_TOKEN}`, "Content-Type": "application/json" },
     body: JSON.stringify(input),
@@ -312,7 +320,7 @@ reword a prompt that has not yet been retried.
 no `model` field to set and no lip-sync route (see the gate above).
 
 ```bash
-curl -sS -X POST "$RECOUP_API/api/content/video" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
+curl -sS -X POST "https://api.recoupable.dev/api/content/video" -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"<the motion>","image_url":"<still url>","duration":5,"resolution":"768P"}'
 # -> 200 { videoUrl }
@@ -372,17 +380,35 @@ at 2K, which took the stills line from ~$4.70 to ~$0.35 on a 33-shot film. Re-ch
 fal before committing, and pull real spend from the api project's production `FAL_KEY` account.
 
 
-## Hand back the URL on stdout
+## Print every media URL to stdout as JSON
 
-The chat renders a player from the media URL **in the tool result's stdout**, so the last thing this
-skill does is print it as JSON on one line:
+The chat renders an inline player from the media URL **in a bash result's stdout**, and it only
+reads well-known JSON fields — `audio_url`, `videoUrl`, `imageUrl` and friends. It parses stdout as
+JSON, so a bare URL on its own line renders **nothing**.
+
+**This applies at every step that produces media, not just the last one.** Verified 2026-09-03: a
+full run generated a real song, still and clip and rendered no players at all, because each
+generator printed `attempt 1 OK` and a bare URL instead of the API's response.
+
+So let the API's own JSON reach stdout:
 
 ```bash
-echo "{\"videoUrl\": \"$FINAL_URL\"}"
+# ✅ the response body lands on stdout as JSON — the player renders
+curl -sS -X POST "https://api.recoupable.dev/api/content/video" ... 
+
+# ✅ same for the song, after polling to completion
+curl -sS "https://api.recoupable.dev/api/music/$ID" ...
+
+# ❌ renders nothing: not JSON
+echo "attempt 1 OK"; echo "$URL"
+
+# ❌ renders nothing: redirected away from stdout
+curl -sS ... -o response.json
 ```
 
-Piping the final step through `jq`, redirecting it to a file, or only mentioning the URL in prose
-means no player renders and the person is handed a bare link. See recoupable/app#2052.
+If a step must post-process the response, print the raw JSON **as well**, on its own. Piping the
+final line through `jq -r`, redirecting it to a file, or only mentioning the URL in prose means no
+player renders and the person is handed a bare link. See recoupable/app#2052.
 
 ## Not yet (v2)
 
