@@ -17,8 +17,13 @@ description: >-
   **meeting prep for a booked call with a
   qualified customer** — producing the pitch, the meeting plan, and the PDFs to
   deliver; use when asked to "prep for the call", "what should I bring to the
-  meeting", "what's our pitch", or "what docs should we deliver". Requires
-  Stripe, Privy, Supabase, Attio, and Recoup API access.
+  meeting", "what's our pitch", or "what docs should we deliver". Also covers
+  **cold outreach** — finding people who have never touched Recoup (Exa Agent
+  API), verifying their email, researching how to position ALL our services
+  (product, audit, catalog videos, advisory) and drafting the first email; use
+  when asked to "find new leads", "do cold outreach", "find emails to contact",
+  "who should we reach out to that isn't a user", or "prospect indie labels".
+  Requires Stripe, Privy, Supabase, Attio, Recoup API, and Exa API access.
 ---
 
 # Recoup Sales Sweep
@@ -144,7 +149,10 @@ into retention on existing accounts.
    unless you make it happen: named-account research, inbound-adjacent communities,
    and the enterprise/custom-dev angle for any label or catalog-holder domain already
    in Attio. Hunting is not a data pull; it is a decision to spend the day differently.
-   New agency leads land on `agency_leads` at **New**.
+   New agency leads land on `agency_leads` at **New**. **The step-by-step hunting
+   motion is `references/cold-outreach.md`**: Exa Agent run → verify emails → research
+   the business → position across all services → earn one number → short one-link
+   email. First run 2026-09-06 cost $1.27 and sent one email the same afternoon.
 4. **Cap retention work.** Timebox existing-account work so it cannot consume the day.
    A zombie task or a stale follow-up is real, but it will never produce a new sale.
 
@@ -612,6 +620,7 @@ major-label exec, and a dormant power user. What actually mattered.
 
 ## Reference files
 
+- `references/cold-outreach.md` — hunting when the funnel is cold: Exa Agent API → email verification → research → all-services positioning → one-number, one-link email.
 - `references/meeting-prep.md` — prep for a booked call: the pitch, the meeting plan, the PDFs to deliver.
 - `references/credits-mechanics.md` — how `checkAndResetCredits` behaves, before you quote a balance.
 - `references/tooling-gotchas.md` — Privy / Stripe / Supabase / Attio quirks and dead columns.
