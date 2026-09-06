@@ -185,6 +185,34 @@ Rules that hold for every deliverable:
   YYYY-MM-DD-slug.md` with the research, the valuation ids, the email, and the post-send
   checklist and reply playbook. The operator sends.
 
+## 7b. Sending from the agent via Resend (when the operator says "send")
+
+The operator can send from their own inbox, or hand the send to the agent so Resend records
+opens and clicks. Decided 2026-09-06; the signature test was opened and clicked the same hour.
+
+- **Sender:** `from: "Patrick Sweetman <sweetman@recoupable.dev>"`, `reply_to:
+  "sweetman@recoupable.com"`. Only `recoupable.dev` is verified in Resend (open + click
+  tracking on at the domain level); `recoupable.com` is Google Workspace with DMARC quarantine
+  and is not in Resend, so a `from` there 403s. Replies still land in the operator's Google
+  inbox via Reply-To. The sent copy does not appear in Gmail's Sent folder, so the
+  `emails/sent/` file is the record.
+- **The house footer is mandatory on every agent send.** It lives in the operator's
+  workspace at `workspace/sales/cold-outreach/signature/` (`signature.html` + the inline icon
+  `recoup-icon-black.png`, attached with `content_id: recoup-icon` and referenced as
+  `cid:recoup-icon`; `README.md` has the colors and links). Black rounded icon, vertical bar,
+  bold name, "Cofounder, Recoup", then `recoupable.dev · LinkedIn · Schedule a meeting`
+  (Calendly). Do not retype it; read the file and append it to the HTML body. Send `html` and
+  `text` both (tracking needs HTML).
+- **Every send carries** `Idempotency-Key: cold-outreach/<lead-slug>-<YYYY-MM-DD>` and
+  `tags: [{campaign: cold-outreach}, {lead: <lead-slug>}]`. Key is the api project's
+  `RESEND_API_KEY`; pass it via a curl header file, not argv.
+- **Reading engagement:** `GET https://api.resend.com/emails/{id}` returns `last_event`
+  (`delivered` → `opened` → `clicked`); the per-event timeline is dashboard or webhooks only.
+  Record the Resend id in the sent file and the Attio note. An open with no reply by the
+  follow-up date changes the nudge (they saw it), a click changes it more (they went to the
+  page).
+- The Gmail sync will not create the Attio person for a Resend send; create it by hand.
+
 ## 8. Close out
 
 Same send loop as any other send: diff the sent copy against the draft (the operator will
