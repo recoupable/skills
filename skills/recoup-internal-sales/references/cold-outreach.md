@@ -172,11 +172,14 @@ Rules that hold for every deliverable:
 
 ## 7. Draft: short, one link, unslop
 
-- **2 to 4 sentences plus "Let me know how I can help."** Sentence one is what the
-  deliverable found (the number, the gap, the list). Sentence two is what we do for businesses
-  like theirs, tied to that. Sentence three is one small advancement we will do next ("if you
-  name a Fat Wreck artist, I will run the audit on them this week"). The work in the offer is
-  ours; the reader's only job is to answer.
+- **Cold means short: 2 to 3 sentences, then one yes/no question.** Sentence one is the
+  fact the deliverable found (the number, the gap, the ratio). Sentence two is the one thing
+  we do that the fact points at, carrying the link. The last line is a single question the
+  reader can answer with yes ("Want me to send you the first one for Mrs. Henry this
+  week?"). **No "Let me know how I can help", no sign-off line, no second offer.** That
+  close belongs to warm threads with existing customers, not to a first cold email. The
+  work in the offer is ours; the reader's only job is to answer the question. Operator
+  ruling 2026-09-06 after the first two sends ran to five sentences each.
 - **Exactly one link, deep** — the artist page carrying the number. No second link, no
   signature-only link.
 - **Run `unslop` on the draft** and grep the body for `—` before presenting it. No em dashes,
@@ -184,6 +187,34 @@ Rules that hold for every deliverable:
 - Draft file per SKILL.md's lead workspace: `workspace/sales/<lead>/emails/drafts/
   YYYY-MM-DD-slug.md` with the research, the valuation ids, the email, and the post-send
   checklist and reply playbook. The operator sends.
+
+## 7b. Sending from the agent via Resend (when the operator says "send")
+
+The operator can send from their own inbox, or hand the send to the agent so Resend records
+opens and clicks. Decided 2026-09-06; the signature test was opened and clicked the same hour.
+
+- **Sender:** `from: "Patrick Sweetman <sweetman@recoupable.dev>"`, `reply_to:
+  "sweetman@recoupable.com"`. Only `recoupable.dev` is verified in Resend (open + click
+  tracking on at the domain level); `recoupable.com` is Google Workspace with DMARC quarantine
+  and is not in Resend, so a `from` there 403s. Replies still land in the operator's Google
+  inbox via Reply-To. The sent copy does not appear in Gmail's Sent folder, so the
+  `emails/sent/` file is the record.
+- **The house footer is mandatory on every agent send.** It lives in the operator's
+  workspace at `workspace/sales/cold-outreach/signature/` (`signature.html` + the inline icon
+  `recoup-icon-black.png`, attached with `content_id: recoup-icon` and referenced as
+  `cid:recoup-icon`; `README.md` has the colors and links). Black rounded icon, vertical bar,
+  bold name, "Cofounder, Recoup", then `recoupable.dev · LinkedIn · Schedule a meeting`
+  (Calendly). Do not retype it; read the file and append it to the HTML body. Send `html` and
+  `text` both (tracking needs HTML).
+- **Every send carries** `Idempotency-Key: cold-outreach/<lead-slug>-<YYYY-MM-DD>` and
+  `tags: [{campaign: cold-outreach}, {lead: <lead-slug>}]`. Key is the api project's
+  `RESEND_API_KEY`; pass it via a curl header file, not argv.
+- **Reading engagement:** `GET https://api.resend.com/emails/{id}` returns `last_event`
+  (`delivered` → `opened` → `clicked`); the per-event timeline is dashboard or webhooks only.
+  Record the Resend id in the sent file and the Attio note. An open with no reply by the
+  follow-up date changes the nudge (they saw it), a click changes it more (they went to the
+  page).
+- The Gmail sync will not create the Attio person for a Resend send; create it by hand.
 
 ## 8. Close out
 
