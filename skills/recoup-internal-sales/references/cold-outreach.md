@@ -12,7 +12,9 @@ The whole run, in order:
 3. **Check they are not already ours** — Attio and Privy, before any research.
 4. **Research the person and the business** — what changed for them recently.
 5. **Position across ALL our services** — not just the valuation subscription.
-6. **Earn one fact** — run a real valuation from our account so the email opens with a number.
+6. **Earn one deliverable** — do one real thing for them from our account (a valuation, a
+   metadata run, a YouTube gap audit, a website proposal, a superfan list) chosen from the
+   research, so the email opens with what we found or built.
 7. **Draft short, one link, unslop** — and hand it to the operator.
 8. **Close out** — sent file, Attio (Agency Leads), follow-up task.
 
@@ -31,8 +33,9 @@ project; one variable shared across dev/preview/prod, so `api/.env.local` has it
   `medium`); the request 400s otherwise.
 
 ```bash
-K=$(grep -h '^EXA_API_KEY' api/.env.local | cut -d= -f2- | tr -d '"')
-curl -s -X POST https://api.exa.ai/agent/runs -H "x-api-key: $K" -H 'Content-Type: application/json' -d '{
+# Keep the key out of argv: write a curl header file once (0600), pass it with -H @file.
+umask 077; printf 'x-api-key: %s\n' "$(grep -h '^EXA_API_KEY' api/.env.local | cut -d= -f2- | tr -d '"')" > "$TMPDIR/exa.hdr"
+curl -s -X POST https://api.exa.ai/agent/runs -H @"$TMPDIR/exa.hdr" -H 'Content-Type: application/json' -d '{
   "query": "Find 8 people in the United States who own or run an independent record label or artist-management company with a catalog of released music on Spotify (5+ years of releases, 3+ artists). Exclude major labels and their subsidiaries and large distributors. For each person find their work email, LinkedIn URL, company name and website, roster size, and the label'"'"'s most streamed artist.",
   "effort": "auto",
   "budget": { "maxCostDollars": 3 },
@@ -47,7 +50,18 @@ curl -s -X POST https://api.exa.ai/agent/runs -H "x-api-key: $K" -H 'Content-Typ
       "why_fit": {"type":"string","description":"20 words or less: why catalog valuation and royalty tracking matter to them"}
     }}}}}
 }'
-# poll GET https://api.exa.ai/agent/runs/{id} until status != running; people are in .output.structured.people
+# Poll until a TERMINAL status. Exa returns queued first, then running; failed and cancelled
+# carry no usable output, so stop on those before reading .output.structured.people.
+ID=$(jq -r .id run-create.json)
+while :; do
+  curl -s https://api.exa.ai/agent/runs/$ID -H @"$TMPDIR/exa.hdr" > run.json
+  case "$(jq -r .status run.json)" in
+    completed) break ;;
+    failed|cancelled) echo "run $(jq -r .status run.json): $(jq -c .stopReason run.json)" >&2; exit 1 ;;
+    *) sleep 15 ;;
+  esac
+done
+jq -r '.output.structured.people[] | [.full_name,.company_name,.email,.email_source]|@tsv' run.json
 ```
 
 Write the ICP into the query, not the schema: geography, label type, catalog age, roster
@@ -92,8 +106,11 @@ Ten minutes, three questions, sources named in the draft file:
   2025-07-17; Posen elected A2IM Treasurer and to the Merlin board in 2026.)
 - **How do they say they make money?** Exec profiles and podcasts: deal structures, D2C vs
   DSP emphasis, artist-development language. Quote them back to themselves, sparingly.
-- **What is the biggest catalog they own that we can measure?** Pick the artist whose whole
-  catalog sits on their label (not one shared with another label), so the number is theirs.
+- **What can we do for them today, for real?** Read the business against the deliverable
+  menu in step 6: a catalog to value, a YouTube presence thinner than the catalog, a site
+  with no artist pages or store, a fan base they say they build from, a release to place. If
+  the answer is a catalog, pick the artist whose whole catalog sits on their label (not one
+  shared with another label), so the number is theirs.
 
 ## 5. Position across all our services
 
@@ -107,42 +124,59 @@ size of the business before drafting:
 | Indie label, 5+ artists, catalog 5+ years | **Agency** (Agency Leads) | release audit that re-runs weekly, $10 catalog videos, advisory; the number is the proof of work |
 | Label that just acquired or merged a catalog | Agency, lead with the audit | per-catalog baseline to track the integration against |
 
-Pick **one or two** services that the measured data points at. The 260-song, 29-year
-Lagwagon catalog with 16% of plays in one song points at the long tail: an audit of
-registrations, metadata and DSP presence, and a video for every catalog song. It does not
-point at a subscription. Advisory is held for the reply; a cold email that lists the whole
-menu reads as a sequence.
+Pick **one or two** services that the research and the deliverable (step 6) point at. The
+260-song, 29-year Lagwagon catalog with 16% of plays in one song points at the long tail: an
+audit of registrations, metadata and DSP presence, and a video for every catalog song. It
+does not point at a subscription. Advisory is held for the reply; a cold email that lists the
+whole menu reads as a sequence.
 
 Price only from a written offer. If the workspace has no rate card for a service, say so in
 the draft file and price from what the operator said (Zac precedent: audit milestone $1,200).
 
-## 6. Earn one fact
+## 6. Earn one deliverable
 
-Run a real valuation from **our** account before drafting, so the first line is a number
-the reader can check:
+A valuation is one option, not the rule. **The deliverable is whatever Recoup can do for this
+specific business that the research says they will care about**, across every API and every
+manual service we sell. Do it for real, from our account, before drafting, so the first line
+of the email is something we found or built for them, not something we offer to do.
 
-```bash
-curl -s -X POST https://api.recoupable.dev/api/valuation -H "Authorization: Bearer $RECOUP_API_KEY" \
-  -H 'Content-Type: application/json' -d '{"spotify_artist_id":"<id from /api/spotify/search>"}'
-# → catalog id + band; then GET /api/catalogs/{id}/measurements for total_streams,
-#   catalog_age_years and the top songs (value = plays); GET /api/artists for the artist id
-```
+Pick from the menu by matching the research (step 4) to the capability. One deliverable per
+email; the rest are the reply.
 
-The link goes to `https://chat.recoupable.dev/artists/{artist_account_id}` — verify it
-renders (it redirects to app.recoupable.dev; that is normal). The `/catalogs/{id}` page
-404s for a non-owner, so never link it. Their account is never written to.
+| Research said | Deliverable | How (all from our account, their account untouched) |
+| --- | --- | --- |
+| They own or just acquired a catalog | **Catalog valuation** with the concentration fact | `POST /api/valuation {spotify_artist_id}` → catalog id + band; `GET /api/catalogs/{id}/measurements` for `total_streams`, `catalog_age_years`, top songs; `GET /api/artists` for the artist id. Link `https://chat.recoupable.dev/artists/{artist_account_id}` (renders via app.recoupable.dev). Never link `/catalogs/{id}`; it 404s for non-owners. |
+| Deep catalog, thin YouTube presence | **YouTube gap audit**: which Spotify songs have no video, and the $10-per-video number | `GET /api/artists/{id}/socials` → the YouTube social id → `POST /api/socials/{yt_id}/scrape?posts=100` (read the videos off the scrape response; `/api/artists/{id}/posts` has no YouTube rows, chat#2017) → diff titles against `GET /api/catalogs/{id}/songs`. Offer the videos via the music-video workflow (`recoup-content-make-video`). |
+| Sync, licensing, discovery talk; messy back catalog | **Catalog metadata enhancement**: a sample of enriched mood / genre / sync tags for their songs | `GET /api/songs/analyze/presets` (catalog metadata enrichment preset) → `POST /api/songs/analyze` per song with `audio_url` → deliver 5-10 rows and the cost to run the whole catalog. |
+| D2C, superfans, "we build from the fans up" | **Superfan list**: the accounts commenting on their artist's posts | `POST /api/socials/{ig_id}/scrape?posts=30` → `GET /api/artists/{id}/fans`. Deliver the count and three named examples; the full list is the reply. |
+| Their website is missing something buyers or fans need | **Website proposal**: one concrete update we would build | `POST /api/research/extract {urls}` on their site → name the gap (no artist pages, no store link, no catalog list, no press kit) and the build. This is agency work; price per the written offer. |
+| Playlists, pitching, placements | **Placement targets** for one release | `recoup-research-playlist-targets` / `recoup-song-placement-pitch` from our account; deliver the top targets. |
+| They want to know what is happening weekly | **Tracking task**: a weekly stream / social / valuation report | `POST /api/tasks` on OUR account for their artist, deliver the first report; the subscription is the ask. |
+| Contacts, A&R, hiring | **People list** | `POST /api/research/people {query}` (Exa) from our account. |
 
-Present the number the house way: one precise dollar figure flat in the first line,
-"asset value at a 10 to 16x multiple on sustainable net label share, not a bid" after it,
-and for a catalog older than ~3 years say it averages history flat so trailing-twelve-months
-will read differently. Never soften the first line with a range.
+Rules that hold for every deliverable:
+
+- **Real, not promised.** The email says what we did and what it found. "I ran…", "I
+  scraped…", "I read your site and…". An offer to do it later is a brochure.
+- **Priced only from a written offer.** If the workspace has no rate card for the service
+  (audit, videos, build, advisory), say so in the draft file and price from what the operator
+  said (Zac precedent: audit milestone $1,200).
+- **Numbers the house way.** One precise figure flat in the first line. For a valuation:
+  "asset value at a 10 to 16x multiple on sustainable net label share, not a bid" after it,
+  and for a catalog older than ~3 years say it averages history flat so trailing-twelve-months
+  will read differently. Never soften the first line with a range.
+- **Our credits, their data untouched.** Everything runs on our account. Nothing is written
+  to theirs; they do not have one.
+- **Auth:** the Recoup API accepts `x-api-key: $RECOUP_API_KEY` (documented) or
+  `Authorization: Bearer` (also documented, works with `recoup_sk_` keys and Privy JWTs).
 
 ## 7. Draft: short, one link, unslop
 
-- **2 to 4 sentences plus "Let me know how I can help."** Sentence one is the number and
-  the concentration fact. Sentence two is what we do for businesses like theirs, tied to the
-  fact. Sentence three is one small advancement we will do ("tell me which artist and I will
-  run the audit this week"). Offers are things we do, never instructions to the reader.
+- **2 to 4 sentences plus "Let me know how I can help."** Sentence one is what the
+  deliverable found (the number, the gap, the list). Sentence two is what we do for businesses
+  like theirs, tied to that. Sentence three is one small advancement we will do next ("if you
+  name a Fat Wreck artist, I will run the audit on them this week"). The work in the offer is
+  ours; the reader's only job is to answer.
 - **Exactly one link, deep** — the artist page carrying the number. No second link, no
   signature-only link.
 - **Run `unslop` on the draft** and grep the body for `—` before presenting it. No em dashes,
@@ -155,10 +189,13 @@ will read differently. Never soften the first line with a range.
 
 Same send loop as any other send: diff the sent copy against the draft (the operator will
 change things; record the commitments as sent), write `emails/sent/…`, `EMAILS.md`, then in
-Attio create the person if the Gmail sync did not, the **Agency Leads** entry (`stage` New,
-`buyer_or_referrer`, `project_type`, `owner`; leave `est_project_value` empty), the sent-log
-note naming the local file and the reply playbook, and a dated follow-up task written as a
-runbook. A cold lead never goes on Valuation Leads unless they ran a valuation themselves.
+Attio create the person if the Gmail sync did not, then **check before creating the list
+entry**: `GET /v2/objects/people/records/{record_id}/entries` and reuse any `agency_leads`
+entry already there (a re-run must not duplicate). Otherwise `POST /v2/lists/agency_leads/
+entries` with `stage` New, `buyer_or_referrer`, `project_type`, `owner` (status and option
+values are accepted by title; resolve ids from `/v2/lists/agency_leads/attributes` if the
+workspace renames them); leave `est_project_value` empty. Then the sent-log note naming the
+local file and the reply playbook, and a dated follow-up task written as a runbook. A cold lead never goes on Valuation Leads unless they ran a valuation themselves.
 
 ## What the first run cost and returned
 
@@ -166,5 +203,5 @@ runbook. A cold lead never goes on Valuation Leads unless they ran a valuation t
 | --- | --- | --- |
 | Exa Agent run (auto, $3 cap) | $1.27 (9 emails, 28 searches) | 8 people, 8 candidate emails |
 | Verification | $0 (SMTP + curl) | 3 verified, 1 published-on-catch-all, 4 catch-all unverified |
-| Recoup valuation (our credits) | one run | Lagwagon $372,110, 260 songs, 265.7M streams |
+| Deliverable (valuation, our credits) | one run | Lagwagon $372,110, 260 songs, 265.7M streams |
 | Email | operator sent same day | Hopeless Records → Agency Leads, follow-up 5 days out |

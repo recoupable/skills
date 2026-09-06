@@ -70,6 +70,9 @@ for step 6), **`recoup-platform-api-access`** (raw Recoup API).
 - Stripe: authenticated CLI **or** a live restricted key (pass `--api-key` — the
   keychain is often unreadable in sandboxed shells).
 - `PRIVY_APP_ID` + `PRIVY_PROJECT_SECRET` — Privy Management API.
+- `EXA_API_KEY` — cold outreach only (`references/cold-outreach.md`). It is the api
+  project's Vercel variable (one value across dev/preview/prod), so read it from
+  `api/.env.local`; the same key backs `POST /api/research/people`.
 
 Everything is a GET or SELECT **except** the two sanctioned writes named in
 Guardrails (Attio follow-ups; disabling a confirmed-dead task). Outreach is
@@ -151,8 +154,9 @@ into retention on existing accounts.
    in Attio. Hunting is not a data pull; it is a decision to spend the day differently.
    New agency leads land on `agency_leads` at **New**. **The step-by-step hunting
    motion is `references/cold-outreach.md`**: Exa Agent run → verify emails → research
-   the business → position across all services → earn one number → short one-link
-   email. First run 2026-09-06 cost $1.27 and sent one email the same afternoon.
+   the business → position across all services → earn one deliverable (valuation,
+   metadata run, YouTube gap audit, website proposal, superfan list) → short
+   one-link email. First run 2026-09-06 cost $1.27 and sent one email the same afternoon.
 4. **Cap retention work.** Timebox existing-account work so it cannot consume the day.
    A zombie task or a stale follow-up is real, but it will never produce a new sale.
 
@@ -620,7 +624,7 @@ major-label exec, and a dormant power user. What actually mattered.
 
 ## Reference files
 
-- `references/cold-outreach.md` — hunting when the funnel is cold: Exa Agent API → email verification → research → all-services positioning → one-number, one-link email.
+- `references/cold-outreach.md` — hunting when the funnel is cold: Exa Agent API → email verification → research → all-services positioning → one real deliverable → one-link email.
 - `references/meeting-prep.md` — prep for a booked call: the pitch, the meeting plan, the PDFs to deliver.
 - `references/credits-mechanics.md` — how `checkAndResetCredits` behaves, before you quote a balance.
 - `references/tooling-gotchas.md` — Privy / Stripe / Supabase / Attio quirks and dead columns.
