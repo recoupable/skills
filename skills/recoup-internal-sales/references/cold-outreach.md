@@ -172,11 +172,14 @@ Rules that hold for every deliverable:
 
 ## 7. Draft: short, one link, unslop
 
-- **2 to 4 sentences plus "Let me know how I can help."** Sentence one is what the
-  deliverable found (the number, the gap, the list). Sentence two is what we do for businesses
-  like theirs, tied to that. Sentence three is one small advancement we will do next ("if you
-  name a Fat Wreck artist, I will run the audit on them this week"). The work in the offer is
-  ours; the reader's only job is to answer.
+- **Cold means short: 2 to 3 sentences, then one yes/no question.** Sentence one is the
+  fact the deliverable found (the number, the gap, the ratio). Sentence two is the one thing
+  we do that the fact points at, carrying the link. The last line is a single question the
+  reader can answer with yes ("Want me to send you the first one for Mrs. Henry this
+  week?"). **No "Let me know how I can help", no sign-off line, no second offer.** That
+  close belongs to warm threads with existing customers, not to a first cold email. The
+  work in the offer is ours; the reader's only job is to answer the question. Operator
+  ruling 2026-09-06 after the first two sends ran to five sentences each.
 - **Exactly one link, deep** — the artist page carrying the number. No second link, no
   signature-only link.
 - **Run `unslop` on the draft** and grep the body for `—` before presenting it. No em dashes,
