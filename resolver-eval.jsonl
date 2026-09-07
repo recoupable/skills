@@ -32,7 +32,7 @@
 {"intent": "enrich this record label with structured facts and recent news", "expected": "recoup-research-the-web"}
 
 # --- song (audio-grounded) ---
-{"intent": "generate an original song for this ad, no existing recording", "expected": "recoup-minimax-music-3", "not": ["recoup-music-video", "recoup-song-analyze-audio"]}
+{"intent": "Review MiniMax Music 3 model-specific caption structure and lyric timing lessons from past songs", "expected": "recoup-minimax-music-3", "not": ["recoup-music-video", "recoup-song-analyze-audio"]}
 {"intent": "analyze this track's audio, bpm key genre and a mix critique", "expected": "recoup-song-analyze-audio"}
 {"intent": "find the best 15 seconds of this song to clip", "expected": "recoup-song-find-hook", "not": ["recoup-content-make-video"]}
 {"intent": "write a playlist pitch and sync brief for this single from the audio", "expected": "recoup-song-placement-pitch", "not": ["recoup-research-playlist-targets"]}
@@ -93,3 +93,5 @@
 {"intent": "turn this track into a music video", "expected": "recoup-music-video"}
 {"intent": "I want a music video about a couple living through an earthquake", "expected": "recoup-music-video"}
 {"intent": "recoup-internal scrape our socials, pick today's topic and build the video", "expected": "recoup-internal-marketing", "not": ["recoup-music-video"]}
+{"intent": "Create a song using the Recoup API, asking me to approve the idea, genre, lyrics and generation", "expected": "recoup-song", "not": ["recoup-minimax-music-3", "recoup-content-make-video"]}
+{"intent": "Make an original song for my new paper-animation video; start with the song idea", "expected": "recoup-song", "not": ["recoup-song-analyze-audio"]}
