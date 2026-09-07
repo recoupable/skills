@@ -29,9 +29,48 @@ Two real builds inform the craft below: **LETAL XLUG (brauxelion's verse)**, shi
 artist-approved 2026-08-28, and **Movamos el Mundo (Tomás Mika)**, stopped mid-build 2026-09-01 by
 the artist's own feedback. Everything here that costs money was learned by spending it.
 
+## Start the video with an approved story bible
+
+**Approved song → approved `BIBLE.md` → song map and scene table → stills → motion → render.**
+If the song has already been generated and approved in this session, use that exact recording,
+lyric sheet and measured timings; skip song generation. For a new song, complete §1 first.
+The bible is the starting point for visual development, before scaffolding the video project
+or writing image and motion prompts.
+
+Load [Higgsfield Character Design — Story Bible](https://github.com/OSideMedia/higgsfield-ai-prompt-skill/tree/c0b73ab946df6658cca513db78bdc3909a655bfd/skills/higgsfield-character-design)
+for the pre-production method. This community skill adapts Higgsfield's character-design
+framework by **@vavavinca**. Its companion
+[Higgsfield Pipeline](https://github.com/OSideMedia/higgsfield-ai-prompt-skill/tree/c0b73ab946df6658cca513db78bdc3909a655bfd/skills/higgsfield-pipeline)
+treats the project bible as the source of truth shared by later production steps.
+Use their story-development method with Recoup's generation workflow; their model and
+platform handoffs do not replace the API routes in this skill. The essentials are included
+below so this skill remains usable when the external source cannot be loaded; disclose that
+limitation instead of claiming to have read it.
+
+Write one reusable `BIBLE.md` in the film's project directory, in this order:
+
+1. **Premise:** the claim the film explores, its counter-argument, and the feeling it promises.
+2. **World:** physical setting, social and economic pressures, beliefs, history and sensory
+   details, scoped to what this particular film needs.
+3. **Characters:** goals, needs, wound, motivation, silhouette, contradiction and relationships.
+   Establish the world before casting; follow §3 for invented characters and artist likeness.
+4. **Story spine:** causal beats that develop the approved song's emotional progression.
+   Each beat changes what can happen next; identify the turning point and the ending.
+5. **Style sheet:** palette, lighting, materials, proportions, camera and movement rules,
+   wardrobe, props, continuity rules and forbidden elements. Carry forward the user's visual
+   constraints; if the song is to determine the style, derive it here from the approved audio.
+
+Record the approved audio source and measured length in the bible. Propose missing creative
+choices as a draft rather than silently treating them as approved. Show the bible to the user
+and obtain approval before generating plates, character references, scene stills or motion.
+Reuse an existing approved bible and fill only missing decisions; don't restart its approval
+merely because the conversation resumed. Later prompts must draw their world, character and
+style constants from this file. If a revision changes those decisions, update the bible and
+get approval for the affected changes before continuing production.
+
 ## Scaffold — you start from nothing
 
-There is no reference project to clone. Stand the project up in the sandbox:
+After bible approval, stand the project up in the sandbox; there is no reference project to clone:
 
 ```bash
 ffmpeg -version                        # in the base image; fail loudly if absent
@@ -153,7 +192,8 @@ more.
 
 ## 5. Song map and scene table
 
-Sections (`Intro / Verse / Hook / Break / Tail`) with a lyric anchor each, then a scene table on top.
+Build from the approved `BIBLE.md`: sections (`Intro / Verse / Hook / Break / Tail`) with a lyric
+anchor each, then a scene table on top.
 **Every beat ≤6.5s** (`references/hooks.md`). Each row carries: window, beat, still prompt, motion
 prompt, and whether the mouth is visible — deciding that in the table is what keeps unsynced,
 mouth-visible framing out of the shot list before any motion spend, not after.
