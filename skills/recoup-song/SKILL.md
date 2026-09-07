@@ -40,8 +40,8 @@ wants the music to determine the visuals, leave the visuals undecided until they
 
 Ask for the idea if none was supplied, or propose one from the current brief. Present:
 what the song is about, narrator or point of view, intended listener, emotional change,
-and the central hook idea. Include the intended use, language, and approximate length
-when known; mark suggested choices as proposals.
+and the central hook idea. Include the intended use and language. Let the idea develop
+without proposing a time limit; record a creative length constraint only when the user supplies one.
 
 Do not silently reuse a previous song concept. Do not pick a genre or write lyrics yet.
 Ask: **"Is this the song idea you want to develop, or what should change?"**
@@ -102,10 +102,21 @@ singable phrasing. Use section tags on their own lines, normally `[Intro]`, `[Ve
 `[Pre-Chorus]`, `[Chorus]`, `[Post-Chorus]`, `[Bridge]`, `[Instrumental]`, `[Solo]`, `[Outro]`.
 Keep production prose in the prompt, not in lines that could be sung.
 
-Reconcile syllable load, phrase lengths, section count, tempo, instrumental gaps, and duration.
-The house estimate of ten sung lines per minute is only a starting heuristic: it is not a
-model constraint and does not replace musical timing. Avoid both an overfilled short request
-and a long empty outro. Keep repeated choruses stable unless variation is intentional.
+Let the lyrics and arrangement determine the song's natural length. Reconcile syllable load,
+phrase lengths, section count, tempo, and instrumental gaps without choosing a shorter API
+duration from an estimated runtime. The house estimate of ten sung lines per minute is only
+a starting heuristic, not a model constraint. Keep repeated choruses stable unless variation
+is intentional, and write a complete ending without an extended empty outro.
+
+**Default to the maximum supported API duration: currently `duration: 300` seconds.**
+Send it explicitly; omitting the field uses the API's shorter 60-second default. This gives
+the model room to finish the full song instead of requesting an estimated 45-, 60-, or
+150-second runtime that may cut it off. It is generation headroom, not a requirement to
+compose five minutes of music: do not pad lyrics, repeat sections, stretch the outro, or
+instruct the prompt to fill 300 seconds. Request a natural ending after the approved sections.
+Use a shorter API duration only when the user explicitly requests that limit. A short video
+or an estimated song length alone does not override this default. Recheck the supported
+maximum before generation; maximum headroom does not guarantee a complete take.
 
 Build the prompt using the [official music-caption-rewriter method](https://github.com/MiniMax-AI/MiniMax-Music3/tree/945655064d59b98004dd70002e7eb5c8c6e11373/skills/music-caption-rewriter):
 read the primary family index, optionally one secondary, then at most three compatible
@@ -123,8 +134,10 @@ The exact `prompt` contains three sections:
 - **Arrangement:** a timeline matching the lyric sections, with concrete instrument entrances,
   exits, energy changes, transitions and ending. Keep lyric lines out of the prompt.
 
-Show the **entire lyrics and exact prompt**, plus requested duration and any optional seed.
-Ask: **"Do you approve these exact lyrics, prompt and duration, or what should change?"**
+Show the **entire lyrics and exact prompt**, plus the API duration (default: maximum
+generation headroom, currently 300 seconds) and any optional seed. Distinguish API headroom
+from any estimated musical runtime.
+Ask: **"Do you approve these exact lyrics, prompt and API duration, or what should change?"**
 Wait. Do not run the API or rewrite an approved prompt silently.
 
 ## 4. Recoup API call
@@ -134,8 +147,11 @@ checks. Prepare the exact request with the approved prompt, lyrics and duration.
 
 - `POST https://api.recoupable.dev/api/music` and a sanitized request preview;
 - the resolved account being charged, requested duration, and number of takes (default one);
-- the current Recoup credit estimate and its source, or explicitly state if it cannot be verified.
-  Do not substitute historical provider cost for the user's Recoup charge.
+- the current Recoup credit precheck/maximum quote for the requested duration and its source,
+  or explicitly state if it cannot be verified. Explain that successful billing uses actual
+  generated duration, capped at the quote; if the provider reports no usable duration, the
+  API falls back to the requested-duration charge. Do not promise actual-only billing without
+  that qualification or substitute historical provider cost for the user's Recoup charge.
 
 Ask: **"Approve this Recoup API request for one take on this account?"** Wait for explicit approval
 of the displayed request and spending scope. Only then submit, record the returned generation ID,

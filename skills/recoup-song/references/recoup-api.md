@@ -9,6 +9,7 @@ Check the current contract before generation if fields, pricing, or behavior hav
 - [OpenAPI](https://docs.recoupable.dev/api-reference/openapi/content.json)
 - [Request validator](https://github.com/recoupable/api/blob/main/lib/music/validateCreateMusicBody.ts)
 - [Recoup music pricing](https://github.com/recoupable/api/blob/main/lib/music/creditCostForDuration.ts)
+- [Completed-generation billing](https://github.com/recoupable/api/blob/071ff9b6dd02fa338128b193713604dd989f5dc1/lib/music/creditsForCompletedGeneration.ts)
 
 ## Authenticate and resolve ownership before the call gate
 
@@ -29,7 +30,7 @@ use a test account. Organizations use `account_id`, not `organization_id`.
 |---|---|
 | `prompt` | Required nonempty string: exact approved structured caption |
 | `lyrics` | Required nonempty string: exact approved tagged lyrics; for instrumental music use section tags without sung words |
-| `duration` | Seconds, 10–300 inclusive; API default 60. Send the approved value explicitly; output duration may differ. |
+| `duration` | Seconds, 10–300 inclusive; API default 60. **Skill default: explicitly send 300**, the supported maximum, unless the user requests a shorter API limit. Output duration may differ. |
 | `account_id` | Optional UUID ownership override, authorized by the API |
 | `seed` | Optional integer; include only when part of the reviewed request |
 | `num_inference_steps` | Optional integer, 1–100, default 30; normally omit |
@@ -40,10 +41,19 @@ The request schema is strict: extra fields fail. There is no `model`, `title`, `
 Store the body as JSON through a serializer; preserve actual newlines in prompt/lyrics.
 Never interpolate those strings into shell source.
 
+Treat the maximum request as headroom for the full song, not its intended musical length.
+Do not substitute a runtime estimate for `duration`, omit the field, or pad the composition
+to fill the maximum. Verify the supported maximum before generation.
+
 Historical pricing snapshot: Recoup source on 2026-09-07 set music to $0.002 per output second,
 with pass-through pricing and credit conversion. Verify the current rate and credit unit before
-showing an estimate; requested duration governs the credit precheck, actual output length governs
-the successful charge. Do not report an estimate as an observed deduction. Failed generations
+showing an estimate. Requested duration governs the credit precheck and maximum quote.
+Successful billing uses the provider-reported actual output duration, capped at that quote.
+If the reported duration is missing, non-finite, or non-positive, the API instead charges the
+requested-duration quote. At this snapshot's rate, a 300-second request requires a $0.60
+credit precheck; a valid 150-second output costs $0.30, while missing duration falls back to
+$0.60. This is why the skill requests maximum headroom by default without promising an
+unconditional actual-only charge. Do not report an estimate as an observed deduction. Failed generations
 are documented as uncharged; plan/subscription fees are not part of this generation estimate.
 
 ## Submit only after gate 4
