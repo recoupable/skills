@@ -1,5 +1,5 @@
 ---
-name: recoup-create-song
+name: recoup-song
 description: Create an original song through the Recoup API with user approval at each stage — idea, genre, lyrics and prompt, then generation. Use for making a new song or a song for a video, including requests to choose a MiniMax Music 3 genre. Builds on recoup-minimax-music-3 production notes. Stops at the audio; does not make or publish a video.
 ---
 

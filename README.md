@@ -53,7 +53,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 
 | Skill | What it does |
 |-------|-------------|
-| recoup-create-song | Original song through Recoup: approved idea, genre, lyrics/prompt, then API call |
+| recoup-song | Original song through Recoup: approved idea, genre, lyrics/prompt, then API call |
 | recoup-song-analyze-audio | Understand a song from its audio (BPM/key/genre, lyrics, mix) |
 | recoup-song-find-hook | Find the most clip-worthy 5–15 seconds |
 | recoup-song-placement-pitch | Playlist/editorial pitch + sync brief from the audio |

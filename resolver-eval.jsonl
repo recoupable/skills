@@ -93,5 +93,5 @@
 {"intent": "turn this track into a music video", "expected": "recoup-music-video"}
 {"intent": "I want a music video about a couple living through an earthquake", "expected": "recoup-music-video"}
 {"intent": "recoup-internal scrape our socials, pick today's topic and build the video", "expected": "recoup-internal-marketing", "not": ["recoup-music-video"]}
-{"intent": "Create a song using the Recoup API, asking me to approve the idea, genre, lyrics and generation", "expected": "recoup-create-song", "not": ["recoup-minimax-music-3", "recoup-content-make-video"]}
-{"intent": "Make an original song for my new paper-animation video; start with the song idea", "expected": "recoup-create-song", "not": ["recoup-song-analyze-audio"]}
+{"intent": "Create a song using the Recoup API, asking me to approve the idea, genre, lyrics and generation", "expected": "recoup-song", "not": ["recoup-minimax-music-3", "recoup-content-make-video"]}
+{"intent": "Make an original song for my new paper-animation video; start with the song idea", "expected": "recoup-song", "not": ["recoup-song-analyze-audio"]}
