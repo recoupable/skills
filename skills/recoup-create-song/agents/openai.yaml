@@ -1,0 +1,4 @@
+interface:
+  display_name: "Recoup Create Song"
+  short_description: "Create songs through four approval gates"
+  default_prompt: "Use $recoup-create-song to develop an original song, starting with my idea and waiting for my approval at each stage."
