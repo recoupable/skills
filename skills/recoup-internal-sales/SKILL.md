@@ -1,32 +1,29 @@
 ---
 name: recoup-internal-sales
 description: >-
-  INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke
-  ONLY when the request explicitly includes "recoup-internal" (e.g.
-  "recoup-internal run the sales sweep"). Never use for customer-facing or
-  artist requests.
-  Run Recoup's daily sales sweep — walk the whole activity surface (Stripe
-  payments, Privy logins, new catalog valuations, BOTH Attio funnels (Valuation
-  Leads for subscriptions and Agency Leads for custom-build/advisory work),
-  Supabase credits, scheduled tasks, and chats), turn each signal into a
-  prioritized follow-up, then act on it: log the follow-up in Attio and draft
-  (never send) outreach. Use when asked to "run the sales sweep", "who should we
-  follow up with", "work the sales pipeline", "any new customers to reach out
-  to", "who signed in / paid / ran a valuation", "who's about to churn", "what's
-  in the agency pipeline", or "find zombie tasks we can turn off". Also covers
-  **meeting prep for a booked call with a
-  qualified customer** — producing the pitch, the meeting plan, and the PDFs to
-  deliver; use when asked to "prep for the call", "what should I bring to the
-  meeting", "what's our pitch", or "what docs should we deliver". Also covers
-  **cold outreach** — finding people who have never touched Recoup (Exa Agent
-  API), verifying their email, researching how to position ALL our services
-  (product, audit, catalog videos, advisory) and drafting the first email; use
-  when asked to "find new leads", "do cold outreach", "find emails to contact",
-  "who should we reach out to that isn't a user", or "prospect indie labels".
-  Requires Stripe, Privy, Supabase, Attio, Recoup API, and Exa API access.
+  INTERNAL Recoup staff sales workflow; invoke only for requests explicitly naming
+  recoup-internal. Run the daily sales sweep across Stripe, Privy, valuations,
+  both Attio funnels, credits, tasks, chats, and email history. Research and
+  prioritize customers and cold prospects, maintain CRM follow-ups, and prepare
+  outreach and meeting materials. Every email requires the user's explicit
+  approval of the exact reviewed draft before sending. Use for sales sweeps,
+  pipeline follow-up, cold outreach, new-lead research, and qualified-call prep.
+  Requires Recoup API, Attio, Stripe, Privy and Supabase access; Exa for cold research.
+  Never use for customer-facing or artist requests.
 ---
 
 # Recoup Sales Sweep
+
+**No email leaves this workflow before the user reviews and explicitly approves
+that exact draft for sending.** A request to act as CSO, run the sweep, contact a
+quota, or "send outreach today" authorizes preparation, not unreviewed sends.
+This applies to customers, cold prospects, replies, follow-ups, and test emails,
+through every sender and tool. An available credential is not approval.
+
+Read `references/outreach-approval.md` before preparing outreach. It defines the
+quality review, the approval record, and the final check before a send. References,
+subagents, scheduled jobs, and send helpers must follow the same boundary. Missing
+or ambiguous approval means **awaiting approval**, never an inferred yes.
 
 The repeatable **prospecting + follow-up** motion for Recoup staff. Eight data
 pulls plus one synthesis: read every place a sales signal shows up, collapse it
@@ -74,9 +71,11 @@ for step 6), **`recoup-platform-api-access`** (raw Recoup API).
   project's Vercel variable (one value across dev/preview/prod), so read it from
   `api/.env.local`; the same key backs `POST /api/research/people`.
 
-Everything is a GET or SELECT **except** the two sanctioned writes named in
-Guardrails (Attio follow-ups; disabling a confirmed-dead task). Outreach is
-**always drafted for a human to send**, never sent from this skill.
+Research and drafting do not authorize sending. Attio follow-ups and confirmed-dead
+task changes follow Guardrails; an email is a separate action requiring the exact-draft
+approval in `references/outreach-approval.md`. Prepare the complete review packet before
+asking. Do not call an endpoint that creates an account or triggers an email as a
+research shortcut; check side effects before running a report, valuation, or task.
 
 ## Source order — dogfood the API first
 
@@ -93,7 +92,7 @@ SQL query would have surfaced.
 | A customer's tasks | `GET /api/tasks?account_id=` | Returns `owner_email`, `model`, `next_run`, `upcoming`, `recent_runs`, `trigger_schedule_id` — **none of which exist as columns** on `scheduled_actions`. A schedule that will never fire is only visible here. |
 | An artist's socials | `GET /api/artists?account_id=` | Socials are **embedded** as `account_socials`; the hand-rolled `accounts → account_socials → socials` join is where mistakes happen. |
 | Remove an artist | `DELETE /api/artists/{id}` | Encodes the last-owner check and the fail-closed song-dependency guard. Raw SQL skips both. |
-| Email → account | `POST /api/accounts` | One call vs. a `account_emails` lookup. |
+| Email → existing account | Read-only `account_emails` lookup | `POST /api/accounts` can create the account and email them; never use it for sales discovery. |
 | Refresh a profile | `POST /api/socials/{id}/scrape` | Real scrape; SQL only shows you stale rows. |
 
 **Admin cross-account access.** An admin Privy JWT plus an `account_id` override
@@ -399,8 +398,9 @@ ORDER BY ae.email NULLS LAST, sa.title;
      sales sequence and costs the warmer thread.
 4. **Act:** write the follow-ups into Attio (create/advance entries, set `owner` +
    next step) and draft each outreach. Present the ranked list + drafts to the
-   operator to send. Before drafting for any selected contact, build their
-   four-source dossier (next section).
+   operator for explicit draft approval. Do not count drafts as contacts or send
+   to fill a quota. Before drafting for any selected contact, build their
+   four-source dossier (next section) and review the actual correspondence.
 
 ## The contact dossier — before any outreach is drafted
 
@@ -423,6 +423,13 @@ sets the "returning vs. new" frame, the Stripe row sets the ask (rescue vs.
 upgrade vs. retention), the chats row tells you what they actually tried to do
 in their own words (titles are admin-readable), and the Resend row is what
 "we" have already said to them.
+
+**Product activity is not the conversation.** Read the actual latest human inbound
+and outbound emails, promises, meeting outcomes, and relationship owner before
+choosing the ask. CRM summaries and delivery receipts cannot establish what the
+customer wants now. If the thread is unavailable, flag that in the review packet;
+do not silently assume no reply, an unanswered question, or permission to restart
+an old proposal. Respect owner and no-contact restrictions when selecting contacts.
 
 Then extend the dossier with four product-side tables — what the contact has
 actually *done* with Recoup, in their own timeline:
@@ -455,9 +462,12 @@ Files are `YYYY-MM-DD-slug.md`. Rules that keep the record trustworthy:
 
 - **`EMAILS.md` is the index, `emails/` is the evidence.** The index entry links to the
   file; the file holds the words. Never let a loose `DRAFT-*.md` sit at the folder root.
-- **The sent file is the operator's copy, not the draft.** Step 3 of the send loop
-  ("diff what actually went out") ends by writing the sent text to `emails/sent/`; a
-  draft promoted to "sent" without the diff is how the record and the inbox drift apart.
+- **Keep approval evidence beside the versioned draft.** Record the user's exact
+  approval, its message reference or time, and the draft version it covers. Follow
+  `references/outreach-approval.md`; never manufacture an approval record from a quota.
+- **The sent file is the verified sent copy, not the draft.** The send loop ends by
+  retrieving and comparing what actually went out before writing `emails/sent/`;
+  saving a draft, scheduling a task, or making an Attio note does not make it sent.
 - **Every inbound reply gets a `received/` file the day it arrives**, even a one-liner.
   The 2026-08-25 reorg of two live accounts found one sent email that existed only in
   Attio and two replies that existed only in Gmail; the reorg is what surfaced them.
@@ -468,15 +478,16 @@ Files are `YYYY-MM-DD-slug.md`. Rules that keep the record trustworthy:
 
 ## The send loop — dossier to closed-out record
 
-The per-contact motion that converts. Run it identically for every send;
-the 2026-07-29 run repeated it seven for seven with same-day replies from
-cold contacts.
+Run this sequence for every message: research → quality review → present exact
+draft → await user approval → send only the approved version → verify and log.
+Each message needs its own approval or inclusion in an explicitly approved batch
+of unchanged versions. Approval of an unrelated previous send does not carry over.
 
 1. **Fix, then tell.** The dossier almost always surfaces account defects —
    duplicate artists or tasks, unconnected socials, blocked balances, schedules
-   that won't deliver. Repair the unambiguous ones via the API *before*
-   drafting, and open the email with what you did ("While looking at your
-   account I fixed two things you shouldn't have had to deal with"). The
+   that won't deliver. Repair only within the authorized scope via the API *before*
+   drafting; never trigger an unapproved email as part of a fix. Open with the specific
+   repair and its result, not a generic announcement that you reviewed the account. The
    specific observed detail is what makes outreach read personal; a fix already
    delivered is what makes it worth answering.
 2. **Draft in the house voice.** Open with the concrete observation, never
@@ -505,13 +516,19 @@ cold contacts.
    [skills.sh/cursor/plugins/unslop](https://www.skills.sh/cursor/plugins/unslop)
    (`npx skills add` — it installs at user level and applies to all writing).
    The pass edits the draft in place; meaning and commitments must survive it
-   unchanged.
-3. **The operator sends; diff what actually went out.** Read the sent copy
-   (from the CRM email sync, or the operator's paste) against your draft. Any
-   commitment the operator added or changed becomes the follow-up task's
-   content — the record must match the inbox, not the draft. Write the sent
-   text to `emails/sent/` (see The lead workspace) before closing out.
-4. **Close out every send the same way:** complete the open task the send
+   unchanged. Then apply the quality review in `references/outreach-approval.md`.
+   Style cleanup, a factual detail, and a product link alone do not make a useful email.
+3. **Present the complete draft and wait for approval.** Show the recipient list,
+   sender/reply-to, subject, exact body including footer, links and attachments,
+   plus the reason to contact and any missing context or new commitments. Record
+   explicit user approval of that version. Do not send while the user is reviewing.
+4. **Send only the approved version; verify what went out.** Immediately before
+   invoking any send tool, compare its complete payload with the approved draft.
+   Follow `references/outreach-approval.md` for changes, subsets, retries, and
+   missing approval. The operator can instead send personally; retrieve their
+   actual sent copy from the CRM/email provider or their paste and record any
+   changed commitments. Write verified text to `emails/sent/` before closing out.
+5. **Close out every send the same way:** complete the open task the send
    fulfilled; write a sent-log note stating what was promised **and the reply
    playbook** (what to do for each likely reply); do the **keep-a-lead-warm
    trio — set `owner`, log the note, create a dated follow-up task** (a
@@ -520,13 +537,15 @@ cold contacts.
    decision rules — executable by a cold reader; set the stage to what the
    email actually did (a Pro pitch → Pro Offer Sent; delivering the number →
    Report Delivered; a retention touch → no stage change).
-5. **On reply, run the playbook same-day.** Log the reply; if the sender is
-   not who the record says, correct the identity immediately (rename, split
+6. **On reply, prepare the playbook same-day.** A reply does not approve our next
+   email. Research, do authorized work, and present the next draft for approval.
+   Log the reply; if the sender is not who the record says, correct the identity
+   immediately (rename, split
    the people, fix future greetings); pay for substantive product feedback on
    the spot (grant, verify the balance landed, say so in the reply);
    reproduce any reported bug in a live browser the same day and file it with
    evidence; and replace any task the reply mooted — a no-touch rule dies the
-   moment they engage.
+   moment they engage, but the draft-approval requirement remains.
 
 ## Meeting prep — the qualified-customer call
 
@@ -552,9 +571,10 @@ Two things that are easy to get wrong and expensive to undo:
 
 ## Guardrails
 
-- **Read-only except two sanctioned writes:** enriching/advancing Attio, and
-  disabling a **confirmed-dead** task. Both are reversible; still **confirm before
-  moving a lead to Lost or disabling a task**.
+- **Keep preparation separate from delivery.** Enriching/advancing Attio and
+  disabling a **confirmed-dead** task follow the existing limits; still **confirm
+  before moving a lead to Lost or disabling a task**. Sending an email additionally
+  requires explicit approval of that exact draft, through any tool or sender.
 - **Never mutate customer data with raw SQL — go through the API.** An `UPDATE` on
   `scheduled_actions` writes the row but skips everything the endpoint does around
   it: `updateTask` re-syncs the Trigger.dev schedule, and `deleteArtist` runs a
@@ -562,8 +582,10 @@ Two things that are easy to get wrong and expensive to undo:
   A direct write leaves the row and the scheduler disagreeing, and the drift is
   invisible in the table you just edited. Use `PATCH`/`DELETE` with an `account_id`
   override. This applies to *every* customer-facing table, not just tasks.
-- **Draft, never send.** Every message touching a real customer is handed to the
-  operator to send. No auto-send from this skill.
+- **Draft first; no unapproved sends.** Follow `references/outreach-approval.md`
+  for every email. No quota, deadline, prior send, CRM stage, subagent recommendation,
+  or automatic goal continuation substitutes for the user's approval. Do not send
+  an apology or correction for an accidental send without review either.
 - **PII stays in the CRM.** Names, emails, account IDs live in Attio/Supabase —
   never paste them into shared docs or external services.
 - **Exclude test rows** everywhere (`sweetmantech*`, `sidney@`, `@example.com`,
@@ -624,6 +646,8 @@ major-label exec, and a dormant power user. What actually mattered.
 
 ## Reference files
 
+- `references/outreach-approval.md` — mandatory quality and exact-draft approval gate for every email.
+- `fixtures/outreach-approval-scenarios.md` — synthetic cases for checking send decisions without real email.
 - `references/cold-outreach.md` — hunting when the funnel is cold: Exa Agent API → email verification → research → all-services positioning → one real deliverable → one-link email.
 - `references/meeting-prep.md` — prep for a booked call: the pitch, the meeting plan, the PDFs to deliver.
 - `references/credits-mechanics.md` — how `checkAndResetCredits` behaves, before you quote a balance.

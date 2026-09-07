@@ -1,4 +1,8 @@
-# Cold outreach — from Exa to a sent email
+# Cold outreach — from Exa to an approved email
+
+**Read `references/outreach-approval.md` before drafting or sending.** These steps
+prepare outreach; they do not grant send permission. Every exact draft must be
+shown to and explicitly approved by the user before any tool sends, schedules, or triggers email.
 
 The one motion in this skill that does not start in our own database. Every one of the
 eight sweep pulls needs the person to already be a user; this reference is how to hunt
@@ -15,8 +19,9 @@ The whole run, in order:
 6. **Earn one deliverable** — do one real thing for them from our account (a valuation, a
    metadata run, a YouTube gap audit, a website proposal, a superfan list) chosen from the
    research, so the email opens with what we found or built.
-7. **Draft short, one link, unslop** — and hand it to the operator.
-8. **Close out** — sent file, Attio (Agency Leads), follow-up task.
+7. **Draft short, one link, unslop** — pass the quality review and present the complete draft.
+8. **Await explicit approval** — for the exact recipients, content, footer, and attachments.
+9. **Send and close out only after approval** — verified sent file, Attio (Agency Leads), follow-up task.
 
 ## 1. Find people with the Exa Agent API
 
@@ -143,6 +148,12 @@ of the email is something we found or built for them, not something we offer to 
 Pick from the menu by matching the research (step 4) to the capability. One deliverable per
 email; the rest are the reply.
 
+**Check delivery side effects first.** Valuation and tracking-task endpoints can
+email reports, even when run on our account. During preparation, use only a verified
+no-email execution path, or read existing measurements and build the artifact locally.
+If none is available, prepare a non-sending alternative and disclose the limitation.
+Do not trigger a real or test email just to earn the deliverable before review.
+
 | Research said | Deliverable | How (all from our account, their account untouched) |
 | --- | --- | --- |
 | They own or just acquired a catalog | **Catalog valuation** with the concentration fact | `POST /api/valuation {spotify_artist_id}` → catalog id + band; `GET /api/catalogs/{id}/measurements` for `total_streams`, `catalog_age_years`, top songs; `GET /api/artists` for the artist id. Link `https://chat.recoupable.dev/artists/{artist_account_id}` (renders via app.recoupable.dev). Never link `/catalogs/{id}`; it 404s for non-owners. |
@@ -186,12 +197,17 @@ Rules that hold for every deliverable:
   no "not just X but Y", no puffery, no meta-framing ("quick note from a human").
 - Draft file per SKILL.md's lead workspace: `workspace/sales/<lead>/emails/drafts/
   YYYY-MM-DD-slug.md` with the research, the valuation ids, the email, and the post-send
-  checklist and reply playbook. The operator sends.
+  checklist and reply playbook. Show the actual attachment and footer in the review
+  packet, not just the body or a summary. Then wait for explicit approval.
 
-## 7b. Sending from the agent via Resend (when the operator says "send")
+## 7b. Sending from the agent via Resend, after exact-draft approval
 
-The operator can send from their own inbox, or hand the send to the agent so Resend records
-opens and clicks. Decided 2026-09-06; the signature test was opened and clicked the same hour.
+The operator can send personally or explicitly approve the reviewed draft for agent
+sending. "Send outreach today" before a draft exists is **not** that approval. Use the
+approval record and pre-send comparison in `references/outreach-approval.md` for warm
+and cold emails alike. Do not batch unapproved contacts with approved ones.
+
+The following is transport configuration, not permission to send:
 
 - **Sender:** `from: "Patrick Sweetman <sweetman@recoupable.dev>"`, `reply_to:
   "sweetman@recoupable.com"`. Only `recoupable.dev` is verified in Resend (open + click
@@ -204,8 +220,9 @@ opens and clicks. Decided 2026-09-06; the signature test was opened and clicked 
   `recoup-icon-black.png`, attached with `content_id: recoup-icon` and referenced as
   `cid:recoup-icon`; `README.md` has the colors and links). Black rounded icon, vertical bar,
   bold name, "Cofounder, Recoup", then `recoupable.dev · LinkedIn · Schedule a meeting`
-  (Calendly). Do not retype it; read the file and append it to the HTML body. Send `html` and
-  `text` both (tracking needs HTML).
+  (Calendly). Do not retype it; read the file and append it to the HTML body **before
+  review**. Show both the plain-text message and rendered HTML/preview with the footer
+  and attachments so the approved artifact matches the send. Send `html` and `text` both.
 - **Every send carries** `Idempotency-Key: cold-outreach/<lead-slug>-<YYYY-MM-DD>` and
   `tags: [{campaign: cold-outreach}, {lead: <lead-slug>}]`. Key is the api project's
   `RESEND_API_KEY`; pass it via a curl header file, not argv.
@@ -218,8 +235,9 @@ opens and clicks. Decided 2026-09-06; the signature test was opened and clicked 
 
 ## 8. Close out
 
-Same send loop as any other send: diff the sent copy against the draft (the operator will
-change things; record the commitments as sent), write `emails/sent/…`, `EMAILS.md`, then in
+Only after a send: record approval evidence for an agent send, or the operator's
+actual sent copy if they sent personally. Diff against the draft and record the
+commitments as sent. Write `emails/sent/…`, `EMAILS.md`, then in
 Attio create the person if the Gmail sync did not, then **check before creating the list
 entry**: `GET /v2/objects/people/records/{record_id}/entries` and reuse any `agency_leads`
 entry already there (a re-run must not duplicate). Otherwise `POST /v2/lists/agency_leads/
@@ -227,6 +245,7 @@ entries` with `stage` New, `buyer_or_referrer`, `project_type`, `owner` (status 
 values are accepted by title; resolve ids from `/v2/lists/agency_leads/attributes` if the
 workspace renames them); leave `est_project_value` empty. Then the sent-log note naming the
 local file and the reply playbook, and a dated follow-up task written as a runbook. A cold lead never goes on Valuation Leads unless they ran a valuation themselves.
+A follow-up date or an open/click is not approval to send the next email; draft it for review.
 
 ## What the first run cost and returned
 

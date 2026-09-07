@@ -1,5 +1,9 @@
 # Meeting prep — the qualified-customer call
 
+Any email delivering the meeting materials still requires review and explicit approval
+of its exact draft and attachments under `references/outreach-approval.md`. Preparing
+a call or PDF does not authorize sending it.
+
 The send loop ends when a lead books a call. This is what happens next, and it is a
 different motion: no longer "who do we contact", but "what do we put in front of someone
 who has already agreed to spend thirty minutes with us."
