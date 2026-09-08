@@ -35,7 +35,7 @@ an all-locked-camera film: other selected rows still use push-ins or a tilt.
 
 | Operation | Actual model / settings |
 |---|---|
-| Song | `minimax/music-3`, requested 120 seconds, direct fal call. For new songs use the owner's later `recoup-song` decision: Recoup API, maximum duration headroom, four approvals. |
+| Song | `minimax/music-3`, requested 120 seconds. For new songs use the owner's later `recoup-song` decision: Recoup API, maximum duration headroom, four approvals. |
 | Transcription | ElevenLabs Scribe, saved word timestamps |
 | Character, prop, location and scene stills | `meta/muse-image/text-to-image` and `meta/muse-image/edit`; PNG; scene frames 9:16, character panels 3:4, prop sheets 16:9 |
 | Audition | `minimax/h3-max-turbo/image-to-video`, 5 seconds, 768P, `prompt_expansion_mode: disabled`; two takes, first selected |
@@ -49,9 +49,8 @@ left in generator code are not evidence that those options made the final film.
 
 ## Transport, capabilities and spend
 
-Small Room's generators called **fal directly**. Do not describe that history as Recoup API
-execution. For a new film, preserve the session's authorized providers, accounts and spend
-limits; never copy a credential or private import path out of the old scripts.
+For a new film, preserve the session's authorized providers, accounts and spend limits;
+never copy a credential or private import path out of the old scripts.
 
 Before paying for an audition or motion batch, verify the chosen route supports the actual
 model and settings above. Name the route, model, take count and current quote in the spend
