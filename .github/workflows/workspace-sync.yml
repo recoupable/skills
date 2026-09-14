@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     concurrency:
-      group: workspace-sync-accept
+      group: workspace-sync-accept-${{ github.event.workflow_run.head_branch }}
       cancel-in-progress: false
     permissions:
       contents: write

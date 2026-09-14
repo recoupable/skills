@@ -56,6 +56,19 @@ def api(endpoint, payload=None):
     return json.loads(result.stdout)
 
 
+def allowed_mode(role, path, mode):
+    submodules = {"business", "skills"} if role == "mono" else {"plugin"} if role == "os" else set()
+    if path in submodules:
+        return mode == "160000"
+    return mode in {"000000", "100644", "100755"}
+
+
+def validate_pr(pr, repo, head):
+    if (pr["base"]["ref"] != "main" or pr["base"]["repo"]["full_name"] != repo or
+            pr["head"]["sha"] != head or pr["head"]["repo"]["full_name"] != repo):
+        raise RuntimeError("Sync PR does not match the verified main-bound proposal")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--role", choices=["os", "plugin", "business", "skills", "mono"], required=True)
@@ -84,15 +97,18 @@ def main():
         fields = line.split()
         mode = fields[1]
         path = line.split("\t", 1)[1]
-        if mode not in {"000000", "100644", "100755"} and not (
-                mode == "160000" and path in ({"business", "skills"} if args.role == "mono" else {"plugin"} if args.role == "os" else set())):
+        if not allowed_mode(args.role, path, mode):
             raise RuntimeError("Sync proposal contains an unsupported file mode")
-    existing = api("repos/" + repo + "/pulls?state=open&head=" + repo.split("/")[0] + ":" + branch)
+    existing = api("repos/" + repo + "/pulls?state=open&base=main&head=" + repo.split("/")[0] + ":" + branch)
     if existing:
         pr = existing[0]
     else:
         pr = api("repos/" + repo + "/pulls", {"title": "Sync reviewed workspace changes", "head": branch, "base": "main",
             "body": "Automatically prepared by the private workspace coordinator. The signed proposal passed this repository's sync validation. Only approved file changes are included; repository history is kept separate."})
+    validate_pr(pr, repo, head)
+    if api("repos/" + repo + "/git/ref/heads/main")["object"]["sha"] != parent:
+        print("Target main moved before merge; coordinator will rebuild the proposal.")
+        return
     # GitHub enforces branch protections. --auto queues required checks instead of bypassing them.
     run("gh", "pr", "merge", str(pr["number"]), "--repo", repo, "--squash", "--auto", "--match-head-commit", head)
     print("Validated sync PR: " + pr["html_url"])
