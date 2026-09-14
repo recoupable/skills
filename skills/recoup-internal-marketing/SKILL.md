@@ -58,7 +58,7 @@ The account workspace holds the durable marketing knowledge. Read in this order:
 | 4 | `VIDEO-STYLES.md` | The style catalog, each pointing at a cloneable reference project. |
 | 5 | `posts-log.md` (tail) | What has already shipped, with performance and the arc each post served. |
 | 6 | `POSTING-PLAYBOOK.md`, `LINKEDIN.md` | Per-platform mechanics and gotchas. Read before publishing, not after. |
-| 7 | `cast/<character>/` | Face guide, **canonical voice**, + **consent status** for any recurring character you plan to use. |
+| 7 | `cast/<character>/` | Face guide and **canonical voice** for any recurring character you plan to use. |
 
 Also read `references/video-pipeline.md` (the shared build recipe) and `references/voice.md`
 (voice choice, audio tags, loudness) before generating audio.
@@ -148,8 +148,6 @@ Gate the pick on all of these before building — details in `references/topic-s
   inviting them to co-post is the largest measured lever we have: the 2026-07-22 collab reel took
   **45 likes against 1–3** for every non-collab reel in the weeks after. Ask every run: who is the
   collaborator, and have they been invited? "None" is an allowed answer that costs reach.
-- **Consent.** Internal roster artists need no per-piece permission. External artists need explicit
-  likeness consent, and their real numbers are a *separate* gate. Check `cast/<character>/`.
 - **Numbers.** Any figure attributed to a real artist must be measured and verified. Never publish
   a number you cannot audit, including numbers about ourselves. Measured-vs-estimated disclosure is
   **one later beat in the piece, never part of the opening figure** — see `references/hooks.md` →

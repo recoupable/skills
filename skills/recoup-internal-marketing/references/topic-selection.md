@@ -83,13 +83,13 @@ renaming it, but never let a launch introduce a name the product does not answer
 
 **Why named — theirs, then ours. This gate comes first.**
 
-Before consent, before the hook, before a single frame: write one sentence on **what the person in
+Before the hook, before a single frame: write one sentence on **what the person in
 the piece gets out of it**, and one on what we get. Both go at the top of the plan doc. If you
 cannot write the first sentence, the piece is an ad wearing someone's name and it does not get
 built.
 
 This gate exists because the rest of this skill did not have it. Every other artist-facing rule
-here is either a *permission* rule (consent, likeness, verified numbers) or a *distribution* rule
+here is either a *permission* rule (verified numbers) or a *distribution* rule
 ("Collaborator, not subject", justified by reach). Together they answer "may we publish this?" and
 "will it travel?" — and never "what does she get?" The gap was found on 2026-08-04 by the artist,
 not by us: mid-collaboration LATASHÁ asked *"what's your case for showing the numbers? like the
@@ -124,13 +124,6 @@ into a figure. Naming the risk unprompted is what makes it consent rather than a
 is worth less than a no.
 
 **Arc + character named.** A post that serves no arc is an ad. Reframe or drop it.
-
-**Consent.**
-- **Internal roster artists: no gate.** No per-piece permission, no courtesy DM. Check
-  `cast/<character>/` for the recorded status rather than assuming.
-- **External artists: explicit likeness consent**, and their real numbers are a **separate** gate —
-  confirm the exact figure with them.
-- The consent status recorded in `cast/<character>/` is the source of truth. It changes; re-read it.
 
 **Numbers.** Any figure attributed to a real artist must be measured and verified, with
 measured-versus-estimated stated. This applies to numbers about **us** too: if a cost or result
