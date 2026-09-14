@@ -193,3 +193,14 @@ Never hand-edit a vendored copy — `check_vendored.py` fails on any drift.
 ## Consulting namespace
 
 Staff consulting capabilities use `recoup-internal-consulting-<skill-name>`. Keep the existing descriptive suffix; it need not fit a fixed word count. These skills work in an explicitly selected private business workspace. Their code and examples are public. Nested video engines/modes are support GUIDE.md files, not extra installable skills. Run the consulting tests when modifying their templates or runtime.
+
+## Consulting synchronization
+
+The private workspace coordinator synchronizes only `recoup-internal-consulting-*` skills in both
+directions. Main-branch edits are picked up by its five-minute polling schedule, subject to GitHub
+scheduling delays. Other Recoup skill domains and root packaging remain owned here. New consulting
+skills receive resolver coverage and version updates, and must pass all normal validation gates.
+
+Incoming `codex/sync-*` proposals are SSH-signed by the coordinator. Separate candidate and trusted-main
+receiver workflows validate files, verify the signature and publish through a PR. No private-source
+credentials or AI review key live here. Overlapping edits remain pending instead of overwriting either side.

@@ -1,0 +1,38 @@
+name: Workspace sync receiver
+
+on:
+  workflow_run:
+    workflows: ['Workspace sync candidate']
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  accept:
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      startsWith(github.event.workflow_run.head_branch, 'codex/sync-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: workspace-sync-accept
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # Only trusted main supplies the receiver and allowed signing key.
+      # The proposed tree is fetched as Git objects; it is never executed here.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout: .github
+      - name: Verify signature and publish through a PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/workspace_sync_receiver.py --role skills
