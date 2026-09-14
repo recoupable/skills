@@ -1,9 +1,9 @@
-# Recoup Sky / media package 1.0.0
+# Recoup Sky / media package 1.0.1
 
 This is a reviewed distribution snapshot of marketing's root DESIGN.md and Brand Studio
 DESIGN-SYSTEM.md, not a second independently authored identity. Provenance and exact file hashes
-are in brand.json. Update from that source, bump this version, and run the plugin's
-scripts/sync_brand.py; --check detects drift across self-contained consumer skills.
+are in brand.json. Update from that source, bump this version, and synchronize the registered self-contained
+consumer copies. The repository's vendored-file check detects drift.
 
 ## Select and stage
 
@@ -44,6 +44,22 @@ Motion: one focal action per beat; calm fades, small movement, purposeful wipes.
 are 180–240 ms for controls and 450–700 ms for editorial reveals. These are implementation guidance,
 not approval of a video. All six existing Studio motion files remain experiments. No default sonic
 identity or synthetic presenter. Preserve camera transparency and keep captions away from faces.
+
+## Titles tell the story
+
+Across the Recoup brand, titles that work together must tell the full story when read alone in
+sequence. This applies to article figures, carousels, slide decks, reports, web sections and video
+title sequences. Draft the title sequence before designing individual frames. Each title advances
+the argument; together they explain the premise, progression and conclusion without body copy or
+images. Read only the titles in order during review. Rewrite any vague label, disconnected slogan
+or missing transition until the reader can follow the complete narrative.
+
+## Use the wordmark deliberately
+
+Do not add a Recoup wordmark footer to every illustration or every frame in a series. Identify the
+collection where useful, such as its enclosing page, cover or closing frame. Supporting figures
+can stand without a mark. If a mark is used, preserve the exact supplied artwork. Generated
+illustrations should contain no logo; apply any needed mark as a separate editable layer.
 
 ## Save and check
 
