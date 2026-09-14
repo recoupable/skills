@@ -26,3 +26,10 @@ jobs:
         run: python3 scripts/check_resolvable.py
       - name: Resolver eval (routing fixtures + coverage)
         run: python3 scripts/run_resolver_eval.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Consulting media and runtime regression checks
+        run: node --test tests/consulting-brand.test.mjs tests/consulting-runtime.test.mjs
+      - name: Consulting template and credential boundary checks
+        run: python3 -m unittest discover -s tests -p test_consulting_templates.py

@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<!-- Stage brand/materialize.mjs beside this HTML. Inspect the image before choosing light/dark. -->
+<link rel="stylesheet" href="recoup-brand/brand.css"><style>
+*{box-sizing:border-box;margin:0}body{width:1080px;height:1350px;padding:80px;position:relative;overflow:hidden;font-family:var(--brand-body-font),sans-serif;color:var(--ink);background:var(--paper)}
+.kicker{font:400 20px var(--brand-label-font),monospace;letter-spacing:.12em;text-transform:uppercase}
+h1{font-family:var(--brand-display-font),sans-serif;font-size:88px;font-weight:500;line-height:1.06;letter-spacing:-.045em;margin:64px 0 32px;max-width:900px}p{font-size:30px;line-height:1.45;font-weight:400}em{font-style:normal;background:var(--signal);color:var(--ink);padding:0 .08em}
+footer{position:absolute;bottom:64px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center;font-size:22px}footer img{width:190px;height:auto}.notes{display:grid;gap:22px;margin-top:48px}.note{background:var(--tint);border:1px solid var(--recoup-border);border-radius:18px;padding:28px 32px;font-size:32px}.note b{font-weight:500}.note span{font:400 20px var(--brand-label-font);margin-right:24px;color:var(--recoup-link)}
+body{padding:0;background:var(--recoup-pale)}.bg{position:absolute;inset:0;background:url('{{BG_IMAGE_ABS_PATH}}') center/cover}
+.scrim{position:absolute;inset:0;background:linear-gradient(100deg,rgba(255,255,255,.97),rgba(255,255,255,.8) 36%,rgba(255,255,255,0) 80%)}
+.wrap{position:absolute;inset:0;padding:80px}h1{max-width:750px;margin-top:150px}p{max-width:620px}
+body.dark{color:white}.dark .scrim{background:linear-gradient(100deg,rgba(19,43,38,.96),rgba(19,43,38,.76) 36%,rgba(19,43,38,0) 80%)}
+.white-logo{display:none}.dark .white-logo{display:block}.dark .ink-logo{display:none}
+</style></head><body class="light"><div class="bg"></div><div class="scrim"></div><main class="wrap">
+<div class="kicker">{{KICKER}}</div><h1>{{HEADLINE_HTML}}</h1><p>{{CONTEXT}}</p></main>
+<footer><img class="ink-logo" src="recoup-brand/logos/lockup-ink.svg" alt="Recoup"><img class="white-logo" src="recoup-brand/logos/lockup-white.svg" alt="Recoup"><span>{{ATTRIBUTION_OR_CONTEXT}}</span></footer></body></html>

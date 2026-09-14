@@ -1,0 +1,20 @@
+@font-face{font-family:'DM Sans';src:url('fonts/dm-sans.woff2') format('woff2');font-style:normal;font-weight:100 1000;font-display:block;}
+@font-face{font-family:'IBM Plex Mono';src:url('fonts/ibm-plex-mono.woff2') format('woff2');font-style:normal;font-weight:400;font-display:block;}
+:root{
+  --recoup-sky:#007EBD;
+  --recoup-lime:#D6FF62;
+  --recoup-forest:#132B26;
+  --recoup-white:#FFFFFF;
+  --recoup-ink:#152E37;
+  --recoup-muted:#586F78;
+  --recoup-pale:#F0F7FA;
+  --recoup-link:#087BAB;
+  --recoup-border:#E2E9EB;
+  --recoup-tray:#F1F3F3;
+  --recoup-heroStart:#0565BB;
+  --recoup-heroEnd:#0075A8;
+  --brand-display-font:'DM Sans';--brand-body-font:'DM Sans';--brand-label-font:'IBM Plex Mono';
+  --ink:var(--recoup-ink);--paper:var(--recoup-white);--accent:var(--recoup-sky);--signal:var(--recoup-lime);--tint:var(--recoup-pale);--muted:var(--recoup-muted);
+}
+.recoup-label{font-family:var(--brand-label-font),monospace;font-weight:400;letter-spacing:.1em;text-transform:uppercase;}
+.recoup-lockup{display:block;width:160px;height:auto;}

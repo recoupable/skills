@@ -1,0 +1,105 @@
+{
+  "id": "recoup-sky",
+  "version": "1.0.0",
+  "source": {
+    "repository": "https://github.com/recoupable/marketing",
+    "commit": "f8fa73c0b5e48e595186e0149756e1611b9d7ff5",
+    "guides": [
+      "DESIGN.md",
+      "brand-studio/DESIGN-SYSTEM.md"
+    ],
+    "finals": "brand-studio/studio-finals.json"
+  },
+  "colors": {
+    "sky": "#007EBD",
+    "lime": "#D6FF62",
+    "forest": "#132B26",
+    "white": "#FFFFFF",
+    "ink": "#152E37",
+    "muted": "#586F78",
+    "pale": "#F0F7FA",
+    "link": "#087BAB",
+    "border": "#E2E9EB",
+    "tray": "#F1F3F3",
+    "heroStart": "#0565BB",
+    "heroEnd": "#0075A8"
+  },
+  "typography": {
+    "display": {
+      "family": "DM Sans",
+      "weight": 500
+    },
+    "body": {
+      "family": "DM Sans",
+      "weight": 400
+    },
+    "label": {
+      "family": "IBM Plex Mono",
+      "weight": 400
+    }
+  },
+  "expressions": {
+    "functional": "White reading surfaces, ink text, sky links, forest anchors, lime emphasis.",
+    "editorial": "Working documents, paper, diagrams, generous margins; choose an approved carousel direction.",
+    "expressive": "Daylight, sky atmosphere, Blue sweep composition, soft material depth."
+  },
+  "motion": {
+    "status": "Derived guidance; new motion remains an experiment until approved.",
+    "controlsMs": [
+      180,
+      240
+    ],
+    "editorialMs": [
+      450,
+      700
+    ],
+    "rules": [
+      "One clear focal action per beat",
+      "Prefer fades, small translations and reveals",
+      "Keep grain stationary",
+      "No automatic ambient glows, bounce, grain animation or sonic identity"
+    ]
+  },
+  "assets": {
+    "fonts/dm-sans.woff2": {
+      "source": "brand-studio/assets/fonts/dm-sans.woff2",
+      "sha256": "9fea608a947e67020c33cad9a6fe3d60c54119dfb8cff87768a8117a15ed7543",
+      "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/9fea608a947e67020c33/assets/fonts/dm-sans.woff2"
+    },
+    "fonts/ibm-plex-mono.woff2": {
+      "source": "brand-studio/assets/fonts/ibm-plex-mono.woff2",
+      "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7",
+      "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/08949f728dc52d528e69/assets/fonts/ibm-plex-mono.woff2"
+    },
+    "logos/symbol-ink.svg": {
+      "source": "brand-studio/assets/logos/symbol-ink.svg",
+      "sha256": "df54603098144282663a276afc86e3e40155d07e3fb57b831bbc6803bc58e9ba",
+      "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/df54603098144282663a/assets/logos/symbol-ink.svg"
+    },
+    "logos/symbol-white.svg": {
+      "source": "brand-studio/assets/logos/symbol-white.svg",
+      "sha256": "a3ee305e91ef392ff5fab9b9e49121607e35ef38d26409d098aaf2312072a7df",
+      "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/a3ee305e91ef392ff5fa/assets/logos/symbol-white.svg"
+    },
+    "logos/symbol-blue.svg": {
+      "source": "brand-studio/assets/logos/symbol-blue.svg",
+      "sha256": "7f08674ec334b2b8dbb38c410829658bde06f08f7372aa4b06262063d5050794",
+      "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7f08674ec334b2b8dbb3/assets/logos/symbol-blue.svg"
+    },
+    "logos/lockup-ink.svg": {
+      "source": "brand-studio/assets/logos/lockup-ink.svg",
+      "sha256": "ff9ae0127fb2d164d398eb6149636029b59694869a1ff06cf43186e1b04ed228",
+      "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/ff9ae0127fb2d164d398/assets/logos/lockup-ink.svg"
+    },
+    "logos/lockup-white.svg": {
+      "source": "brand-studio/assets/logos/lockup-white.svg",
+      "sha256": "e98ffd97619b53d6c4d10aab832c9234f026b4285f6334b0b667e0c625a23240",
+      "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/e98ffd97619b53d6c4d1/assets/logos/lockup-white.svg"
+    },
+    "logos/lockup-blue.svg": {
+      "source": "brand-studio/assets/logos/lockup-blue.svg",
+      "sha256": "8eb6a0703dbad3f0756409d12d580cd52b23db6a78f385e2a29262ddfb4b9d9b",
+      "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/8eb6a0703dbad3f07564/assets/logos/lockup-blue.svg"
+    }
+  }
+}

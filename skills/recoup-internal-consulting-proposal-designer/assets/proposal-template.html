@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>{{CLIENT_NAME}} Proposal</title><style>
+  @page { size:A4; margin:17mm 17mm; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:var(--brand-body-font, Arial),sans-serif; color:var(--recoup-ink); line-height:1.5; font-size:10pt; background:#fff; }
+  .wrap { max-width:720px; margin:0 auto; padding:8px 0; }
+
+  .head { position:relative; }
+  .brandrow { margin-bottom:26px; }
+  .kicker { font-size:8pt; letter-spacing:.2em; text-transform:uppercase; color:var(--recoup-link); font-weight:500; }
+  .doctitle { font-size:18pt; line-height:1.15; color:var(--recoup-forest); letter-spacing:-0.01em; margin:6px 0 10px; font-weight:500; }
+  .meta { font-size:9pt; color:var(--recoup-muted); }
+  .meta b { color:var(--recoup-ink); font-weight:600; }
+  .rule { height:3px; background:var(--recoup-link); width:52px; margin:14px 0 22px; border-radius:2px; }
+
+  .lead { font-size:11pt; line-height:1.6; color:var(--recoup-ink); margin-bottom:11px; }
+  .lead.last { margin-bottom:34px; }
+  .lead b { color:var(--recoup-forest); }
+
+  .lbl { font-size:8.2pt; letter-spacing:.15em; text-transform:uppercase; color:var(--recoup-link); font-weight:500; margin-bottom:13px; }
+
+  .cols { width:100%; border-collapse:separate; border-spacing:0; margin-bottom:34px; }
+  .cols td { width:50%; vertical-align:top; }
+  .cols td.gap { width:18px; }
+  .panel { border:1px solid var(--recoup-border); border-radius:12px; padding:18px 20px; height:100%; background:var(--recoup-pale); }
+  .panel.up { background:var(--recoup-forest); border-color:var(--recoup-forest); }
+  .panel h3 { font-size:8.2pt; letter-spacing:.12em; text-transform:uppercase; font-weight:500; margin-bottom:13px; }
+  .panel.now h3 { color:var(--recoup-muted); }
+  .panel.up h3 { color:var(--recoup-lime); }
+  .panel ul { list-style:none; }
+  .panel li { font-size:9.8pt; line-height:1.45; padding-left:18px; position:relative; margin-bottom:12px; }
+  .panel li:last-child { margin-bottom:0; }
+  .panel.now li::before { content:"\2022"; position:absolute; left:1px; color:var(--recoup-muted); }
+  .panel.up { color:var(--recoup-white); }
+  .panel.up li::before { content:"\2713"; position:absolute; left:0; color:var(--recoup-lime); font-weight:500; }
+  .panel.up li b { color:#fff; }
+
+  .steps { width:100%; border-collapse:separate; border-spacing:0; }
+  .steps td { width:25%; vertical-align:top; padding-right:16px; }
+  .steps td:last-child { padding-right:0; }
+  .stepnum { font-size:8.4pt; font-weight:500; color:var(--recoup-link); letter-spacing:.06em; margin-bottom:5px; }
+  .steph { font-size:11pt; font-weight:500; color:var(--recoup-forest); margin-bottom:4px; }
+  .stepd { font-size:9.4pt; color:var(--recoup-muted); line-height:1.45; }
+  .howfoot { font-size:9.2pt; color:var(--recoup-muted); font-style:italic; margin-top:18px; }
+
+  .p2 { page-break-before:always; margin-top:30px; }
+  .runhead { display:flex; align-items:center; gap:9px; padding-bottom:11px; border-bottom:1px solid var(--recoup-border); margin-bottom:26px; }
+  .runhead .rl { font-size:8pt; letter-spacing:.14em; text-transform:uppercase; color:var(--recoup-muted); font-weight:500; }
+  .runhead .rr { margin-left:auto; font-size:8pt; color:var(--recoup-muted); }
+
+  .invest { border:1.5px solid var(--recoup-forest); border-radius:13px; overflow:hidden; }
+  .invest .note { font-size:9.2pt; color:var(--recoup-muted); line-height:1.45; padding:12px 18px 2px; }
+  table.tiers { width:100%; border-collapse:collapse; }
+  table.tiers td { padding:11px 18px; border-top:1px solid var(--recoup-border); vertical-align:top; }
+  table.tiers tr:first-child td { border-top:none; padding-top:20px; }
+  .trec { background:var(--recoup-pale); }
+  .opt { width:27%; }
+  .opt .nm { font-size:11pt; font-weight:500; color:var(--recoup-forest); }
+  .opt .recpill { display:inline-block; font-size:7pt; font-weight:500; letter-spacing:.06em; background:var(--recoup-link); color:#fff; padding:2px 6px; border-radius:3px; margin-top:6px; }
+  .prc { font-size:17pt; font-weight:500; color:var(--recoup-forest); width:19%; white-space:nowrap; letter-spacing:-0.01em; padding-top:14px; }
+  .prc span { font-size:9pt; font-weight:600; color:var(--recoup-muted); }
+  .chg { font-size:9.6pt; color:var(--recoup-ink); line-height:1.45; }
+  .chg b { color:var(--recoup-forest); }
+  .chg .plus { font-size:8.8pt; font-weight:500; color:var(--recoup-forest); margin-bottom:6px; }
+  .chg ul.feat { list-style:none; margin:0; }
+  .chg ul.feat li { position:relative; padding-left:16px; margin-bottom:4px; font-size:9.3pt; line-height:1.32; }
+  .chg ul.feat li:last-child { margin-bottom:0; }
+  .chg ul.feat li::before { content:"\2713"; position:absolute; left:0; color:var(--recoup-link); font-weight:500; }
+  .chg ul.feat li b { color:var(--recoup-forest); }
+  .chg .bf { display:block; margin-top:8px; font-size:8.8pt; font-style:italic; color:var(--recoup-muted); }
+  .assure { background:var(--recoup-pale); font-size:9pt; color:var(--recoup-ink); padding:9px 18px; border-top:1px solid var(--recoup-border); }
+  .assure b { color:var(--recoup-forest); }
+  .mtm { background:var(--recoup-pale); border:1px solid var(--recoup-border); border-radius:9px; font-size:9pt; color:var(--recoup-ink); padding:10px 16px; }
+  .mtm b { color:var(--recoup-forest); }
+  .proj { font-size:9.4pt; font-style:italic; color:var(--recoup-muted); margin:14px 0 10px; line-height:1.5; }
+  .proj b { color:var(--recoup-forest); }
+
+  .close { background:var(--recoup-forest); border-radius:13px; padding:15px 20px; color:var(--recoup-white); break-inside:avoid; }
+  .close .anchor { font-size:9.6pt; line-height:1.5; padding-bottom:11px; margin-bottom:11px; border-bottom:1px solid #586F78; }
+  .close .anchor b { color:#fff; }
+  .close h4 { font-size:8.2pt; letter-spacing:.14em; text-transform:uppercase; color:var(--recoup-lime); font-weight:500; margin-bottom:8px; }
+  .close ol { list-style:none; counter-reset:s; }
+  .close li { counter-increment:s; position:relative; padding-left:26px; margin-bottom:7px; font-size:9.6pt; line-height:1.4; color:var(--recoup-white); }
+  .close li:last-child { margin-bottom:0; }
+  .close li::before { content:counter(s); position:absolute; left:0; top:-1px; width:17px; height:17px; background:var(--recoup-link); color:#fff; border-radius:50%; font-size:8pt; font-weight:500; text-align:center; line-height:17px; }
+  .close li b { color:#fff; }
+
+  .foot { font-size:8pt; color:var(--recoup-muted); text-align:center; margin-top:14px; }
+
+.doctitle,.steph,.prc{font-family:var(--brand-display-font),sans-serif;font-weight:500}
+  .kicker,.lbl,.stepnum,.runhead,.panel h3,.close h4{font-family:var(--brand-label-font),monospace;font-weight:400}
+  .brandrow img,.brandrow svg{width:145px;height:auto}.foot{font-size:8pt;color:var(--recoup-muted)}
+{{BRAND_CSS}}
+</style></head><body><div class="wrap">
+
+  <div class="head">
+    <div class="brandrow">{{BRAND_LOCKUP_HTML}}</div>
+    <div class="kicker">Proposal</div>
+    <div class="doctitle">{{DOC_TITLE}}</div>
+    <div class="meta">Prepared for {{CLIENT_CONTACT}}, {{CLIENT_NAME}}</div>
+    <div class="rule"></div>
+  </div>
+
+  <p class="lead">{{LEAD_PARA_1}}</p>
+  <p class="lead last">{{LEAD_PARA_2}}</p>
+
+  <table class="cols"><tr>
+    <td><div class="panel now"><h3>Where {{CLIENT_NAME}} is today</h3><ul>
+      <li>{{NOW_1}}</li>
+      <li>{{NOW_2}}</li>
+      <li>{{NOW_3}}</li>
+    </ul></div></td>
+    <td class="gap"></td>
+    <td><div class="panel up"><h3>Where this takes you</h3><ul>
+      <li>{{NEXT_1}}</li>
+      <li>{{NEXT_2}}</li>
+      <li>{{NEXT_3}}</li>
+    </ul></div></td>
+  </tr></table>
+
+
+  <div class="lbl">How we get there</div>
+  <table class="steps"><tr>
+    <td><div class="stepnum">01</div><div class="steph">{{STEP_1_NAME}}</div><div class="stepd">{{STEP_1_DETAIL}}</div></td>
+    <td><div class="stepnum">02</div><div class="steph">{{STEP_2_NAME}}</div><div class="stepd">{{STEP_2_DETAIL}}</div></td>
+    <td><div class="stepnum">03</div><div class="steph">{{STEP_3_NAME}}</div><div class="stepd">{{STEP_3_DETAIL}}</div></td>
+    <td><div class="stepnum">04</div><div class="steph">{{STEP_4_NAME}}</div><div class="stepd">{{STEP_4_DETAIL}}</div></td>
+  </tr></table>
+
+  <div class="p2">
+    <div class="runhead"><span class="rl">Proposal for {{CLIENT_NAME}}</span><span class="rr">{{BRAND_NAME}} &middot; {{DOC_DATE}}</span></div>
+
+    <div class="lbl">The investment</div>
+    <div class="invest">
+      <table class="tiers">
+        <tr>
+          <td class="opt"><span class="nm">{{TIER_1_NAME}}</span></td>
+          <td class="prc">{{TIER_1_PRICE}}<span>&nbsp;{{TIER_1_PERIOD}}</span></td>
+          <td class="chg">{{TIER_1_DETAIL}}<span class="bf">{{TIER_1_FIT}}</span></td>
+        </tr>
+        <tr class="trec">
+          <td class="opt"><span class="nm">{{TIER_2_NAME}}</span></td>
+          <td class="prc">{{TIER_2_PRICE}}<span>&nbsp;{{TIER_2_PERIOD}}</span></td>
+          <td class="chg">{{TIER_2_DETAIL}}<span class="bf">{{TIER_2_FIT}}</span></td>
+        </tr>
+        <tr>
+          <td class="opt"><span class="nm">{{TIER_3_NAME}}</span></td>
+          <td class="prc">{{TIER_3_PRICE}}<span>&nbsp;{{TIER_3_PERIOD}}</span></td>
+          <td class="chg">{{TIER_3_DETAIL}}<span class="bf">{{TIER_3_FIT}}</span></td>
+        </tr>
+      </table>
+    </div>
+    <p class="proj" style="margin:26px 0">{{COMMERCIAL_TERMS}}</p>
+
+    <div class="close">
+      <div class="anchor">{{CLOSE_ANCHOR}}</div>
+      <h4>Next steps</h4>
+      <ol>
+        <li>{{NEXT_STEP_1}}</li>
+        <li>{{NEXT_STEP_2}}</li>
+        <li>{{NEXT_STEP_3}}</li>
+      </ol>
+    </div>
+
+    <div class="foot">{{BRAND_NAME}} &nbsp;&middot;&nbsp; {{BRAND_TAGLINE}} &nbsp;&middot;&nbsp; {{DOC_DATE}}</div>
+  </div>
+
+</div></body></html>
