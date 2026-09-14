@@ -61,8 +61,11 @@ those is reachable from an API key.** For an API-based pipeline like ours, **rou
 candidate**, which raises the stakes on testing it. Sourced from community guides written against
 Seedance **2.0**, so verify before relying on it.
 
-**Practical rule:** an original character invented in the prompt is fully available today. A
-recurring cast member whose likeness is a real person is not, until route 1 is proven.
+**Practical rule (earned 2026-09-14):** through fal, **no face of any origin passes the input filter** — a Muse
+sheet, a Seedance-extracted frame and Seedance's own untouched mp4 were all rejected with the same error
+(run log). Characters on fal exist only as text descriptors; identity across takes is repetition, not a
+reference. Route 1 can only be tested with a BytePlus ModelArk account, where the output's task provenance
+lives. Until then: **Seedance for face-free beats, an i2v model for every shot with a lead.**
 
 ### 🔴 Do NOT composite a character sheet — it breaks trust AND causes duplicate people
 
@@ -503,6 +506,10 @@ parameters and the honest verdict, including the failures.
 
 | Date | Piece / arc | Endpoint | Duration · ratio · res · audio | Refs | Time | Verdict |
 |---|---|---|---|---|---|---|
+| 2026-09-14 | NOBODY OFF THE STAGE — **cast acceptance test** | fal ref2v | 4s · 9:16 · 480p · audio off | Muse-generated director face close-up + hill plate | 122s | ❌ **REJECTED AT INPUT** (`content_policy_violation`, "likenesses of real people"). A Muse face is not trusted either; it is the face, not the generator. Unbilled. |
+| 2026-09-14 | route 1 test A — character on grey | fal **t2v** | 4s · 9:16 · 480p · audio off | none | 142s | ✅ Generated. Seed `988227973`. Used only as the source for tests B and C. |
+| 2026-09-14 | route 1 test B — **Seedance's own frame** as face ref | fal ref2v | 4s · 480p | PNG frame extracted from test A + hill plate | 100s | ❌ **REJECTED AT INPUT**, same error. An extracted frame is "secondary editing". Unbilled. |
+| 2026-09-14 | route 1 test C — **Seedance's own untouched mp4** as identity ref | fal ref2v | 4s · 480p | test A's original mp4 as `@Video1` + hill plate | 161s | ❌ **REJECTED AT INPUT**, same error. **Route 1 is dead through fal**: the trust check is account/task provenance on ModelArk, and a reseller cannot pass it. Unbilled. |
 | 2026-08-13 | back-office v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 142s | ❌ **Generated, then REJECTED by output moderation.** `content_policy_violation`, "potential copyright violation", `partner_validation_failed`. Prompt was film-noir styled: night, rain on the window, loosened tie, desk lamp. |
 | 2026-08-13 | **THE OPERATOR ep1, full 30s** | fal **ref2v** | **30s** · 9:16 · 720p · audio on | 1 face-free scene plate | **292s** | ✅ **All three acts, one cut, identity held across a hard location change.** Seed `39363830`, 7.68MB, -22.3 LUFS. |
 | 2026-08-13 | PoC: collision `[The Operator]` | fal **ref2v** | 10s · 9:16 · 720p · audio on | **1 face-free scene plate** | 208s | ✅ **Best result yet.** Scene plate transferred completely; the collision read as an accident; the crouch + phone-to-ear + line all landed. Seed `927418445`. |
