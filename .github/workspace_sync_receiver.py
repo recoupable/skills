@@ -45,10 +45,10 @@ def allowed(role, path):
         role == "business" and path in {"AGENTS.md", "CLAUDE.md", "README.md", "DESIGN.md", "skills/quarterly-value-review.md"})
 
 
-def api(endpoint, payload=None):
+def api(endpoint, payload=None, method="POST"):
     args = ["gh", "api", endpoint]
     if payload is not None:
-        args += ["--method", "POST", "--input", "-"]
+        args += ["--method", method, "--input", "-"]
     result = subprocess.run(args, input=None if payload is None else json.dumps(payload),
                             text=True, capture_output=True)
     if result.returncode:
@@ -67,6 +67,16 @@ def validate_pr(pr, repo, head):
     if (pr["base"]["ref"] != "main" or pr["base"]["repo"]["full_name"] != repo or
             pr["head"]["sha"] != head or pr["head"]["repo"]["full_name"] != repo):
         raise RuntimeError("Sync PR does not match the verified main-bound proposal")
+
+
+def only_versions_change(before, after):
+    if isinstance(before, dict) and isinstance(after, dict):
+        return before.keys() == after.keys() and all(
+            isinstance(after[k], str) and bool(re.fullmatch(r"\d+\.\d+\.\d+", after[k]))
+            if k == "version" else only_versions_change(before[k], after[k]) for k in before)
+    if isinstance(before, list) and isinstance(after, list):
+        return len(before) == len(after) and all(only_versions_change(a, b) for a, b in zip(before, after))
+    return before == after
 
 
 def main():
@@ -93,6 +103,12 @@ def main():
     paths = run("git", "diff", "--name-only", "--no-renames", parent, head).splitlines()
     if not paths or any(not allowed(args.role, p) for p in paths):
         raise RuntimeError("Sync proposal touches a protected path")
+    for path in paths:
+        if path.endswith(("/plugin.json", "/marketplace.json")) and path.startswith("."):
+            before = json.loads(run("git", "show", parent + ":" + path))
+            after = json.loads(run("git", "show", head + ":" + path))
+            if not only_versions_change(before, after):
+                raise RuntimeError("Sync may change manifest versions only; packaging changes require normal review")
     for line in run("git", "diff", "--raw", "--no-renames", parent, head).splitlines():
         fields = line.split()
         mode = fields[1]
@@ -109,8 +125,12 @@ def main():
     if api("repos/" + repo + "/git/ref/heads/main")["object"]["sha"] != parent:
         print("Target main moved before merge; coordinator will rebuild the proposal.")
         return
-    # GitHub enforces branch protections. --auto queues required checks instead of bypassing them.
-    run("gh", "pr", "merge", str(pr["number"]), "--repo", repo, "--squash", "--auto", "--match-head-commit", head)
+    # The merge API atomically checks this exact head. Never leave deferred auto-merge
+    # enabled: a later unsigned branch edit must not inherit this approval.
+    result = api("repos/" + repo + "/pulls/" + str(pr["number"]) + "/merge",
+                 {"sha": head, "merge_method": "squash"}, method="PUT")
+    if not result.get("merged"):
+        raise RuntimeError("GitHub did not merge the exact verified proposal; rerun after required checks")
     print("Validated sync PR: " + pr["html_url"])
 
 
