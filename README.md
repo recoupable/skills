@@ -145,3 +145,11 @@ Add a route for the new skill in [`RESOLVER.md`](RESOLVER.md) and a fixture in `
 
 - **Website**: [recoupable.com](https://recoupable.com)
 - **Support**: support@recoupable.com
+
+## Internal consulting workflows
+
+The 63 `recoup-internal-consulting-*` skills cover client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
+
+Business installs this same repository at `plugin/` as a pinned Git submodule. Consult its workspace rules before accessing data. Integration adapters, credentials and active schedules belong to the selected workspace; installing these skills does not configure them.
+
+Media skills bundle the Recoup Sky identity, DM Sans, IBM Plex Mono, exact logos and approved Finals references. Video engines and modes are supporting GUIDE.md files under the HyperFrames skill. Third-party assets retain their notices; personal-use replica and Virgil font binaries are excluded.

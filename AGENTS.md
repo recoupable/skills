@@ -16,7 +16,7 @@ recoupable/skills/            ← the repo root IS the plugin
 │   ├── recoup-roster-add-artist/
 │   ├── recoup-research-the-web/
 │   ├── recoup-internal-dev-issue-tracker/
-│   └── ...                   (31 skills, flat)
+│   └── ...                   (flat skill folders)
 ├── agents/                   ← specialized subagents
 ├── hooks/                    ← lifecycle hooks (hooks.json + *.sh)
 ├── references/               ← shared docs (canonical sources for any vendored copies)
@@ -189,3 +189,7 @@ python3 scripts/check_vendored.py
 ```
 
 Never hand-edit a vendored copy — `check_vendored.py` fails on any drift.
+
+## Consulting namespace
+
+Staff consulting capabilities use `recoup-internal-consulting-<skill-name>`. Keep the existing descriptive suffix; it need not fit a fixed word count. These skills work in an explicitly selected private business workspace. Their code and examples are public. Nested video engines/modes are support GUIDE.md files, not extra installable skills. Run the consulting tests when modifying their templates or runtime.

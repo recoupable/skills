@@ -1,7 +1,7 @@
 {
   "name": "recoup-skills",
-  "version": "2.0.4",
-  "description": "A record label in a box. Recoup turns your AI agent into a full music team — artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation — all in one install.",
+  "version": "2.1.0",
+  "description": "A record label in a box. Recoup turns your AI agent into a full music team \u2014 artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation \u2014 all in one install.",
   "author": {
     "name": "Recoup",
     "email": "support@recoupable.com",
@@ -27,8 +27,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Recoup Skills",
-    "shortDescription": "A record label in a box — your AI music team in one install",
-    "longDescription": "The whole Recoup platform in one plugin: artist research and analytics, A&R and contact discovery, content and short-form video, song analysis, end-to-end release campaigns, and catalog valuation — everything your AI music team needs to run an artist's career.",
+    "shortDescription": "A record label in a box \u2014 your AI music team in one install",
+    "longDescription": "The whole Recoup platform in one plugin: artist research and analytics, A&R and contact discovery, content and short-form video, song analysis, end-to-end release campaigns, and catalog valuation \u2014 everything your AI music team needs to run an artist's career.",
     "developerName": "Recoup",
     "category": "Music",
     "capabilities": [
@@ -36,7 +36,7 @@
       "Write"
     ],
     "websiteURL": "https://recoupable.com",
-    "brandColor": "#345A5D",
+    "brandColor": "#007EBD",
     "composerIcon": "./assets/recoup-icon.png",
     "logo": "./assets/recoup-icon.png"
   }

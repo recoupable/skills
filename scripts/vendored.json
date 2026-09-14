@@ -183,6 +183,54 @@
         "skills/recoup-internal-account-health-report/references/onboarding-checkpoints.md",
         "skills/recoup-internal-weekly-usage-review/references/onboarding-checkpoints.md"
       ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/references/anti-slop.md",
+      "copies": [
+        "skills/recoup-internal-consulting-copy-editor/references/anti-slop.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/references/voice-principles.md",
+      "copies": [
+        "skills/recoup-internal-consulting-copy-editor/references/voice-principles.md",
+        "skills/recoup-internal-consulting-hyperframes-video/references/voice-principles.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/references/long-form-essay.md",
+      "copies": [
+        "skills/recoup-internal-consulting-copy-editor/references/long-form-essay.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-graphics/references/dimensions.md",
+      "copies": [
+        "skills/recoup-internal-consulting-generative-post/references/dimensions.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/references/social-article-style.md",
+      "copies": [
+        "skills/recoup-internal-consulting-nightly-content/references/social-article-style.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-hyperframes-video/engine/hyperframes-core/references/subagent-dispatch.md",
+      "copies": [
+        "skills/recoup-internal-consulting-copy-editor/references/subagent-dispatch.md"
+      ]
+    },
+    {
+      "canonical_dir": "skills/recoup-internal-consulting-tasteful-design/brand",
+      "copies_dirs": [
+        "skills/recoup-internal-consulting-graphics/brand",
+        "skills/recoup-internal-consulting-generative-post/brand",
+        "skills/recoup-internal-consulting-article-illustrator/brand",
+        "skills/recoup-internal-consulting-higgsfield/brand",
+        "skills/recoup-internal-consulting-proposal-designer/brand",
+        "skills/recoup-internal-consulting-hyperframes-video/brand"
+      ]
     }
   ]
 }

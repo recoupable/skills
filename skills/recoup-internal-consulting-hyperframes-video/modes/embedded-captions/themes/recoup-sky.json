@@ -1,0 +1,48 @@
+{
+  "name": "recoup-sky",
+  "voice": "Recoup Sky: calm, readable words, exact brand fonts and a forest caption plate.",
+  "when": "Default for Recoup, Consulting and Business footage.",
+  "register": "calm",
+  "fonts": {
+    "body": "DM Sans",
+    "hero": "DM Sans",
+    "tag": "IBM Plex Mono"
+  },
+  "palette": {
+    "body": "#FFFFFF",
+    "accent": "#D6FF62",
+    "em": "#D6FF62"
+  },
+  "body": {
+    "paradigm": "rail",
+    "layer": "fg",
+    "fontPx": 46,
+    "bottomPx": 96,
+    "letterSpacing": "-.01em",
+    "entrance": "fade",
+    "exit": "fade",
+    "minorScale": 1.0,
+    "yield": {
+      "dim": 0.55,
+      "pre": 0.2,
+      "post": 0.9
+    },
+    "fontWeight": 400,
+    "glow": "none",
+    "background": "#132B26",
+    "emWeight": 500
+  },
+  "hero": {
+    "setpiece": "settle",
+    "layer": "bg",
+    "fontPx": 150,
+    "params": {},
+    "fontWeight": 500
+  },
+  "plate": {
+    "dim": 0,
+    "pushIn": 0,
+    "grain": 0
+  },
+  "linkages": []
+}
