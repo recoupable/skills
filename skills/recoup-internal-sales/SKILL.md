@@ -255,7 +255,8 @@ A person can legitimately appear on both, but only once each side is real.
 `New → In Conversation → Call Booked → Scoping → Proposal Sent → Won → Nurture → Lost`
 
 Fields: `stage`, `buyer_or_referrer` (Buyer / Referrer / Unknown), `project_type`
-(Build / Advisory / Retainer / Unknown), `owner`, `est_project_value`, `lost_reason`.
+(Build / Advisory / Retainer / Unknown), `lead_source` (Podcast for guests), `owner`,
+`est_project_value`, `lost_reason`.
 
 - **The stage that matters most is `In Conversation`.** It means they replied but **no
   time is on the calendar**. `Call Booked` is deliberately separate, because "agreed to a
@@ -271,6 +272,12 @@ Fields: `stage`, `buyer_or_referrer` (Buyer / Referrer / Unknown), `project_type
   introductions, not buyers, and treating a referrer as a buyer wastes a cycle.
 - **Leave `est_project_value` empty until the work is scoped.** A guessed number makes an
   unqualified lead look qualified.
+- **The podcast is the top of this funnel.** Cold outreach is a podcast invite, the
+  episode is the discovery call, and the day-7 follow-up is three builds we could do.
+  Guests are `lead_source = Podcast` on this list, mapped onto the existing stages; the
+  loop with its consent gate, the invite and day-7 templates, the episode-copy rules, the
+  cover spec and the Spotify for Creators edit path are in
+  `references/podcast-guest-pipeline.md`.
 
 #### Both lists
 
@@ -652,3 +659,4 @@ major-label exec, and a dormant power user. What actually mattered.
 - `references/meeting-prep.md` — prep for a booked call: the pitch, the meeting plan, the PDFs to deliver.
 - `references/credits-mechanics.md` — how `checkAndResetCredits` behaves, before you quote a balance.
 - `references/tooling-gotchas.md` — Privy / Stripe / Supabase / Attio quirks and dead columns.
+- `references/podcast-guest-pipeline.md` — the podcast-invite top of funnel: loop + Attio mapping with the consent gate, invite and day-7 templates, what to measure, premium episode copy, cover spec, guest photo sourcing, Spotify for Creators edits.
