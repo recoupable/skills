@@ -22,7 +22,8 @@ private checkout for missing inputs. Use workspace identity, audience, pricing, 
 4. Structure with AIDA (Attention → Interest → Desire → Action). Lead with the problem + outcome, not your resume.
 5. Place it on the specificity ladder (generic → category → specific → targeted) and match it to the business stage.
 6. Save the draft in `content/03-drafts/YYYY-MM-DD-<topic>/`; note the target audience (IC vs. leadership).
-7. For an illustrated article or complete bundle, invoke `recoup-internal-consulting-article-illustrator`:
+7. Preserve the workspace or bundle's image delivery format, including existing WebP paths.
+   For an illustrated article or complete bundle, invoke `recoup-internal-consulting-article-illustrator`:
    a bold thumbnail with a large text hook and contrasting artwork on any approved Recoup color,
    followed by simple pure-white-background inline illustrations with minimal labels and optional
    headlines. Use Higgsfield artwork with editable DM Sans overlays via `recoup-internal-consulting-graphics`.

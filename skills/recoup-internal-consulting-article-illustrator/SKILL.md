@@ -11,11 +11,11 @@ an explicit client/artist identity wins. Stage the self-contained brand package 
 
 ## Approved article image system
 
-- **Thumbnail, images/image1.png:** one bold focal illustration and a large, short text hook,
+- **Thumbnail, images/image1.<ext>:** one bold focal illustration and a large, short text hook,
   usually 3–6 words. Choose any approved Recoup background color to suit the concept; blue is not
   required. Text and illustration must both contrast clearly against the background and read at
   160px wide. Use color, scale and composition to earn attention. No body copy or repeated footer.
-- **Inline figures, images/image2.png onward:** simple illustrations on pure white #FFFFFF
+- **Inline figures, images/image2.<ext> onward:** simple illustrations on pure white #FFFFFF
   backgrounds. Keep object fills white by default, forest/ink outlines, blue connections and small
   lime accents. No pale-blue panels, tinted backgrounds or elaborate scenes. One useful concept
   per figure, with only the short labels needed to understand it.
@@ -24,6 +24,11 @@ an explicit client/artist identity wins. Stage the self-contained brand package 
   titles in order must tell the complete story. This never requires a headline on every asset.
 - **Wordmark:** omit repeated Recoup wordmarks from individual illustrations. Use the exact supplied
   mark only where collection-level identification is useful. Never generate a logo.
+
+Use the workspace or existing bundle's delivery format for `<ext>` (for example WebP or PNG).
+Preserve existing WebP paths; do not reintroduce PNG duplicates. Render intermediates and original
+provider downloads belong in the dated work folder. Retain compact selected artwork with the bundle,
+and keep original provider URLs/hashes separate from converted source hashes.
 
 ## Workflow
 
@@ -41,13 +46,13 @@ an explicit client/artist identity wins. Stage the self-contained brand package 
 4. Use recoup-internal-consulting-graphics to add editable text and export each composition. Follow its
    thumbnail recipe for image1. Use exact DM Sans for the hook and labels; mono only for short indices.
    The generation preview is source artwork, not the finished thumbnail: the final export must include
-   the text hook. Present the composed final PNG for approval.
+   the text hook. Present the composed final image for approval.
 5. Review the thumbnail at full size and 160px wide: readable hook, clear focal illustration, strong
    foreground/background contrast, safe crop and no clutter. Review inline figures at article width:
    white background, useful relationship, minimal labels, correct spelling, no unnecessary headline
    or wordmark. Check loaded fonts, clipping and overflow. If multiple titles work together, read
    them alone in sequence to verify the narrative.
-6. Save images/image1.png above the first line, then image2.png onward in reading order, with descriptive
+6. Save images/image1.<ext> above the first line, then image2.<ext> onward in reading order, with descriptive
    alt text. Keep editable sources, selected generated artwork, generation records and brand.lock.json
    with the bundle. Temporary generation files belong in the workspace's dated
    `work/YYYY-MM-DD-<task-name>/` folder; reuse it when continuing the task.

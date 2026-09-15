@@ -22,7 +22,7 @@ headlines. Omit repeated wordmarks. Keep thumbnail and inline compositions disti
 - **In-feed thumbnail:** 1080×1350 (4:5) or 1080×1080.
 - Exact specs + safe zones: `references/dimensions.md`.
 
-> **Animated hero?** This PNG stays the **poster + OG image** (link-preview cards never animate). To add
+> **Animated hero?** This still image stays the **poster + OG image** (link-preview cards never animate). To add
 > motion *on the owned blog*, mount a muted `<video>` loop behind it — drop-in template
 > `library/web/blog-hero.html`, render the loop with `recoup-internal-consulting-hyperframes-video`. Playbook:
 > `knowledge/sops/animated-media-for-posts-and-article-headers.md`.
@@ -51,7 +51,12 @@ isn't obvious, it fails — increase type size and contrast, cut elements, try a
 Multiple ideas · paragraphs of text · low contrast · tiny type · a busy scene · 4+ colors · generic stock.
 
 ## Render
-Single PNG at the target size:
+Render at the target size. Preserve the workspace or existing bundle's delivery format.
+For a WebP bundle, render a temporary PNG in the dated work folder, encode the final WebP,
+and inspect its text and edges at full size and 160px. Update references and source manifests
+together; do not leave duplicate PNG delivery files. Retain editable HTML and selected artwork.
+
+Example PNG intermediate (use WebP conversion afterward when required):
 ```bash
 npx playwright screenshot --viewport-size="1280,720" "file:///abs/path/thumb.html" "/abs/path/thumb.png"
 ```
