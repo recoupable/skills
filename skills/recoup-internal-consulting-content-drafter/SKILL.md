@@ -21,6 +21,11 @@ private checkout for missing inputs. Use workspace identity, audience, pricing, 
 3. Apply the title formula: "[N] steps to [outcome] by [%] using [tool/method]"; prefer "you" over "I".
 4. Structure with AIDA (Attention → Interest → Desire → Action). Lead with the problem + outcome, not your resume.
 5. Place it on the specificity ladder (generic → category → specific → targeted) and match it to the business stage.
-6. Save the draft to `content/03-drafts/` with a clear title; note the target audience (IC vs. leadership).
+6. Save the draft in `content/03-drafts/YYYY-MM-DD-<topic>/`; note the target audience (IC vs. leadership).
+7. For an illustrated article or complete bundle, invoke `recoup-internal-consulting-article-illustrator`:
+   a bold thumbnail with a large text hook and contrasting artwork on any approved Recoup color,
+   followed by simple pure-white-background inline illustrations with minimal labels and optional
+   headlines. Use Higgsfield artwork with editable DM Sans overlays via `recoup-internal-consulting-graphics`.
+   Do not force images onto a text-only post. Keep assets and their sources in the same bundle.
 
 Output: a draft ready for review. Sources: Ch. 5 + (for agent/skill topics) the research wiki via `integrations/research/AGENTS.md`.

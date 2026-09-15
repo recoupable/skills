@@ -76,8 +76,13 @@ ink/forest text, never white. Caption text uses a solid forest plate on variable
 
 ## Article covers earn attention
 
-Treat the first article image as a thumbnail with its own composition. Use a bold, saturated Recoup
-color field, a single high-contrast focal element and, when useful, a short oversized hook of 3–6
-words. Make it recognizable and readable at about 160px wide. Supporting illustrations can remain
-simple on white with short labels and optional headlines. Do not style the cover as another inline
-figure. Color and scale should earn attention without misleading claims or extra body copy.
+The first article image is a bold thumbnail with one focal illustration and a required large text
+hook, usually 3–6 words. Any approved Recoup background color is valid; blue is not required. Select
+text and illustration colors that both contrast clearly with the field. Make the result recognizable
+and readable at about 160px wide. Generate artwork with Higgsfield, then add exact editable DM Sans
+text. Present the composed thumbnail, not just its text-free source artwork.
+
+Inline article illustrations use pure white #FFFFFF backgrounds and white object fills by default,
+with forest/ink outlines, blue connections and restrained lime accents. Keep them simple: one useful
+concept, minimal labels, optional headlines and no recurring wordmark. No pale-blue backgrounds or
+panels. Keep the thumbnail and inline figures distinct; strong color belongs where it earns attention.

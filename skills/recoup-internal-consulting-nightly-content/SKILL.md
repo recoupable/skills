@@ -107,14 +107,18 @@ See `content/AGENTS.md`.)
    Save as `email.md` (frontmatter: `source` = the article path, `subject`, `status: draft`). Then gate it:
    **`recoup-internal-consulting-copy-reviewer`** (the owner's subscriber/prospect ICP) → rewrite → **`recoup-internal-consulting-copy-editor`**, edits in place.
 
-7. **Illustrate the edited article.** Read **`recoup-internal-consulting-article-illustrator`** (the house article-image skill;
-   brand taste via **`recoup-internal-consulting-tasteful-design`** / `DESIGN.md`). Per its density rule, produce the
-   **hero** — saved as `images/image1.png` and embedded above the first line — **plus ~1 inline figure per
-   major section**, saved as `images/image2.png`, `image3.png`, … (reading order) and embedded at each
-   section break (pick the archetype that fits each concept). Use the Recoup editorial package and selected Finals reference IDs. Render exact
-   diagrams locally with HTML/SVG; generate hero environments only through the configured available
-   provider, then overlay type/logo. Run the illustrator's checks. If rendering is unavailable, stage the
-   article without figures and flag it in the report — don't block the article.
+7. **Illustrate the edited article.** Invoke **`recoup-internal-consulting-article-illustrator`** with the
+   approved two-part system. `images/image1.png` is a bold thumbnail with a large short text hook and
+   one focal illustration: any approved Recoup background color is valid when both text and artwork
+   contrast clearly. Blue is not mandatory. Embed it above the article's first line. Inline figures
+   (`images/image2.png` onward, in reading order) are simple illustrations on pure white backgrounds
+   with minimal labels, optional headlines and no repeated wordmarks. Produce only useful figures,
+   roughly one per major section. Use Higgsfield for artwork and `recoup-internal-consulting-graphics`
+   for editable DM Sans text and final exports; exact data diagrams may use HTML/SVG. Preview paid
+   generation costs and retain prompts/job IDs. Present the final text-bearing thumbnail, not only
+   its text-free source generation. Check the cover at 160px wide and figures at article width.
+   If rendering/provider access is unavailable, flag missing assets in the report and stage the
+   article without claiming figures were made. Keep all output draft until the owner approves it.
 
 8. **Write the manifest, mark the signal, report, score, commit.** Write the bundle **`meta.yml`** — the
    approval state machine: `id` (the folder), `title`, `date`, `engine: A`, `source` (the signal path), a
