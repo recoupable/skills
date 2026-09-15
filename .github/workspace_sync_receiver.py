@@ -63,6 +63,23 @@ def allowed_mode(role, path, mode):
     return mode in {"000000", "100644", "100755"}
 
 
+def changed_entries(parent, head):
+    # NUL-delimited raw records preserve Unicode, spaces and quotes exactly.
+    raw = run("git", "diff", "--raw", "--no-renames", "-z", parent, head)
+    if not raw:
+        return []
+    fields = raw.split("\0")
+    if fields[-1] != "" or len(fields) % 2 != 1:
+        raise RuntimeError("Malformed Git change records")
+    entries = []
+    for index in range(0, len(fields) - 1, 2):
+        metadata = fields[index].split()
+        if len(metadata) != 5 or not metadata[0].startswith(":"):
+            raise RuntimeError("Malformed Git change metadata")
+        entries.append((fields[index + 1], metadata[1]))
+    return entries
+
+
 def validate_pr(pr, repo, head):
     if (pr["base"]["ref"] != "main" or pr["base"]["repo"]["full_name"] != repo or
             pr["head"]["sha"] != head or pr["head"]["repo"]["full_name"] != repo):
@@ -100,7 +117,8 @@ def main():
     if run("git", "rev-list", "--count", main_head + ".." + head) != "1":
         raise RuntimeError("A sync proposal must contain exactly one target-local commit")
     run("git", "-c", "gpg.ssh.allowedSignersFile=.github/sync-allowed-signers", "verify-commit", head)
-    paths = run("git", "diff", "--name-only", "--no-renames", parent, head).splitlines()
+    entries = changed_entries(parent, head)
+    paths = [path for path, _ in entries]
     if not paths or any(not allowed(args.role, p) for p in paths):
         raise RuntimeError("Sync proposal touches a protected path")
     for path in paths:
@@ -109,10 +127,7 @@ def main():
             after = json.loads(run("git", "show", head + ":" + path))
             if not only_versions_change(before, after):
                 raise RuntimeError("Sync may change manifest versions only; packaging changes require normal review")
-    for line in run("git", "diff", "--raw", "--no-renames", parent, head).splitlines():
-        fields = line.split()
-        mode = fields[1]
-        path = line.split("\t", 1)[1]
+    for path, mode in entries:
         if not allowed_mode(args.role, path, mode):
             raise RuntimeError("Sync proposal contains an unsupported file mode")
     existing = api("repos/" + repo + "/pulls?state=open&base=main&head=" + repo.split("/")[0] + ":" + branch)
