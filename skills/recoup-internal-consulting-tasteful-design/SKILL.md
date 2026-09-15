@@ -55,6 +55,7 @@ output ownership; /brand is public and new intended Studio assets start in Exper
 ## Maintaining the package
 
 Update from marketing's root DESIGN.md / brand-studio/DESIGN-SYSTEM.md and committed Finals only.
-Keep source revision and hashes in brand.json, bump version, then run scripts/sync_brand.py from the
-plugin root. scripts/sync_brand.py --check rejects differing consumer copies. Do not edit those copies
-independently. Preserve original vendor-font notices and alternatives for explicit other brands.
+Keep source revision and hashes in brand.json and bump the version. In the authoring repository,
+follow its AGENTS.md vendoring procedure: copy the canonical brand directory to every registered
+consumer, then run the repository vendored-file check. That check detects drift; it does not copy
+files. Do not edit consumer copies independently. Preserve original vendor-font notices and alternatives for explicit other brands.

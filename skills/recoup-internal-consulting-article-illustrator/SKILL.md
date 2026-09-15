@@ -1,6 +1,6 @@
 ---
 name: recoup-internal-consulting-article-illustrator
-description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-internal consulting requests. Create bold article thumbnails with contrasting text and illustration, plus simple white-background inline figures. Uses Higgsfield artwork with editable DM Sans text and approved Recoup colors."
+description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-internal consulting requests. Create bold article thumbnails with contrasting text and illustration, plus simple white-background inline figures, including flow, comparison, cycle, stack, hub and framework diagrams. Uses Higgsfield artwork with editable DM Sans text and approved Recoup colors."
 ---
 
 # Consulting Article Illustrator
@@ -38,7 +38,9 @@ and keep original provider URLs/hashes separate from converted source hashes.
 2. Read `references/prompt-kit.md` and inspect the actual approved reference from `brand/finals.json`.
    Borrow relevant illustration language; keep the inline background white even when a reference
    uses another surface. Use the thumbnail's selected Recoup field and contrast deliberately.
-3. Use recoup-internal-consulting-higgsfield for the thumbnail artwork and simple inline illustrations.
+3. Create or reuse `work/YYYY-MM-DD-<task-name>/` and pass that exact work folder to
+   recoup-internal-consulting-higgsfield for all downloads and render intermediates. Use it for the
+   thumbnail artwork and simple inline illustrations.
    Check the live model, preview cost before each paid generation, and retain exact prompts and job
    IDs. Generate artwork without text or logos, leaving room for the intended editable text. If an
    exact chart or data diagram requires deterministic geometry, author that diagram in HTML/SVG.

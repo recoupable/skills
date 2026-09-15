@@ -3,7 +3,9 @@
 This is a reviewed distribution snapshot of marketing's root DESIGN.md and Brand Studio
 DESIGN-SYSTEM.md, not a second independently authored identity. Provenance and exact file hashes
 are in brand.json. Update from that source, bump this version, and synchronize the registered self-contained
-consumer copies. The repository's vendored-file check detects drift.
+consumer copies: copy the canonical brand directory to every destination listed for it in the
+authoring repository's vendored registry, following that repository's AGENTS.md procedure.
+The repository's vendored-file check detects drift; it does not perform the copy.
 
 ## Select and stage
 
