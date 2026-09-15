@@ -54,7 +54,8 @@ You can render the *same* template at *many* formats — that's how you create o
 3. **Apply brand from `DESIGN.md`.** Use the brand name, logo SVG, and handle for footers/close slides/profile marks.
 4. **Compose for the format.** Match the layout to the canvas — a 4:5 feed post, a 9:16 story, a 4:1 banner, and a circular pfp are different compositions, not the same art stretched. Respect the safe zone for the format (see dimensions.md). For multi-slide carousels, one idea per slide.
 5. **Stage `brand/materialize.mjs` in the output directory and load `recoup-brand/brand.css`. Generate HTML** sized to the target canvas. Set `body { width: Wpx; height: Hpx; }`. Replace `BRAND_NAME` with the brand from `DESIGN.md`; use its logo SVG.
-6. **Render to PNG** via Playwright at the matching viewport:
+6. **Render a PNG intermediate** at the matching viewport in the task's dated work folder.
+   Use the workspace's supported browser/rendering tool; when Playwright CLI is available:
 
    ```bash
    npx playwright screenshot --viewport-size="WIDTH,HEIGHT" "file:///abs/path/graphic.html" "/abs/path/graphic.png"
@@ -137,4 +138,9 @@ The full "bold, not boring" stance + the anti-AI-slop checklist live in **`recou
 
 ## Output
 
-Save PNGs to the output directory (e.g. `slide-0.png … slide-N.png`, or `graphic-1080x1350.png` for single/multi-size). Keep HTML source alongside for iteration.
+Preserve the workspace or bundle's delivery format. For existing WebP bundles, convert the rendered
+PNG intermediate to WebP, verify dimensions, text and visual quality, and save to the existing
+WebP path. Keep PNG intermediates in `work/YYYY-MM-DD-<task-name>/`, not as duplicate bundle
+assets. PNG remains valid when it is the requested delivery format. If a distribution surface
+explicitly requires a separate PNG OG card, export that named derivative for that surface; it does
+not replace the article's WebP image. Keep editable HTML alongside final delivery assets.

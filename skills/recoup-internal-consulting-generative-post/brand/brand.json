@@ -1,6 +1,6 @@
 {
   "id": "recoup-sky",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "source": {
     "repository": "https://github.com/recoupable/marketing",
     "commit": "f8fa73c0b5e48e595186e0149756e1611b9d7ff5",
@@ -101,5 +101,13 @@
       "sha256": "8eb6a0703dbad3f0756409d12d580cd52b23db6a78f385e2a29262ddfb4b9d9b",
       "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/8eb6a0703dbad3f07564/assets/logos/lockup-blue.svg"
     }
+  },
+  "editorialRulesSource": {
+    "repository": "https://github.com/recoupable/marketing",
+    "commit": "1097aa948ad0b85db013190fa679a28d7260c57b",
+    "guides": [
+      "DESIGN.md",
+      "brand-studio/DESIGN-SYSTEM.md"
+    ]
   }
 }

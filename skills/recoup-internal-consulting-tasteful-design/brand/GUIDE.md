@@ -1,9 +1,11 @@
-# Recoup Sky / media package 1.0.0
+# Recoup Sky / media package 1.0.1
 
 This is a reviewed distribution snapshot of marketing's root DESIGN.md and Brand Studio
 DESIGN-SYSTEM.md, not a second independently authored identity. Provenance and exact file hashes
-are in brand.json. Update from that source, bump this version, and run the plugin's
-scripts/sync_brand.py; --check detects drift across self-contained consumer skills.
+are in brand.json. Update from that source, bump this version, and synchronize the registered self-contained
+consumer copies: copy the canonical brand directory to every destination listed for it in the
+authoring repository's vendored registry, following that repository's AGENTS.md procedure.
+The repository's vendored-file check detects drift; it does not perform the copy.
 
 ## Select and stage
 
@@ -45,6 +47,26 @@ are 180–240 ms for controls and 450–700 ms for editorial reveals. These are 
 not approval of a video. All six existing Studio motion files remain experiments. No default sonic
 identity or synthetic presenter. Preserve camera transparency and keep captions away from faces.
 
+## Titles tell the story
+
+Headlines are optional: do not add one to every illustration or frame. Let a supporting figure
+work through its visual and necessary short labels when the surrounding content provides context.
+The narrative rule governs titles used together; it does not require a headline on every asset.
+
+Across the Recoup brand, titles that work together must tell the full story when read alone in
+sequence. This applies to article figures, carousels, slide decks, reports, web sections and video
+title sequences. Draft the title sequence before designing individual frames. Each title advances
+the argument; together they explain the premise, progression and conclusion without body copy or
+images. Read only the titles in order during review. Rewrite any vague label, disconnected slogan
+or missing transition until the reader can follow the complete narrative.
+
+## Use the wordmark deliberately
+
+Do not add a Recoup wordmark footer to every illustration or every frame in a series. Identify the
+collection where useful, such as its enclosing page, cover or closing frame. Supporting figures
+can stand without a mark. If a mark is used, preserve the exact supplied artwork. Generated
+illustrations should contain no logo; apply any needed mark as a separate editable layer.
+
 ## Save and check
 
 Keep editable source and output in the existing client/deal/content folder. Add expression,
@@ -53,3 +75,16 @@ New intended Studio work starts in Experiments, through the existing promotion p
 Check actual fonts, exact logo, contrast, phone-scale reading, overflow, safe areas, PDF pagination
 and timeline seeks. White on sky is for large type; small links use link blue on white. Lime needs
 ink/forest text, never white. Caption text uses a solid forest plate on variable footage.
+
+## Article covers earn attention
+
+The first article image is a bold thumbnail with one focal illustration and a required large text
+hook, usually 3–6 words. Any approved Recoup background color is valid; blue is not required. Select
+text and illustration colors that both contrast clearly with the field. Make the result recognizable
+and readable at about 160px wide. Generate artwork with Higgsfield, then add exact editable DM Sans
+text. Present the composed thumbnail, not just its text-free source artwork.
+
+Inline article illustrations use pure white #FFFFFF backgrounds and white object fills by default,
+with forest/ink outlines, blue connections and restrained lime accents. Keep them simple: one useful
+concept, minimal labels, optional headlines and no recurring wordmark. No pale-blue backgrounds or
+panels. Keep the thumbnail and inline figures distinct; strong color belongs where it earns attention.

@@ -7,13 +7,22 @@ hero, a LinkedIn/Open-Graph link-preview card. It is read at ~160px wide in a no
 **Compose it as:** this recipe × a style template (usually `statement` for a hook, `stat` for a number)
 × a format. Pull tokens from the project's top-level `DESIGN.md`.
 
+## Recoup article pipeline
+
+An article thumbnail requires a large text hook and one bold focal illustration. Any approved Recoup
+background color is valid; blue is not required. Choose contrasting text and artwork for the selected
+field (for example white/lime on forest, forest on lime, or dark ink on white). Generate artwork with
+Higgsfield, then add exact editable DM Sans text. The generated background alone is not the final
+thumbnail. Supporting article figures use pure white backgrounds, minimal labels and optional
+headlines. Omit repeated wordmarks. Keep thumbnail and inline compositions distinct.
+
 ## Format
 - **YouTube / video:** 1280×720 (16:9).
 - **Link / OG preview** (LinkedIn, X, blog share): 1200×630 (1.91:1).
 - **In-feed thumbnail:** 1080×1350 (4:5) or 1080×1080.
 - Exact specs + safe zones: `references/dimensions.md`.
 
-> **Animated hero?** This PNG stays the **poster + OG image** (link-preview cards never animate). To add
+> **Animated hero?** This still image stays the **poster + OG image** (link-preview cards never animate). To add
 > motion *on the owned blog*, mount a muted `<video>` loop behind it — drop-in template
 > `library/web/blog-hero.html`, render the loop with `recoup-internal-consulting-hyperframes-video`. Playbook:
 > `knowledge/sops/animated-media-for-posts-and-article-headers.md`.
@@ -23,8 +32,8 @@ hero, a LinkedIn/Open-Graph link-preview card. It is read at ~160px wide in a no
    half of the frame. If it needs a sentence, it's a `statement` post, not a thumbnail.
 2. **One high-contrast focal element.** A face mid-emotion, a single number, or one object/diagram — never
    a scene. The eye must land in <1 second.
-3. **Maximum contrast.** Commit to a dark field (`--ink`/`--navy`) with one `--signal` pop, or a crisp
-   light field with a near-black hook. No pale gradients, no mid-tones fighting the text.
+3. **Maximum contrast.** Choose a field from the current approved Recoup palette, with
+   text and illustration colors that clearly contrast against it. No pale gradients, no mid-tones fighting the text.
 4. **No body copy.** No paragraphs, no captions, no multi-line subheads. Supporting text (if any) is one
    short kicker.
 5. **Footer is optional.** Thumbnails often drop the footer to maximize focal size — keep just the Recoup
@@ -42,7 +51,12 @@ isn't obvious, it fails — increase type size and contrast, cut elements, try a
 Multiple ideas · paragraphs of text · low contrast · tiny type · a busy scene · 4+ colors · generic stock.
 
 ## Render
-Single PNG at the target size:
+Render at the target size. Preserve the workspace or existing bundle's delivery format.
+For a WebP bundle, render a temporary PNG in the dated work folder, encode the final WebP,
+and inspect its text and edges at full size and 160px. Update references and source manifests
+together; do not leave duplicate PNG delivery files. Retain editable HTML and selected artwork.
+
+Example PNG intermediate (use WebP conversion afterward when required):
 ```bash
 npx playwright screenshot --viewport-size="1280,720" "file:///abs/path/thumb.html" "/abs/path/thumb.png"
 ```

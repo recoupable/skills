@@ -18,9 +18,16 @@ private checkout for missing inputs. Use workspace identity, audience, pricing, 
    steal`) and pull concrete, cited specifics to build the draft on — carry the `[[citations]]` so
    every claim stays traceable. Out-of-domain topic? Skip this — the wiki is silent on generic
    app/business, so don't force it.
-3. Apply the title formula: "[N] steps to [outcome] by [%] using [tool/method]"; prefer "you" over "I".
+3. Write a title with a clear subject and takeaway. A reader seeing only the title must understand what the article covers and what they will learn. Name the actual work or decision; replace vague references such as "the tool," "two numbers," or "the system" with concrete context. Match the promise to the article evidence. Never invent a count, percentage or outcome to fit a headline formula. Curiosity comes after comprehension.
 4. Structure with AIDA (Attention → Interest → Desire → Action). Lead with the problem + outcome, not your resume.
 5. Place it on the specificity ladder (generic → category → specific → targeted) and match it to the business stage.
-6. Save the draft to `content/03-drafts/` with a clear title; note the target audience (IC vs. leadership).
+6. Convert the topic to a lowercase hyphenated slug, removing path separators and punctuation. Save the draft in `content/03-drafts/YYYY-MM-DD-<topic-slug>/`; note the target audience (IC vs. leadership).
+7. Run the intended-reader review and `recoup-internal-consulting-copy-editor` gates; implement accepted edits before generating article assets.
+8. Preserve the workspace or bundle's image delivery format, including existing WebP paths.
+   For an illustrated article or complete bundle, invoke `recoup-internal-consulting-article-illustrator`:
+   a bold thumbnail with a large text hook and contrasting artwork on any approved Recoup color,
+   followed by simple pure-white-background inline illustrations with minimal labels and optional
+   headlines. Use Higgsfield artwork with editable DM Sans overlays via `recoup-internal-consulting-graphics`.
+   Do not force images onto a text-only post. Keep assets and their sources in the same bundle.
 
 Output: a draft ready for review. Sources: Ch. 5 + (for agent/skill topics) the research wiki via `integrations/research/AGENTS.md`.

@@ -1,42 +1,72 @@
 ---
 name: recoup-internal-consulting-article-illustrator
-description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-internal consulting requests. Create Recoup editorial article heroes and editable concept diagrams: flow, comparison, cycle, stack, hub and framework. Uses approved brand references, exact DM Sans labels and supplied logos; generated environments are composed separately from text."
+description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-internal consulting requests. Create bold article thumbnails with contrasting text and illustration, plus simple white-background inline figures, including flow, comparison, cycle, stack, hub and framework diagrams. Uses Higgsfield artwork with editable DM Sans text and approved Recoup colors."
 ---
 
 # Consulting Article Illustrator
 
-Illustrate articles with Recoup editorial heroes and concept diagrams. Use the selected workspace
-and its existing content bundle. Load DESIGN.md and brand/GUIDE.md (`brand/GUIDE.md`); an explicit
-client/artist identity wins. Stage the self-contained brand package with
+Use the selected workspace and its existing content bundle. Load DESIGN.md and `brand/GUIDE.md`;
+an explicit client/artist identity wins. Stage the self-contained brand package with
 `node <installed-skill>/brand/materialize.mjs <output-directory>`.
+
+## Approved article image system
+
+- **Thumbnail, images/image1.<ext>:** one bold focal illustration and a large, short text hook,
+  usually 3–6 words. Choose any approved Recoup background color to suit the concept; blue is not
+  required. Text and illustration must both contrast clearly against the background and read at
+  160px wide. Use color, scale and composition to earn attention. No body copy or repeated footer.
+- **Inline figures, images/image2.<ext> onward:** simple illustrations on pure white #FFFFFF
+  backgrounds. Keep object fills white by default, forest/ink outlines, blue connections and small
+  lime accents. No pale-blue panels, tinted backgrounds or elaborate scenes. One useful concept
+  per figure, with only the short labels needed to understand it.
+- **Headlines:** required on the thumbnail; optional on inline figures. Do not repeat the surrounding
+  article heading inside every illustration. When multiple titles work together, reading only those
+  titles in order must tell the complete story. This never requires a headline on every asset.
+- **Wordmark:** omit repeated Recoup wordmarks from individual illustrations. Use the exact supplied
+  mark only where collection-level identification is useful. Never generate a logo.
+
+Use the workspace or existing bundle's delivery format for `<ext>` (for example WebP or PNG).
+Preserve existing WebP paths; do not reintroduce PNG duplicates. Render intermediates and original
+provider downloads belong in the dated work folder. Retain compact selected artwork with the bundle,
+and keep original provider URLs/hashes separate from converted source hashes.
 
 ## Workflow
 
-1. Read the article. Plan one hero above the first line plus roughly one useful figure per major
-   section (usually at most 4–6). One idea per figure; omit redundant pictures.
-2. Choose a concept and archetype from references/prompt-kit.md. Prefer Paper trail, Margin notes,
-   Catalog index or Blueprint among brand/finals.json references. Diagrams use paper/white/pale-blue
-   surfaces, ink structure, sky connections and restrained lime emphasis. DM Sans is the exact label
-   font, mono only for short indices. A restrained drawn line is optional; grey whiteboard and
-   hand lettering are no longer the house default.
-3. For exact diagrams, author editable SVG/HTML and render locally; use recoup-internal-consulting-graphics for
-   rendering and format safe zones. For an expressive hero/environment use an available image tool
-   or recoup-internal-consulting-higgsfield, then composite editable labels and supplied logo with HTML. Generate
-   no text, logos or fake documents. Read the actual approved reference before prompting.
-4. Review the render: accurate relationship, correct spelling, contrast, readable at article width,
-   no overflow, exact loaded font/mark, one focal idea. Do not enforce legacy sample styling.
-5. Save hero as images/image1.png above the first line, then image2.png onward in reading order.
-   Use descriptive alt text explaining each figure. Keep editable sources and brand.lock.json with
-   expression/reference IDs alongside the bundle. Scratch goes in content/_work/article-images/.
+1. Read the edited article. Plan a thumbnail above its first line and roughly one useful inline figure
+   per major section (usually at most 4–6 figures). Omit redundant pictures. Draft the thumbnail hook
+   and any optional figure titles together before designing. Keep claims faithful to the article.
+2. Read `references/prompt-kit.md` and inspect the actual approved reference from `brand/finals.json`.
+   Borrow relevant illustration language; keep the inline background white even when a reference
+   uses another surface. Use the thumbnail's selected Recoup field and contrast deliberately.
+3. Create or reuse `work/YYYY-MM-DD-<task-name>/` and pass that exact work folder to
+   recoup-internal-consulting-higgsfield for all downloads and render intermediates. Use it for the
+   thumbnail artwork and simple inline illustrations.
+   Check the live model, preview cost before each paid generation, and retain exact prompts and job
+   IDs. Generate artwork without text or logos, leaving room for the intended editable text. If an
+   exact chart or data diagram requires deterministic geometry, author that diagram in HTML/SVG.
+   Report unavailable provider access; do not silently substitute a different generator.
+4. Use recoup-internal-consulting-graphics to add editable text and export each composition. Follow its
+   thumbnail recipe for image1. Use exact DM Sans for the hook and labels; mono only for short indices.
+   The generation preview is source artwork, not the finished thumbnail: the final export must include
+   the text hook. Present the composed final image for approval.
+5. Review the thumbnail at full size and 160px wide: readable hook, clear focal illustration, strong
+   foreground/background contrast, safe crop and no clutter. Review inline figures at article width:
+   white background, useful relationship, minimal labels, correct spelling, no unnecessary headline
+   or wordmark. Check loaded fonts, clipping and overflow. If multiple titles work together, read
+   them alone in sequence to verify the narrative.
+6. Save images/image1.<ext> above the first line, then image2.<ext> onward in reading order, with descriptive
+   alt text. Keep editable sources, selected generated artwork, generation records and brand.lock.json
+   with the bundle. Temporary generation files belong in the workspace's dated
+   `work/YYYY-MM-DD-<task-name>/` folder; reuse it when continuing the task.
 
 ## Scheduled runs
 
-recoup-internal-consulting-nightly-content passes the selected brand and reference IDs. Use local HTML/SVG rendering
-for diagrams. If generative imagery is needed, use its configured available provider/model and
-report unavailable access; never claim a generation succeeded or invent a score. Stage drafts for
-review, never auto-publish. No additional provider call is needed to typeset an exact diagram.
+recoup-internal-consulting-nightly-content passes the selected brand, reference IDs, output folder and
+these separate thumbnail/inline requirements. Use its configured Higgsfield access; report unavailable
+access or rendering and stage the article without claiming missing images exist. Never auto-publish.
 
 ## Historical samples
 
-samples/flow.png, compare.png and cycle.png preserve the previous whiteboard identity as historical
-references. They are not current Recoup exemplars. Use brand/finals.json and the new prompt kit.
+samples/flow.png, compare.png and cycle.png preserve the previous whiteboard identity. They can help
+explain simple figure structure; they are not current palette, typography or branding authorities.
+Use the current brand package and the approved article image system above.

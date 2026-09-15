@@ -39,7 +39,7 @@ content/03-drafts/<YYYY-MM-DD>-<topic-slug>/    ← the idea is the unit (date +
   article.md       the pillar article (hero + figures embedded inline)
   linkedin.md      the stand-alone LinkedIn post
   email.md         a single-idea broadcast email to the list (not the weekly newsletter)
-  images/          image1.png = hero (also the social/OG preview), then image2.png… (~1 per section)
+  images/          image1.<ext> = hero (also the social/OG preview), then image2.<ext>… (~1 per section)
 ```
 Children are **role-named** (`article.md`, `linkedin.md`, `email.md`; `x.md` as the idea warrants) — the
 folder carries the title, so every bundle is structurally identical and the approval queue is uniform.
@@ -81,7 +81,7 @@ See `content/AGENTS.md`.)
 2. **Write the ARTICLE** (the pillar). Read **`recoup-internal-consulting-copy-writer`** first: voice-principles,
    anti-slop, formats §blog/articles, and **`references/social-article-style.md`**. Use the social-article
    structure by default: thesis first, purpose sentence, thought experiment, fair comparison, pragmatic
-   verdict. Aim 800–1,400 words. Save as `article.md` with frontmatter: `title`, `source`
+   verdict. Give the article a title that names its subject and takeaway clearly without the body or image. Check that its promise is supported by the article; curiosity never replaces context. Aim 800–1,400 words. Save as `article.md` with frontmatter: `title`, `source`
    (insight/transcript path), `audience`, `status: draft`.
 
 3. **Reader review (customer POV) + rewrite.** Read **`recoup-internal-consulting-copy-reviewer`** and run it on
@@ -103,18 +103,23 @@ See `content/AGENTS.md`.)
 
 6. **Derive + gate the EMAIL.** From the edited article, write a **single-idea broadcast email** to the list
    (`recoup-internal-consulting-copy-writer` + the routing in `email/AGENTS.md`) — a one-idea nurture send, **not** the weekly
-   newsletter. Lead with the reader's takeaway; one clear CTA; it may lead with the bundle hero (`images/image1.png`).
+   newsletter. Lead with the reader's takeaway; one clear CTA; it may lead with the bundle hero (`images/image1.<ext>`).
    Save as `email.md` (frontmatter: `source` = the article path, `subject`, `status: draft`). Then gate it:
    **`recoup-internal-consulting-copy-reviewer`** (the owner's subscriber/prospect ICP) → rewrite → **`recoup-internal-consulting-copy-editor`**, edits in place.
 
-7. **Illustrate the edited article.** Read **`recoup-internal-consulting-article-illustrator`** (the house article-image skill;
-   brand taste via **`recoup-internal-consulting-tasteful-design`** / `DESIGN.md`). Per its density rule, produce the
-   **hero** — saved as `images/image1.png` and embedded above the first line — **plus ~1 inline figure per
-   major section**, saved as `images/image2.png`, `image3.png`, … (reading order) and embedded at each
-   section break (pick the archetype that fits each concept). Use the Recoup editorial package and selected Finals reference IDs. Render exact
-   diagrams locally with HTML/SVG; generate hero environments only through the configured available
-   provider, then overlay type/logo. Run the illustrator's checks. If rendering is unavailable, stage the
-   article without figures and flag it in the report — don't block the article.
+7. **Illustrate the edited article.** Invoke **`recoup-internal-consulting-article-illustrator`** with the
+   approved two-part system. `images/image1.<ext>` is a bold thumbnail with a large short text hook and
+   one focal illustration: any approved Recoup background color is valid when both text and artwork
+   contrast clearly. Blue is not mandatory. Embed it above the article's first line. Inline figures
+   (`images/image2.<ext>` onward, in reading order) are simple illustrations on pure white backgrounds
+   with minimal labels, optional headlines and no repeated wordmarks. Produce only useful figures,
+   roughly one per major section. Use Higgsfield for artwork and `recoup-internal-consulting-graphics`
+   for editable DM Sans text and final exports; exact data diagrams may use HTML/SVG. Preview paid
+   generation costs and retain prompts/job IDs. Present the final text-bearing thumbnail, not only
+   its text-free source generation. Use the workspace's delivery format for `<ext>` and preserve existing
+   WebP paths without adding PNG duplicates. Check the cover at 160px wide and figures at article width.
+   If rendering/provider access is unavailable, flag missing assets in the report and stage the
+   article without claiming figures were made. Keep all output draft until the owner approves it.
 
 8. **Write the manifest, mark the signal, report, score, commit.** Write the bundle **`meta.yml`** — the
    approval state machine: `id` (the folder), `title`, `date`, `engine: A`, `source` (the signal path), a

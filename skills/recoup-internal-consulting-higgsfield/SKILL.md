@@ -65,8 +65,10 @@ the command cheat-sheet → `integrations/higgsfield/AGENTS.md`.
    `higgsfield account status` for balance. State the credit cost to the user before any paid run.
 5. **Generate.** `higgsfield generate create <model> --prompt "…" [--image <id>] --wait` (blocks, prints
    the result URL). Add `--json` to parse. Image gen can take a couple minutes; video longer.
-6. **Land the raw result.** Download into the gitignored `integrations/higgsfield/_work/` —
-   `curl -fsSL "<url>" -o integrations/higgsfield/_work/YYYY-MM-DD-<slug>.png` (or `.mp4`).
+6. **Land the raw result.** Use the exact dated work folder supplied by the calling workflow.
+   Otherwise create `work/YYYY-MM-DD-<task-name>/` in the selected workspace; reuse it for the task.
+   Download original provider files there and record their URLs and hashes. Keep raw downloads
+   out of Git; promote only selected delivery assets and compact provenance into the bundle.
 7. **Finish + brand (usually a handoff).** Needs text/logo/framing → pass the generated image to
    `recoup-internal-consulting-graphics` as a background and overlay branded type. A clip for a post →
    `recoup-internal-consulting-hyperframes-video` can package it with captions/overlays.
