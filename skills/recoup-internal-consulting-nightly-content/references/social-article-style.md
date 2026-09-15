@@ -221,7 +221,7 @@ For LinkedIn:
 
 For newsletters or blog-style social articles:
 
-- Add a direct title.
+- Add a title with a clear subject and takeaway. Read it without the article or illustration: the intended reader must understand the topic and what they will learn. Name the actual work; avoid unexplained references such as "the tool" or "two numbers." Support the promise with the body, and never invent a number or outcome for a hook. Related titles must tell a coherent story when read in sequence.
 - Keep the opening paragraph short enough that the reader reaches the mental model immediately.
 - Use the same structure, but make section headers a little more descriptive if skimming matters.
 

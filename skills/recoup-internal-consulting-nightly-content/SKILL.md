@@ -81,7 +81,7 @@ See `content/AGENTS.md`.)
 2. **Write the ARTICLE** (the pillar). Read **`recoup-internal-consulting-copy-writer`** first: voice-principles,
    anti-slop, formats §blog/articles, and **`references/social-article-style.md`**. Use the social-article
    structure by default: thesis first, purpose sentence, thought experiment, fair comparison, pragmatic
-   verdict. Aim 800–1,400 words. Save as `article.md` with frontmatter: `title`, `source`
+   verdict. Give the article a title that names its subject and takeaway clearly without the body or image. Check that its promise is supported by the article; curiosity never replaces context. Aim 800–1,400 words. Save as `article.md` with frontmatter: `title`, `source`
    (insight/transcript path), `audience`, `status: draft`.
 
 3. **Reader review (customer POV) + rewrite.** Read **`recoup-internal-consulting-copy-reviewer`** and run it on

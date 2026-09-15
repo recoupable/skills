@@ -4,6 +4,14 @@ These principles shape all writing — social posts, emails, essays, landing pag
 
 ---
 
+## Titles must make sense before the article is read
+
+Every article title must name a clear subject and takeaway. Read it without the body, image or neighboring articles: can the intended reader explain what they are about to read and what they will learn? If not, rewrite it. Concrete work and decisions come before curiosity. Do not make readers decode an unexplained tool, number, metaphor or anecdote. A surprising opening is useful only after the title gives enough context.
+
+The title's promise must be supported by the article. Do not invent percentages, steps, measured outcomes or working capabilities to make a hook stronger. For example, prefer "Use past reports to teach AI your team's reporting standards" to "Three old files taught the tool what a spec never could."
+
+When titles work together as a series or section sequence, reading only those titles must tell the full story. Each article title must still make sense on its own. Inline illustrations may omit headlines; thumbnail text should remain understandable without the article body.
+
 ## Lead with the counterintuitive or surprising
 
 Don't open with context-setting. Open with the thing that makes someone stop scrolling.
