@@ -255,7 +255,8 @@ A person can legitimately appear on both, but only once each side is real.
 `New → In Conversation → Call Booked → Scoping → Proposal Sent → Won → Nurture → Lost`
 
 Fields: `stage`, `buyer_or_referrer` (Buyer / Referrer / Unknown), `project_type`
-(Build / Advisory / Retainer / Unknown), `owner`, `est_project_value`, `lost_reason`.
+(Build / Advisory / Retainer / Unknown), `lead_source` (Podcast for guests), `owner`,
+`est_project_value`, `lost_reason`.
 
 - **The stage that matters most is `In Conversation`.** It means they replied but **no
   time is on the calendar**. `Call Booked` is deliberately separate, because "agreed to a

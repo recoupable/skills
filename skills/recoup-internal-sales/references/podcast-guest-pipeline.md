@@ -16,7 +16,7 @@ to run it the same way.
 | 3. Record | The booking confirmation carries the written consent: recording, publication on the named platforms, use of clips and of the guest's name, photo and company name, and the right to withdraw before publication. No consent on file, no recording. Then 30 to 60 minutes remotely: their history in the industry, where AI does real work in the business today, the numbers behind it. Recorder notes go to the private guest folder. | `Call Booked` |
 | 4. Publish | Within 48 h, once the consent is on file and the guest has approved their cover photo: YouTube (show playlist), Spotify, Apple, socials; the episode is added to the site's `content/podcast/episodes.json` in the same PR; the guest gets the full episode and clips. | unchanged |
 | 5. Day 7 | One short email with three concrete things we could build for them, drawn from the call notes. One sentence each, no price. | `Scoping`, `project_type = Build` |
-| 6. Reply | A proposal for a 2 to 4 week build, priced from the current private rate card with a deposit plus delivery split, in the order `discovery-and-proposals.md` sets. Terms are proposals until accepted. | `Proposal Sent` |
+| 6. Reply | A proposal for a 2 to 4 week build, priced from the current private rate card with a deposit plus delivery split, in the order `gtm/playbooks/discovery-and-proposals.md` (marketing repo) sets. Terms are proposals until accepted. | `Proposal Sent` |
 | 7. Deposit paid | The build runs. | `Won` |
 | 8. Delivered | Testimonial request and a post-mortem in the private guest folder. After three paid, completed, reviewed builds, review the rate. | unchanged |
 | No reply after 3 touches, or a decline | Close it honestly. | `Lost`, `lost_reason` set |
@@ -99,12 +99,13 @@ The reference thumbnails are 2000×1125 (some 4000×2250). Fractions are of the 
 | Guest line | Under the title: name at 4.1% H semibold, org/role at 3.7% H regular, bottom of block 18% H above the bottom edge |
 | PFP placement | Right side, from 40% W to the right edge, face centred at ~71% W; head top on the top margin (10% H); shoulders bleed off the bottom edge |
 | PFP style | Background-removed cutout of a real photo, full colour, no circle, no frame, no tint, no drop shadow; the sweep shows around the silhouette |
-| Colour | Reference uses dark ink on a flat accent; ours is white type on the Recoup Podcast blue sweep (`assets/recoup-podcast-blue-sweep-background.png`, lockup `recoup-podcast-white-transparent.png`) |
+| Colour | Reference uses dark ink on a flat accent; ours is white type on the Recoup Podcast blue sweep (the show's blue-sweep background and white lockup PNGs, in the operator's workspace) |
 
 Square derivation: same margins and logo; title column 47% W and the title auto-steps
 down (8.9 → 5.2% H) until the block clears the lockup row; the cutout is 62% H tall,
-centred at 74% W, anchored to the bottom edge. `workspace/sales/podcast/scripts/make-covers.py`
-implements both.
+centred at 74% W, anchored to the bottom edge. The table is the spec; the operator's private
+workspace carries a Pillow script and the two brand assets that implement it, and they are
+not shipped with this skill.
 
 ## Guest photo sourcing
 
