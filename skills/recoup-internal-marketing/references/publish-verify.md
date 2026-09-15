@@ -189,6 +189,24 @@ given. On 2026-07-28 the description survived (the connector merges) — that wa
 **`embeddable: false`** is a channel default the connector ignores; a Short we want to embed on the
 site has to be flipped by hand in YouTube Studio.
 
+## Importing a finished film into OpusClip for scheduling (2026-09-14)
+
+Opus is the scheduler for clips and full films alike, but **an import burns its karaoke captions AND emojis
+over ours by default**, and the bundled CLI cannot turn either off (`--enable-caption` only sets true; there is
+no emoji flag). Two test imports found this. The working recipe:
+
+- Cut the clips yourself at song-map boundaries (ffmpeg re-encode, not stream copy) so they carry the film's own
+  captions; 15–30s each, a strong first frame.
+- Host each file on fal storage (or any public URL) and call `POST https://api.opus.pro/api/clip-projects`
+  directly with `curationPref.skipCurate: true` and
+  `renderPref: { layoutAspectRatio: "portrait", enableCaption: false, enableEmoji: false, enableAutoEmoji: false, enableBRoll: false, enableKeywordHighlight: false }`.
+  The API accepts the undocumented flags; the returned single clip is the whole file, our captions only.
+- The clip title still comes back with an `_OpusClip Captions` suffix. Cosmetic; ignore it.
+- Then `post schedule` per platform as usual (`content/off-the-stage/video/opus/schedule.mjs`). Check the live
+  queue with `post list --from … --to …` for collisions with other slates **before** picking slots; the same
+  accounts carried the cxy slate at 17:00 UTC, so the film went at 21:00 UTC.
+- Verify the first slot actually posts (`post list --project`), not the schedule call's `ok`.
+
 ## Log it
 
 One row per post in `posts-log.md`: platform, account, URL/URN, asset, arc + character, CTA and its

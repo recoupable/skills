@@ -5,6 +5,72 @@ ByteDance's video model. Announced **2026-07-31**, API live on BytePlus ModelArk
 at the bottom is the part that grows. First written 2026-08-13, before our first generation — so
 everything above the run log is *sourced*, not *earned*. Mark earned findings as such.
 
+## The decision gate (earned 2026-09-14, NOBODY OFF THE STAGE) — read before any other section
+
+**Through fal, Seedance's input filter rejects every photoreal human face, whatever made it** — a Muse sheet,
+a Nano Banana sheet, a frame extracted from Seedance's own output, that output's untouched mp4, and a
+face-bearing clip sent as an extension source (six rejections, run log). **A stylized face passes and holds
+identity across shots.** So the *medium* decides the model:
+
+| Cast | Model | Why |
+|---|---|---|
+| Photoreal characters | **H3 Max i2v from Muse start stills** (SMALL ROOM pipeline) | Seedance cannot take the face; H3 takes the still |
+| Stylized / animated characters | **Seedance 2.5 `reference-to-video`** with the sheets as references | The sheets get in, identity is held by reference, whole song sections become one take |
+| Face-free plates and beats (empty streets, cranes, crowds from behind) | Seedance | Its strongest work either way |
+
+What still passes with a photoreal cast, for a hybrid: **headless wardrobe crops** (build, clothes, props
+transfer; the face is redrawn), location plates, props. What never passes: any face, by any route.
+
+### The stylized pipeline, in order (what worked first time and what did not)
+
+1. **Cast photoreal first, from the owner's references** (Muse, bake-off, approved sheets). Identity decisions
+   are made on real faces, where they are easiest to judge.
+2. **Re-render every asset with ONE style string via Muse edit** — sheets, plates, props, the two-shot size
+   reference — so the character survives the medium change. Keep the string in its own module and paste it
+   verbatim into every Seedance prompt too (`content/off-the-stage/style3d.mjs`).
+3. **Bisect-test every face panel alone before a take**: one panel + one plate, 4s, 480p (free if rejected).
+   The phone-lit close-up in our set stayed near-photoreal after the first pass, tripped the filter, and cost a
+   full 8-reference take before the bisect found it. A harder push ("larger eyes, smooth skin, no freckles,
+   unmistakably an animated character") fixed it in one edit.
+4. **Proof take = the hardest two-lead beat first** (ours: the reversal two-shot, 15s). If identity holds
+   there it holds everywhere; if it fails, nothing downstream is worth spending on.
+5. **One take per song-map section, ≤30s, cuts written as `Shot N` inside the take.** No per-shot start
+   stills. Seven takes covered a 121.6s film.
+6. **Upscale per take, not the master**: Topaz on fal, 720→1080 at $0.02/s. It trims ~0.5s off some takes
+   (twice on the same two); pad by cloning the last frame to the window length.
+7. **HyperFrames `--fps 24`**, and its render lands as `renders/video_<timestamp>.mp4`, so the mux script
+   must glob, not assume `main.mp4`.
+
+### The prompt architecture that held (el.cine's "The Last Dish" template + the Higgsfield 2.5 dialect)
+
+```
+[GLOBAL]  medium + palette + "every shot is a LOCKED camera" + acting register + PHYSICS LAWS + no text + NO BGM
+[Characters]  one line per lead: @ImageN roles with exclusions and a fidelity grade; count header
+[Scenes and props]  plates and props by role, "do not use as a starting frame"
+[GEO SPATIAL LAYOUT]  per location, pasted unchanged into every shot of that location
+[Shots — N seconds continuous]  Shot k (a–b s): size, locked camera, initial state, primary event, End state
+[Maintain Consistency]
+AUDIO: diegetic only. NO BGM.
+```
+
+**PHYSICS LAWS is the block that stopped the re-rolls.** Both physics failures we shipped past were prompt
+omissions, not model faults: thumbs passed through a handshake, and a phone teleported between hands with its
+earbud cable detached. The fixes, now standing in every `[GLOBAL]`: *hands that touch stay solid and never pass
+through each other; every prop belongs to ONE named hand and changes hands only when a shot says so; the cable
+runs from the phone to her ear whenever she holds it; the crowd is one mass, backs to camera, never a face.*
+Then per shot, write ownership explicitly ("phone in her LEFT hand", "hat in her RIGHT hand") and restate it in
+every End state. A climb floated until it was written as weight transfer ("plants her right foot on the
+crossbar, the crossbar takes her weight, pushes up, left foot lands flat on the planks; each foot always in
+contact"). Age-blind names throughout (THE PASSENGER, THE DIRECTOR; never "kid", "young").
+
+### Cost anchors (fal, 2026-09-14)
+
+720p `reference-to-video` ≈ $0.47/s (a 15s take ≈ $7); rejected inputs are not billed. A 121.6s film: ~$78
+across six tests, three proof takes, six slate takes and one re-roll, + ~$4 Muse + ~$3.30 Topaz. The same
+15s beat on H3 Max cost $0.60 and followed one action per clip; Seedance followed the staged direction and
+kept the world continuous across its internal cut. Choose Seedance for multi-beat, two-lead takes; H3 for
+single-action solo clips if the cast is photoreal.
+
 ## Sources, ranked by trust
 
 | Trust | Source | What it's good for |

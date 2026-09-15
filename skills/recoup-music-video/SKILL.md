@@ -113,6 +113,14 @@ plain grey, then separate face and body references: front/back wardrobe, face cl
 needed angles; include mouth-open/closed variants when relevant. Present the candidates and
 let the user select the character before motion testing.
 
+**Decide the medium here, because it decides the motion model.** A photoreal cast animates with
+H3 Max i2v from Muse start stills (the Small Room pipeline). A stylized or animated cast can
+instead go to Seedance 2.5 with the sheets as references, one take per song section: Seedance's
+input filter (through fal) rejects every photoreal face of any origin but accepts a stylized one
+and holds it across shots. Cast photoreal from the user's references first, approve, then
+re-render every asset in one style string. Recipe, prompt architecture and costs:
+`recoup-internal-marketing/references/seedance.md` → *The decision gate*.
+
 Stage a **silent five-second screen test** of an actual demanding beat from the film,
 using **H3 Max Turbo** at the settings in the production reference. It must prove the
 character can act with gaze, posture and hands. Small Room tested looking from a failing
