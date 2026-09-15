@@ -86,6 +86,22 @@ def validate_pr(pr, repo, head):
         raise RuntimeError("Sync PR does not match the verified main-bound proposal")
 
 
+def merge_verified_pr(pr, repo, head):
+    endpoint = "repos/" + repo + "/pulls/" + str(pr["number"])
+    try:
+        result = api(endpoint + "/merge", {"sha": head, "merge_method": "squash"}, method="PUT")
+    except RuntimeError:
+        # GitHub can finish a merge but fail to deliver the response. Read back
+        # the exact proposal's state; do not retry an uncertain write.
+        recorded = api(endpoint)
+        validate_pr(recorded, repo, head)
+        if recorded.get("merged") is True:
+            return
+        raise RuntimeError("GitHub did not confirm the exact proposal was merged") from None
+    if not result.get("merged"):
+        raise RuntimeError("GitHub did not merge the exact verified proposal; rerun after required checks")
+
+
 def only_versions_change(before, after):
     if isinstance(before, dict) and isinstance(after, dict):
         return before.keys() == after.keys() and all(
@@ -142,10 +158,7 @@ def main():
         return
     # The merge API atomically checks this exact head. Never leave deferred auto-merge
     # enabled: a later unsigned branch edit must not inherit this approval.
-    result = api("repos/" + repo + "/pulls/" + str(pr["number"]) + "/merge",
-                 {"sha": head, "merge_method": "squash"}, method="PUT")
-    if not result.get("merged"):
-        raise RuntimeError("GitHub did not merge the exact verified proposal; rerun after required checks")
+    merge_verified_pr(pr, repo, head)
     print("Validated sync PR: " + pr["html_url"])
 
 
