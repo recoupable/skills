@@ -5,6 +5,72 @@ ByteDance's video model. Announced **2026-07-31**, API live on BytePlus ModelArk
 at the bottom is the part that grows. First written 2026-08-13, before our first generation — so
 everything above the run log is *sourced*, not *earned*. Mark earned findings as such.
 
+## The decision gate (earned 2026-09-14, NOBODY OFF THE STAGE) — read before any other section
+
+**Through fal, Seedance's input filter rejects every photoreal human face, whatever made it** — a Muse sheet,
+a Nano Banana sheet, a frame extracted from Seedance's own output, that output's untouched mp4, and a
+face-bearing clip sent as an extension source (six rejections, run log). **A stylized face passes and holds
+identity across shots.** So the *medium* decides the model:
+
+| Cast | Model | Why |
+|---|---|---|
+| Photoreal characters | **H3 Max i2v from Muse start stills** (SMALL ROOM pipeline) | Seedance cannot take the face; H3 takes the still |
+| Stylized / animated characters | **Seedance 2.5 `reference-to-video`** with the sheets as references | The sheets get in, identity is held by reference, whole song sections become one take |
+| Face-free plates and beats (empty streets, cranes, crowds from behind) | Seedance | Its strongest work either way |
+
+What still passes with a photoreal cast, for a hybrid: **headless wardrobe crops** (build, clothes, props
+transfer; the face is redrawn), location plates, props. What never passes: any face, by any route.
+
+### The stylized pipeline, in order (what worked first time and what did not)
+
+1. **Cast photoreal first, from the owner's references** (Muse, bake-off, approved sheets). Identity decisions
+   are made on real faces, where they are easiest to judge.
+2. **Re-render every asset with ONE style string via Muse edit** — sheets, plates, props, the two-shot size
+   reference — so the character survives the medium change. Keep the string in its own module and paste it
+   verbatim into every Seedance prompt too (`content/off-the-stage/style3d.mjs`).
+3. **Bisect-test every face panel alone before a take**: one panel + one plate, 4s, 480p (free if rejected).
+   The phone-lit close-up in our set stayed near-photoreal after the first pass, tripped the filter, and cost a
+   full 8-reference take before the bisect found it. A harder push ("larger eyes, smooth skin, no freckles,
+   unmistakably an animated character") fixed it in one edit.
+4. **Proof take = the hardest two-lead beat first** (ours: the reversal two-shot, 15s). If identity holds
+   there it holds everywhere; if it fails, nothing downstream is worth spending on.
+5. **One take per song-map section, ≤30s, cuts written as `Shot N` inside the take.** No per-shot start
+   stills. Seven takes covered a 121.6s film.
+6. **Upscale per take, not the master**: Topaz on fal, 720→1080 at $0.02/s. It trims ~0.5s off some takes
+   (twice on the same two); pad by cloning the last frame to the window length.
+7. **HyperFrames `--fps 24`**, and its render lands as `renders/video_<timestamp>.mp4`, so the mux script
+   must glob, not assume `main.mp4`.
+
+### The prompt architecture that held (el.cine's "The Last Dish" template + the Higgsfield 2.5 dialect)
+
+```
+[GLOBAL]  medium + palette + "every shot is a LOCKED camera" + acting register + PHYSICS LAWS + no text + NO BGM
+[Characters]  one line per lead: @ImageN roles with exclusions and a fidelity grade; count header
+[Scenes and props]  plates and props by role, "do not use as a starting frame"
+[GEO SPATIAL LAYOUT]  per location, pasted unchanged into every shot of that location
+[Shots — N seconds continuous]  Shot k (a–b s): size, locked camera, initial state, primary event, End state
+[Maintain Consistency]
+AUDIO: diegetic only. NO BGM.
+```
+
+**PHYSICS LAWS is the block that stopped the re-rolls.** Both physics failures we shipped past were prompt
+omissions, not model faults: thumbs passed through a handshake, and a phone teleported between hands with its
+earbud cable detached. The fixes, now standing in every `[GLOBAL]`: *hands that touch stay solid and never pass
+through each other; every prop belongs to ONE named hand and changes hands only when a shot says so; the cable
+runs from the phone to her ear whenever she holds it; the crowd is one mass, backs to camera, never a face.*
+Then per shot, write ownership explicitly ("phone in her LEFT hand", "hat in her RIGHT hand") and restate it in
+every End state. A climb floated until it was written as weight transfer ("plants her right foot on the
+crossbar, the crossbar takes her weight, pushes up, left foot lands flat on the planks; each foot always in
+contact"). Age-blind names throughout (THE PASSENGER, THE DIRECTOR; never "kid", "young").
+
+### Cost anchors (fal, 2026-09-14)
+
+720p `reference-to-video` ≈ $0.47/s (a 15s take ≈ $7); rejected inputs are not billed. A 121.6s film: ~$78
+across six tests, three proof takes, six slate takes and one re-roll, + ~$4 Muse + ~$3.30 Topaz. The same
+15s beat on H3 Max cost $0.60 and followed one action per clip; Seedance followed the staged direction and
+kept the world continuous across its internal cut. Choose Seedance for multi-beat, two-lead takes; H3 for
+single-action solo clips if the cast is photoreal.
+
 ## Sources, ranked by trust
 
 | Trust | Source | What it's good for |
@@ -61,8 +127,14 @@ those is reachable from an API key.** For an API-based pipeline like ours, **rou
 candidate**, which raises the stakes on testing it. Sourced from community guides written against
 Seedance **2.0**, so verify before relying on it.
 
-**Practical rule:** an original character invented in the prompt is fully available today. A
-recurring cast member whose likeness is a real person is not, until route 1 is proven.
+**Practical rule (earned 2026-09-14):** through fal, **no face of any origin passes the input filter** — a Muse
+sheet, a Seedance-extracted frame and Seedance's own untouched mp4 were all rejected with the same error
+(run log). A **headless wardrobe crop passes and transfers** (run log), so build, clothes and props can be locked by image;
+the face cannot, and an extension chain cannot carry one either. Identity across takes = wardrobe by image +
+face by descriptor, redrawn every take — **unless the film is stylized**: a 3D-animation / cartoon face passes
+the filter as a reference and holds across takes (run log, 09-14). Photoreal cast → hybrid with an i2v model;
+stylized cast → all-Seedance with sheets, the Higgsfield reference doctrine applies in full. Route 1 can only be tested with a BytePlus ModelArk account, where the output's task provenance
+lives. Until then: **Seedance for face-free beats, an i2v model for every shot with a lead.**
 
 ### 🔴 Do NOT composite a character sheet — it breaks trust AND causes duplicate people
 
@@ -503,6 +575,13 @@ parameters and the honest verdict, including the failures.
 
 | Date | Piece / arc | Endpoint | Duration · ratio · res · audio | Refs | Time | Verdict |
 |---|---|---|---|---|---|---|
+| 2026-09-14 | NOBODY OFF THE STAGE — **cast acceptance test** | fal ref2v | 4s · 9:16 · 480p · audio off | Muse-generated director face close-up + hill plate | 122s | ❌ **REJECTED AT INPUT** (`content_policy_violation`, "likenesses of real people"). A Muse face is not trusted either; it is the face, not the generator. Unbilled. |
+| 2026-09-14 | route 1 test A — character on grey | fal **t2v** | 4s · 9:16 · 480p · audio off | none | 142s | ✅ Generated. Seed `988227973`. Used only as the source for tests B and C. |
+| 2026-09-14 | route 1 test B — **Seedance's own frame** as face ref | fal ref2v | 4s · 480p | PNG frame extracted from test A + hill plate | 100s | ❌ **REJECTED AT INPUT**, same error. An extracted frame is "secondary editing". Unbilled. |
+| 2026-09-14 | route 1 test C — **Seedance's own untouched mp4** as identity ref | fal ref2v | 4s · 480p | test A's original mp4 as `@Video1` + hill plate | 161s | ❌ **REJECTED AT INPUT**, same error. **Route 1 is dead through fal**: the trust check is account/task provenance on ModelArk, and a reseller cannot pass it. Unbilled. |
+| 2026-09-14 | **extension test** — extend a face-bearing Seedance clip forward | fal ref2v (extension order) | 4s · auto · 480p | test A's mp4 as `@Video 1`, extension phrasing | 105s | ❌ **REJECTED AT INPUT** on `video_urls`. The filter runs on the upload, not the prompt intent: **chains cannot carry a face through fal.** Unbilled. |
+| 2026-09-14 | **headless wardrobe test** — director body crop, no face | fal ref2v | 4s · 9:16 · 480p · audio off | `cast/director-body-headless.png` (crop from the collar down) + hill plate | 468s (queued) | ✅ **ACCEPTED, and the wardrobe transferred**: shell open over tank, walkie on chest strap, headset, cargos, shot list, sleeve faint on the raised arm; hill plate and the crane signal landed. **The face is the model's own** (different from the t2v plate). Seed `143886878`. |
+| 2026-09-14 | **stylized-face test** — dir5 re-rendered as 3D feature-animation (Muse edit) as the face ref | fal ref2v | 4s · 9:16 · 480p · audio off | `cast/director-stylized.png` + hill plate | 415s (queued) | ✅ **ACCEPTED, identity HELD**: same face, hair, hoops, sleeve, headset, wardrobe on the hill, crane signal landed. **The filter is a photoreal-likeness classifier; a stylized face is not a likeness.** This is how el.cine's Filmera "The Last Dish" template holds two characters across a 27s take (stylized 3D, two sheets + storyboard + set). Seed `715878081`. |
 | 2026-08-13 | back-office v1 `[Builder Diary]` | fal t2v | 10s · 9:16 · 720p · audio on | none | 142s | ❌ **Generated, then REJECTED by output moderation.** `content_policy_violation`, "potential copyright violation", `partner_validation_failed`. Prompt was film-noir styled: night, rain on the window, loosened tie, desk lamp. |
 | 2026-08-13 | **THE OPERATOR ep1, full 30s** | fal **ref2v** | **30s** · 9:16 · 720p · audio on | 1 face-free scene plate | **292s** | ✅ **All three acts, one cut, identity held across a hard location change.** Seed `39363830`, 7.68MB, -22.3 LUFS. |
 | 2026-08-13 | PoC: collision `[The Operator]` | fal **ref2v** | 10s · 9:16 · 720p · audio on | **1 face-free scene plate** | 208s | ✅ **Best result yet.** Scene plate transferred completely; the collision read as an accident; the crouch + phone-to-ear + line all landed. Seed `927418445`. |
