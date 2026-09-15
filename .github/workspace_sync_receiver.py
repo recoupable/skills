@@ -52,8 +52,13 @@ def api(endpoint, payload=None, method="POST"):
     result = subprocess.run(args, input=None if payload is None else json.dumps(payload),
                             text=True, capture_output=True)
     if result.returncode:
-        raise RuntimeError("GitHub receiver API request failed")
-    return json.loads(result.stdout)
+        status = re.search(r"\(HTTP (\d{3})\)", result.stderr)
+        suffix = " (HTTP " + status[1] + ")" if status else ""
+        raise RuntimeError("GitHub receiver API request failed" + suffix)
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError:
+        raise RuntimeError("GitHub receiver API returned invalid JSON") from None
 
 
 def allowed_mode(role, path, mode):
@@ -90,14 +95,16 @@ def merge_verified_pr(pr, repo, head):
     endpoint = "repos/" + repo + "/pulls/" + str(pr["number"])
     try:
         result = api(endpoint + "/merge", {"sha": head, "merge_method": "squash"}, method="PUT")
-    except RuntimeError:
+        if not isinstance(result, dict) or type(result.get("merged")) is not bool:
+            raise RuntimeError("GitHub merge API returned an invalid confirmation")
+    except RuntimeError as error:
         # GitHub can finish a merge but fail to deliver the response. Read back
         # the exact proposal's state; do not retry an uncertain write.
         recorded = api(endpoint)
         validate_pr(recorded, repo, head)
         if recorded.get("merged") is True:
             return
-        raise RuntimeError("GitHub did not confirm the exact proposal was merged") from None
+        raise RuntimeError("PR remains unmerged; check permissions and required checks before retrying") from error
     if not result.get("merged"):
         raise RuntimeError("GitHub did not merge the exact verified proposal; rerun after required checks")
 
