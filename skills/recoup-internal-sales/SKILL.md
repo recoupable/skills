@@ -274,8 +274,9 @@ Fields: `stage`, `buyer_or_referrer` (Buyer / Referrer / Unknown), `project_type
 - **The podcast is the top of this funnel.** Cold outreach is a podcast invite, the
   episode is the discovery call, and the day-7 follow-up is three builds we could do.
   Guests are `lead_source = Podcast` on this list, mapped onto the existing stages; the
-  loop, the episode-copy rules, the cover spec and the Spotify for Creators edit path are
-  in `references/podcast-guest-pipeline.md`.
+  loop with its consent gate, the invite and day-7 templates, the episode-copy rules, the
+  cover spec and the Spotify for Creators edit path are in
+  `references/podcast-guest-pipeline.md`.
 
 #### Both lists
 
@@ -657,4 +658,4 @@ major-label exec, and a dormant power user. What actually mattered.
 - `references/meeting-prep.md` — prep for a booked call: the pitch, the meeting plan, the PDFs to deliver.
 - `references/credits-mechanics.md` — how `checkAndResetCredits` behaves, before you quote a balance.
 - `references/tooling-gotchas.md` — Privy / Stripe / Supabase / Attio quirks and dead columns.
-- `references/podcast-guest-pipeline.md` — the podcast-invite top of funnel: loop + Attio mapping, premium episode copy, cover spec, guest photo sourcing, Spotify for Creators edits.
+- `references/podcast-guest-pipeline.md` — the podcast-invite top of funnel: loop + Attio mapping with the consent gate, invite and day-7 templates, what to measure, premium episode copy, cover spec, guest photo sourcing, Spotify for Creators edits.
