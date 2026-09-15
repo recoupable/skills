@@ -104,7 +104,7 @@
   },
   "editorialRulesSource": {
     "repository": "https://github.com/recoupable/marketing",
-    "commit": "d9efa4617fd03af7e03ca421b7f6cdf1d8bf3b0f",
+    "commit": "06e6673e58abe2e39218540865667b456e6c5fb9",
     "guides": [
       "DESIGN.md",
       "brand-studio/DESIGN-SYSTEM.md"

@@ -17,7 +17,10 @@ client/artist identity wins. Stage the self-contained brand package with
    supporting figures can use the visual and short labels alone. When using multiple titles together,
    write them in reading order first: they must tell the complete story with a clear premise,
    progression and conclusion. Do not add headlines merely to satisfy the narrative rule.
-2. Choose a concept and archetype from references/prompt-kit.md. Prefer Paper trail, Margin notes,
+2. Design the first image as a bold, colorful thumbnail: one dominant focal element, saturated
+   Recoup color and an optional oversized 3–6 word hook. Verify it at 160px wide. Supporting figures
+   can stay simple on white; give the cover its own composition.
+   Choose a concept and archetype from references/prompt-kit.md. Prefer Paper trail, Margin notes,
    Catalog index or Blueprint among brand/finals.json references. Diagrams use paper/white/pale-blue
    surfaces, ink structure, sky connections and restrained lime emphasis. DM Sans is the exact label
    font, mono only for short indices. A restrained drawn line is optional; grey whiteboard and

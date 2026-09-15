@@ -73,3 +73,11 @@ New intended Studio work starts in Experiments, through the existing promotion p
 Check actual fonts, exact logo, contrast, phone-scale reading, overflow, safe areas, PDF pagination
 and timeline seeks. White on sky is for large type; small links use link blue on white. Lime needs
 ink/forest text, never white. Caption text uses a solid forest plate on variable footage.
+
+## Article covers earn attention
+
+Treat the first article image as a thumbnail with its own composition. Use a bold, saturated Recoup
+color field, a single high-contrast focal element and, when useful, a short oversized hook of 3–6
+words. Make it recognizable and readable at about 160px wide. Supporting illustrations can remain
+simple on white with short labels and optional headlines. Do not style the cover as another inline
+figure. Color and scale should earn attention without misleading claims or extra body copy.
