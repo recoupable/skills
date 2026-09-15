@@ -13,9 +13,10 @@ client/artist identity wins. Stage the self-contained brand package with
 ## Workflow
 
 1. Read the article. Plan one hero above the first line plus roughly one useful figure per major
-   section (usually at most 4–6). One idea per figure; omit redundant pictures. Write every figure
-   title in reading order first. The titles alone must tell the complete story, with a clear premise,
-   progression and conclusion. Revise disconnected labels before designing the individual figures.
+   section (usually at most 4–6). One idea per figure; omit redundant pictures. Headlines are optional;
+   supporting figures can use the visual and short labels alone. When using multiple titles together,
+   write them in reading order first: they must tell the complete story with a clear premise,
+   progression and conclusion. Do not add headlines merely to satisfy the narrative rule.
 2. Choose a concept and archetype from references/prompt-kit.md. Prefer Paper trail, Margin notes,
    Catalog index or Blueprint among brand/finals.json references. Diagrams use paper/white/pale-blue
    surfaces, ink structure, sky connections and restrained lime emphasis. DM Sans is the exact label
@@ -27,7 +28,7 @@ client/artist identity wins. Stage the self-contained brand package with
    series; use the supplied logo only where identification is useful. Generate
    no text, logos or fake documents. Read the actual approved reference before prompting.
 4. Review the render: accurate relationship, correct spelling, contrast, readable at article width,
-   no overflow, exact loaded font (and supplied mark if used), one focal idea. Read only the titles
+   no overflow, exact loaded font (and supplied mark if used), one focal idea. If multiple titles work together, read them
    in order again: the full narrative must make sense without images or body copy. Do not enforce
    legacy sample styling.
 5. Save hero as images/image1.png above the first line, then image2.png onward in reading order.
