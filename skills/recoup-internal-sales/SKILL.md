@@ -462,7 +462,7 @@ workspace/sales/<lead>/
     sent/              verbatim final text of each send, one file, with its reply playbook
     received/          verbatim inbound emails, one file each
     threads/           verbatim multi-message Gmail threads (secrets redacted)
-    drafts/            every draft and revision; never the sent version
+    drafts/            in-flight drafts only; emptied once the email is sent
 ```
 
 Files are `YYYY-MM-DD-slug.md`. Rules that keep the record trustworthy:
@@ -475,6 +475,13 @@ Files are `YYYY-MM-DD-slug.md`. Rules that keep the record trustworthy:
 - **The sent file is the verified sent copy, not the draft.** The send loop ends by
   retrieving and comparing what actually went out before writing `emails/sent/`;
   saving a draft, scheduling a task, or making an Attio note does not make it sent.
+- **One file per send, after the send.** The sent file carries the verbatim body, the
+  approval evidence (exact quote, time, draft version), the provider id, the CRM ids and
+  the reply playbook, so the draft and any HTML/text builds are deleted once it exists
+  (decided 2026-09-21 after a ten-invite batch produced five files per lead). A lead with
+  a single cold send needs no `EMAILS.md` yet; the index appears with the first reply. A
+  draft revision that carried a decision gets one line in `EMAILS.md` saying what changed
+  and why; the file itself is not kept.
 - **Every inbound reply gets a `received/` file the day it arrives**, even a one-liner.
   The 2026-08-25 reorg of two live accounts found one sent email that existed only in
   Attio and two replies that existed only in Gmail; the reorg is what surfaced them.
