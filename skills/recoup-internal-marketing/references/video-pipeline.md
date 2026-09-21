@@ -179,6 +179,33 @@ viewers are sound-off). Time them from a transcript of the actual audio, not fro
 next fades in 0.04s later puts two captions in the same place for 0.1s. Leave a gap larger than the
 fade.
 
+## 6b. Build the composition FROM the audio (the pattern that held on 2026-09-21)
+
+Do not hand-time scenes. Write a `build.py` that reads `audio_meta.json` (measured durations, word
+timings) and emits `index.html`:
+
+- every scene window derives from its line's start and measured duration, with a fixed gap between
+  lines; a card or a clip that must play alone (the raw model voice, an end card) gets its own window;
+- captions are chunked from the word timings (split at punctuation, at most ~9 words, the next chunk's
+  start minus a fade as the end), one timed clip each;
+- the GSAP timeline is emitted as **static** `tl.set` / `tl.to` lines (the linter cannot see inside a
+  loop), with cue times taken from specific words ("character", "voice") when a tick must land on a word;
+- the build prints its windows and a ready `snapshot --at` list at mid-beat times.
+
+A line change is then a re-record plus a rebuild, never a re-time. Reference: the account workspace's
+`content/jenny-ep1-h3-lipsync/video/build.py`.
+
+**Lint gotchas from that build:** a kicker and its scene on the same `data-track-index` fail
+`overlapping_clips_same_track`, give kickers their own track; a `.chip` with both `top` and `bottom` set
+stretches into a tall pill, set `bottom: auto`; a fade-out on a clip needs `tl.set(..., {opacity: 0})`
+at the clip boundary or lint reports `gsap_exit_missing_hard_kill`; a Jenny clip is composited **muted**
+with the approved VO as a stem, and the raw model-voice clip plays with its own audio only in a window
+where no narration runs.
+
+**Costs on screen come from billing, pulled last.** Query the fal usage API after the final generation
+and before the cost line is recorded; the receipt panel, the spoken figure and the log cite the same
+JSON, labelled "as billed".
+
 ## 7. Lint, snapshot, render, then read frames
 
 **Render is the expensive loop. Do not use it to look at your work.** Render with `--fps 24` to
