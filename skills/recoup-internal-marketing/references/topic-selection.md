@@ -8,33 +8,27 @@ paragraph: **which arc, which character, why today.**
 ### 1. Continue a live arc (the default)
 
 Read `NARRATIVE.md` for storylines in progress and check `posts-log.md` for what the last episode of
-that arc teased. Serialized beats compound: a recurring segment that ends on a number and asks "did
-it go up?" has a built-in reason to return.
-
-Prefer this when an arc has an open loop. Closing loops is cheaper than opening them.
+that arc teased. A recurring segment that ends on a number and asks "did it go up?" has a built-in
+reason to return. Closing loops is cheaper than opening them.
 
 ### 2. Pull a logged idea
 
-Sources of already-approved ideas:
-
-- Upcoming canon dates in `NARRATIVE.md` (anniversaries, launches, scheduled milestones). These are
-  time-bound — missing the date wastes the idea.
+- Upcoming canon dates in `NARRATIVE.md` (anniversaries, launches, scheduled milestones). Time-bound;
+  missing the date wastes the idea.
 - Ideas parked in workspace docs or open decisions awaiting an owner ruling.
 - A skeptic's objection from the comments. The canon treats real objections as the antagonist chorus:
   answer with an episode, not a rebuttal thread.
 
 ### 3. Draft a new idea
 
-Only if it both advances an existing arc and is worth adding to the canon. If it needs a **new
-storyline**, write the arc proposal as its own doc (premise, why not an existing arc, its own
-guardrail, episode list) and get an owner ruling before treating it as canon. Do not quietly expand
-the canon inside a post.
+Only if it both advances an existing arc and is worth adding to the canon. A **new storyline** needs
+its own arc-proposal doc (premise, why not an existing arc, its own guardrail, episode list) and an
+owner ruling before it is canon. Do not quietly expand the canon inside a post.
 
 ## Gate zero: what KIND of piece is this? (2026-08-12)
 
-**Ask this before the arc, because it decides the structure and the arc only decorates it.**
-
-Look at the source, not at the leaderboard:
+**Ask this before the arc, because it decides the structure and the arc only decorates it.** Look at
+the source, not at the leaderboard:
 
 | The source is | The piece is | Its structure |
 |---|---|---|
@@ -42,63 +36,22 @@ Look at the source, not at the leaderboard:
 | **A thing that went wrong** (an outage, a bad number, a wrong send) | an **incident** | hook · what happened · why · what changed · what is still not fixed |
 | **A measured result** (an artist's earnings, a weekly delta) | a **report** | hook · the number · how it was measured · what it means · what happens next |
 
-**A launch told as an incident is not a better launch. It is a different film.**
+**A launch told as an incident is not a better launch. It is a different film.** Register is chosen
+by the subject, not last week's score; our error is one beat, never the subject; a launch uses the
+name the docs use (08-12).
 
-### The trap, and it is a strong one
-
-Our best-performing register is confession: WE WERE WRONG was the best X post of its window and a
-product changelog took 2 views on YouTube six days later. Everything in this workspace celebrates
-that, and `NARRATIVE.md` makes the Integrity Arc canon. So when a **shipped feature** arrives, there
-is real gravity pulling it toward "here is what we got wrong, and here is the fix."
-
-That is how it went wrong on 2026-08-12. A new endpoint existed because a name-based lookup had
-emailed a customer the wrong artist's show. The run picked the incident, cleared every gate below
-(arc named, character named, why-theirs written, numbers verified) and built a film that spent its
-whole runtime on our mistake. Owner ruling:
-
-> It focuses too much on not sending any info which really hyperfocuses on the error rather than
-> highlight the new feature.
-
-It was rebuilt from scratch as a launch and came out **shorter** (34.4s against 46.1s), because
-explaining what a viewer gains takes less time than explaining what we got wrong first.
-
-**The rule:** the register is chosen by the subject, not by what scored last week. An incident that
-produced a feature is a launch whose problem section is one sentence long. Our error is the *setup*,
-never the subject, and it never gets more than one beat.
-
-### The budget test
-
-Count the beats. **A launch spends the majority of them on what the viewer gets** — the solution,
-how it works, how to start. If more beats are about us (our mistake, our process, our correction)
-than about them, it is an incident film wearing a launch's title. Rewrite or relabel it.
-
-### For a launch, name the feature
-
-Use the name the docs use, and check that the docs actually use it. On 2026-08-12 the copy invented
-"Events Finder" for something the docs call "Artist Events", which would have sent every viewer who
-clicked the CTA to a page with a different name on it. Either match the docs or ship a docs PR
-renaming it, but never let a launch introduce a name the product does not answer to.
+**The budget test:** count the beats. A launch spends the majority on what the viewer gets. If more
+beats are about us (our mistake, our process, our correction) than about them, it is an incident
+film wearing a launch's title. Rewrite or relabel it.
 
 ## The gates every pick must clear
 
-**Why named — theirs, then ours. This gate comes first.**
-
-Before the hook, before a single frame: write one sentence on **what the person in
-the piece gets out of it**, and one on what we get. Both go at the top of the plan doc. If you
-cannot write the first sentence, the piece is an ad wearing someone's name and it does not get
-built.
-
-This gate exists because the rest of this skill did not have it. Every other artist-facing rule
-here is either a *permission* rule (verified numbers) or a *distribution* rule
-("Collaborator, not subject", justified by reach). Together they answer "may we publish this?" and
-"will it travel?" — and never "what does she get?" The gap was found on 2026-08-04 by the artist,
-not by us: mid-collaboration LATASHÁ asked *"what's your case for showing the numbers? like the
-why?"* and nothing in this skill answered her.
-
-**Ours is allowed to be commercial. Say it first, plainly.** We build the tool that produced the
-number; their case is the proof it works. An artist who has caught us being wrong can smell a
-pitch dressed as a favour, and leading with our own interest costs less than being caught
-concealing it.
+**Why named — theirs, then ours. This gate comes first.** Before the hook, before a single frame:
+one sentence on **what the person in the piece gets out of it**, and one on what we get, both at the
+top of the plan doc. If you cannot write the first sentence, the piece is an ad wearing someone's
+name and it does not get built. Say ours first, plainly (08-04): we build the tool that produced the
+number, their case is the proof it works, and an artist who has caught us being wrong can smell a
+pitch dressed as a favour.
 
 **Four arguments that hold up** when the piece publishes an artist's real numbers:
 
@@ -127,8 +80,7 @@ is worth less than a no.
 
 **Numbers.** Any figure attributed to a real artist must be measured and verified, with
 measured-versus-estimated stated. This applies to numbers about **us** too: if a cost or result
-cannot be verified today, publish the counts you can audit and leave the rest blank. A flattering
-unverifiable number is still the thing this account exists not to do.
+cannot be verified today, publish the counts you can audit and leave the rest blank.
 
 *Verifying a generation-cost claim without a billing dashboard* (worked 2026-07-29, after the
 docs-page route 429'd): read **live official unit prices** from fal's pricing API —
@@ -136,28 +88,18 @@ docs-page route 429'd): read **live official unit prices** from fal's pricing AP
 (returns e.g. `$0.08/image`, `$0.01/second`) — and multiply by the **audited unit counts** on disk.
 For ElevenLabs, `GET /v1/usage/character-stats?start_unix=&end_unix=` gives the day's credits and
 `GET /v1/user/subscription` shows overage ($0 overage ⇒ $0 incremental on a flat plan; report the
-pro-rata plan value alongside). **Disclose computed-vs-billed:** this method is official-price ×
+pro-rata plan value alongside). **Disclose computed-vs-billed:** this is official-price ×
 audited-count, not billed line items — fal's usage/billing platform API needs an **admin-scoped**
 key (the inference `FAL_KEY` gets `authorization_error`), so name the basis when publishing.
 
-**NO AI disclosure in body copy.** Owner ruling, 2026-07-28. Do not write "AI generated", "made with
-AI", or any equivalent into a caption, tweet, description or on-screen line. The audience already
-knows, and the characters are worth more spent on the substance — on X in particular, a disclosure
-sentence is ~22 of a 280-character budget.
+**NO AI disclosure in body copy.** Owner ruling 2026-07-28, stated in `SKILL.md` → Step 3; it
+reverses the 2026-07-06 A/B note and wins over any older workspace doc.
 
-If platform-policy labelling is wanted, use the platform's native **AI-content toggle at upload**;
-that is a metadata flag, not caption text, and it costs nothing.
+**Collaborator, not subject.** Invite a featured artist to co-post; the measured lever and the gate
+are in `SKILL.md` → Step 3.
 
-This **reverses** the earlier 2026-07-06 A/B note that disclosed variants were the platform-bests.
-Older workspace docs may still carry that guidance; the ruling above wins. Do not reintroduce a
-disclosure line because a workspace file says to.
-
-**Collaborator, not subject.** Where a real artist features, invite them to co-post. The one
-collaborative post in our data did several times the engagement of everything without one, because
-the artist amplifies to their own audience. Plan the invite as part of the post, not after it.
-
-**One idea per day.** Two assets in the same slot split our own audience and read as broadcasting. If
-a build produces two good assets, sequence them across days and let the gap be a cliffhanger.
+**One idea per day.** Two assets in the same slot split our own audience and read as broadcasting.
+If a build produces two good assets, sequence them across days and let the gap be a cliffhanger.
 
 **Fiction versus fact.** Skits and dramatizations use disclosed generated likenesses. Anything
 carrying a real artist's name carries only real, verified numbers.

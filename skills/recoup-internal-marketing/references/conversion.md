@@ -5,8 +5,7 @@ post becomes attributable, and what to read at the re-pull.
 
 ## Open every run with the funnel numbers (step 2a)
 
-The social scrape cannot see the result. Before reading a single like, pull from
-`recoup-internal-sales` / `recoup-internal-funnel-valuation-pipeline`:
+Pull from `recoup-internal-sales` / `recoup-internal-funnel-valuation-pipeline` before reading a single like:
 
 | Read | Why it comes first |
 |---|---|
@@ -14,16 +13,10 @@ The social scrape cannot see the result. Before reading a single like, pull from
 | **signups (Privy) and cards (Stripe)** | separates "interest" from "paid" |
 | **is the likely destination converting at all** | if it converts nobody, a better asset changes nothing |
 
-**Known state 2026-07-30, re-verify rather than assume:** `/pricing` is the #2 marketing page (79
-visitors in the 30 days to 07-29) and the last real trial signup and last new card were both
-**2026-06-06** — pricing traffic producing zero trials
-([chat#1902](https://github.com/recoupable/chat/issues/1902)). The post-signup path has reproduced
-defects too: a funded outreach customer ran a valuation, saw nothing, re-ran the whole flow, hit a
-second bug via a referral, and gave up on the UI
-([chat#1912](https://github.com/recoupable/chat/issues/1912)).
-
-While that is true, **more traffic is not the constraint** and the funnel guardrail in `SKILL.md`
-applies: report it, get a decision, and prefer fixing the path over shipping into it.
+Re-verify that `/pricing` converts before pointing at it; it hardcoded `utm_campaign=free` on its own free
+CTA and overwrote the tag on the converting click (08-07). The 07-30 read had it as the #2 marketing page
+producing zero trials ([chat#1902](https://github.com/recoupable/chat/issues/1902)); while that holds, more
+traffic is not the constraint.
 
 ## The destination is half the conversion
 
@@ -35,11 +28,6 @@ A post and its landing page are one artifact. Judge them together:
 - **A single next action.** If the page offers four things, the post converted nobody in particular.
 - **Proof that it works today.** Load it on the day you publish. "It worked last week" is not a
   check.
-
-> **Status 2026-07-28: the capture chain is NOT built yet.** Tracked as **row 29** of
-> [chat#1889](https://github.com/recoupable/chat/issues/1889). Until it ships, **tag the links anyway**
-> (it costs nothing and the data is retroactively useful once capture lands) and be explicit that
-> conversion is unmeasured rather than implying engagement means it worked.
 
 ## The link convention
 
@@ -59,8 +47,7 @@ https://recoupable.dev/?utm_source=<platform>&utm_medium=social&utm_campaign=<pr
 Add `utm_content` only when genuinely A/B testing two variants of the same post.
 
 **On X a tagged link is free.** X counts *any* URL as 23 weighted characters regardless of its literal
-length, so a full UTM string costs exactly what a bare `recoupable.dev` costs. The platform where
-characters are scarcest is the one where this is free.
+length, so a full UTM string costs exactly what a bare `recoupable.dev` costs.
 
 ## Per-platform placement, and the Instagram problem
 
@@ -71,10 +58,9 @@ characters are scarcest is the one where this is free.
 | **LinkedIn** | first comment, never the body (LI throttles body links) | ✅ yes |
 | **Instagram** | **bio only — captions do not render clickable links** | ⚠️ campaign-level at best |
 
-**Instagram is the real limitation and it must not be glossed over.** A per-post tagged link is
-impossible in an IG caption. Options, in order of preference:
+**Instagram is the real limitation and it must not be glossed over.** Options, in order of preference:
 
-1. **Update the bio link to the current campaign's tagged URL when you post.** Gives campaign-level
+1. **Update the bio link to the current campaign's tagged URL when you post.** Campaign-level
    attribution for the window that post is the newest. Cheap, no build.
 2. A link-in-bio landing page listing recent posts, each linking out tagged. More build, better
    granularity.
@@ -84,24 +70,12 @@ impossible in an IG caption. Options, in order of preference:
 Because IG is our best-performing video platform, treating "IG produced no attributable signups" as
 "IG doesn't convert" would be a straightforward measurement error.
 
-## The capture chain (what row 29 builds)
+## The capture chain
 
-Four pieces, because the click and the signup happen on different hosts:
-
-1. **`marketing`** (`recoupable.dev`) reads `utm_*` on first load and writes a **first-touch** cookie
-   `rcp_attr` — `{source, medium, campaign, landing, ts}`, `Domain=.recoupable.dev`,
-   `Max-Age` 90 days, `SameSite=Lax`. **First-touch, never overwritten:** last-touch would erase the
-   post that actually earned the visit.
-2. **`marketing`** appends the attribution to the outbound **"Open app"** CTA
-   ([marketing#52](https://github.com/recoupable/marketing/pull/52)) as an opaque param, so the chain
-   survives even if cookie scoping fails across the subdomain hop.
-3. **`chat`** (`chat.recoupable.dev`) reads cookie-or-param on the auth-completion path and POSTs it to
-   api once, on account creation.
-4. **`api` + `database`** persist one row per account.
-
-**Resolved 2026-08-18: Vercel Analytics DOES capture `utm_*` automatically, on both properties, with
-no app code.** Pieces 1–2 are already a readable dashboard; only the **signup join** (3–4) is new
-work. The pull is below — run it, don't rebuild it.
+Pieces 1–2 of the capture chain (first-touch `utm_*` capture on both properties) are live via Vercel Web
+Analytics with no app code (08-18); the signup join
+([chat#1889](https://github.com/recoupable/chat/issues/1889) row 29) is not. Visits are readable; signups
+from those visits are not — keep declaring them unreadable until the join ships.
 
 ## The attributed-visits pull (verified 2026-08-18)
 
@@ -136,35 +110,8 @@ Gotchas that cost time the first run:
   CTAs land on marketing. Reading only one undercounts the slate.
 - Read this at **step 2a** (is conversion readable?) and again at the **~48h re-pull**.
 
-What this pull cannot see: signups. Visits stop at the pageview until the join (pieces 3–4, row 29
-of [chat#1889](https://github.com/recoupable/chat/issues/1889)) ships — keep declaring signups
-unreadable until it does.
-
-## What the first pull taught (2026-08-18) — read before weighting today's platforms
-
-The first month of readable data (07-20 → 08-18, every slate in the window) refuted several
-assumptions the runs had been operating on. Re-run the pull before trusting these — they are
-findings, not laws — but do not rebuild the old assumptions without new data:
-
-1. **The whole funnel top is ~1–7 tagged visits per slate** (~31 visitors across a month of
-   4-platform slates). Asset polish is not the constraint at this scale; audience size and
-   distribution are. Calibrate effort accordingly: an extra render pass buys nothing, a
-   collaborator's audience or an SEO surface buys reach.
-2. **Clicks do not follow views — YouTube converts best per view.** yt delivered the most tagged
-   visitors of any source (20, vs ig 7, li 5, x 3) from the *lowest* view counts (2–63/Short).
-   The description link is the only social CTA surface people reliably click. A platform whose
-   views collapsed can still be the best click channel — check clicks before writing a platform
-   off as dead distribution.
-3. **The tagged read structurally undercounts X (~8×).** `t.co` referrals were 23 visitors against
-   3 tagged `utm_source=x` — the no-link-in-body doctrine routes X clicks through bio and replies,
-   which arrive untagged. Always read `referrerHostname` next to `utmCampaign` before declaring a
-   platform's contribution zero.
-4. **Google organic outdrew all social combined** (70 visitors to recoupable.dev vs ~31 tagged
-   social). SEO surfaces compound daily; feed posts spike and vanish. This is standing evidence
-   for SEO-first titles and for public, indexable pages (artist profiles) as marketing assets.
-5. **The best-converting campaigns were an incident piece and a character piece**
-   (`changelog-0807` 6, `the-operator-ep1` 7) — not the launches. Same register the engagement
-   data favors; now conversion agrees.
+The sweetman account's first-pull findings (08-18) live in the workspace at `marketing/FUNNEL.md`; re-run
+the pull before trusting them.
 
 ## What to read at the re-pull
 

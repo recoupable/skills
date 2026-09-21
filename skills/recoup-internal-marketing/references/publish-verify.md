@@ -19,8 +19,7 @@ posts whatever it was handed, and **nothing warns you**:
 | LinkedIn | `cfg.copy.li.body`, `cfg.copy.li.firstComment` | an empty share |
 | all | `cfg.accounts[platform]` | **silently defaults to sweetman** |
 
-Note X and Instagram want *opposite* shapes. That has now bitten in both directions: an object on
-`ig` threw on 2026-08-07, and a string on `x` published an empty tweet on 2026-08-12.
+X and Instagram want *opposite* shapes, and both directions have shipped.
 
 ### Run this, and do not publish if it exits non-zero
 
@@ -55,9 +54,9 @@ process.exit(fail ? 1 : 0);
 "
 ```
 
-**Why it must be executable rather than a checklist item.** The account trap and the shape trap are
-both invisible to reading: the config *looks* complete, and the missing `accounts` key looks like
-nothing at all. A human reading the file will not see an absence. `process.exit(1)` will.
+It must be executable rather than a checklist item because a missing `accounts` key and a wrong copy shape
+are invisible to reading; `process.exit(1)` is not. Weighted length: URLs count as 23 characters regardless
+of real length, emoji and CJK count as 2.
 
 ## Pre-publish gate
 
@@ -80,14 +79,16 @@ follows is the judgement the script cannot make._
       200" — *does the page continue the story the post told, and can it convert?* A homepage that
       loads fine is a dead end for a post about one artist's catalog. Precedent and the standing
       `/pricing` defect: `references/conversion.md`.
-- [ ] **Attribution declared: readable or not.** If nothing records `utm_campaign` yet, write
-      "conversion unreadable for this slate" into `posts-log.md` now, at publish time. Deciding this
-      at the re-pull is how two consecutive runs reported engagement in place of conversion.
+- [ ] **Attribution declared: visits readable by `utm_campaign`, the signup join unreadable (row 29).**
+      Write it into `posts-log.md` now, at publish time. Deciding this at the re-pull is how two
+      consecutive runs reported engagement in place of conversion.
 - [ ] **Artist tagged with the correct per-platform handle** — they differ (`@gatsby.wtf` on IG vs
       `@gatsby_grace` on X). Confirm each rather than reusing one.
 - [ ] **No leading @-tag on X.** A tweet that opens with a mention drops out of the main feed. Put the
       mention inline.
 - [ ] **No AI disclosure** in any body copy (owner ruling 2026-07-28).
+- [ ] **No third-party provider or model names on anything published (owner 09-04):** grep for fal,
+      MiniMax, Seedance, ElevenLabs, Grok, OmniHuman, Muse.
 - [ ] **The image depicts what the copy's opening line describes.** Caught on 2026-07-28: the LinkedIn
       body opened "Two pictures of the same bedroom on the same night" while the config still pointed
       at a timeline card, which shows neither picture. Copy and image are chosen together.
@@ -96,60 +97,22 @@ follows is the judgement the script cannot make._
 
 ## Account routing
 
-Connections are per artist account, and they are **not symmetrical**. Verify, do not assume:
+Recoup official has no YouTube or LinkedIn connector and @recoupai replies 403 (unfixed since 2026-07-24,
+so put the reply's content inline and set `reply: null`); verify the target account with
+`GET /api/connectors` before every publish (ACCOUNT.md owns the table):
 
 ```bash
 curl -sS "https://recoup-api.vercel.app/api/connectors?account_id=<ACCOUNT_ID>" \
   -H "x-api-key: $RECOUP_API_KEY"
 ```
 
-Verified 2026-07-28:
-
-| Account | X | Instagram | YouTube | LinkedIn |
-|---|---|---|---|---|
-| **Recoup official** | ✅ | ✅ | ❌ | ❌ |
-| **sweetman** | ✅ | ✅ | ✅ | ✅ |
-
-So a company announcement can post IG + X as Recoup official, but **YouTube and LinkedIn must be
-sweetman** — there is no Recoup connection for them. Route per platform with `accounts:` in
-`post.config.mjs`.
-
-**Known issue:** replies from **@recoupai** return 403 "not permitted" while the main post succeeds
-(unfixed since 2026-07-24). So when posting X as Recoup official, put everything the reply would have
-carried **inline in the main tweet** and set `reply: null` — an errored reply adds nothing.
-
-## Auth: prefer the API key
-
-Use **`RECOUP_API_KEY`** (`x-api-key`) over `RECOUP_ACCESS_TOKEN` (`Authorization: Bearer`). The access
-token lives ~1 hour, and the documented failure is a human review pause — the YouTube
-unlisted → eyeball → public flip — outlasting it and 401ing the final call. The API key does not
-expire. The shared runner's `authHeaders()` prefers the key and falls back to the token.
-
-## A success response is NOT evidence that your copy shipped (2026-09-02)
-
-Two tweets went out with a video and **no text at all**, and the runner reported success both times.
-X permits a media-only post, so it returned a real tweet id and no error. The cause was a latent bug
-in the shared runner: it read `cfg.copy.x.text` while every config in the workspace writes `copy.x`
-as a **string**, so the body resolved to `undefined` and was never sent. The path had never been
-exercised because earlier films used their own per-project `post-x.mjs` that passed the string.
-
-Three rules follow, and they are cheap:
-
-1. **Read the published text back and compare it to the config**, every platform, every time. The
-   syndication read is what caught this; the API said success. Do not compare by eye.
-2. **Refuse to post an empty body.** The runner now throws if the resolved text is empty rather than
-   letting the platform accept it silently.
-3. **Beware a diagnosis that fits the symptom.** The first theory was "the body is over 280 chars",
-   which was plausible, wrong, and cost a second empty tweet. A 273-char body failed identically.
-   When a fix does not work, the theory is wrong, not the dose. Check what the code actually sends
-   before changing what you send it.
-
-Weighted length still matters and is now in the pre-flight: URLs count as 23 characters regardless
-of real length, emoji and CJK count as 2.
-
 ## Post-publish verification
 
-A returned id is not proof the post is correct. **Neither is a verification you skim.**
+A returned id is not proof the post is correct. **Neither is a verification you skim.** Read the published
+text back and compare programmatically; refuse an empty body (08-07 ig object, 08-12 wrong-account empty
+tweet, 09-02 two empty tweets). X permits a media-only post, so it returns a real tweet id for an empty
+body; the runner now throws on empty resolved text. When a fix does not work, the theory is wrong, not the
+dose: the "over 280 chars" theory cost the second empty tweet (09-02).
 
 Compare the published field to the config **programmatically** and print the result. On 2026-08-12
 the verifier printed `text: https://t.co/wejzAvboDm`, which *was* the evidence the body was empty,
@@ -175,37 +138,16 @@ the IG media endpoint's `permalink` + `caption`.
 | **Instagram** | the reel URL resolves | `curl -o /dev/null -w "%{http_code}"` → 200 |
 | **LinkedIn** | the post URN **and** that the first comment landed | the runner returns `commentId`; a share URN with no `commentId` means the comment failed |
 
-### Two YouTube traps
+### YouTube traps
 
-**oEmbed gives false negatives.** `youtube.com/oembed?url=…` returned `Unauthorized` for a video that
-was correctly public — curl without a User-Agent. On 2026-07-28 this nearly triggered a "fix" to a
-working post. Trust the API's `privacyStatus`, not oEmbed.
+- **oEmbed gives false negatives** (curl without a User-Agent returned `Unauthorized` for a public video,
+  2026-07-28): trust the API's `privacyStatus`, not oEmbed.
+- **A partial-snippet update can wipe the description** because `videos.update` replaces the snippet part it
+  is given; it survived on 2026-07-28 by luck. Always send the full snippet and re-read the description
+  length afterwards.
+- **`embeddable: false`** is a channel default the connector ignores; flip it by hand in YouTube Studio.
 
-**A partial-snippet update can wipe the description.** `YOUTUBE_UPDATE_VIDEO` with `title` but no
-`description` risks clearing it, because YouTube's `videos.update` replaces the snippet part it is
-given. On 2026-07-28 the description survived (the connector merges) — that was luck, not design.
-**Always send the full snippet, and re-read the description length afterwards.**
-
-**`embeddable: false`** is a channel default the connector ignores; a Short we want to embed on the
-site has to be flipped by hand in YouTube Studio.
-
-## Importing a finished film into OpusClip for scheduling (2026-09-14)
-
-Opus is the scheduler for clips and full films alike, but **an import burns its karaoke captions AND emojis
-over ours by default**, and the bundled CLI cannot turn either off (`--enable-caption` only sets true; there is
-no emoji flag). Two test imports found this. The working recipe:
-
-- Cut the clips yourself at song-map boundaries (ffmpeg re-encode, not stream copy) so they carry the film's own
-  captions; 15–30s each, a strong first frame.
-- Host each file on fal storage (or any public URL) and call `POST https://api.opus.pro/api/clip-projects`
-  directly with `curationPref.skipCurate: true` and
-  `renderPref: { layoutAspectRatio: "portrait", enableCaption: false, enableEmoji: false, enableAutoEmoji: false, enableBRoll: false, enableKeywordHighlight: false }`.
-  The API accepts the undocumented flags; the returned single clip is the whole file, our captions only.
-- The clip title still comes back with an `_OpusClip Captions` suffix. Cosmetic; ignore it.
-- Then `post schedule` per platform as usual (`content/off-the-stage/video/opus/schedule.mjs`). Check the live
-  queue with `post list --from … --to …` for collisions with other slates **before** picking slots; the same
-  accounts carried the cxy slate at 17:00 UTC, so the film went at 21:00 UTC.
-- Verify the first slot actually posts (`post list --project`), not the schedule call's `ok`.
+OpusClip import for scheduling a finished film: `POSTING-PLAYBOOK.md` (workspace) owns the recipe.
 
 ## Log it
 
