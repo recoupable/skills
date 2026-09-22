@@ -90,6 +90,10 @@ Corollary: argue from **something the customer already did**, never from an assu
 
 ### House format
 
+**Start from the template:** `references/pdf-house-style.md` holds the house style (tokens, components,
+color rule) and `templates/pdf-house-style/page.html` plus `scripts/build_pdf.py` build and check the
+one-page PDF. The bullets below are the content rules the template already follows.
+
 - Title, then `prepared by Recoup · <ISO date>`.
 - A **`THE SHORT VERSION`** paragraph before any data, giving the whole argument in three sentences.
 - Big stat blocks: `EPISODES 116` · `TOTAL RUNTIME 97 hrs` · `AUDIENCE, OWNED 0`.
