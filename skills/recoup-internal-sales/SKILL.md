@@ -7,7 +7,8 @@ description: >-
   prioritize customers and cold prospects, maintain CRM follow-ups, and prepare
   outreach and meeting materials. Every email requires the user's explicit
   approval of the exact reviewed draft before sending. Use for sales sweeps,
-  pipeline follow-up, cold outreach, new-lead research, and qualified-call prep.
+  pipeline follow-up, cold outreach and podcast guest invites and nudges, new-lead
+  research, and qualified-call prep.
   Requires Recoup API, Attio, Stripe, Privy and Supabase access; Exa for cold research.
   Never use for customer-facing or artist requests.
 ---
@@ -277,7 +278,10 @@ Fields: `stage`, `buyer_or_referrer` (Buyer / Referrer / Unknown), `project_type
   Guests are `lead_source = Podcast` on this list, mapped onto the existing stages; the
   loop with its consent gate, the invite and day-7 templates, the episode-copy rules, the
   cover spec and the Spotify for Creators edit path are in
-  `references/podcast-guest-pipeline.md`.
+  `references/podcast-guest-pipeline.md`. **Run its five-point invite checklist before any
+  review copy** (subject `Interview request: <topic>`, no body sign-off, no stock close,
+  full unslop including the self-audit across the batch, every referenced source
+  hyperlinked); each item was a real defect on the 2026-09-22 run.
 
 #### Both lists
 
@@ -666,4 +670,4 @@ major-label exec, and a dormant power user. What actually mattered.
 - `references/meeting-prep.md` — prep for a booked call: the pitch, the meeting plan, the PDFs to deliver.
 - `references/credits-mechanics.md` — how `checkAndResetCredits` behaves, before you quote a balance.
 - `references/tooling-gotchas.md` — Privy / Stripe / Supabase / Attio quirks and dead columns.
-- `references/podcast-guest-pipeline.md` — the podcast-invite top of funnel: loop + Attio mapping with the consent gate, invite and day-7 templates, what to measure, premium episode copy, cover spec, guest photo sourcing, Spotify for Creators edits.
+- `references/podcast-guest-pipeline.md` — the podcast-invite top of funnel: loop + Attio mapping with the consent gate, the invite template and its pre-review checklist, threaded nudges, running the day (status first, research budget, verification ladder), day-7 template, what to measure, premium episode copy, cover spec, guest photo sourcing, Spotify for Creators edits.
