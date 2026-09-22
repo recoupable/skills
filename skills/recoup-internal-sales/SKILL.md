@@ -577,6 +577,8 @@ Full workflow in `references/meeting-prep.md` — mining what the customer alrea
 told us (read chat message **bodies**, never the auto-generated titles), finding
 the gap between what they promise publicly and what their published process
 delivers, the four document shapes, and the house format.
+Every PDF uses the one-page house style: `references/pdf-house-style.md`
+(template `templates/pdf-house-style/page.html`, build and checks `scripts/build_pdf.py`).
 
 Two things that are easy to get wrong and expensive to undo:
 
