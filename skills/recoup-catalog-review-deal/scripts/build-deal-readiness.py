@@ -15,8 +15,8 @@ status from open findings:
                        or legacy ``P1``).
 - ``ready``         -- no open blockers or high-severity findings.
 
-The Stop hook reads the resulting deal_status to decide whether the
-agent can claim a package is shareable. Customers don't open this
+The workflow reads the resulting deal_status before the agent can
+claim a package is shareable. Customers don't open this
 file. The script is also referenced by recoup-catalog-review-deal dashboard mode for the
 analyst readiness gate.
 
