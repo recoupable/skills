@@ -1,6 +1,6 @@
 ---
 name: recoup-research-artist-overview
-description: Full research sweep on one of your artists — profile, streaming metrics, audience demographics/geography, competitive position, and which songs are popping on TikTok. Use for "research [artist]", "tell me about [artist]", "how are they doing", "where are the fans", "compare [a] vs [b]", "find collaborators", "when to release", or "which of their songs are blowing up on TikTok". Modes: overview, audience, competition, tiktok. For finding NEW artists use recoup-research-find-talent; for a recurring update use recoup-research-weekly-brief.
+description: 'Full research sweep on one of your artists — profile, streaming metrics, audience demographics/geography, competitive position, and which songs are popping on TikTok. Use for "research [artist]", "tell me about [artist]", "how are they doing", "where are the fans", "compare [a] vs [b]", "find collaborators", "when to release", or "which of their songs are blowing up on TikTok". Modes: overview, audience, competition, tiktok. For finding NEW artists use recoup-research-find-talent; for a recurring update use recoup-research-weekly-brief.'
 ---
 
 # Recoup Research — Artist Overview
