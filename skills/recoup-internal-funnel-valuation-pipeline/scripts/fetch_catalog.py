@@ -3,7 +3,7 @@
 
 This is the same data the marketing valuation tool uses — no DOM scraping. It
 pulls the artist's albums (names, years, track counts, **album art**) and the
-per-album live play counts (store-served Spotify counts — no Songstats quota,
+per-album live play counts (store-served Spotify counts,
 so no 429), then writes a lead JSON ready for render_valuation_pdf.py.
 
 Dollar figures (est_catalog_value, per-release value) come from the valuation

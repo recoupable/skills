@@ -19,8 +19,8 @@ orphaned). The 8 calls:
 1. `POST /api/artists {name, organization_id}` → capture `account_id`.
 2. `GET /api/spotify/search` → best match → `id`, `external_urls.spotify`, `images[0]`.
 3. `PATCH /api/artists/{id}` with image + `profileUrls:{SPOTIFY}` (UPPERCASE keys).
-4. Structured research (retry transient misses): `/research/lookup?spotifyId=` →
-   `songstats_artist_id`, then `/research/profile|career|playlists` + `/research/web`.
+4. Web research: one `POST /research/web` call (biography, press, collaborations);
+   save the response under `## Research`.
 5. Spotify catalog (`topTracks`, `albums`, `album`) → write `releases/{slug}/RELEASE.md`
    per album + `releases/top-tracks.md`.
 6. Web search for socials (ig/tiktok/twitter/youtube).

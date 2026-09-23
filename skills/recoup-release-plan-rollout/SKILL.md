@@ -52,7 +52,7 @@ workspace is populated (brief + campaign + RELEASE.md exist) or a hard blocker h
    `assumptions.yaml` + the brief, never from memory.
 5. **Playlist targeting (chained)** → call recoup-research-playlist-targets (targets +
    gaps) and recoup-research-find-contacts (curator + drafted pitch — draft only); if
-   audience is thin, recoup-research-artist-overview (audience). Land in `targeting/`.
+   audience is thin, recoup-research-the-web (audience). Land in `targeting/`.
 6. **Arm monitoring** → note standing watches: recoup-release-track-drop (drop +
    launch alert) and recoup-research-weekly-brief (recurring + streaming spikes).
 7. **Review + completion gate (do not skip).** Run
@@ -69,11 +69,12 @@ stage is missing.
 ## Mode: brief (the creative brief)
 
 Require artist, title, date-or-TBD, type, one-line creative direction, asset gaps
-(ask once if missing). Pull in parallel (`references/endpoints.md`): `audience`
-(TikTok+IG), `similar`, current `playlists`. Synthesize to `brief/brief-$(date +%F).md`:
+(ask once if missing). Pull in parallel (`references/endpoints.md`):
+`artists/{id}/socials` (per-platform follower counts), `spotify/artist` (followers,
+popularity, genres) and one `research/web` search for recent coverage. Synthesize to `brief/brief-$(date +%F).md`:
 creative direction (verbatim) · narrative thread · **3 visualizer directions** ·
-**5 content angles** · platform hooks (each anchored in a concrete audience number) ·
-ranked playlist targets · geo rollout · open decisions. It's a plan, not assets — to
+**5 content angles** · platform hooks (each anchored in a concrete follower or play-count number) ·
+playlist targets from cited coverage · geo rollout (from `research/events` + web) · open decisions. It's a plan, not assets — to
 produce assets use the recoup-content-* skills. No invented audience numbers.
 
 ## Mode: campaign (the dated rollout schedule)
