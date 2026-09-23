@@ -110,9 +110,17 @@ Gate the pick on all of these before building (details in `references/topic-sele
 ## Step 4 — Build the asset
 
 **Route the format first** (`references/video-formats.md`): pick a style from `VIDEO-STYLES.md`
-and clone its reference project's `video/` dir; never start from scratch. Spoken-word ad / talking
-character: a lip-synced clip from a generated still, see `references/video-pipeline.md` → *Lip-synced
-VO over a still*. Artist music video is the separate `recoup-music-video` skill.
+and clone its reference project's `video/` dir; never start from scratch. Presenter how-to / spoken-word
+piece (Style H): a recurring character on camera for hook and CTA, the method between, see
+`references/character-sheet.md` (building her), `references/video-pipeline.md` → *Lip-synced VO over a
+still* and *Build the composition FROM the audio*. Artist music video is the separate
+`recoup-music-video` skill.
+
+**The approval sequence for a Style H piece, each artifact revealed in Finder (`open -R`), never
+described:** character sheet → voice (one review file) → the on-camera prompt → gate clips → the script
+table with the exact spoken text → audio line by line (regenerate only the edited lines) → the composite
+→ the composed post bodies → the schedule. Every gate is a file the owner opens; a gate that is only
+narrated in chat is not a gate (09-21).
 
 **Build in this order, for EVERY video.** Each stage is approved before the next begins, because
 each one seeds the next and a mistake compounds.
@@ -169,9 +177,12 @@ homepage with zero trials in eight weeks). Declare at publish time: visits reada
 **The CTA is a direct tagged link, never a comment-gate:** tried twice, zero leads both times. Tag
 per `references/conversion.md`.
 
-**LinkedIn gets an IMAGE, not video, because images outperform video there** (owner ruling
-2026-07-28, from personal-post data). A performance decision, not a connector workaround, so do not
-hand-upload a video "for consistency" either. The image depicts what the copy's opening line describes.
+**LinkedIn: image or video is under a tagged re-test (owner, 2026-09-21).** The 07-28 ruling (images
+outperform video there, from a handful of June personal posts) stands as the default, but the Jenny ep 1
+slate runs seven videos on the personal profile with `utm_source=li` links in the body through 09-27.
+Read LinkedIn's attributed visits against the June image posts at the ~09-29 re-pull and rewrite this
+paragraph on that data. Until then: video is allowed on LinkedIn for educator pieces through Opus; an
+image card is still the default for films.
 
 - **Publish + measure:** `recoup-internal-social-ship-posts` owns per-platform copy, the connector
   mechanics, and the ~48h re-pull.
@@ -196,9 +207,11 @@ hand-upload a video "for consistency" either. The image depicts what the copy's 
 
 - **No em dashes in published copy** (captions, tweets, titles, descriptions, first comments,
   on-screen text; internal docs exempt). Rewrite the sentence rather than substituting a comma.
-- **No third-party provider or model names on anything published** (owner ruling 09-04): no fal,
-  MiniMax, Seedance, ElevenLabs, Grok, OmniHuman on cards, captions, descriptions or on-screen text;
-  describe by function; label costs "as billed" or "at list price".
+- **Provider and model names: none on films and their cards, required in educator pieces.** The 09-04
+  ruling (no fal, MiniMax, Seedance, ElevenLabs, Grok, OmniHuman on cards, captions, descriptions or
+  on-screen text; describe by function) still governs films. The owner revised it on 09-21 for the
+  Style H how-to series, where the tool name is the hook and the search term and the request is shown
+  on screen. Costs stay labelled "as billed" or "at list price" everywhere.
 - **No why, no build.** Permission is not a reason: "they consented" answers whether we *may*, never
   whether we *should*.
 - **Nothing publishes without explicit owner go-ahead.** "My goal is to post X" is a draft
@@ -229,4 +242,7 @@ hand-upload a video "for consistency" either. The image depicts what the copy's 
 - `references/seedance.md` — Seedance 2.5 generated plates: constraints, the fal call, prompt doctrine, run log
 - `references/seedance-examples.md` — every Seedance 2.5 example prompt we have, verbatim and sourced
 - `references/structure.md` — holding a multi-item piece together after the hook
+- `references/character-sheet.md` — building a recurring on-camera character: identity bake-off, the deterministic sheet, body changes, the voice, the guide
+- `references/opus.md` — scheduling a slate through OpusClip: import with captions off, the manifest, per-platform body rules, pre-flight, `post list` as the only truth, teaser slates
+- `scripts/gen-voice.py`, `scripts/opus-import.mjs`, `scripts/opus-schedule.mjs` — the templates those references describe
 - **artist music video** lives in the separate `recoup-music-video` skill. Route there; do not rebuild the pipeline here.

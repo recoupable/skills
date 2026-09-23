@@ -123,25 +123,31 @@ Rules that hold for any hero:
   went through the floor and invented a mirrored warehouse below. State that the floor is solid,
   the camera never goes below it, and exactly one subject is on screen at all times.
 
-## 4d. Lip-synced VO over a still (verified on fal, 2026-09-21)
+## 4d. Lip-synced VO over a still (earned on the first Jenny film, 2026-09-21)
 
-Two endpoints; both supersede the 08-31 "OmniHuman 1.5 for every mouth-visible shot" split for
-spoken pieces, at half the price. The Seedance photoreal-face filter does not apply to MiniMax.
+Both endpoints supersede the 08-31 "OmniHuman 1.5 for every mouth-visible shot" split for spoken
+pieces, at half the price. The Seedance photoreal-face filter does not apply to MiniMax.
 
-- **`minimax/h3-max/lip-sync/image-to-video`**: one image with a visible face (photo, 3D render or
-  illustration; aspect 0.4–2.5) + `audio_url` 5–14.8s (longer is clipped). Mouth only: framing,
-  expression and lighting stay as the still; our soundtrack is kept. `enable_transcription` defaults
-  on, set false for singing. 480p $0.05/s · 768p $0.08/s · 1080p $0.16/s · 2K $0.32/s; ~1 min per
-  1080p clip.
-- **`minimax/h3-max/reference-to-video`**: up to 12 reference files (`reference_image_urls`,
-  `reference_video_urls` 2–15s, `reference_audio_urls` 2–15s, 15s audio total); the prompt refers to
-  "Image 1", "Audio 1". `duration` 5–15, `aspect_ratio` incl. 9:16, `prompt_expansion_mode`
-  disabled|balanced|quality. Same per-second prices up to 1080p; first 4,096 reference tokens free.
-  Holds identity from the images and lip-syncs to the audio while generating body and camera motion.
+| Endpoint | What it does | What it does to the audio | Billed |
+|---|---|---|---|
+| `minimax/h3-max/lip-sync/image-to-video` | One still with a visible face (photo, 3D render or illustration; aspect 0.4–2.5) + `audio_url` 5–14.8s. Mouth, eyes and expression move; framing, body and camera stay as the still. | **Keeps our take sample-exact** (cross-correlation 1.00). | $0.08/s at 768P (9s ≈ $0.72) |
+| `minimax/h3-max/reference-to-video` | Up to 12 refs (`reference_image_urls`, `reference_video_urls` 2–15s, `reference_audio_urls` 2–15s); prompt refers to "Image 1", "Audio 1"; `duration` 5–15, 9:16 supported, `prompt_expansion_mode: "disabled"`. Holds identity from the sheet and generates real presenter body language and camera moves. | **Re-voices the line**: Audio 1 is a content and timbre reference, not a soundtrack. The words mostly survive, the voice and timing do not, and it can insert a word ("and three" appeared mid-sentence). | $0.08/s at 768P (10s = $0.80) |
+| `fal-ai/sync-lipsync/v2/pro` | `video_url` + `audio_url`, `sync_mode: "cut_off"`. Re-syncs an existing clip's mouth to supplied audio; trims the clip to the audio. | Puts the approved take back, sample-exact. | ~$0.75–0.83 per 9–10s clip |
 
-**Workflow:** VO lines generated and approved first per `references/voice.md`, one line ≤14.8s per
-clip; drive the approved still; composite the clip **muted** in HyperFrames with the approved VO
-stems so the render stays the single source of truth.
+**The production route for a speaking character (owner-approved 09-21):** reference-to-video for the
+performance and camera (its audio discarded) → Sync Lipsync with the approved ElevenLabs take. About
+$1.55–1.70 per clip at 768P. The locked-still endpoint alone is cheaper but reads too still for a
+presenter; reference-to-video alone loses the approved voice. Never ship reference-to-video's own audio.
+
+**Reference-sheet constraints, learned by refusal:** video endpoints reject images over 5760px on a
+side or with aspect outside 0.4–2.5. A one-row character sheet fails both; keep a two-row copy of the
+same panels for video prompts (`cast/<name>/<name>-sheet-video.png`), the one-row sheet for stills.
+
+**Workflow:** VO lines generated, normalised and approved first per `references/voice.md`, one line
+≤14.8s per clip; then the clip; then composite the clip **muted** in HyperFrames with the approved VO
+as a separate stem, so the render stays the single source of truth. QC every clip: frames at 1s steps,
+cross-correlate the clip's audio against the take (expect 1.00 for lip-sync and Sync, ~0.3 for
+reference-to-video), and Scribe-transcribe it to catch inserted words.
 
 ## 5. Audio
 
@@ -172,6 +178,33 @@ viewers are sound-off). Time them from a transcript of the actual audio, not fro
 **A caption's fade-out must complete before the next one starts**: fading out over 0.14s while the
 next fades in 0.04s later puts two captions in the same place for 0.1s. Leave a gap larger than the
 fade.
+
+## 6b. Build the composition FROM the audio (the pattern that held on 2026-09-21)
+
+Do not hand-time scenes. Write a `build.py` that reads `audio_meta.json` (measured durations, word
+timings) and emits `index.html`:
+
+- every scene window derives from its line's start and measured duration, with a fixed gap between
+  lines; a card or a clip that must play alone (the raw model voice, an end card) gets its own window;
+- captions are chunked from the word timings (split at punctuation, at most ~9 words, the next chunk's
+  start minus a fade as the end), one timed clip each;
+- the GSAP timeline is emitted as **static** `tl.set` / `tl.to` lines (the linter cannot see inside a
+  loop), with cue times taken from specific words ("character", "voice") when a tick must land on a word;
+- the build prints its windows and a ready `snapshot --at` list at mid-beat times.
+
+A line change is then a re-record plus a rebuild, never a re-time. Reference: the account workspace's
+`content/jenny-ep1-h3-lipsync/video/build.py`.
+
+**Lint gotchas from that build:** a kicker and its scene on the same `data-track-index` fail
+`overlapping_clips_same_track`, give kickers their own track; a `.chip` with both `top` and `bottom` set
+stretches into a tall pill, set `bottom: auto`; a fade-out on a clip needs `tl.set(..., {opacity: 0})`
+at the clip boundary or lint reports `gsap_exit_missing_hard_kill`; a Jenny clip is composited **muted**
+with the approved VO as a stem, and the raw model-voice clip plays with its own audio only in a window
+where no narration runs.
+
+**Costs on screen come from billing, pulled last.** Query the fal usage API after the final generation
+and before the cost line is recorded; the receipt panel, the spoken figure and the log cite the same
+JSON, labelled "as billed".
 
 ## 7. Lint, snapshot, render, then read frames
 
