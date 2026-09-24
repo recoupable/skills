@@ -281,7 +281,9 @@ Fields: `stage`, `buyer_or_referrer` (Buyer / Referrer / Unknown), `project_type
   `references/podcast-guest-pipeline.md`. **Run its five-point invite checklist before any
   review copy** (subject `Interview request: <topic>`, no body sign-off, no stock close,
   full unslop including the self-audit across the batch, every referenced source
-  hyperlinked); each item was a real defect on the 2026-09-22 run.
+  hyperlinked); each item was a real defect on the 2026-09-22 run. **Once a recording is
+  booked, the confirmation always carries the timeline PDF** (the reference's *Booked:
+  the timeline PDF* section).
 
 #### Both lists
 
@@ -672,4 +674,4 @@ major-label exec, and a dormant power user. What actually mattered.
 - `references/meeting-prep.md` — prep for a booked call: the pitch, the meeting plan, the PDFs to deliver.
 - `references/credits-mechanics.md` — how `checkAndResetCredits` behaves, before you quote a balance.
 - `references/tooling-gotchas.md` — Privy / Stripe / Supabase / Attio quirks and dead columns.
-- `references/podcast-guest-pipeline.md` — the podcast-invite top of funnel: loop + Attio mapping with the consent gate, the invite template and its pre-review checklist, threaded nudges, running the day (status first, research budget, verification ladder), day-7 template, what to measure, premium episode copy, cover spec, guest photo sourcing, Spotify for Creators edits.
+- `references/podcast-guest-pipeline.md` — the podcast-invite top of funnel: loop + Attio mapping with the consent gate, the booking confirmation with the timeline PDF, the invite template and its pre-review checklist, threaded nudges, running the day (status first, research budget, verification ladder), day-7 template, what to measure, premium episode copy, cover spec, guest photo sourcing, Spotify for Creators edits.
