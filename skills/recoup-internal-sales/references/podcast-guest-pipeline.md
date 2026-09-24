@@ -13,12 +13,13 @@ to run it the same way.
 |---|---|---|
 | 1. Invite | Ten invites a day to qualified leads: people who own or run a music business and have said something public about AI or automation in it within the last 12 months. The invite sells the episode, not Recoup. | `New`, `lead_source = Podcast`; `project_type` stays unset until discovery confirms a build |
 | 2. Reply | Any reply. Flag after 3 days with no time on the calendar, ahead of anything further down the board. | `In Conversation` |
-| 3. Record | The booking confirmation carries the written consent: recording, publication on the named platforms, use of clips and of the guest's name, photo and company name, and the right to withdraw before publication. No consent on file, no recording. Then 30 to 60 minutes remotely: their history in the industry, where AI does real work in the business today, the numbers behind it. Recorder notes go to the private guest folder. | `Call Booked` |
-| 4. Publish | Within 48 h, once the consent is on file and the guest has approved their cover photo: YouTube (show playlist), Spotify, Apple, socials; the episode is added to the site's `content/podcast/episodes.json` in the same PR; the guest gets the full episode and clips. | unchanged |
-| 5. Day 7 | One short email with three concrete things we could build for them, drawn from the call notes. One sentence each, no price. | `Scoping`, `project_type = Build` |
-| 6. Reply | A proposal for a 2 to 4 week build, priced from the current private rate card with a deposit plus delivery split, in the order `gtm/playbooks/discovery-and-proposals.md` (marketing repo) sets. Terms are proposals until accepted. | `Proposal Sent` |
-| 7. Deposit paid | The build runs. | `Won` |
-| 8. Delivered | Testimonial request and a post-mortem in the private guest folder. After three paid, completed, reviewed builds, review the rate. | unchanged |
+| 3. Booked | The same day a time exists, a confirmation email in the invite's thread with the **timeline PDF** attached (see *Booked: the timeline PDF* below). It is the guest's written record of what happens next. | `Call Booked` |
+| 4. Record | Written consent, sent with the interview outline 48 hours before, covers: recording, publication on the named platforms, use of clips and of the guest's name, photo and company name, and the right to withdraw before publication. No consent on file, no recording. Then 30 to 60 minutes remotely: their history in the industry, where AI does real work in the business today, the numbers behind it. Recorder notes go to the private guest folder. | `Call Booked` |
+| 5. Publish | Within 48 h, once the consent is on file and the guest has approved their cover photo: YouTube (show playlist), Spotify, Apple, socials; the episode is added to the site's `content/podcast/episodes.json` in the same PR; the guest gets the full episode and clips. | unchanged |
+| 6. Day 7 | One short email with three concrete things we could build for them, drawn from the call notes. One sentence each, no price. | `Scoping`, `project_type = Build` |
+| 7. Reply | A proposal for a 2 to 4 week build, priced from the current private rate card with a deposit plus delivery split, in the order `gtm/playbooks/discovery-and-proposals.md` (marketing repo) sets. Terms are proposals until accepted. | `Proposal Sent` |
+| 8. Deposit paid | The build runs. | `Won` |
+| 9. Delivered | Testimonial request and a post-mortem in the private guest folder. After three paid, completed, reviewed builds, review the rate. | unchanged |
 | No reply after 3 touches, or a decline | Close it honestly. | `Lost`, `lost_reason` set |
 
 No new stages, no new list; a guest is an agency lead with a different first touch. This
@@ -110,6 +111,43 @@ every run.
 - **Show the whole draft, send review copies of every round.** The operator reviews in
   their inbox; each fix round is a fresh review copy, and the approval quote goes in the
   sent record.
+
+### Booked: the timeline PDF
+
+Every booking gets the same follow-up, sent the day the time is confirmed (by the guest
+picking a slot, by their booking page, or by the operator booking on the guest's own
+scheduler). Nothing about the recording is left to the calendar invite alone.
+
+1. **Fix the calendar invite first.** Title `Recoup Podcast recording: <Guest Name>`, the
+   recording-studio link as the location, and the scheduler's auto-generated video link
+   and reschedule text removed. A booking made on the guest's own scheduler carries *their*
+   video link; the guest must get ours from us.
+2. **Build the timeline PDF.** One Letter page, house style (`references/pdf-house-style.md`),
+   titled *Your episode, step by step*, with the guest's name, title and company. Three
+   numbered steps, each with a real date:
+   1. *Your interview outline arrives*: the date, 48 hours before the recording.
+   2. *We record*: date and time in the guest's timezone, the studio named, "join from the
+      link in your calendar invite", scheduled length and expected recording length.
+   3. *It goes live, and we tag you*: where it goes out (show platforms and socials) and
+      **who we tag**: every account for the guest and their companies, each one checked on
+      the platform before it goes in.
+   Close with "Anything off?": reply to change the tag list before anything goes out.
+   Store the HTML beside the PDF in the private episode folder (`episodes/<date>-<slug>/`).
+3. **Send it as a threaded reply.** `Re: <invite subject>`, `In-Reply-To`/`References` on the
+   invite's Message-ID, BCC the cofounder, PDF attached. Body is two sentences: they are
+   confirmed for the Recoup Podcast (linked, `utm_medium=reply`) at the date and time, and the
+   attached one-pager covers next steps (outline date, the studio, the tag list). The
+   send-path gotcha: a payload with a PDF attachment overflows a command-line argument, so
+   pipe it to the HTTP client from stdin.
+4. **Approval as usual:** the exact draft and the PDF shown to the operator; a review copy
+   when they ask for one. The approval quote goes in the sent record.
+5. **Close out:** stage `Call Booked`, the sent file names the PDF, and two dated runbook
+   tasks: the outline plus written consent 48 hours before, and a studio test the day
+   before. The consent gate in step 4 of the loop still applies: no consent on file, no
+   recording.
+
+A confirmation without the PDF is incomplete: the timeline is what makes a cold guest show
+up prepared and makes the tag list theirs to correct before publication.
 
 ### The day-7 follow-up
 
