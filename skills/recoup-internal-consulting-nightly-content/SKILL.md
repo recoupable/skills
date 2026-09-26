@@ -5,6 +5,12 @@ description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-inte
 
 # Consulting Nightly Content (article-first flywheel engine)
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## Visual handoff
 
 When this workflow creates or requests a rendered artifact, use `recoup-internal-consulting-tasteful-design` and
@@ -51,7 +57,7 @@ See `content/AGENTS.md`.)
 ## Rails
 1. **Never auto-publish.** Drafts only; the owner reviews + publishes via `recoup-internal-consulting-linkedin-publisher` (Postbridge).
 2. **Grounded, not fabricated.** Every claim traces to a real captured insight/transcript — carry the
-   citation. Never invent a client name, number, or result; confirm before naming a client, or write generically.
+   citation in the private manifest; public attribution must pass the public-content gate. Never invent a client name, number, or result; confirm before naming a client, or write generically.
 3. **Voice = `recoup-internal-consulting-copy-writer`** (no exceptions): no em-dashes, anti-slop list, specific, human. Read it.
 4. **Two gates on EVERY audience-facing format (article, linkedin, email): reader, then editor.** Run `recoup-internal-consulting-copy-reviewer` (the right ICP per format) and rewrite from its notes, *then* `recoup-internal-consulting-copy-editor`. Reviewer before editor, always. **Scored ≠ gated:** `score_run.py` is the floor; the reader/editor passes are the bar.
 5. **One idea, the full bundle.** Every run produces `article.md` + `linkedin.md` + `email.md` + `images/` + `meta.yml`. The article is the pillar; the post and email derive from the edited article.
@@ -81,7 +87,7 @@ See `content/AGENTS.md`.)
 2. **Write the ARTICLE** (the pillar). Read **`recoup-internal-consulting-copy-writer`** first: voice-principles,
    anti-slop, formats §blog/articles, and **`references/social-article-style.md`**. Use the social-article
    structure by default: thesis first, purpose sentence, thought experiment, fair comparison, pragmatic
-   verdict. Give the article a title that names its subject and takeaway clearly without the body or image. Check that its promise is supported by the article; curiosity never replaces context. Aim 800–1,400 words. Save as `article.md` with frontmatter: `title`, `source`
+   verdict. Give the article a title that names its subject and takeaway clearly without the body or image. Check that its promise is supported by the article; curiosity never replaces context. Use the shortest complete explanation, usually 400–700 words; expand only when the reader needs more evidence or steps. Save as `article.md` with frontmatter: `title`, `source`
    (insight/transcript path), `audience`, `status: draft`.
 
 3. **Reader review (customer POV) + rewrite.** Read **`recoup-internal-consulting-copy-reviewer`** and run it on
@@ -137,3 +143,12 @@ See `content/AGENTS.md`.)
   angles. Spend the effort on the pillar.
 - **Mine, don't manufacture.** Nothing worth a pillar → say nothing. The flywheel rewards signal, not cadence.
 - Scored by `evals/content/score_run.py`: grounding, voice, non-dup on each format (article + post + email). The scorer is the floor; the reviewer+editor gates are the bar.
+
+## Mechanical public-copy preflight
+
+The checker ships alongside this skill. Run `python3 scripts/check_public_copy.py <public-file> ...`
+on each public format and cover source, using actual workspace paths. Optionally pass
+`--policy <workspace-policy.json>` with an `excluded_public_names` list. Fix blocking references
+and private source paths before delivery. Missing input files fail the run. This checker cannot
+verify factual accuracy, attribution, reader comprehension or raster text; perform the manual gate
+and inspect exported images separately. Do not pass internal briefs or manifests as public copy.

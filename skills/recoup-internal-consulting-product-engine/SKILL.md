@@ -5,6 +5,12 @@ description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-inte
 
 # Consulting Product Engine
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## Visual handoff
 
 When this workflow creates or requests a rendered artifact, use `recoup-internal-consulting-tasteful-design` and
