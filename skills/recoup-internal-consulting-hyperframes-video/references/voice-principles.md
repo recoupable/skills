@@ -12,19 +12,16 @@ The title's promise must be supported by the article. Do not invent percentages,
 
 When titles work together as a series or section sequence, reading only those titles must tell the full story. Each article title must still make sense on its own. Inline illustrations may omit headlines; thumbnail text should remain understandable without the article body.
 
-## Lead with the counterintuitive or surprising
+## Lead with the reader's question or useful answer
 
-Don't open with context-setting. Open with the thing that makes someone stop scrolling.
+Name the subject and make the benefit clear immediately. Surprise is optional; comprehension is required.
 
-> "There is a paradox at the heart of AI."
+Weak: "There is a paradox at the heart of AI."
+Clear: "Your finance team should be able to check every number in an AI report."
 
-> "Time isn't as linear as you think."
-
-> "Here's a question: Are we officially in the part of the movie where human experts lose their livelihoods?"
-
-The first sentence earns the second. If the opening could be swapped into any other post on the same topic, it's too generic.
-
-For social posts, this means the first line IS the hook. For emails, it means the subject line or first sentence. For essays, it's the thesis paragraph. The scale changes, the principle doesn't.
+A hook must make sense without the rest of the article. Do not force a coined term, dramatic contrast,
+or source introduction where a direct business question works. Apply the public-content quality gate
+before borrowing named examples or quotations.
 
 ---
 

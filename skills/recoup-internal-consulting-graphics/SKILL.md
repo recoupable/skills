@@ -5,6 +5,12 @@ description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-inte
 
 # Consulting Graphics
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## Current brand
 
 Recoup/Consulting/Business work defaults to **Recoup Sky**. Read `brand/GUIDE.md` and the workspace

@@ -20,6 +20,12 @@ Full design: the selected workspace workflow specification (if available) · tem
 staging + frontmatter + routing: `email/AGENTS.md`.
 **Voice + gate (always):** write in `recoup-internal-consulting-copy-writer` voice, then run every draft through the `recoup-internal-consulting-outbound-email` skill (read context, route to the right person, reader-POV check, names verified) before staging.
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## Steps
 1. **Take one source.** Prefer an existing `signals/` entry. If it is a raw call, run
    `recoup-internal-consulting-content-extraction` first so the signal exists. Record its path. It becomes `source:`.

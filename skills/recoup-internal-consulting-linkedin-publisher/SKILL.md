@@ -5,6 +5,12 @@ description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-inte
 
 # Consulting LinkedIn Publisher
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## Visual handoff
 
 When this workflow creates or requests a rendered artifact, use `recoup-internal-consulting-tasteful-design` and
@@ -49,3 +55,12 @@ Publish or schedule authorized content using the selected workspace's publishing
 
 Credentials belong in the user's connector or selected workspace environment, never in this skill
 or a chat message. Do not publish, send, or schedule without authorization for that action.
+
+## Mechanical public-copy preflight
+
+The checker ships alongside this skill. Run `python3 scripts/check_public_copy.py <public-file> ...`
+on each public format and cover source, using actual workspace paths. Optionally pass
+`--policy <workspace-policy.json>` with an `excluded_public_names` list. Fix blocking references
+and private source paths before delivery. Missing input files fail the run. This checker cannot
+verify factual accuracy, attribution, reader comprehension or raster text; perform the manual gate
+and inspect exported images separately. Do not pass internal briefs or manifests as public copy.
