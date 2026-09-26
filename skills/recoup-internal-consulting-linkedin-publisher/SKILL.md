@@ -34,7 +34,7 @@ label the result manual/unscored; never invent a numeric score or successful pro
 Publish or schedule authorized content using the selected workspace's publishing account.
 
 1. Read the source draft or signal and the workspace's voice/positioning rules. Shape the caption
-   for LinkedIn; preserve the author's meaning and verify claims.
+   for LinkedIn; preserve the author's meaning and verify claims. Apply the readable-format gate below.
 2. Discover the connected accounts through the available publishing connector or the workspace's
    reviewed provider configuration. Match the requested personal or company profile by its displayed
    identity and provider ID. Never use a plugin-embedded account ID or default to its author's account.
@@ -49,12 +49,40 @@ Publish or schedule authorized content using the selected workspace's publishing
 5. Attach media in a format the selected provider supports. Convert animation to MP4 when necessary;
    use an available media tool or the workspace's reviewed loop helper. Check document/carousel support
    against the provider's current capabilities. Keep original source assets.
-6. Record the provider receipt, account, timestamp, URL, and actual state. Scheduled is not published;
+6. Open the published permalink, refresh it, and visually verify the readable-format gate below.
+   A success receipt alone does not prove readable formatting. Record the provider receipt, account,
+   timestamp, URL, actual state, and visual-check result. Scheduled is not published;
    draft is not scheduled. Move a source to `content/04-published/` only after publication is verified.
 7. Save the verified post URL for `recoup-internal-consulting-linkedin-audience` to inspect engagement later.
 
 Credentials belong in the user's connector or selected workspace environment, never in this skill
 or a chat message. Do not publish, send, or schedule without authorization for that action.
+
+## Readable-format gate
+
+Apply this to new posts and edits, regardless of publishing tool.
+
+- Keep one clear theme. Use short paragraphs, usually one or two sentences, with a visible blank
+  line between them. Split dense multi-sentence blocks at a natural thought boundary. Keep the hook
+  and final question or CTA distinct. Use simple bullets only for genuinely parallel items; do not
+  add decorative headings, excessive emoji, or Unicode imitation bold to create structure.
+- Keep plain-text source paragraphs separated by two newline characters. For API/connector publishing,
+  pass real newlines, not literal backslash-n text. Inspect the provider preview when available.
+- In LinkedIn's native editor, adjacent paragraph elements can publish with no visible gap even when
+  the editor's text extraction reports blank lines. Preserve an actual empty paragraph between text
+  paragraphs. One verified rich-text paste shape is `<p>First paragraph.</p><p><br></p><p>Next paragraph.</p>`.
+  Use the supported paste or keyboard controls; do not inject DOM mutations. Confirm the blank line
+  visually in the editor before saving. If the paste collapses spacing, insert empty paragraphs with
+  the editor's normal controls and check again.
+- After publishing or saving an edit, open the actual post URL and refresh. Inspect the expanded post
+  visually at a normal reading width. Check paragraph gaps, readable block lengths, the hook, CTA,
+  and any link preview or image. Accessibility text or a successful save alone is insufficient:
+  both can look correct while the live post remains a wall of text.
+- Fix formatting in the existing authorized post and repeat the live visual check. Do not create a
+  duplicate post as a formatting workaround. Preserve approved meaning and links. Record the check
+  in the workspace publication receipt; if the live view is unavailable, report formatting as unverified.
+- For scheduled posts, verify the available preview and record live formatting as pending until the
+  post is published and inspected. Do not claim a live visual check for a scheduled item.
 
 ## Mechanical public-copy preflight
 
