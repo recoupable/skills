@@ -20,6 +20,26 @@ Keep paragraphs short and remove sections that repeat the point. A useful 400–
 
 A non-technical reader must be able to explain the point after the opening and identify the next step at the end. If they cannot, rewrite before deriving companion posts. Review quotes, numbers and who said/did what across every format after rewriting.
 
+### Recoup voice: established methods use present tense
+
+Describe Recoup’s established services and working methods in active present tense: “We start”,
+“We build”, “We test”, “We train”, “Recoup helps”. Do not make real services sound hypothetical
+with “we would”, “we could”, “we’d”, or “Recoup would”.
+
+- Method: “We start with the employee who built the workflow and the person who checks its output.”
+- Illustrative example: “For a catalog report, that might mean testing a completed quarter.”
+- Verified result: “The team reduced preparation time” only when supported by evidence.
+
+Apply this to articles, posts, emails, headlines, excerpts, captions and CTAs. Review the whole
+paragraph: follow-on wording such as “the team could review” or “finance would own” may also need
+present-tense wording when describing the agreed method. Prefer “can review” and “finance owns”.
+
+This is an editorial review, not a blanket replacement. Preserve quotations, past events (including
+“we’d” meaning “we had”), real conditions, illustrative scenarios and proposals for work not yet offered.
+Do not turn planned features, sample outputs or hoped-for savings into shipped capabilities or proven
+results. Use “we recommend” for advice rather than inventing a track record. Describe scope-dependent
+steps with their condition: “Once the reports pass review, we connect the recurring inputs.”
+
 ## 3. Cover comprehension
 
 Draft the cover text before artwork. It must name the subject and what the reader will learn or do without help from the article, caption, filename or surrounding UI. Use roughly 3–8 plain words; never sacrifice meaning to a word limit.
