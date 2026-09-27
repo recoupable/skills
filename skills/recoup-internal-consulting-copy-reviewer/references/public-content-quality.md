@@ -20,7 +20,7 @@ Keep paragraphs short and remove sections that repeat the point. A useful 400–
 
 A non-technical reader must be able to explain the point after the opening and identify the next step at the end. If they cannot, rewrite before deriving companion posts. Review quotes, numbers and who said/did what across every format after rewriting.
 
-## Recoup voice: established methods use present tense
+### Recoup voice: established methods use present tense
 
 Describe Recoup’s established services and working methods in active present tense: “We start”,
 “We build”, “We test”, “We train”, “Recoup helps”. Do not make real services sound hypothetical
