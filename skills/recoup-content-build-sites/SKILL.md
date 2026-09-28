@@ -89,3 +89,7 @@ Follow the host's required schema. If none is specified, return the completed ar
 Record taste feedback as explicit user decisions, separately from the agent's assessment. A liked reference does not automatically approve every part of it. Do not deploy, publish or perform paid actions beyond the authorization supplied by the user and host.
 
 For developers connecting this package to a model runtime, see `references/runtime-integration.md`. That document describes an integration approach; installing this skill alone does not change a separate Sites pipeline.
+
+## Optional Spotify fan connection
+
+When the customer requests paid Spotify fan capture, use the companion `recoup-content-connect-fans` skill if the host provides it. It handles customer authentication, site registration, activation and the public connection link. If unavailable, consult the live Recoup API documentation and confirm capability before promising capture. This build skill does not supply that integration by itself. Keep customer credentials out of site code and keep Spotify playback separate from fan capture.

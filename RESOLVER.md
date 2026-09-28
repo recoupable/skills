@@ -43,6 +43,7 @@
 | Intent | Skill |
 |---|---|
 | create / improve an interactive site, fan experience, brand activation, playable microsite, or Sites concept / build / review | `recoup-content-build-sites` |
+| add Spotify login to a site, activate paid fan connection, or retrieve site-attributed Spotify fans | `recoup-content-connect-fans` |
 | write a caption in the artist's voice | `recoup-content-write-caption` |
 | cover art / thumbnail / carousel / promo / quote card | `recoup-content-make-graphics` |
 | narrative music video from an approved song, or create the song first (Small Room workflow) | `recoup-music-video` |
