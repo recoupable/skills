@@ -7,12 +7,9 @@ an announcement, a result. The **look** comes from the account's style catalog, 
 
 ## What stays constant
 
-- **Default: vertical 9:16, 1080x1920** for Reels / Shorts / TikTok. Some older feed-first pieces
-  are 4:5 (1080x1350); match the account's recent output rather than assuming.
+- **Vertical 9:16, 1080x1920, designed for the 4:5 crop** (§6, *Safe zone*).
 - **Voice-forward.** One narration line drives each beat; visuals support the voice.
-- **Dark and achromatic.** Chrome stays black and white; colour comes from the content and from
-  status indicators, per the shared design system.
-- **Runtime target ~40s**, never past it without a stated reason (see `references/hooks.md`).
+- **Runtime target ~30s** (~70 spoken words), never past 40s without a stated reason.
 - **Content fills the frame: cards and imagery occupy ~40% of frame height.** A small floating card
   reads weak on a phone; three of six re-renders on 2026-08-19 were the owner asking for bigger.
 
@@ -33,9 +30,8 @@ shipped feature, see §4), or generated footage (narrative pieces with a recurri
 
 ## 1. Plan doc first, approved before a credit is spent
 
-Write the plan (`SCRIPT.md` or `scene-plan.md`) **before** any code or audio: **the why — theirs,
-then ours** as single sentences, then the arc and character, then a beat table
-`# · Window · Beat · On screen · VO`. VO copy costs money and carries the message, so lock it first.
+The plan (`episode.json` or `SCRIPT.md`) is written and approved before any code or audio; its gates
+are in `SKILL.md` → Step 4.
 
 **Copy rules:**
 - **No em dashes or en dashes** in anything published, including on-screen text.
@@ -53,11 +49,15 @@ Author `index.html` as a **single composition**: all scenes are divs driven by o
 timeline registered as `window.__timelines["main"]`. Do not leave snapshot copies of `index.html`
 in the project; a second file carrying `data-composition-id` fails lint ("exactly one root index.html").
 
-## 3. Brand and fonts
+## 3. Brand: the live site, not DESIGN.md
 
-Dark background, light foreground, shadow-as-border instead of CSS `border`. Fonts are copied into
-the project's `fonts/` directory and referenced by `@font-face`. In CSS use the **literal** family
-name (`"Geist Mono"`); the linter does not resolve `var(--mono)`.
+Match what recoupable.dev ships today; `mono/DESIGN.md` lags it (owner, 2026-09-27). Read the tokens
+from the site's CSS at the start of a run. As of 09-27: the sky hero image as background, frosted-glass
+cards, ink `#142e3a`, lime `#d6ff62` for the one highlight and the CTA pill, blue `#007ebd`, DM Sans
+for everything, IBM Plex Mono uppercase for labels, the `recoup-wordmark-*` files from
+`marketing/public/brand/`. Fonts are copied into the project and referenced by `@font-face` with the
+**literal** family name; the linter does not resolve `var()`. A customer document shown on screen is
+built in the `recoup-internal-sales` PDF house style.
 
 ## 4. Rebuilding UI: components, not screenshots
 
@@ -85,6 +85,12 @@ Rules that hold for any hero:
   counter's initial DOM text equals its tween's start value (it mounts, then moves, never jumps).
 - **Stack vertically what would wrap horizontally** (flows, roster rows). Socials show brand
   glyphs, never written platform names.
+- **Animate the product, never a static panel** (owner, 09-27): a chat that streams its checklist, a
+  diff with an Insert Shot on the changed line, a terminal, cards landing as found, PRs flipping to
+  Merged, a cursor clicking Approve, bars, a before/after Split Screen.
+- **Direct with named moves** (vocabulary: melies.co/cinematic-techniques), logged per beat: Parallax
+  sky, Whip Pan into each step, slow Push In, Crash Zoom on titles and outputs, Smash Cut (white
+  flash) out of B-roll, Fade In to the end card.
 
 ## 4b. Reference discipline: what a seed image transmits
 
@@ -105,8 +111,7 @@ Rules that hold for any hero:
   prop only works on populated plates.
 - **Test whether you need angle plates before making them.** On `meta/muse-image` an explicit,
   emphatic camera move produced a top-down floor shot straight from an eye-level hall plate; four
-  planned angle plates went unused. One image tells you which world you are in. (`recoup-music-video`
-  now says the same.)
+  planned angle plates went unused. One image tells you which world you are in.
 - **A plate earns its place only when two or more shots share it.** A single-shot plate is two
   generations to do one thing.
 
@@ -123,6 +128,18 @@ Rules that hold for any hero:
   went through the floor and invented a mirrored warehouse below. State that the floor is solid,
   the camera never goes below it, and exactly one subject is on screen at all times.
 
+## 4c′. B-roll: two generated clips per short (09-27)
+
+A plate opens step 1 (~2.3s, then Whip Pan to the product) and a silent character beat opens the output
+(then Smash Cut). Both on H3 at $0.08/s: plates `minimax/h3-max/text-to-video`, the character
+`reference-to-video` from her sheet. **Plate prompt:** a specific person, a goal and one beat tied to the
+step, a named camera move, then "ARRI Alexa 35, 35mm anamorphic, candid documentary realism, never a
+stock photo, no one looks at the camera." **Never ask for readable text** (screens, whiteboards, notes
+render as gibberish): "no letters or words anywhere in frame." **Physics:** one action, one owning hand,
+rigid props that never morph, one continuous locked shot. Check frames at 4fps before compositing.
+**A 7-video week, billed 09-27:** Jenny hook + CTA clips $11.82, B-roll ~$0.40 a clip, drafts ~1% of the
+ElevenLabs month; about $18 of fal when nothing is rerolled.
+
 ## 4d. Lip-synced VO over a still (earned on the first Jenny film, 2026-09-21)
 
 Both endpoints supersede the 08-31 "OmniHuman 1.5 for every mouth-visible shot" split for spoken
@@ -135,9 +152,11 @@ pieces, at half the price. The Seedance photoreal-face filter does not apply to 
 | `fal-ai/sync-lipsync/v2/pro` | `video_url` + `audio_url`, `sync_mode: "cut_off"`. Re-syncs an existing clip's mouth to supplied audio; trims the clip to the audio. | Puts the approved take back, sample-exact. | ~$0.75–0.83 per 9–10s clip |
 
 **The production route for a speaking character (owner-approved 09-21):** reference-to-video for the
-performance and camera (its audio discarded) → Sync Lipsync with the approved ElevenLabs take. About
-$1.55–1.70 per clip at 768P. The locked-still endpoint alone is cheaper but reads too still for a
-presenter; reference-to-video alone loses the approved voice. Never ship reference-to-video's own audio.
+performance and camera (its audio discarded, `duration` = the line rounded up, 5s minimum) → Sync
+Lipsync with the approved take. About $0.75–0.95 per 3–6s line. Never ship reference-to-video's own audio.
+**Cut the scene at the clip's end minus 0.08s**; a window that outlasts the clip holds its last frame
+(owner: "paused video", 09-27). **Any character B-roll under her own narration is lip-synced to that
+audio segment** (Sync, ~$0.25), or the mouth reads as talking out of sync.
 
 **Reference-sheet constraints, learned by refusal:** video endpoints reject images over 5760px on a
 side or with aspect outside 0.4–2.5. A one-row character sheet fails both; keep a two-row copy of the
@@ -171,10 +190,16 @@ at `1.0`.
 - Place each VO line at its real start from the generated durations, and align each scene window to
   its line. A ~0.3s pre-roll and ~0.35s to 0.55s gaps between lines read naturally.
 
-### Captions
+### Captions and the safe zone
 
 Burn in captions for every VO line (roughly 12% more watch time, 80% higher completion, most feed
-viewers are sound-off). Time them from a transcript of the actual audio, not from the plan.
+viewers are sound-off). Time them from the audio's word timings, not from the plan.
+
+**Everything that must be read sits in the centre 4:5 band, y 285–1635**, because LinkedIn's feed
+crops 9:16 to 4:5, **and above the bottom 400px and left of the right 140px**, where X's player and
+viewer overlays sit (09-27). Captions at y ≈ 1300–1480 in an ink pill (50px DM Sans); a hook title in
+the lower third just above the caption, never over the face; wordmark and step pill at y ≈ 318.
+Check with a 4:5 crop of one hook and one step frame per video: `ffmpeg -i f.png -vf crop=1080:1350:0:285`.
 **A caption's fade-out must complete before the next one starts**: fading out over 0.14s while the
 next fades in 0.04s later puts two captions in the same place for 0.1s. Leave a gap larger than the
 fade.
@@ -193,7 +218,8 @@ timings) and emits `index.html`:
 - the build prints its windows and a ready `snapshot --at` list at mid-beat times.
 
 A line change is then a re-record plus a rebuild, never a re-time. Reference: the account workspace's
-`content/jenny-ep1-h3-lipsync/video/build.py`.
+`content/builder-diary-week/_shared/build2.py` (one `episode.json` per video, scene components, B-roll
+slots, the technique log in `timing.json`).
 
 **Lint gotchas from that build:** a kicker and its scene on the same `data-track-index` fail
 `overlapping_clips_same_track`, give kickers their own track; a `.chip` with both `top` and `bottom` set
@@ -285,18 +311,6 @@ in `references/publish-verify.md` and `recoup-internal-social-ship-posts`.
 
 ## Project file map
 
-```
-<project>/
-  SCRIPT.md            the plan doc, reviewed first
-  post.config.mjs      per-platform copy + asset paths
-  li-card/             purpose-built LinkedIn image, not a video-frame crop
-  video/
-    index.html         single composition, one timeline
-    gen-voice.py       VO generation, voice + model recorded in the docstring
-    audio_meta.json    durations per line
-    assets/voice/      generated lines, plus raw originals in a named sibling
-    fonts/
-    renders/           MP4s
-    thumbs/            cover frame
-    .env               gitignored
-```
+The reference project `content/builder-diary-week/`: `_shared/` (the engine), one `epN-*/` per video
+(`episode.json`, `audio_meta.json`, `assets/voice|clips|img/`, `index.html`, `timing.json`, `renders/`),
+`opus/` (manifest, composed bodies, ledger). Keys stay in gitignored `.env` files.

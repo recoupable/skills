@@ -10,7 +10,7 @@ const only = args.includes("--only") ? args[args.indexOf("--only") + 1] : null;
 const limit = args.includes("--limit") ? +args[args.indexOf("--limit") + 1] : Infinity;
 const ledgerPath = MANIFEST.replace(/\.json$/, ".ledger.jsonl");
 const done = new Set(existsSync(ledgerPath) ? readFileSync(ledgerPath, "utf8").trim().split("\n").filter(Boolean).map(l => JSON.parse(l).key) : []);
-const link = p => `${m.site}?utm_source=${p}&utm_medium=social&utm_campaign=${m.campaign}`;
+let cur = ""; const link = p => `${m.site}?utm_source=${p}&utm_medium=social&utm_campaign=${m.campaign}-${cur}`;  // one campaign per item
 const bodies = (c, p) => {
   const yt = { title: c.yt_title, description: `${c.caption}
 
@@ -28,7 +28,7 @@ ${m.cta_yt} ${link("li")}` };   // link in the body
   return { yt, tt, ig, x, li }[p];
 };
 let n = 0;
-for (const c of m.items) {
+for (const c of m.items) { cur = c.key;
   for (const p of Object.keys(m.accounts)) {
     if (only && p !== only) continue;
     const key = `${c.key}:${p}`; if (done.has(key)) continue; if (n >= limit) process.exit(0);

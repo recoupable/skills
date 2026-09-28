@@ -99,7 +99,9 @@ Gate the pick on all of these before building (details in `references/topic-sele
   them to co-post is the largest measured lever we have: the 2026-07-22 collab reel took **45 likes
   against 1–3** for every non-collab reel after it. "None" is allowed and costs reach.
 - **Numbers.** Any figure attributed to a real artist must be measured and verified; never publish a
-  number you cannot audit, including about ourselves. Measured-vs-estimated disclosure is **one
+  number you cannot audit, including about ourselves. A client without consent becomes a **fictional
+  client**, said so in the caption; never invent a timestamp, file name or diff to fill a panel.
+  Measured-vs-estimated disclosure is **one
   later beat, never part of the opening figure** (`references/hooks.md` → *One flat figure*).
 - **NO AI disclosure in body copy.** Owner ruling 2026-07-28: never spend caption, tweet,
   description or on-screen text saying the visuals are AI generated; use the platform's own
@@ -109,51 +111,33 @@ Gate the pick on all of these before building (details in `references/topic-sele
 
 ## Step 4 — Build the asset
 
-**Route the format first** (`references/video-formats.md`): pick a style from `VIDEO-STYLES.md`
-and clone its reference project's `video/` dir; never start from scratch. Presenter how-to / spoken-word
-piece (Style H): a recurring character on camera for hook and CTA, the method between, see
-`references/character-sheet.md` (building her), `references/video-pipeline.md` → *Lip-synced VO over a
-still* and *Build the composition FROM the audio*. Artist music video is the separate
-`recoup-music-video` skill.
+**Route the format first** (`references/video-formats.md`): pick a style from `VIDEO-STYLES.md` and
+clone its reference project; never start from scratch. The weekly default is the **Builder Diary short**
+(Style I): Jenny to camera for hook and CTA, three animated process steps, the output, a B-roll plate and
+a Jenny beat. Artist music video is the separate `recoup-music-video` skill.
 
-**The approval sequence for a Style H piece, each artifact revealed in Finder (`open -R`), never
-described:** character sheet → voice (one review file) → the on-camera prompt → gate clips → the script
-table with the exact spoken text → audio line by line (regenerate only the edited lines) → the composite
-→ the composed post bodies → the schedule. Every gate is a file the owner opens; a gate that is only
-narrated in chat is not a gate (09-21).
+**Draft first, spend last (owner, 2026-09-27).** Every stage is a file revealed in Finder (`open -R`),
+approved before the next; a gate narrated only in chat is not a gate.
 
-**Build in this order, for EVERY video.** Each stage is approved before the next begins, because
-each one seeds the next and a mistake compounds.
-
-1. **Concept lock.** One reviewed paragraph: premise, character, structure. Not changed once
-   generation starts (09-02: the concept moved three times mid-build and orphaned a complete
-   21-still pass; "$2.85 for garbage"). An imprecise vision is not fixable downstream.
-2. **Plan doc `SCRIPT.md`.** Why theirs then ours (risk to a real person stated alongside), arc,
-   character, destination, collaborator, and the hook archetype named (specific number, contrarian
-   claim, list tease; if you cannot name one, rewrite it). Never open by qualifying the audience.
-   **Cold-feed premise test:** the video states its premise in its first beats, VO or on-screen,
-   because a cut that relies on the caption has no story for most viewers (`references/hooks.md`).
-   Name the final act before the hook: every number in the last three beats belongs to something the
-   film already introduced; for a shipped feature that is the contract and a runnable CTA, not a
-   benchmark (`references/video-formats.md` → *The third act*). A multi-item piece gets its
-   scaffolding here (`references/structure.md`). Reviewed **before** a credit is spent.
-3. **Hook line generated and MEASURED from audio** (08-11): the spoken hook lands in 3s read from the
-   generated audio's duration, not estimated from the word count (`references/hooks.md`).
-4. **Voice chosen by checking the MODEL first** (`references/voice.md`); most "robotic VO" is a stale
-   `model_id` in a cloned script (08-06). Bake off on the film's lines at equal loudness, record the
-   winner; a recurring character keeps its canonical voice in `cast/<character>/`. Then **audio
-   approved before compositing**: one concatenated review file, owner listens (08-07: this caught a
-   mechanical voice before the timeline existed; a voice change later is a timeline rebuild).
-5. **Character sheets.**
-6. **Location plates**, only when two or more shots share one.
-7. **Stills**, then the **contact-sheet gate**.
-8. **Motion.**
-9. **Composite.** Read the plan doc's Screen column back against the composition row by row (08-12).
-10. **Snapshot** with `npx hyperframes@0.7.5 snapshot --at <times> .` (pin the version; ~15s) before
-    any render. One run burned **seven full renders** on findings visible in a still.
-11. **Render**, in the background.
-12. **Frames read out of the MP4 at caption times.** The right duration is not evidence it looks
-    right, and `inspect` samples fixed points so it misses collisions between them.
+1. **Ideas table.** For a weekly slate, one row per video from the week's merged PRs
+   (`gh search prs --author=@me --merged-at=">=<date>"`) and meeting notes: the lesson, the proof, the
+   source, the consent it needs. Owner approves rows before any script.
+2. **Script** (`episode.json` or `SCRIPT.md`): why theirs then ours, arc, character, destination,
+   collaborator, hook archetype (specific number, contrarian claim, list tease; never open by qualifying
+   the audience), ~70 words, locked once generation starts (09-02). Teach a **process**, not an output.
+   The character never carries a factual number; the panels do. Name the final act before the hook
+   (`references/video-formats.md` → *The third act*). Cold-feed premise test (`references/hooks.md`).
+3. **Voice** from the character's canon (`cast/<character>/`), model checked first (`references/voice.md`);
+   the hook measured from the audio, inside 3s.
+4. **$0 draft**: the character as a still, VO, animated product scenes, captions, a 4:5-cropped frame check.
+   Owner reviews the drafts; edits re-voice only the changed lines.
+5. **Generated video only after the draft is approved**: character clips (`references/video-pipeline.md`
+   → §4d), B-roll (§4c′); for films, character sheets, plates, stills and motion
+   (`references/character-sheet.md`, contact-sheet gate before motion).
+6. **Composite**, read back against the script row by row; **snapshot** with
+   `npx hyperframes@0.7.5 snapshot --at <times> .` before any render (one run burned seven renders on
+   findings visible in a still).
+7. **Render** in the background, then **read frames out of the MP4** at caption times and in the 4:5 crop.
 
 Two audits ride along. **Audit the SCREEN, not only the script:** run the second half of the
 `references/hooks.md` checklist over every panel; it scopes to **claims and measurements** (a `1/5`
@@ -177,12 +161,9 @@ homepage with zero trials in eight weeks). Declare at publish time: visits reada
 **The CTA is a direct tagged link, never a comment-gate:** tried twice, zero leads both times. Tag
 per `references/conversion.md`.
 
-**LinkedIn: image or video is under a tagged re-test (owner, 2026-09-21).** The 07-28 ruling (images
-outperform video there, from a handful of June personal posts) stands as the default, but the Jenny ep 1
-slate runs seven videos on the personal profile with `utm_source=li` links in the body through 09-27.
-Read LinkedIn's attributed visits against the June image posts at the ~09-29 re-pull and rewrite this
-paragraph on that data. Until then: video is allowed on LinkedIn for educator pieces through Opus; an
-image card is still the default for films.
+**LinkedIn: educator videos go to the personal profile through Opus, link in the body**; films still
+get an image card. The 09-21 → 10-04 slates are the tagged test against the June image posts; rewrite
+this line on that data at the ~10-06 re-pull.
 
 - **Publish + measure:** `recoup-internal-social-ship-posts` owns per-platform copy, the connector
   mechanics, and the ~48h re-pull.
@@ -209,8 +190,8 @@ image card is still the default for films.
   on-screen text; internal docs exempt). Rewrite the sentence rather than substituting a comma.
 - **Provider and model names: none on films and their cards, required in educator pieces.** The 09-04
   ruling (no fal, MiniMax, Seedance, ElevenLabs, Grok, OmniHuman on cards, captions, descriptions or
-  on-screen text; describe by function) still governs films. The owner revised it on 09-21 for the
-  Style H how-to series, where the tool name is the hook and the search term and the request is shown
+  on-screen text; describe by function) still governs films. The owner revised it on 09-21 for
+  educator pieces, where the tool name is the hook and the search term and the request is shown
   on screen. Costs stay labelled "as billed" or "at list price" everywhere.
 - **No why, no build.** Permission is not a reason: "they consented" answers whether we *may*, never
   whether we *should*.
@@ -239,7 +220,7 @@ image card is still the default for films.
 - `references/publish-verify.md` — the pre-publish gate, post-publish verification, platform traps
 - `references/video-pipeline.md` — the shared build recipe: scaffold, rebuilt UI panels, captions, lip-synced VO over a still, render, frame QC
 - `references/voice.md` — model vs voice vs delivery, the bake-off, audio tags, loudness
-- `references/seedance.md` — Seedance 2.5 generated plates: constraints, the fal call, prompt doctrine, run log
+- `references/seedance.md` — Seedance 2.5 for stylized casts: constraints, the fal call, prompt doctrine, run log
 - `references/seedance-examples.md` — every Seedance 2.5 example prompt we have, verbatim and sourced
 - `references/structure.md` — holding a multi-item piece together after the hook
 - `references/character-sheet.md` — building a recurring on-camera character: identity bake-off, the deterministic sheet, body changes, the voice, the guide

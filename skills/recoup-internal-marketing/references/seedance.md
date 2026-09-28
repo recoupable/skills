@@ -16,7 +16,7 @@ identity across shots.** So the *medium* decides the model:
 |---|---|---|
 | Photoreal characters | **H3 Max i2v from Muse start stills** (SMALL ROOM pipeline) | Seedance cannot take the face; H3 takes the still |
 | Stylized / animated characters | **Seedance 2.5 `reference-to-video`** with the sheets as references | The sheets get in, identity is held by reference, whole song sections become one take |
-| Face-free plates and beats (empty streets, cranes, crowds from behind) | Seedance | Its strongest work either way |
+| Face-free plates and beats | **H3 text-to-video** for live-action B-roll; Seedance only inside a stylized piece | Seedance plates read as stock next to H3's story-tied shots (owner, 09-27) |
 
 What still passes with a photoreal cast, for a hybrid: **headless wardrobe crops** (build, clothes, props
 transfer; the face is redrawn), location plates, props. What never passes: any face, by any route. Route 1
