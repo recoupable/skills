@@ -10,6 +10,12 @@ Reality headings. Business paths below are relative to that project. Bundled res
 to this installed skill; sibling capabilities resolve by their installed names. Never search another
 private checkout for missing inputs. Use workspace identity, audience, pricing, and `DESIGN.md` fonts.
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## Steps
 1. Take the signal (from `signals/`) — read its `source`/`related` and traverse to the raw for context.
 2. **Ground research-derived drafts (pull the wiki).** If the idea cites `[[wiki pages]]` (it came

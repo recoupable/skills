@@ -2,6 +2,8 @@
 import importlib.util
 from pathlib import Path
 import tempfile
+import subprocess
+import sys
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,6 +21,11 @@ http = module('http_template', 'skills/recoup-internal-consulting-integration-sc
 
 
 class TemplateTests(unittest.TestCase):
+    def test_public_copy_policy_regressions(self):
+        script = ROOT / "skills/recoup-internal-consulting-copy-writer/scripts/test_public_copy.py"
+        result = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_proposal_refuses_unfilled_fields_before_rendering(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / 'proposal.html'

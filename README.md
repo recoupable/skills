@@ -153,3 +153,12 @@ The 63 `recoup-internal-consulting-*` skills cover client/deal operations, propo
 Business installs this same repository at `plugin/` as a pinned Git submodule. Consult its workspace rules before accessing data. Integration adapters, credentials and active schedules belong to the selected workspace; installing these skills does not configure them.
 
 Media skills bundle the Recoup Sky identity, DM Sans, IBM Plex Mono, exact logos and approved Finals references. Video engines and modes are supporting GUIDE.md files under the HyperFrames skill. Third-party assets retain their notices; personal-use replica and Virgil font binaries are excluded.
+
+### Catalog Stop-hook removal (2.1.1)
+
+Catalog review uses explicit readiness and dashboard validators, with no catalog
+Stop hook. Update to 2.1.1 and start a new session to unload a previously active
+skill hook. If the reviewer identifies itself as `recoup-catalogs-plugin`, update
+that separate plugin to 0.3.1 too (or disable it if you use this consolidated
+package). Organization-managed installs require the administrator to publish the
+update. Source-file protection and completion requirements remain in place.

@@ -12,6 +12,12 @@ private checkout for missing inputs. Use workspace identity, audience, pricing, 
 
 Write with context, taste, and a reason to speak. Apply with judgment. Spirit over letter.
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## Rule priority
 
 When rules collide:
@@ -38,7 +44,7 @@ If the point is made, stop.
 
 ### Voice principles (always load)
 
-Before writing any published content, read references/voice-principles.md (`references/voice-principles.md`). It contains the full voice system: how to open (lead with the counterintuitive), how to structure evidence (concrete before abstract, evidence stacking), confidence calibration, sentence rhythm, source attribution, the steelman habit, endings that open instead of close, and tone calibration. These principles apply to everything — social posts, emails, essays, landing pages. Scale them to the format.
+Before writing any published content, read references/voice-principles.md (`references/voice-principles.md`). It contains the full voice system: how to open (lead with a useful, concrete reader question or answer), how to structure evidence (concrete before abstract, evidence stacking), confidence calibration, sentence rhythm, source attribution, the steelman habit, endings that open instead of close, and tone calibration. These principles apply to everything — social posts, emails, essays, landing pages. Scale them to the format.
 
 ## Context modes
 
@@ -63,7 +69,7 @@ Before writing any published content, read references/voice-principles.md (`refe
 Weak: "The company faced challenges." → "The company missed payroll twice in 6 months."
 Weak: "The tool improves workflow." → "The tool removes 4 approval emails from the invoice process."
 
-Use real examples. Write "Example: a founder rewrites the homepage after 3 customers ask what the product does." Not "Imagine a hypothetical scenario..."
+Use verified examples where permitted. Label invented scenarios and figures as illustrative at first use; never present them as a real customer story.
 
 ## Anti-slop rules (always apply)
 
@@ -156,3 +162,12 @@ For business or persuasion copy (emails, memos, proposals, landing pages, ads, u
 - Facts with context: does every number answer "so what?"
 
 Send the cleaner version.
+
+## Mechanical public-copy preflight
+
+The checker ships alongside this skill. Run `python3 scripts/check_public_copy.py <public-file> ...`
+on each public format and cover source, using actual workspace paths. Optionally pass
+`--policy <workspace-policy.json>` with an `excluded_public_names` list. Fix blocking references
+and private source paths before delivery. Missing input files fail the run. This checker cannot
+verify factual accuracy, attribution, reader comprehension or raster text; perform the manual gate
+and inspect exported images separately. Do not pass internal briefs or manifests as public copy.

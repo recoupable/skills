@@ -1,0 +1,154 @@
+<!doctype html>
+<!--
+  Recoup PDF house style: one US Letter page, built from the components below.
+  Copy this file into the task's working folder, delete the components you don't need,
+  replace the SYNTHETIC example content, then render:
+    python3 scripts/build_pdf.py page.html Out.pdf --font <GeistPixel-Square.ttf> --preview out.png
+  Placeholders filled by the build script: __PIXEL_FONT__ (the display font) and __RECOUP_ICON__.
+  <img src="embed:relative/or/absolute/path.jpg"> and <img src="embed:https://..."> are inlined as base64.
+  Guide: references/pdf-house-style.md
+-->
+<html><head><meta charset="utf-8"><title>Example Show: Month Numbers</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+__PIXEL_FONT__
+:root{--ink:#0a0a0a;--ink2:#52524e;--muted:#8a8a85;--line:#e6e6e3;--surface:#fafaf9;--accent:#2a78d6;--accent-tint:#e8f1fc;--ctx:#c9c9c4;
+  --display:"GeistPixel","Geist Mono",monospace}
+@page{size:Letter;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;color:var(--ink);font-family:Geist,system-ui,sans-serif;font-size:10pt;line-height:1.38;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--ctx);text-underline-offset:2px}
+.page{width:8.5in;height:11in;padding:.45in .55in .35in;display:flex;flex-direction:column;gap:12px}
+
+/* 1. Header + title */
+.top{display:flex;justify-content:space-between;align-items:center;font-family:"Plus Jakarta Sans";font-size:8.5pt;color:var(--muted)}
+.top img{height:18px;vertical-align:middle;margin-right:6px}
+h1{font-family:var(--display);font-weight:400;font-size:26pt;line-height:1.02}
+h1 span{color:var(--muted)}
+.label{font-family:"Plus Jakarta Sans";font-weight:700;font-size:7.5pt;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+
+/* 2. The short version */
+.short{background:var(--surface);box-shadow:0 0 0 1px var(--line);border-radius:12px;padding:10px 16px}
+.short p{font-size:10.5pt}
+
+/* 3. Chart card */
+.card{box-shadow:0 0 0 1px var(--line);border-radius:12px;padding:11px 16px}
+.card h2{font-family:"Plus Jakarta Sans";font-weight:700;font-size:12.5pt;margin-bottom:2px}
+.sub{color:var(--ink2);font-size:9pt;margin-bottom:8px}
+
+/* 3a. Hero number + split bar (a part of a whole) */
+.hero{display:flex;align-items:center;gap:22px}
+.big{font-family:var(--display);font-size:44pt;line-height:.9;color:var(--accent)}
+.bigcap{font-size:9pt;color:var(--ink2);max-width:1.5in;margin-top:4px}
+.split{flex:1}
+.bar{display:flex;height:34px;gap:2px}
+.bar div{border-radius:4px;display:flex;align-items:center;padding-left:10px;font-family:"Plus Jakarta Sans";font-weight:700;font-size:9.5pt}
+.leg{display:flex;justify-content:space-between;margin-top:6px;font-size:9pt;color:var(--ink2)}
+.leg b{color:var(--ink);font-family:"Plus Jakarta Sans"}
+.sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:0}
+
+/* 3b. Ranked horizontal bars (magnitude, with a highlighted group) */
+.rows{display:flex;flex-direction:column;gap:5px}
+.row{display:grid;grid-template-columns:3.3in 1fr;align-items:center;gap:10px}
+.rl{font-size:9pt;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rl small{display:inline-block;width:.85in;color:var(--muted);font-size:7.5pt;font-family:"Plus Jakarta Sans";font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.track{display:flex;align-items:center;gap:8px}
+.fill{height:14px;border-radius:0 4px 4px 0}
+.val{font-family:"Plus Jakarta Sans";font-weight:700;font-size:9.5pt}
+
+/* 4. Stat tiles (use .hl on at most one or two: the number that matters) */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tiles.four{grid-template-columns:repeat(4,1fr)}
+.tile{box-shadow:0 0 0 1px var(--line);border-radius:12px;padding:7px 12px}
+.tile .n{font-family:var(--display);font-size:20pt;line-height:1.05}
+.tile .t{font-size:8.5pt;color:var(--ink2)}
+.tile.hl{background:var(--accent-tint);box-shadow:0 0 0 1.5px var(--accent)}
+.tile.hl .n{color:var(--accent)}
+
+/* 5. Entity card grid (shows, artists, venues): artwork + tag + one line + status + contact */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ent{box-shadow:0 0 0 1px var(--line);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:4px}
+.ent.hl{background:var(--accent-tint);box-shadow:0 0 0 1.5px var(--accent)}
+.eh{display:flex;gap:8px;align-items:center}
+.eh img{width:38px;height:38px;border-radius:7px;flex:none;object-fit:cover}
+.nm{display:block;font-family:"Plus Jakarta Sans";font-weight:700;font-size:8.8pt;line-height:1.15;text-decoration:none;color:var(--ink)}
+.tag{display:inline-block;margin-top:2px;font-family:"Plus Jakarta Sans";font-weight:700;font-size:6.5pt;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ent.hl .tag{color:var(--accent)}
+.ent p{font-size:7.9pt;color:var(--ink2);line-height:1.3;flex:1}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:7.6pt}
+.stat{font-family:"Plus Jakarta Sans";font-weight:700}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:0}
+.stat.on{color:var(--ink)}.stat.on .dot{background:var(--accent)}
+.stat.off{color:var(--muted)}.stat.off .dot{box-shadow:inset 0 0 0 1.5px var(--ctx)}
+.ct{font-size:7.4pt;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct a{color:var(--ink2)}
+
+/* 6. Next moves row */
+.next{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.next div{font-size:9pt;color:var(--ink2);border-top:2px solid var(--ink);padding-top:6px}
+.next b{display:block;color:var(--ink);font-family:"Plus Jakarta Sans";font-size:9.5pt;margin-bottom:2px}
+
+/* 7. Ready-to-send message card */
+.msg{box-shadow:0 0 0 1px var(--line);border-radius:12px;padding:9px 14px;display:grid;grid-template-columns:1.55in 1fr;gap:14px}
+.msg .side{font-size:8pt;color:var(--ink2)}
+.msg .side b{display:block;font-family:"Plus Jakarta Sans";font-size:9.5pt;color:var(--ink);margin-bottom:3px}
+.msg .body{font-size:8.3pt;line-height:1.36}
+.msg .body p{margin-bottom:4px}
+
+/* 8. Sources footer */
+.foot{margin-top:auto;font-size:7.2pt;color:var(--muted);line-height:1.45}
+</style></head><body><div class="page">
+
+<!-- 1. Header + title. Name recurring documents by their period and add "Next review". -->
+<div class="top"><span><img src="data:image/png;base64,__RECOUP_ICON__" alt="">prepared by Recoup · 2026-01-15</span><span>Next review: February 2026</span></div>
+<h1>Example Show<br><span>January 2026 Numbers</span></h1>
+
+<!-- 2. The whole argument in three sentences, before any data. -->
+<div class="short"><div class="label">The short version</div>
+<p>SYNTHETIC EXAMPLE. Most of this week's video views went to older uploads, so the archive is already working. Short clips outpull full episodes. The number to move next is the mailing list, which is at zero.</p></div>
+
+<!-- 3a. Hero number + split bar. Accent = the part that carries the point; gray = context. -->
+<div class="card"><h2>The archive is doing most of the work</h2>
+<div class="sub">Views gained by the <a href="https://example.com/channel">example channel</a>, week of Jan 12</div>
+<div class="hero"><div><div class="big">70%</div><div class="bigcap">of the week's views came from older videos</div></div>
+<div class="split"><div class="bar"><div style="flex:700;background:var(--accent);color:#fff">700</div><div style="flex:300;background:var(--ctx);color:var(--ink)">300</div></div>
+<div class="leg"><span><span class="sw" style="background:var(--accent)"></span><b>Older videos</b></span><span><span class="sw" style="background:var(--ctx)"></span><b>This week's uploads</b></span></div></div></div></div>
+
+<!-- 3b. Ranked bars. Width = value / max * 80%. Keep labels short enough to fit on one line. -->
+<div class="card"><h2>Clips outpull full episodes</h2>
+<div class="sub">Top uploads from December, views as of Jan 1</div>
+<div class="rows">
+<div class="row"><div class="rl"><small>Clip</small>Example clip one</div><div class="track"><div class="fill" style="width:80%;background:var(--accent)"></div><span class="val">900</span></div></div>
+<div class="row"><div class="rl"><small>Clip</small>Example clip two</div><div class="track"><div class="fill" style="width:44.4%;background:var(--accent)"></div><span class="val">500</span></div></div>
+<div class="row"><div class="rl"><small>Full episode</small>Example episode</div><div class="track"><div class="fill" style="width:8.9%;background:var(--ctx)"></div><span class="val">100</span></div></div>
+</div>
+<div class="leg" style="justify-content:flex-start;gap:18px;margin-top:6px"><span><span class="sw" style="background:var(--accent)"></span>Clip</span><span><span class="sw" style="background:var(--ctx)"></span>Full episode</span></div></div>
+
+<!-- 4. Stat tiles. Highlight only the number the reader should act on. -->
+<div><div class="label">Where things stand</div>
+<div class="tiles">
+<div class="tile"><div class="n">10,000</div><div class="t">all-time plays</div></div>
+<div class="tile"><div class="n">100</div><div class="t">episodes released*</div></div>
+<div class="tile hl"><div class="n">0</div><div class="t"><b>Mailing list subscribers.</b> Fans have nowhere to sign up yet.</div></div>
+</div></div>
+
+<!-- 5. Entity grid. Status dot + text label, never color alone. Artwork via embed:. -->
+<div><div class="label">Example targets</div>
+<div class="grid">
+<div class="ent hl"><div class="eh"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxIDEiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjOWM5YzQiLz48L3N2Zz4=" alt=""><div><a class="nm" href="https://example.com/show-a">Example Show A</a><span class="tag">The first pitch</span></div></div>
+<p>One line on why this one fits, from something the customer already did.</p><div class="meta"><span class="stat on"><span class="dot"></span>Posted Jan 12</span><span style="color:var(--muted)">12 eps</span></div><div class="ct">Pitch: <a href="mailto:host@example.com">host@example.com</a></div></div>
+<div class="ent"><div class="eh"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxIDEiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjOWM5YzQiLz48L3N2Zz4=" alt=""><div><a class="nm" href="https://example.com/show-b">Example Show B</a><span class="tag">Industry</span></div></div>
+<p>One line on the fit.</p><div class="meta"><span class="stat off"><span class="dot"></span>Quiet since Dec 1</span><span style="color:var(--muted)">80 eps</span></div><div class="ct">Pitch: <a href="https://example.com/contact">show website</a></div></div>
+</div></div>
+
+<!-- 6. Next moves: three, each a bold verb phrase plus one sentence. Say what NOT to do where it builds trust. -->
+<div><div class="label">What this points to</div>
+<div class="next">
+<div><b>First move</b>One sentence.</div>
+<div><b>Second move</b>One sentence.</div>
+<div><b>Third move</b>One sentence.</div>
+</div></div>
+
+<!-- 8. Every number's source and pull date; the limits of the data on the same page. -->
+<div class="foot">*Footnote any figure whose source or date differs from the rest. Sources: name each system and the timestamp of the pull. State what the data cannot see.</div>
+</div></body></html>

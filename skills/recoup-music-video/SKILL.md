@@ -118,8 +118,9 @@ H3 Max i2v from Muse start stills (the Small Room pipeline). A stylized or anima
 instead go to Seedance 2.5 with the sheets as references, one take per song section: Seedance's
 input filter (through fal) rejects every photoreal face of any origin but accepts a stylized one
 and holds it across shots. Cast photoreal from the user's references first, approve, then
-re-render every asset in one style string. Recipe, prompt architecture and costs:
-`recoup-internal-marketing/references/seedance.md` → *The decision gate*.
+re-render every asset in one style string. Recipe, prompt architecture and costs live in
+the Seedance reference of the staff-only `recoup-internal-marketing` skill (*The decision gate*),
+not in this skill.
 
 Stage a **silent five-second screen test** of an actual demanding beat from the film,
 using **H3 Max Turbo** at the settings in the production reference. It must prove the

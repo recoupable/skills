@@ -1,3 +1,7 @@
+# Reader-first default
+
+Apply `public-content-quality.md` first. The patterns below are optional techniques, not a required outline. Use one concrete example and the shortest complete explanation; no minimum word count, mandatory comparison, or coined concept. Public competitor references remain prohibited even when a historical sample uses them.
+
 # Social article style
 
 Use this for pieces that sit between a quick social post and a deep essay: roughly 500-1,200 words, with room to stretch toward 1,400 when the source has enough real examples. It is built for LinkedIn, a newsletter, a consulting pillar article, or a blog-style social article. The job is to teach one mental model, compare a few options, and leave the reader with a practical way to think.

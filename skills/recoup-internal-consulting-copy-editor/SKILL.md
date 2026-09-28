@@ -16,6 +16,12 @@ label the result manual/unscored; never invent a numeric score or successful pro
 
 A second set of eyes on a finished draft. The review runs in a **fresh-context subagent** so it reads like a first-time editor, not the author. The **main agent implements** the edits, with judgment. This skill *uses* `recoup-internal-consulting-copy-writer` (the house voice + anti-slop standard) and `evals/content/score_run.py` (the check) — it does not redefine them.
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## When to run
 On request ("copy-edit / edit / hard edit / editor pass / review this draft"), and as the last gate before publishing any long-form piece.
 
@@ -91,3 +97,12 @@ Return your notes in exactly this shape, no preamble:
 ## Notes
 - The subagent is a **reviewer, not an author** — keep all edits in the main agent so voice and final judgment stay in one hand.
 - **Compound it:** if the reviewer catches a brand-new slop or non-conversational pattern, propose a change to the canonical copy-writer standard (bad → good) and re-sync its registered copies so it's caught automatically next time — don't just fix the one instance.
+
+## Mechanical public-copy preflight
+
+The checker ships alongside this skill. Run `python3 scripts/check_public_copy.py <public-file> ...`
+on each public format and cover source, using actual workspace paths. Optionally pass
+`--policy <workspace-policy.json>` with an `excluded_public_names` list. Fix blocking references
+and private source paths before delivery. Missing input files fail the run. This checker cannot
+verify factual accuracy, attribution, reader comprehension or raster text; perform the manual gate
+and inspect exported images separately. Do not pass internal briefs or manifests as public copy.

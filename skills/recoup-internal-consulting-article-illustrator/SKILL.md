@@ -9,6 +9,12 @@ Use the selected workspace and its existing content bundle. Load DESIGN.md and `
 an explicit client/artist identity wins. Stage the self-contained brand package with
 `node <installed-skill>/brand/materialize.mjs <output-directory>`.
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## Approved article image system
 
 - **Thumbnail, images/image1.<ext>:** one bold focal illustration and a large, short text hook,

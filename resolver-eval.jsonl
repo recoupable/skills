@@ -160,3 +160,4 @@
 {"intent": "recoup-internal consulting: system auditor — Reconcile and health-check the whole workspace", "expected": "recoup-internal-consulting-system-auditor", "not": []}
 {"intent": "recoup-internal consulting: tasteful design — Apply the current Recoup identity across graphics, video, slides, proposals and interfaces", "expected": "recoup-internal-consulting-tasteful-design", "not": []}
 {"intent": "recoup-internal consulting: testimonial capture — Capture a testimonial and logo rights", "expected": "recoup-internal-consulting-testimonial-capture", "not": []}
+{"intent": "recoup-internal draft today's ten podcast guest invites and nudge last week's non-responders", "expected": "recoup-internal-sales", "not": ["recoup-internal-marketing"]}

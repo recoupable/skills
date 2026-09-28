@@ -229,4 +229,5 @@ hand-upload a video "for consistency" either. The image depicts what the copy's 
 - `references/seedance.md` — Seedance 2.5 generated plates: constraints, the fal call, prompt doctrine, run log
 - `references/seedance-examples.md` — every Seedance 2.5 example prompt we have, verbatim and sourced
 - `references/structure.md` — holding a multi-item piece together after the hook
+- `references/character-swap-edit.md` — recreating a trend by swapping the cast of a real performance clip (reAPI Seedance 2.5 edit): casting limits, the 3-reference rule, hosting, QC; script `scripts/reapi-edit.sh`
 - **artist music video** lives in the separate `recoup-music-video` skill. Route there; do not rebuild the pipeline here.

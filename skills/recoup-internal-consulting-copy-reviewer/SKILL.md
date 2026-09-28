@@ -16,6 +16,12 @@ the owner's actual customer understand it, trust it, care, and want to act? The 
 author. It returns **notes only**; the **main agent rewrites** from them. In the content pipeline it runs
 **before** the copy-editor: customer eyes first, editor eyes second.
 
+## Required public-content gate
+
+Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
+It governs competitor/source restrictions, plain-language explanations, cover comprehension and
+revision evidence. Apply it to every public format; older style examples do not override this gate.
+
 ## When to run
 - In `recoup-internal-consulting-nightly-content`: on the article, right after it's written and **before** the copy-editor.
 - On request: "review this from the customer's eyes", "would my ICP care", "reader reaction", "is this too

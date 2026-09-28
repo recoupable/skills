@@ -84,6 +84,7 @@
 | "recoup-internal" + implement/ship a tracked issue end-to-end (docs-first, TDD) | `recoup-internal-dev-ship-issue` |
 | "recoup-internal" + benchmark/audit/grade a skill pack or plugin | `recoup-internal-eval-skill-benchmark` |
 | "recoup-internal" + run the daily sales sweep / who to follow up with (Stripe + Privy + valuations + Attio + credits + tasks + chats) | `recoup-internal-sales` |
+| "recoup-internal" + podcast guest outreach: find today's invite list, draft invites or nudges | `recoup-internal-sales` |
 | "recoup-internal" + work the Attio catalog-valuation sales funnel | `recoup-internal-funnel-valuation-pipeline` |
 | "recoup-internal" + account-health / account-status snapshot for a Recoup account | `recoup-internal-account-health-report` |
 | "recoup-internal" + fleet-wide weekly usage review / week in review / business pulse (logins, Stripe, credits, gateway reconciliation, catalogs) | `recoup-internal-weekly-usage-review` |

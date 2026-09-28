@@ -231,6 +231,29 @@
         "skills/recoup-internal-consulting-proposal-designer/brand",
         "skills/recoup-internal-consulting-hyperframes-video/brand"
       ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/references/public-content-quality.md",
+      "copies": [
+        "skills/recoup-internal-consulting-copy-reviewer/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-copy-editor/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-nightly-content/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-content-drafter/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-article-illustrator/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-graphics/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-product-engine/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-email-atomizer/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-linkedin-post-architect/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-linkedin-publisher/references/public-content-quality.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/scripts/check_public_copy.py",
+      "copies": [
+        "skills/recoup-internal-consulting-copy-editor/scripts/check_public_copy.py",
+        "skills/recoup-internal-consulting-linkedin-publisher/scripts/check_public_copy.py",
+        "skills/recoup-internal-consulting-nightly-content/scripts/check_public_copy.py"
+      ]
     }
   ]
 }

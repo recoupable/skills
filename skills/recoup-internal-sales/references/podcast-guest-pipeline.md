@@ -13,12 +13,13 @@ to run it the same way.
 |---|---|---|
 | 1. Invite | Ten invites a day to qualified leads: people who own or run a music business and have said something public about AI or automation in it within the last 12 months. The invite sells the episode, not Recoup. | `New`, `lead_source = Podcast`; `project_type` stays unset until discovery confirms a build |
 | 2. Reply | Any reply. Flag after 3 days with no time on the calendar, ahead of anything further down the board. | `In Conversation` |
-| 3. Record | The booking confirmation carries the written consent: recording, publication on the named platforms, use of clips and of the guest's name, photo and company name, and the right to withdraw before publication. No consent on file, no recording. Then 30 to 60 minutes remotely: their history in the industry, where AI does real work in the business today, the numbers behind it. Recorder notes go to the private guest folder. | `Call Booked` |
-| 4. Publish | Within 48 h, once the consent is on file and the guest has approved their cover photo: YouTube (show playlist), Spotify, Apple, socials; the episode is added to the site's `content/podcast/episodes.json` in the same PR; the guest gets the full episode and clips. | unchanged |
-| 5. Day 7 | One short email with three concrete things we could build for them, drawn from the call notes. One sentence each, no price. | `Scoping`, `project_type = Build` |
-| 6. Reply | A proposal for a 2 to 4 week build, priced from the current private rate card with a deposit plus delivery split, in the order `gtm/playbooks/discovery-and-proposals.md` (marketing repo) sets. Terms are proposals until accepted. | `Proposal Sent` |
-| 7. Deposit paid | The build runs. | `Won` |
-| 8. Delivered | Testimonial request and a post-mortem in the private guest folder. After three paid, completed, reviewed builds, review the rate. | unchanged |
+| 3. Booked | The same day a time exists, a confirmation email in the invite's thread with the **timeline PDF** attached (see *Booked: the timeline PDF* below). It is the guest's written record of what happens next. | `Call Booked` |
+| 4. Record | Written consent, sent with the interview outline 48 hours before, covers: recording, publication on the named platforms, use of clips and of the guest's name, photo and company name, and the right to withdraw before publication. No consent on file, no recording. Then 30 to 60 minutes remotely: their history in the industry, where AI does real work in the business today, the numbers behind it. Recorder notes go to the private guest folder. | `Call Booked` |
+| 5. Publish | Within 48 h, once the consent is on file and the guest has approved their cover photo: YouTube (show playlist), Spotify, Apple, socials; the episode is added to the site's `content/podcast/episodes.json` in the same PR; the guest gets the full episode and clips. | unchanged |
+| 6. Day 7 | One short email with three concrete things we could build for them, drawn from the call notes. One sentence each, no price. | `Scoping`, `project_type = Build` |
+| 7. Reply | A proposal for a 2 to 4 week build, priced from the current private rate card with a deposit plus delivery split, in the order `gtm/playbooks/discovery-and-proposals.md` (marketing repo) sets. Terms are proposals until accepted. | `Proposal Sent` |
+| 8. Deposit paid | The build runs. | `Won` |
+| 9. Delivered | Testimonial request and a post-mortem in the private guest folder. After three paid, completed, reviewed builds, review the rate. | unchanged |
 | No reply after 3 touches, or a decline | Close it honestly. | `Lost`, `lost_reason` set |
 
 No new stages, no new list; a guest is an agency lead with a different first touch. This
@@ -26,32 +27,127 @@ file is public: no names, emails, deal terms, price figures or the exclusion lis
 
 ### The invite
 
-Three sentences, one question, two links, no second offer, no em dashes. The hook is the
-only line that takes research; name, topic and company are fills from the lead file, so
-ten a day is a copy job.
+40 to 75 words: one real reason for writing, one sentence about the show, one specific
+question. The hook is the only line that takes research; everything else is written fresh
+for each guest. Operator rulings from the 2026-09-22 run (five rounds of review copies)
+are marked; treat them as defects to check before every review copy, not style tips.
 
 ```
-Subject: Recoup Podcast invite: {{first_name}} on {{topic_short}}
+Subject: Interview request: {{topic, a few lowercase words}}
 
-{{HOOK: one sentence citing the specific thing they said or did about AI in their business, with where and when it was said.}}
+Hi {{first_name}},
 
-I host the Recoup Podcast and I'd like to record a 30 to 60 minute conversation with you on how you got into music and how {{company}} is using AI in the business today; the episode goes out on YouTube, Spotify, Apple Podcasts and Recoup's socials, and you get the full episode and clips to post yourself.
+{{HOOK: the specific thing they said or did about AI in their business. The phrase that
+names the source ("your transparency report", "told Billboard") links to it.}} {{One
+question about it that only they can answer.}}
 
-Would you be up for recording in the next two weeks? Pick any slot that suits you here: {{booking_link}}
+I host the Recoup Podcast, 14k YouTube subscribers. {{A plain ask, worded differently
+from every other email in the batch.}}
 ```
 
-- **Hook:** one fact, one source, dated inside the last 12 months. A quote is best, a public
-  action is fine, a guess is not allowed. No AI statement found means they are not a fit for
-  this funnel; use the standard outreach instead.
+Checklist before any review copy leaves (each one was a real defect on 2026-09-22):
+
+1. **Subject is `Interview request: <their topic>`**, e.g. `Interview request: the
+   transparency report`. Not `Recoup Podcast: <Name>?` and not a headline.
+2. **No sign-off in the body.** The house footer already carries the name; a name line
+   above it is redundant.
+3. **No stock close.** "Up for it?" and its cousins ("worth it?", "still open to it?") read
+   as automation, worse when repeated across a batch. End on the specific question or a
+   plain ask that no other email in the batch uses.
+4. **Run the whole `unslop` skill, including its final self-audit ("what makes this
+   obviously AI-generated?"), per draft and across the batch.** No sentence may appear in
+   two emails of the same batch; the podcast sentence is the usual offender. Cut
+   unverifiable claims ("nobody talks about this"), flattery ("so you'd know") and invented
+   reactions ("the line I keep thinking about"). Never record "unslop: done" unless the
+   self-audit happened.
+5. **Link the source.** Any piece the body mentions (a post, report, column, interview)
+   carries a hyperlink to it on the phrase that names it; the plain-text part prints the
+   URL after the phrase. Open every URL before the review copy.
+
+- **Hook:** one fact, one source, dated inside the last 12 months and read at the source.
+  Research tools mis-attribute quotes between people and summarisers paraphrase; confirm
+  the exact words on the page. No AI statement found means they are not a fit for this
+  funnel; if the operator still wants the guest (a history episode), flag it in the lead
+  file and let them decide.
 - **Links:** "Recoup Podcast" links to
-  `https://recoupable.dev/podcast?utm_source=email&utm_medium=invite&utm_campaign=<yyyy-mm>`
-  (send month), so a guest request shows its batch in the CRM note. The booking link is
-  printed as is. No third link.
+  `https://recoupable.dev/podcast?utm_source=email&utm_medium=invite&utm_campaign=<yyyy-mm>&utm_content=<lead-slug>`
+  so a visit attributes to one guest; review copies use `utm_medium=review` so internal
+  clicks never count. The source link is the only other link. No booking link in a first
+  touch; scheduling comes after they say yes.
 - **Before sending:** email verified; not a customer or a live agency lead (CRM and login
-  records, read-only); not on the exclusion list; the exact draft approved by the operator.
-  Ten a day is a target, not an approval.
-- **After sending:** sent copy, provider id and approval evidence go in the private guest
-  folder; the CRM note names the file.
+  records, read-only); not on the exclusion list; a review copy in the operator's inbox;
+  the exact draft approved by the operator. Ten a day is a target, not an approval.
+- **After sending:** sent copy, source links, provider id and approval evidence go in the
+  private guest folder; the CRM note names the file; a dated follow-up task (+5 business
+  days) written as a runbook.
+
+### Nudges
+
+Silence after 5 business days gets one nudge with a new angle (a second thing they said),
+sent as a reply in the invite's thread (`In-Reply-To` and `References` set to the invite's
+Message-ID, subject `Re: <invite subject>`). Same checklist: no sign-off, no stock close,
+source linked, unslop across the batch. Second nudge at +10, `Lost` at three touches.
+Nudges drafted and never sent are the common failure: check for them at the start of
+every run.
+
+### Running the day
+
+- **Start with status, not research.** Provider `last_event` for every sent invite (only
+  `bounced` means anything within minutes of sending; `opened`/`clicked` in the first
+  seconds are mail scanners), per-lead page views by `utmContent`, due follow-up tasks and
+  any unsent nudge drafts.
+- **Check the research budget first.** A lead-research agent that runs out of credits
+  mid-run leaves the day short; confirm the balance, run the named-person enrichment
+  early (it is the cheapest source of verified addresses), and say plainly when the list
+  is short and why instead of padding it.
+- **Verification ladder:** an address published by the person (best), an SMTP `RCPT TO`
+  probe with a random-address control (works only on Google-hosted mail; Outlook,
+  Proofpoint, Rackspace and small hosts reject or drop the probe), then an enrichment
+  address on a catch-all domain, where a bounce on send is the only signal. Never guess a
+  pattern.
+- **Login-record lookups:** some identity APIs sit behind a bot filter that rejects
+  default HTTP-library user agents with 403; a 403 there is not a permission answer. Use
+  curl or set a user agent before concluding access is broken.
+- **Show the whole draft, send review copies of every round.** The operator reviews in
+  their inbox; each fix round is a fresh review copy, and the approval quote goes in the
+  sent record.
+
+### Booked: the timeline PDF
+
+Every booking gets the same follow-up, sent the day the time is confirmed (by the guest
+picking a slot, by their booking page, or by the operator booking on the guest's own
+scheduler). Nothing about the recording is left to the calendar invite alone.
+
+1. **Fix the calendar invite first.** Title `Recoup Podcast recording: <Guest Name>`, the
+   recording-studio link as the location, and the scheduler's auto-generated video link
+   and reschedule text removed. A booking made on the guest's own scheduler carries *their*
+   video link; the guest must get ours from us.
+2. **Build the timeline PDF.** One Letter page, house style (`references/pdf-house-style.md`),
+   titled *Your episode, step by step*, with the guest's name, title and company. Three
+   numbered steps, each with a real date:
+   1. *Your interview outline arrives*: the date, 48 hours before the recording.
+   2. *We record*: date and time in the guest's timezone, the studio named, "join from the
+      link in your calendar invite", scheduled length and expected recording length.
+   3. *It goes live, and we tag you*: where it goes out (show platforms and socials) and
+      **who we tag**: every account for the guest and their companies, each one checked on
+      the platform before it goes in.
+   Close with "Anything off?": reply to change the tag list before anything goes out.
+   Store the HTML beside the PDF in the private episode folder (`episodes/<date>-<slug>/`).
+3. **Send it as a threaded reply.** `Re: <invite subject>`, `In-Reply-To`/`References` on the
+   invite's Message-ID, BCC the cofounder, PDF attached. Body is two sentences: they are
+   confirmed for the Recoup Podcast (linked, `utm_medium=reply`) at the date and time, and the
+   attached one-pager covers next steps (outline date, the studio, the tag list). The
+   send-path gotcha: a payload with a PDF attachment overflows a command-line argument, so
+   pipe it to the HTTP client from stdin.
+4. **Approval as usual:** the exact draft and the PDF shown to the operator; a review copy
+   when they ask for one. The approval quote goes in the sent record.
+5. **Close out:** stage `Call Booked`, the sent file names the PDF, and two dated runbook
+   tasks: the outline plus written consent 48 hours before, and a studio test the day
+   before. The consent gate in step 4 of the loop still applies: no consent on file, no
+   recording.
+
+A confirmation without the PDF is incomplete: the timeline is what makes a cold guest show
+up prepared and makes the tag list theirs to correct before publication.
 
 ### The day-7 follow-up
 
