@@ -20,12 +20,6 @@ Full design: the selected workspace workflow specification (if available) · tem
 staging + frontmatter + routing: `email/AGENTS.md`.
 **Voice + gate (always):** write in `recoup-internal-consulting-copy-writer` voice, then run every draft through the `recoup-internal-consulting-outbound-email` skill (read context, route to the right person, reader-POV check, names verified) before staging.
 
-## Required public-content gate
-
-Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
-It governs competitor/source restrictions, plain-language explanations, cover comprehension and
-revision evidence. Apply it to every public format; older style examples do not override this gate.
-
 ## Steps
 1. **Take one source.** Prefer an existing `signals/` entry. If it is a raw call, run
    `recoup-internal-consulting-content-extraction` first so the signal exists. Record its path. It becomes `source:`.
@@ -34,7 +28,7 @@ revision evidence. Apply it to every public format; older style examples do not 
    all 6). A weak fit is a skip. Don't pad.
 3. **Route.** For each chosen format, apply the default routing (`email/AGENTS.md`):
    trend-jack → cold/warm/targets · proof → everyone · insight → warm/targets/customers ·
-   build-in-public → customers/warm · nudge → one named person · newsletter → whole list.
+   build-in-public → customers/warm · nudge → one named person · newsletter → actively subscribed newsletter recipients only. Coordinate the total send frequency rather than automatically sending every derivative.
 4. **Resolve segments live.** Query Attio (`ATTIO_API_KEY`) for current membership of each target
    segment. Reconcile-on-touch, never a copied list. For a 1:1 nudge, pick the one named contact.
 5. **Draft each touch.** Fill the matching `library/email-templates/` skeleton in the owner's voice.
@@ -48,3 +42,12 @@ revision evidence. Apply it to every public format; older style examples do not 
 
 Output: N staged email drafts in `email/outbox/`, each tracing to one source.
 Source: Ch. 3/5 (atomization plus the multi-format test) plus the selected workspace workflow specification (if available).
+
+## Newsletter and distribution work
+Read the selected workspace’s approved publishing system and current status through its AGENTS.md before drafting. Keep private strategy and customer proof in that workspace, not in this public skill.
+
+Treat a newsletter as one publication with channel variants. Preserve its core value across email and native newsletter editions; adapt formatting and the next action for the audience. A blog is a durable reference, and a feed post is a standalone discovery piece. Neither automatically requires another email. Use one primary action without banning useful source links. Human-review discussion is conditional on the topic, not a required section.
+
+Keep editorial broadcasts separate from welcome/sales sequences and customer adoption messages. CRM membership or a social subscription is not email consent. Resolve active subscriptions and suppressions before dispatch; never automatically enroll scraped contacts or reset an unsubscribe. Stop redundant acquisition pitches for current customers.
+
+Record edition ID, audience, source evidence, approved claims, primary action/destination, per-channel review and release state, live URL or send ID, and follow-up owner. Verify destination and fulfillment before release. Track qualified responses and customer outcomes separately from audience growth. A draft, API acceptance and delivered message are different states. Existing authorization boundaries still apply.

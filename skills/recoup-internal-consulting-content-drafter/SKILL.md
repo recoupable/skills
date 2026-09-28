@@ -10,12 +10,6 @@ Reality headings. Business paths below are relative to that project. Bundled res
 to this installed skill; sibling capabilities resolve by their installed names. Never search another
 private checkout for missing inputs. Use workspace identity, audience, pricing, and `DESIGN.md` fonts.
 
-## Required public-content gate
-
-Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
-It governs competitor/source restrictions, plain-language explanations, cover comprehension and
-revision evidence. Apply it to every public format; older style examples do not override this gate.
-
 ## Steps
 1. Take the signal (from `signals/`) — read its `source`/`related` and traverse to the raw for context.
 2. **Ground research-derived drafts (pull the wiki).** If the idea cites `[[wiki pages]]` (it came
@@ -24,16 +18,18 @@ revision evidence. Apply it to every public format; older style examples do not 
    steal`) and pull concrete, cited specifics to build the draft on — carry the `[[citations]]` so
    every claim stays traceable. Out-of-domain topic? Skip this — the wiki is silent on generic
    app/business, so don't force it.
-3. Write a title with a clear subject and takeaway. A reader seeing only the title must understand what the article covers and what they will learn. Name the actual work or decision; replace vague references such as "the tool," "two numbers," or "the system" with concrete context. Match the promise to the article evidence. Never invent a count, percentage or outcome to fit a headline formula. Curiosity comes after comprehension.
-4. Structure with AIDA (Attention → Interest → Desire → Action). Lead with the problem + outcome, not your resume.
+3. Choose a clear title naming the subject and reader benefit. Use numbers only when supported; no mandatory headline formula.
+4. Choose the structure that fits the material: essay, briefing, demonstration, interview or Q&A. AIDA is optional. A newsletter can include industry interpretation, useful product developments, field notes and reader questions without forcing every item into a sales case study.
 5. Place it on the specificity ladder (generic → category → specific → targeted) and match it to the business stage.
-6. Convert the topic to a lowercase hyphenated slug, removing path separators and punctuation. Save the draft in `content/03-drafts/YYYY-MM-DD-<topic-slug>/`; note the target audience (IC vs. leadership).
-7. Run the intended-reader review and `recoup-internal-consulting-copy-editor` gates; implement accepted edits before generating article assets.
-8. Preserve the workspace or bundle's image delivery format, including existing WebP paths.
-   For an illustrated article or complete bundle, invoke `recoup-internal-consulting-article-illustrator`:
-   a bold thumbnail with a large text hook and contrasting artwork on any approved Recoup color,
-   followed by simple pure-white-background inline illustrations with minimal labels and optional
-   headlines. Use Higgsfield artwork with editable DM Sans overlays via `recoup-internal-consulting-graphics`.
-   Do not force images onto a text-only post. Keep assets and their sources in the same bundle.
+6. Save the draft to `content/03-drafts/` with a clear title; note the target audience (IC vs. leadership).
 
 Output: a draft ready for review. Sources: Ch. 5 + (for agent/skill topics) the research wiki via `integrations/research/AGENTS.md`.
+
+## Newsletter and distribution work
+Read the selected workspace’s approved publishing system and current status through its AGENTS.md before drafting. Keep private strategy and customer proof in that workspace, not in this public skill.
+
+Treat a newsletter as one publication with channel variants. Preserve its core value across email and native newsletter editions; adapt formatting and the next action for the audience. A blog is a durable reference, and a feed post is a standalone discovery piece. Neither automatically requires another email. Use one primary action without banning useful source links. Human-review discussion is conditional on the topic, not a required section.
+
+Keep editorial broadcasts separate from welcome/sales sequences and customer adoption messages. CRM membership or a social subscription is not email consent. Resolve active subscriptions and suppressions before dispatch; never automatically enroll scraped contacts or reset an unsubscribe. Stop redundant acquisition pitches for current customers.
+
+Record edition ID, audience, source evidence, approved claims, primary action/destination, per-channel review and release state, live URL or send ID, and follow-up owner. Verify destination and fulfillment before release. Track qualified responses and customer outcomes separately from audience growth. A draft, API acceptance and delivered message are different states. Existing authorization boundaries still apply.

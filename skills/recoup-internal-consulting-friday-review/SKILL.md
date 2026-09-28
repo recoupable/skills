@@ -27,3 +27,12 @@ label the result manual/unscored; never invent a numeric score or successful pro
 8. Report a short weekly content plan.
 
 Source: Ch. 4 (the Friday Review).
+
+## Newsletter and distribution work
+Read the selected workspace’s approved publishing system and current status through its AGENTS.md before drafting. Keep private strategy and customer proof in that workspace, not in this public skill.
+
+Treat a newsletter as one publication with channel variants. Preserve its core value across email and native newsletter editions; adapt formatting and the next action for the audience. A blog is a durable reference, and a feed post is a standalone discovery piece. Neither automatically requires another email. Use one primary action without banning useful source links. Human-review discussion is conditional on the topic, not a required section.
+
+Keep editorial broadcasts separate from welcome/sales sequences and customer adoption messages. CRM membership or a social subscription is not email consent. Resolve active subscriptions and suppressions before dispatch; never automatically enroll scraped contacts or reset an unsubscribe. Stop redundant acquisition pitches for current customers.
+
+Record edition ID, audience, source evidence, approved claims, primary action/destination, per-channel review and release state, live URL or send ID, and follow-up owner. Verify destination and fulfillment before release. Track qualified responses and customer outcomes separately from audience growth. A draft, API acceptance and delivered message are different states. Existing authorization boundaries still apply.
