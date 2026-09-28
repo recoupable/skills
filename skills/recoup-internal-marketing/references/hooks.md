@@ -71,8 +71,8 @@ caption, so a cut that only works pre-briefed has no story for most of its audie
       4.0s line whose surprising word arrives at 1.1s beats a 3.0s line that resolves at 2.9s.
 - [ ] Which **archetype** is it? (Cannot name one → rewrite.)
 - [ ] **Cold-feed premise test:** does the video state its own premise (VO or on-screen) without the caption?
-- [ ] **Captions burned in** on every line?
-- [ ] Every beat **≤6.5s**? Runtime **≤40s** unless there is a stated reason?
+- [ ] **Captions burned in** on every line, inside the 4:5 safe zone (`video-pipeline.md` → *Captions*)?
+- [ ] Every beat **≤6.5s**? Runtime **~30s**, ≤40s unless there is a stated reason?
 - [ ] Does it avoid **qualifying the audience**?
 
 ### Then audit the SCREEN, not just the script

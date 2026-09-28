@@ -13,19 +13,16 @@ and handoffs are owned by `SKILL.md`.
 | Brand film, manifesto, hype piece where the *feeling* is the point | **Kinetic keynote** | Clone the reference project. **Not** for feature explainers |
 | Entertainment: emotional live-action carrying a **value**, not a feature | **Cinematic narrative** (face guide → stills → i2v → composite) | Clone the reference project; character kit from `cast/` |
 | A two-person conversation / talking-head ad with real dialogue | **FaceTime call** | `recoup-internal-video-grok-1.5-imagine-facetime` |
-| A character SPEAKS the VO to camera (spoken-word ad, testimonial) | **Lip-synced still** (Muse/NB2 still → MiniMax H3 Max lip-sync or reference-to-video with the approved VO line, ≤15s audio per clip) | `references/video-pipeline.md` → *Lip-synced VO over a still* |
-| Explain a **method** — how something was made, how a number was derived | **Recipe / BTS artifact walk** | Clone the reference project |
+| Teach a **process** in ~30s: what we shipped or learned this week, a presenter to camera | **Builder Diary short** (Style I, the weekly default): Jenny hook → 3 animated product steps → output → Jenny CTA | Clone `content/builder-diary-week/`; `SKILL.md` → Step 4 |
+| Explain a **method** at length (a 2-minute recipe walk) | **Recipe / BTS artifact walk** (Style E/H) | Clone the reference project |
 | Captions or graphic overlays onto existing footage | hyperframes caption / overlay workflows | `embedded-captions`, `talking-head-recut` |
-| A **scene we could never shoot** carries the beat: a character in a place, a physical action, a location | **Generated plate** (Seedance 2.5), our typography composited over it | `references/seedance.md`. Invented characters are fine; **no photoreal face of any origin** can be a reference through fal (real photo, Muse sheet, or Seedance's own frame); stylized faces can |
+| A **live-action beat we could never shoot** (B-roll, a person in a place doing one thing) | **Generated plate** on `minimax/h3-max/text-to-video` | `references/video-pipeline.md` → *B-roll*. Seedance plates read as stock to the owner (09-27); keep Seedance for stylized casts |
 | **Recreate a trend**: a known performance clip with a new cast (the "Hotel Lobby" swap) | **Character-swap edit** (source clip + 3 references per person → reAPI Seedance 2.5 `edit` → original audio restored) | `references/character-swap-edit.md`, `scripts/reapi-edit.sh`. Real faces allowed on reAPI, not fal; heads of state refused. Owner approves the reference sheet before any credit |
 | A song is the whole story, cut to 9:16, **photoreal cast** | **Music video** (song → cast → Muse stills → H3 Max i2v per clip → composite) | **`recoup-music-video`**; reference project SMALL ROOM |
 | A song is the whole story, cut to 9:16, **stylized / animated cast** | **Music video, Seedance slate** (song → cast photoreal from references → re-render in one style → sheets as references → one Seedance take per song section → Topaz → composite) | `references/seedance.md` → *The decision gate*; reference project `content/off-the-stage/seedance/slate.mjs`. A photoreal face never gets into Seedance through fal; a stylized one does |
 
 **Concrete beats stylish for a feature or product announcement:** show the real interface and the
 real change; the ruling and the head-to-head are in the account's `VIDEO-STYLES.md`.
-
-**LinkedIn is an image post, not video:** see `SKILL.md` → Step 5 (owner ruling 2026-07-28). Size it
-1080x1350 (4:5), link in the first comment.
 
 A format with no skill yet is built from its reference project: clone it, never rebuild from scratch.
 

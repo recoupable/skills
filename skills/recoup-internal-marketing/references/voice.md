@@ -58,7 +58,8 @@ owner approved the delivery and ruled her the default going forward. Prior defau
 Brian (through 08-06), W. L. Oxley (08-07 to 08-12). Measured on 2026-08-17:
 
 - **She is fast**: the same hook line paid off at 1.74s in her read vs 2.08s in the male take.
-  Still generate the hook first and measure; pace is voice-specific and does not transfer.
+  Still generate the hook first and measure; pace is voice-specific and does not transfer. To tighten a
+  slate, `atempo=1.1` on the kept raw take (pitch holds, word timings divide by 1.1) re-times it without re-billing.
 - **Her raw output is quiet with hot peaks** (~-19 LUFS at ~0 dBTP), so a straight gain clips. Use
   the gain + true-peak limiter chain below; working values on her material were
   `volume=+4.4dB, alimiter=limit=0.84:attack=1:release=80:level=disabled` at 96k oversample,

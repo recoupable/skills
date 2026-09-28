@@ -3,7 +3,7 @@
 Opus is the scheduler for YouTube, TikTok, Instagram, X and LinkedIn from one place. It is not the clipper
 for our films (its clipper burns its own captions and emojis); our cuts are made in HyperFrames or ffmpeg
 and imported as finished clips. Reference slate: the account workspace's
-`content/jenny-ep1-h3-lipsync/opus/` (35 posts: six teasers plus a full film, five platforms).
+`content/builder-diary-week/opus/` (35 posts: seven shorts, one per day, five platforms).
 
 ## The tools (`scripts/`)
 
@@ -12,7 +12,7 @@ and imported as finished clips. Reference slate: the account workspace's
 | `opus-import.mjs` | Uploads each finished clip to fal storage, creates an Opus project with `curationPref.skipCurate: true` and every caption/emoji/b-roll flag off (the bundled CLI cannot send those flags, so this POSTs `/api/clip-projects` directly), then polls `clip list` for the single clip id. Ledger: `opus/projects.json`. |
 | `opus-schedule.mjs` | Reads a manifest, composes the per-platform bodies, schedules through the CLI, appends a JSONL ledger, and stops on the first failure. Idempotent by `key:platform`. |
 
-`OPUSCLIP_API_KEY` lives in the Opus dashboard (or the session environment), never in a file in the repo.
+`OPUSCLIP_API_KEY` comes from the Opus dashboard and lives in `~/.config/opusclip.env` (mode 600), never in a repo.
 
 ## The manifest
 
@@ -36,7 +36,7 @@ and cancel-and-recreate pending schedules (09-14).
 | X | `x` only, ≤280 chars | **no URL: Opus X rejects any URL in the text** (09-14) |
 | LinkedIn | `caption` + `cta_yt` + tagged link | in the body |
 
-Tag every link `?utm_source=<yt|tt|ig|x|li>&utm_medium=social&utm_campaign=<campaign>`.
+Tag every link `?utm_source=<yt|tt|ig|x|li>&utm_medium=social&utm_campaign=<campaign>-<item key>`, so each post's visits read on their own.
 
 ## Pre-flight, then schedule, then verify
 
