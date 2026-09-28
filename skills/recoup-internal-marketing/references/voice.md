@@ -111,6 +111,24 @@ can drift at `0.0`, so start them at `0.5`.
 - **A list needs scaffolding or it reads as a jumble.** State the count up front, then spoken
   ordinals ("One… Two… Three…"), paired with an on-screen step counter.
 
+## Writing the spoken text (four re-records on 2026-09-21 were wording, not performance)
+
+Show the owner the exact spoken text of every line in the script table before recording, and write it
+the way it must be heard:
+
+- **Currency as dollars and cents with "and"**: "one dollar and fifty five cents", "five dollars and
+  thirty one cents"; never "one dollar fifty-five".
+- **Contractions, always**: "Here's the catch", "That's the whole recipe"; "Here is" reads stiff.
+- **Numbers, URLs and acronyms spelled for the ear**: "five steps", "recoupable dot dev", "H three".
+- **A number that will be measured is recorded last.** Pull the figure (fal usage API, the file count)
+  immediately before generating that line; the VO and the on-screen panel read from the same JSON. The
+  day total was re-recorded from an estimated $5.60 to the billed $5.31 on 09-21.
+
+**Regenerate only the lines that changed.** The template `scripts/gen-voice.py` takes ids
+(`python3 gen-voice.py 02 07`), keeps every other line from `audio_meta.json`, copies an
+owner-approved take unchanged with its Scribe word timings, and rebuilds the review file every run. An
+approved take never goes back through the generator.
+
 ## Loudness
 
 **Measure, then apply linear gain. Never blind-normalize.** Target **-16.5 LUFS** per line, then
