@@ -161,3 +161,5 @@
 {"intent": "recoup-internal consulting: tasteful design — Apply the current Recoup identity across graphics, video, slides, proposals and interfaces", "expected": "recoup-internal-consulting-tasteful-design", "not": []}
 {"intent": "recoup-internal consulting: testimonial capture — Capture a testimonial and logo rights", "expected": "recoup-internal-consulting-testimonial-capture", "not": []}
 {"intent": "recoup-internal draft today's ten podcast guest invites and nudge last week's non-responders", "expected": "recoup-internal-sales", "not": ["recoup-internal-marketing"]}
+
+{"intent": "Build an interactive fan site with a clear activity, using digital experience references to improve the concept and final implementation.", "expected": "recoup-content-build-sites", "not": ["recoup-content-make-graphics", "recoup-content-write-caption"]}
