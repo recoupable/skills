@@ -49,12 +49,12 @@ Author `index.html` as a **single composition**: all scenes are divs driven by o
 timeline registered as `window.__timelines["main"]`. Do not leave snapshot copies of `index.html`
 in the project; a second file carrying `data-composition-id` fails lint ("exactly one root index.html").
 
-## 3. Brand: the live site, not DESIGN.md
+## 3. Brand: Recoup Sky
 
-Match what recoupable.dev ships today; `mono/DESIGN.md` lags it (owner, 2026-09-27). Read the tokens
-from the site's CSS at the start of a run. As of 09-27: the sky hero image as background, frosted-glass
-cards, ink `#142e3a`, lime `#d6ff62` for the one highlight and the CTA pill, blue `#007ebd`, DM Sans
-for everything, IBM Plex Mono uppercase for labels, the `recoup-wordmark-*` files from
+`mono/DESIGN.md` maps the shared system and `marketing/DESIGN.md` specifies it; the code wins if they
+disagree. In video: the sky hero image as background, frosted-glass cards, ink `#152e37`, lime
+`#d6ff62` for the one highlight and the CTA pill, blue `#007ebd`, DM Sans for everything, IBM Plex
+Mono uppercase for labels, the `recoup-wordmark-*` files from
 `marketing/public/brand/`. Fonts are copied into the project and referenced by `@font-face` with the
 **literal** family name; the linter does not resolve `var()`. A customer document shown on screen is
 built in the `recoup-internal-sales` PDF house style.
