@@ -47,7 +47,7 @@ Use the real artist's approved text, not the example unchanged. Return URL must 
 - 409: another configuration update won; reload and reconcile before retry.
 - 503: provider, billing or storage unavailable; surface the dependency.
 
-Recoup chooses whether eligible access comes from an existing paid plan or specific price IDs. Do not assume any purchase grants access. Existing `POST /api/subscriptions/sessions` accepts `{plan: "starter" | "pro", successUrl, cancelUrl?}` and returns a checkout URL, but use it only when the selected plan is confirmed eligible. It does not create an arbitrary add-on price. Never perform checkout as the fan; this is the customer artist's paid feature.
+Spotify fan connection is included in an active paid Recoup subscription owned by the site's workspace. No separate add-on is required. Existing `POST /api/subscriptions/sessions` accepts `{plan: "starter" | "pro", successUrl, cancelUrl?}` and returns the customer checkout URL. Let the customer complete payment; then retry activation. Fans do not buy this feature.
 
 ## Public fan journey
 
@@ -72,4 +72,10 @@ Each fan has `id`, `site_id`, `spotify_id`, `display_name`, `email`, first/last 
 
 ## Recoup operator setup
 
-Operators must apply `20260928010000_site_fan_connections.sql`, configure `SITES_SPOTIFY_CLIENT_ID`, register an HTTPS callback ending `/api/sites/spotify/callback`, set `SITES_FAN_SPOTIFY_REDIRECT_URI`, and select a supported billing policy. This is Recoup service configuration, not work to impose on each artist. The existing browser playback callback remains separate.
+Operators must apply `20260928010000_site_fan_connections.sql`, configure `SITES_SPOTIFY_CLIENT_ID`, register an HTTPS callback ending `/api/sites/spotify/callback`, set `SITES_FAN_SPOTIFY_REDIRECT_URI`. This is Recoup service configuration, not work to impose on each artist. The existing browser playback callback remains separate.
+
+## Activity reporting
+
+`GET /api/sites/{siteId}/activity` returns 30-day counts for visits, starts, completions, replays and shares to authorized workspace members. `POST /api/sites/public/{siteId}/activity` accepts `{id: EVENT_UUID, visitId: VISIT_UUID, event: "visit" | "start" | "complete" | "replay" | "share"}`. Reuse the event UUID when retrying. Use a site-scoped visit ID. Never send emails, profile data or arbitrary page contents to this endpoint. These are browser-reported interactions, not verified Spotify listening or a named fan activity history.
+
+Recoup-hosted generated sites use the trusted host bridge: `window.recoup.track(event)` reports approved events; `window.recoup.join()` reveals the trusted signup controls. External sites should implement the equivalent fixed-event transport and keep account credentials on the server.

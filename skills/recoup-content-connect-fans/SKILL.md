@@ -25,7 +25,7 @@ Reuse the existing Recoup site ID when provided. For an externally hosted site, 
 
 Read the site's current fan connection settings. Configure the final HTTPS return URL, the customer's clear marketing acceptance text, `enabled: true` and the current revision (0 when absent). Name the artist and the communication purpose in the text. The hosted journey presents it with one agreement button; Spotify presents its own permissions screen next. Do not add separate checkboxes to work around the configured journey.
 
-If activation returns 402, explain that the owning workspace needs an eligible paid plan. Offer only the actual available checkout or upgrade path whose eligibility is confirmed by Recoup; do not invent pricing or charge without authorization. After checkout, retry activation. A 503 requires provider or billing configuration by Recoup and is not fixed by asking the customer to pay again.
+If activation returns 402, explain that the owning workspace needs an eligible paid plan. The feature is included in an active paid Recoup subscription. Use the existing customer checkout path; do not create an add-on or charge without authorization. After checkout, retry activation. A 503 requires provider or billing configuration by Recoup and is not fixed by asking the customer to pay again.
 
 ## 4. Add the returned public link
 
