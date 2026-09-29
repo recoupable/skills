@@ -57,6 +57,31 @@ Use generated media for a specific job: a painted environment, tactile material,
 
 Keep live interaction in the site: a cinematic background is not a playable scene, and a still character does not supply a walk cycle. Use code for responsive movement, object manipulation and branching state; use generated media where it supplies material or imagery the chosen world needs. Do not paste a video behind a generic card and call the result immersive. Recompose for phone and desktop rather than assuming a centered crop works.
 
-For server integrations, [Higgsfield's model catalog](https://open.higgsfield.ai/explore) is the discovery source. Read the exact selected model's API reference; names available in a consumer app or CLI do not establish REST access for a particular account. Two documented image options are [Recraft V4.1](https://open.higgsfield.ai/models/recraft/v4.1/text-to-image/api-reference) for illustration/graphic imagery and [Soul 2](https://open.higgsfield.ai/models/higgsfield-ai/soul/v2/standard/api-reference) for photographic editorial imagery. Select deliberately, preserve model/request provenance, and verify account access with a real generation. Documented availability is not proof of a funded account or a successful request.
+## Choose a model for the asset's job
+
+The Sites director must name a production model and explain the choice for each asset. These are candidates to evaluate, not a universal quality ranking:
+
+| Job | Current candidate | Constraints |
+|---|---|---|
+| Authored hero illustration, precise composition, convincing materials | GPT Image 2 through Vercel AI Gateway (`openai/gpt-image-2`) | Use explicit supported pixel dimensions; the current adapter uses landscape 1536×1024, portrait 1024×1536 or square 1024×1024. Compose safe crops for the requested layout. |
+| Reference-led character or product artwork | Nano Banana Pro through Fal (`fal-ai/nano-banana-pro`, `/edit` with references) | 2K still image. Identity consistency is a test requirement, not a promise. |
+| Short cinematic reveal or environmental motion | Seedance 2.5 through Higgsfield (`bytedance/seedance-2.5/text-to-video`) | Current Sites budget: one silent 4–6 second 720p clip, static fallback, pause and reduced-motion behavior. A seamless loop is not guaranteed. |
+| Precise kinetic type, responsive feedback, game state, user-controlled motion | Live HTML/CSS/SVG/Canvas | Keep input and state in code. Never simulate controls inside a generated video. |
+
+Do not use the retired Recraft, Soul or Muse defaults. Choose at most two generated assets and only when they serve the activity. Model novelty does not excuse poor composition. Preserve a coherent visual language across the generated art and live graphics. A cinematic clip behind generic cards is not an immersive experience.
+
+Primary references: [Gateway image generation](https://vercel.com/docs/ai-gateway/modalities/image-generation), [Nano Banana Pro API](https://fal.ai/models/fal-ai/nano-banana-pro/api), [Nano Banana Pro editing](https://fal.ai/models/fal-ai/nano-banana-pro/edit/api), [Seedance 2.5 API](https://open.higgsfield.ai/models/bytedance/seedance-2.5/text-to-video/api-reference).
+
+### Learn from actual outputs
+
+Keep the selected model, rationale, request identifier and elapsed generation time with the saved asset. Read previous completed site reviews from the same workspace before choosing again. Asset-specific failures are evidence to change a choice or prompt. A whole-site verdict does not isolate model quality; do not turn it into a model leaderboard or claim the model was trained. Failed or unreviewed generations are not positive examples. Inspect the image at its actual crop; review video over time, not only its first frame.
+
+A same-brief exploratory comparison on 2026-09-29 produced two usable lunar toy-stage images: GPT Image 2 took about 92 seconds and emphasized detailed glass/materials; Nano Banana Pro took about 38 seconds and produced cleaner toy silhouettes and a wide stage composition. These are observations from one prompt without reference images, not evidence of general superiority or identity preservation. Seedance 2.5 also completed the five-second silent video request. Completion alone does not establish motion quality. Compare again on a different visual task before generalizing.
+
+### Hyperframes and authored motion
+
+[Hyperframes](https://github.com/heygen-com/hyperframes) renders HTML/CSS and seekable animations into video. It fits deterministic title sequences, trailers or result films, not the state engine of a live game. [Claude Motion Director](https://github.com/abdullatif06/claude-motion-director) is one concrete Opus 5.5 project built on Hyperframes; this does not establish what every viral demo used.
+
+Useful principles to borrow now: define the visual look before animation, write a short shot plan, use explicit timing, inspect representative frames, then watch normal-speed playback and revise. The current Sites engine does **not** have a Hyperframes rendering service. Do not invent a render endpoint or claim an export exists. Keep live motion in the available web runtime; introduce a separate deterministic render adapter only when a real export requirement calls for one.
 
 Keep provider credentials server-side. Generation is asynchronous: retain the accepted request ID, poll the returned status URL, stop on terminal failure, and never repeat an ambiguous paid submission automatically. Copy completed media into durable workspace storage; provider URLs are temporary. Authenticate polling only against the provider's trusted origin, validate downloaded media and bound file size. Budget and meter the selected model's actual unit price rather than reusing another provider's rate. Follow the [request lifecycle](https://docs.higgsfield.ai/docs/concepts/requests) and [authentication guidance](https://docs.higgsfield.ai/docs/authentication).
