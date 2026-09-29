@@ -38,3 +38,16 @@ Report specific observations and distinguish tested behavior from inferred quali
 **Weak adaptation:** “Drag blobs while a song plays” presented as equivalent to Blob Opera.
 
 **Better capability decision:** determine whether the system can produce responsive, musically coherent audio. If it cannot, choose a different payoff that the available assets can deliver rather than promising the missing musical behavior.
+
+
+## Art and motion craft
+
+Use `visual-experiences/GUIDE.md` and select the relevant chapters. Commit to one striking visual rule and a defining interactive moment. Specify composition, material and motion behavior concretely, not with adjectives like premium or cinematic. Let the first gesture visibly change the world within a moment. Develop the consequence more than the explanatory UI.
+
+Borrow separately: an activity pattern from the interactive library, a visual language from a visual reference, and a motion mechanism from a motion reference. Do not copy another artist's identity or proprietary media. Keep the evidence labels: indexed clips and creator claims are not independent one-shot benchmarks.
+
+Procedural art is not limited to placeholder geometry. Canvas, SVG and native WebGL can support painterly texture, articulated figures, lighting, parallax, fields and dimensional scenes when the implementation provides the actual rendering and behavior. Use real generated imagery when it solves a specific visual need. Preserve stable seeded texture, deliberate silhouettes and material consistency.
+
+A small game needs responsive feel: anticipation, contact, response and readable recovery; a spatial scene needs grounded scale and motivated camera movement; a creative tool needs expressive variation and a result worth seeing. Do not require every experience to have a score, win/loss, camera orbit, particles or a download.
+
+Review normal-motion output before judging animation. Inspect entry, the key action and payoff, and retain the payoff evidence before replay/reset. Reduced-motion support is a separate usability check, not the only view of the work. Compare against the selected reference mechanisms and repair the largest visible weakness; do not invent additional approval tests unrelated to the promised experience.
