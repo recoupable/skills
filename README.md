@@ -63,6 +63,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | Skill | What it does |
 |-------|-------------|
 | recoup-content-build-sites | Design and build interactive sites using 60 curated digital experience references |
+| recoup-content-connect-fans | Configure paid Spotify fan connection, site attribution and private fan retrieval |
 | recoup-content-write-caption | Captions in the artist's own voice |
 | recoup-content-make-graphics | Cover art, thumbnails, carousels, promo/quote cards |
 | recoup-music-video | Narrative music video: approved song, bible, audition, references, motion and verified edit |

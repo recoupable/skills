@@ -163,3 +163,4 @@
 {"intent": "recoup-internal draft today's ten podcast guest invites and nudge last week's non-responders", "expected": "recoup-internal-sales", "not": ["recoup-internal-marketing"]}
 
 {"intent": "Build an interactive fan site with a clear activity, using digital experience references to improve the concept and final implementation.", "expected": "recoup-content-build-sites", "not": ["recoup-content-make-graphics", "recoup-content-write-caption"]}
+{"intent": "Add Recoup login with Spotify to my release site and attribute connected fans to my artist account.", "expected": "recoup-content-connect-fans", "not": ["recoup-content-build-sites"]}

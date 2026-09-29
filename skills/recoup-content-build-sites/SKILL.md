@@ -1,6 +1,6 @@
 ---
 name: recoup-content-build-sites
-description: Design and build engaging interactive websites using a curated library of 60 games, creative tools, brand campaigns and digital experiences. Use when creating or improving a fan site, artist experience, brand activation, playable website, interactive microsite, or a Sites concept, creative direction, implementation or review. Helps choose an understandable activity, produce a worthwhile result and carry that interaction through the finished site.
+description: Design and build engaging interactive websites using a curated library of 60 interactive experiences plus 104 visual, motion and game references, including games, creative tools, brand campaigns and digital experiences. Use when creating or improving a fan site, artist experience, brand activation, playable website, interactive microsite, or a Sites concept, creative direction, implementation or review. Helps choose an understandable activity, produce a worthwhile result and carry that interaction through the finished site.
 ---
 
 # Build a worthwhile interactive site
@@ -61,7 +61,7 @@ If the concept depends on unavailable assets or services, adapt it while preserv
 
 ## 4. Build the selected interaction
 
-Read `references/build-and-review.md`. Work within the host's project and output contract. Use its available tools to implement, preview and revise the site; this skill does not create tools, runtime permissions or integrations.
+Read `references/build-and-review.md` and `references/visual-experiences/GUIDE.md`. For the selected direction, read the relevant motion, art or spatial-design chapter and two complementary examples from its 104-entry library. These are craft references, not fixed site templates. Work within the host's project and output contract. Use its available tools to implement, preview and revise the site; this skill does not create tools, runtime permissions or integrations.
 
 Make the primary activity apparent on the first screen. Show enough context to make its purpose clear, then let the visitor act. Give immediate, appropriate feedback. Let the consequence visibly reflect the input; avoid generic results unrelated to the visitor's choices.
 
@@ -89,3 +89,7 @@ Follow the host's required schema. If none is specified, return the completed ar
 Record taste feedback as explicit user decisions, separately from the agent's assessment. A liked reference does not automatically approve every part of it. Do not deploy, publish or perform paid actions beyond the authorization supplied by the user and host.
 
 For developers connecting this package to a model runtime, see `references/runtime-integration.md`. That document describes an integration approach; installing this skill alone does not change a separate Sites pipeline.
+
+## Optional Spotify fan connection
+
+When the customer requests paid Spotify fan capture, use the companion `recoup-content-connect-fans` skill if the host provides it. It handles customer authentication, site registration, activation and the public connection link. If unavailable, consult the live Recoup API documentation and confirm capability before promising capture. This build skill does not supply that integration by itself. Keep customer credentials out of site code and keep Spotify playback separate from fan capture.
