@@ -61,7 +61,7 @@ If the concept depends on unavailable assets or services, adapt it while preserv
 
 ## 4. Build the selected interaction
 
-Read `references/build-and-review.md` and `references/visual-experiences/GUIDE.md`. For the selected direction, read the relevant motion, art or spatial-design chapter and two complementary examples from its 104-entry library. These are craft references, not fixed site templates. Work within the host's project and output contract. Use its available tools to implement, preview and revise the site; this skill does not create tools, runtime permissions or integrations.
+Read `references/build-and-review.md`, including its game-craft workflow when the selected experience is playable, and `references/visual-experiences/GUIDE.md`. For the selected direction, read the relevant motion, art or spatial-design chapter and two complementary examples from its 104-entry library. These are craft references, not fixed site templates. Work within the host's project and output contract. Use its available tools to implement, preview and revise the site; this skill does not create tools, runtime permissions or integrations.
 
 Make the primary activity apparent on the first screen. Show enough context to make its purpose clear, then let the visitor act. Give immediate, appropriate feedback. Let the consequence visibly reflect the input; avoid generic results unrelated to the visitor's choices.
 
