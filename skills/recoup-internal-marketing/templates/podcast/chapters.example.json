@@ -1,0 +1,17 @@
+{
+  "note": "Raw audio-track seconds. One entry per block; ch00 is the cold open (built with no_chapter). Copy every approved edit decision here, with a note naming who asked and when.",
+  "offsets": { "guest": 0.12, "host": 0.133 },
+  "host_video_fixed_start": 6.0,
+  "chapters": [
+    { "id": "ch00", "num": "00", "title": "Coming up",
+      "pieces": [ { "in": 1174.75, "out": 1186.80, "mute_host": [[1174.75, 1186.80]], "note": "guest's strongest 6-14s line; host muted" } ] },
+    { "id": "ch01", "num": "01", "title": "How statements broke",
+      "pieces": [
+        { "in": 6.10, "out": 91.42, "mute_host": [[75.40, 76.00]], "note": "host intro + first answer; host backchannel 'Yeah' muted" },
+        { "in": 94.52, "out": 261.05, "note": "guest stutter cut at 91.42-94.52" } ] },
+    { "id": "ch02", "num": "02", "title": "Matching is the whole game",
+      "pieces": [
+        { "in": 344.60, "out": 345.80, "host_only": true, "video_from": 408.40, "note": "host started the question mid-answer: splice his fragment under the chapter card" },
+        { "in": 409.70, "out": 712.65, "mute_host": [[470.15, 471.50]], "note": "question + answer; next mid-answer start muted" } ] }
+  ]
+}

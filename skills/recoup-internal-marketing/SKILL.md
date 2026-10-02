@@ -1,6 +1,6 @@
 ---
 name: recoup-internal-marketing
-description: 'INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal do today''s marketing"). Never use for customer-facing or artist requests. The daily marketing run for one of our own social accounts, in order: read the account workspace (narrative canon, hook doctrine, video styles, post ledger), scrape the account''s own socials to learn what is working and what flopped, pick today''s topic (continue an arc, pull a logged idea, or draft a new one), then build the asset and hand off. Use when the user says "do today''s marketing", "today''s content run", "make today''s video", "our hooks are weak", or asks what to post today for one of OUR OWN accounts. Runs the whole day end to end. Its stated goal: convert a free content viewer into a paying Recoup subscriber — and know which post did it; so the run opens on the funnel numbers and refuses to ship into a destination that cannot convert. **Not for a single post''s copy** — drafting/publishing/measuring one LinkedIn or X post is recoup-internal-social-ship-posts, which this skill calls at step 5. Orchestrates: routes video production to the format skills and publish/measure to recoup-internal-social-ship-posts.'
+description: 'INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal do today''s marketing"). Never use for customer-facing or artist requests. The daily marketing run for one of our own social accounts, in order: read the account workspace (narrative canon, hook doctrine, video styles, post ledger), scrape the account''s own socials to learn what is working and what flopped, pick today''s topic (continue an arc, pull a logged idea, or draft a new one), then build the asset and hand off. Use when the user says "do today''s marketing", "today''s content run", "make today''s video", "our hooks are weak", or asks what to post today for one of OUR OWN accounts. Runs the whole day end to end. Its stated goal: convert a free content viewer into a paying Recoup subscriber — and know which post did it; so the run opens on the funnel numbers and refuses to ship into a destination that cannot convert. **Not for a single post''s copy** — drafting/publishing/measuring one LinkedIn or X post is recoup-internal-social-ship-posts, which this skill calls at step 5. Orchestrates: routes video production to the format skills and publish/measure to recoup-internal-social-ship-posts. Also owns Recoup Podcast post-production end to end: from the raw Restream files of a recorded interview to an edited news-desk episode (transcripts, cuts, chapter graphics, intro, covers) scheduled on Spotify and YouTube, plus its shorts. Use for "edit the podcast episode", "produce <guest>''s episode from the raw files", "publish the podcast to Spotify and YouTube", "make the podcast thumbnail". Guest outreach, booking and the recording itself are recoup-internal-sales.'
 ---
 
 # Recoup Internal — Marketing (the daily run)
@@ -184,6 +184,17 @@ this line on that data at the ~10-06 re-pull.
 3. **Log both** in `posts-log.md`, even when the answer is zero. A written zero is a finding.
 4. **Feed it back into step 2.** Next run ranks by what converted; where likes disagree, conversion wins.
 
+## Podcast episodes (raw recording -> scheduled release)
+
+A recorded Recoup Podcast interview is marketing's job from the raw files onward: edit, package, schedule
+on Spotify and YouTube, then cut the shorts. Follow `references/podcast-episode.md` in order: intake,
+ElevenLabs transcripts, camera check, the owner's cut decisions, chapter graphics anchored to transcript
+phrases, a ~90s prototype, per-chapter renders reviewed one at a time, the opening (cold open + Wire
+intro), assembly, covers, then publish. The approved look is the news-desk template in
+`templates/podcast/news-desk.html`; the scripts in `scripts/podcast/` reproduce it from an episode
+project. The same gates apply as for any asset: every stage revealed in Finder and approved, no public
+click without the owner, and verify the published fields from the platform's own data.
+
 ## Guardrails
 
 - **No em dashes in published copy** (captions, tweets, titles, descriptions, first comments,
@@ -227,4 +238,5 @@ this line on that data at the ~10-06 re-pull.
 - `references/opus.md` — scheduling a slate through OpusClip: import with captions off, the manifest, per-platform body rules, pre-flight, `post list` as the only truth, teaser slates
 - `scripts/gen-voice.py`, `scripts/opus-import.mjs`, `scripts/opus-schedule.mjs` — the templates those references describe
 - `references/character-swap-edit.md` — recreating a trend by swapping the cast of a real performance clip (reAPI Seedance 2.5 edit): casting limits, the 3-reference rule, hosting, QC; script `scripts/reapi-edit.sh`
+- `references/podcast-episode.md` — a recorded podcast from raw Restream files to scheduled on Spotify + YouTube: the news-desk format, project layout, the ordered run with approval gates, splice patterns, publish traps; scripts `scripts/podcast/` (transcribe, camera_check, fix_host_video, cut, build, render.sh, make_intro, assemble, make_cover, lipsync) and templates `templates/podcast/` (news-desk, wire-intro, episode/chapters/specs examples); brand fonts and logos in `brand/`
 - **artist music video** lives in the separate `recoup-music-video` skill. Route there; do not rebuild the pipeline here.

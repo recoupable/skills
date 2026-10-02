@@ -1,0 +1,1217 @@
+{
+  "sourceCommit": "f8fa73c0b5e48e595186e0149756e1611b9d7ff5",
+  "assets": [
+    {
+      "id": "carousel-blue-notes",
+      "title": "Blue notes",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/blue-notes/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f15029ea07d236c4c24d/assets/carousels/blue-notes/preview.jpg",
+          "sha256": "f15029ea07d236c4c24d75102cdb71d182fc81db4b2bb92260b774231ea38935"
+        },
+        {
+          "path": "assets/carousels/blue-notes/blue-notes.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/28fe586ecf608dc18b3a/assets/carousels/blue-notes/blue-notes.pdf",
+          "sha256": "28fe586ecf608dc18b3aa9255b5dd425882c1be18bba842e25f488f27d13cd61"
+        },
+        {
+          "path": "assets/carousels/blue-notes/blue-notes.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/1b1e10407cfe3d1a73c3/assets/carousels/blue-notes/blue-notes.zip",
+          "sha256": "1b1e10407cfe3d1a73c3f0fb38db2391360cb94fbe7b2ff7df0346623e6ac6de"
+        }
+      ]
+    },
+    {
+      "id": "carousel-paper-trail",
+      "title": "Paper trail",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/paper-trail/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/ec088696884cac791b21/assets/carousels/paper-trail/preview.jpg",
+          "sha256": "ec088696884cac791b21779b22bba6e584cc7558c68083d2edd93152eb48a040"
+        },
+        {
+          "path": "assets/carousels/paper-trail/paper-trail.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/8095cd0ce626ca6059c2/assets/carousels/paper-trail/paper-trail.pdf",
+          "sha256": "8095cd0ce626ca6059c2a71ede449ef0f224fbda4e5bfae8c38635d21b317dfe"
+        },
+        {
+          "path": "assets/carousels/paper-trail/paper-trail.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7f5495640c8f82a26120/assets/carousels/paper-trail/paper-trail.zip",
+          "sha256": "7f5495640c8f82a26120bdf774f39108f6c9247c2fb56597e1ee91d44d51a502"
+        }
+      ]
+    },
+    {
+      "id": "carousel-signal-study",
+      "title": "Signal study",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/signal-study/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/bb598c13c73df91e5932/assets/carousels/signal-study/preview.jpg",
+          "sha256": "bb598c13c73df91e5932d6de75d96976e8c34be3e74c79244c1ed2009edf7025"
+        },
+        {
+          "path": "assets/carousels/signal-study/signal-study.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/d05a897b6ea89e31e528/assets/carousels/signal-study/signal-study.pdf",
+          "sha256": "d05a897b6ea89e31e52810de737cb6571b9975251ba901c1623d9791475cb273"
+        },
+        {
+          "path": "assets/carousels/signal-study/signal-study.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/9c1bbe686c64fbf39c72/assets/carousels/signal-study/signal-study.zip",
+          "sha256": "9c1bbe686c64fbf39c727e3e3e4b6abd241b60a114bca436306f42ac40170599"
+        }
+      ]
+    },
+    {
+      "id": "carousel-cobalt-press",
+      "title": "Cobalt press",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/cobalt-press/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/658aa98bd2dc1906e11a/assets/carousels/cobalt-press/preview.jpg",
+          "sha256": "658aa98bd2dc1906e11ae418e0cfd1ebff135cde591d97c7dc09c641176dabfe"
+        },
+        {
+          "path": "assets/carousels/cobalt-press/cobalt-press.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/636d9b770a10215bd086/assets/carousels/cobalt-press/cobalt-press.pdf",
+          "sha256": "636d9b770a10215bd086fd649ed666e2020f251beb82eb2f004f65356320eaeb"
+        },
+        {
+          "path": "assets/carousels/cobalt-press/cobalt-press.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/2f5132e5d9ff6cc1bce6/assets/carousels/cobalt-press/cobalt-press.zip",
+          "sha256": "2f5132e5d9ff6cc1bce65717a2ebe4e9b08eca6960aee76c94f0727d9ebf8d93"
+        }
+      ]
+    },
+    {
+      "id": "carousel-margin-notes",
+      "title": "Margin notes",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/margin-notes/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/aab1a7fa4316729e3dde/assets/carousels/margin-notes/preview.jpg",
+          "sha256": "aab1a7fa4316729e3ddedf40cd1e072221f146816bb2615e86b179be4600f318"
+        },
+        {
+          "path": "assets/carousels/margin-notes/margin-notes.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/776fedd4367dbb837a4d/assets/carousels/margin-notes/margin-notes.pdf",
+          "sha256": "776fedd4367dbb837a4dff218bc68d4ef32c0aa5f8e608e62495c5e4ec27a055"
+        },
+        {
+          "path": "assets/carousels/margin-notes/margin-notes.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/0ff7b966dff7250df642/assets/carousels/margin-notes/margin-notes.zip",
+          "sha256": "0ff7b966dff7250df6420283cfe810035230ee20fecff21325ac3f5f0e51f92c"
+        }
+      ]
+    },
+    {
+      "id": "carousel-cut-paper",
+      "title": "Cut paper",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/cut-paper/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7544382b6e2e04600a39/assets/carousels/cut-paper/preview.jpg",
+          "sha256": "7544382b6e2e04600a39ebaf83d9408331a0abd42de2d633b429ac1aa19496ea"
+        },
+        {
+          "path": "assets/carousels/cut-paper/cut-paper.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7b7657a03a7c42febdaa/assets/carousels/cut-paper/cut-paper.pdf",
+          "sha256": "7b7657a03a7c42febdaa4b1cbb81066398839ea84acfb0e71a8967194b2befd8"
+        },
+        {
+          "path": "assets/carousels/cut-paper/cut-paper.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7e5cd42f449e210b34fc/assets/carousels/cut-paper/cut-paper.zip",
+          "sha256": "7e5cd42f449e210b34fcb7a22e59b72f7785afc3bc2b8fa391d07af31af7d9ba"
+        }
+      ]
+    },
+    {
+      "id": "carousel-night-shift",
+      "title": "Night shift",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/night-shift/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/a2f1639cc5cd65bf1dab/assets/carousels/night-shift/preview.jpg",
+          "sha256": "a2f1639cc5cd65bf1dabfa362d4be16b95341e356241212a7da392b6c36eff31"
+        },
+        {
+          "path": "assets/carousels/night-shift/night-shift.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/9aefb8339c4dc36147b9/assets/carousels/night-shift/night-shift.pdf",
+          "sha256": "9aefb8339c4dc36147b96f70f0a2119e555fa2230ff7293d00f0875e46b215ac"
+        },
+        {
+          "path": "assets/carousels/night-shift/night-shift.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/8944b5f61f6a40e31675/assets/carousels/night-shift/night-shift.zip",
+          "sha256": "8944b5f61f6a40e3167536219b8aa5f97a32cc9572069678e20bba1e07bf8b5b"
+        }
+      ]
+    },
+    {
+      "id": "carousel-catalog-index",
+      "title": "Catalog index",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/catalog-index/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f58b92afaefc63985aa3/assets/carousels/catalog-index/preview.jpg",
+          "sha256": "f58b92afaefc63985aa3f125f5d0c73d2389a25edc4e2a5f0538b54adeb5bc4e"
+        },
+        {
+          "path": "assets/carousels/catalog-index/catalog-index.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/0ebd1eb500f935f7f240/assets/carousels/catalog-index/catalog-index.pdf",
+          "sha256": "0ebd1eb500f935f7f240828b7978fa49340a889704f38d2d3389c8fba46a4448"
+        },
+        {
+          "path": "assets/carousels/catalog-index/catalog-index.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7f5d1b679a52044f6f3b/assets/carousels/catalog-index/catalog-index.zip",
+          "sha256": "7f5d1b679a52044f6f3ba06ce5239782cab9daebb3985b9b389b266f0521a52c"
+        }
+      ]
+    },
+    {
+      "id": "carousel-blueprint",
+      "title": "Blueprint",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/blueprint/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/acddd3e0de1e36174548/assets/carousels/blueprint/preview.jpg",
+          "sha256": "acddd3e0de1e3617454864b670584f8280b3d3d77fd975b22d2d7b4091d1d494"
+        },
+        {
+          "path": "assets/carousels/blueprint/blueprint.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/0db36af928dab5276d61/assets/carousels/blueprint/blueprint.pdf",
+          "sha256": "0db36af928dab5276d613d832cda6fa2c68148f9a6ba1f3ba5844e64a57632b5"
+        },
+        {
+          "path": "assets/carousels/blueprint/blueprint.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/e1ea0756a8337d83d603/assets/carousels/blueprint/blueprint.zip",
+          "sha256": "e1ea0756a8337d83d603a4d188aa2c834a715b5f6bf65edcdaeeccef8f6b5466"
+        }
+      ]
+    },
+    {
+      "id": "carousel-spotlight",
+      "title": "Spotlight",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/spotlight/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/988467dd51a5e95b2414/assets/carousels/spotlight/preview.jpg",
+          "sha256": "988467dd51a5e95b241434e12c0367a874f434246bb7502e125d76892082dbc5"
+        },
+        {
+          "path": "assets/carousels/spotlight/spotlight.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/4de82de60d30ed0c045a/assets/carousels/spotlight/spotlight.pdf",
+          "sha256": "4de82de60d30ed0c045a23d1a560e9847da66529146f0eb3a59d4305868713d2"
+        },
+        {
+          "path": "assets/carousels/spotlight/spotlight.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/00b27689df4ee286fcf3/assets/carousels/spotlight/spotlight.zip",
+          "sha256": "00b27689df4ee286fcf3b9c3436efc32fd530777372d56019ae02d6701a9d29e"
+        }
+      ]
+    },
+    {
+      "id": "carousel-field-guide",
+      "title": "Field guide",
+      "group": "carousels",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/carousels/field-guide/preview.jpg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/3cff7d56d5b915cd2331/assets/carousels/field-guide/preview.jpg",
+          "sha256": "3cff7d56d5b915cd23312acbd7d5f1ab7efe02655a8837e6cdc28315bb8a91f0"
+        },
+        {
+          "path": "assets/carousels/field-guide/field-guide.pdf",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/828e8bccd6ed47caaef1/assets/carousels/field-guide/field-guide.pdf",
+          "sha256": "828e8bccd6ed47caaef1ea04d99068ed8f28932afa81dcd2af6647207a0be927"
+        },
+        {
+          "path": "assets/carousels/field-guide/field-guide.zip",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/eb06f891827919254a7e/assets/carousels/field-guide/field-guide.zip",
+          "sha256": "eb06f891827919254a7e91cff1690a1bf0aaa26f0aa09b5f3978c5247b2269cb"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-badge",
+      "title": "Podcast badge",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/badge.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/8293315a8760bd5df7ce/assets/podcast-kit-blue-sweep/badge.png",
+          "sha256": "8293315a8760bd5df7cef8cbc80fb609c95ca7176fd5f3903e51cf65ed3f5d64"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/badge.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/8293315a8760bd5df7ce/assets/podcast-kit-blue-sweep/badge.png",
+          "sha256": "8293315a8760bd5df7cef8cbc80fb609c95ca7176fd5f3903e51cf65ed3f5d64"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/badge.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/ac011f5cd1fbf574931a/assets/podcast-kit-blue-sweep/badge.svg",
+          "sha256": "ac011f5cd1fbf574931a79933e1d6a192ba7544d72c8e3d9c3d57943a1f855a0"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-badge-overlay",
+      "title": "Corner badge overlay",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/badge-overlay.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/a50447cf3b341ff58726/assets/podcast-kit-blue-sweep/badge-overlay.png",
+          "sha256": "a50447cf3b341ff587263fdaec7f096663516a71cf5e5f7043379bb1de1cdb39"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/badge-overlay.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/a50447cf3b341ff58726/assets/podcast-kit-blue-sweep/badge-overlay.png",
+          "sha256": "a50447cf3b341ff587263fdaec7f096663516a71cf5e5f7043379bb1de1cdb39"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/badge-overlay.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/98430d9616b1558229be/assets/podcast-kit-blue-sweep/badge-overlay.svg",
+          "sha256": "98430d9616b1558229bec96c7d5113f26046d5631aa9048f686626a279f43046"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-title",
+      "title": "Show title",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/title.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/8d502c0ef45f0917f03a/assets/podcast-kit-blue-sweep/title.png",
+          "sha256": "8d502c0ef45f0917f03ae13a5028c8391890b73bfcb5601cb43e349b9d9f1f4a"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/title.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/8d502c0ef45f0917f03a/assets/podcast-kit-blue-sweep/title.png",
+          "sha256": "8d502c0ef45f0917f03ae13a5028c8391890b73bfcb5601cb43e349b9d9f1f4a"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/title.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/6628b06300783ecc5891/assets/podcast-kit-blue-sweep/title.svg",
+          "sha256": "6628b06300783ecc5891600d575a1a04edf0ee9e42790904144bad8c5ed5a8cd"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-cover",
+      "title": "Square show cover",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/cover.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/81c65a710033eb400d7d/assets/podcast-kit-blue-sweep/cover.png",
+          "sha256": "81c65a710033eb400d7d1dffc5649b6614881d5ff891d87afc06f0d4defda052"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/cover.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/81c65a710033eb400d7d/assets/podcast-kit-blue-sweep/cover.png",
+          "sha256": "81c65a710033eb400d7d1dffc5649b6614881d5ff891d87afc06f0d4defda052"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/cover.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/73d212528c4420cbae43/assets/podcast-kit-blue-sweep/cover.svg",
+          "sha256": "73d212528c4420cbae4338d31e3c4821f155a8e98ca65dd8292ec9fd6b2c7909"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-thumbnail",
+      "title": "Episode thumbnail",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/thumbnail.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/c90ff1ba25967eaea362/assets/podcast-kit-blue-sweep/thumbnail.png",
+          "sha256": "c90ff1ba25967eaea36265e89f8861fbfdb0af8fb1a66447b17323c484840d28"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/thumbnail.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/c90ff1ba25967eaea362/assets/podcast-kit-blue-sweep/thumbnail.png",
+          "sha256": "c90ff1ba25967eaea36265e89f8861fbfdb0af8fb1a66447b17323c484840d28"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/thumbnail.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/e853feeb5ece3783b514/assets/podcast-kit-blue-sweep/thumbnail.svg",
+          "sha256": "e853feeb5ece3783b514930023fc951bbe12ad8ef2e9d357cd92023199b5fa54"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-solo",
+      "title": "Solo video frame",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/solo-preview.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/bd026749fe8a33beffca/assets/podcast-kit-blue-sweep/solo-preview.png",
+          "sha256": "bd026749fe8a33beffcab1c30bb708f0828343cc462342662bb85af472000b32"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/solo.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/64247a0be183a3379528/assets/podcast-kit-blue-sweep/solo.png",
+          "sha256": "64247a0be183a33795289d51e0e43fe24483ad7336e87c5feb99c31d5ed54f39"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/solo.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/81b6fde18a01deafb1f4/assets/podcast-kit-blue-sweep/solo.svg",
+          "sha256": "81b6fde18a01deafb1f4609ec19d69ae8d8f808a198c488b31e0b8c0d81cec5b"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/solo-labels.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/95b0fd138a77bcd6bf8b/assets/podcast-kit-blue-sweep/solo-labels.png",
+          "sha256": "95b0fd138a77bcd6bf8ba5ad6a6f96664dd38fe9bcfc2733aa9152e9508813e8"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-duo",
+      "title": "Two-person video frame",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/duo-preview.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/9adb2616a7c4942b1e18/assets/podcast-kit-blue-sweep/duo-preview.png",
+          "sha256": "9adb2616a7c4942b1e18274725d84b59128a2251ef7d1526f155c6359e2507ca"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/duo.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/4b9685cb94857f5251cb/assets/podcast-kit-blue-sweep/duo.png",
+          "sha256": "4b9685cb94857f5251cb3dcdd698a8e9dff16db8584ba0ddf69b7577008ac8f8"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/duo.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/a245381e5e457d2c5c7c/assets/podcast-kit-blue-sweep/duo.svg",
+          "sha256": "a245381e5e457d2c5c7c767c786f3e3cb7380243cb867c1058a9e38cf798ba26"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/duo-labels.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f1291b5dd19e90482c91/assets/podcast-kit-blue-sweep/duo-labels.png",
+          "sha256": "f1291b5dd19e90482c9120a550e1afcd97f27554301fe10fc04102f34b666bbe"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-vertical",
+      "title": "Vertical clip frame",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/vertical-preview.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/abd37587f480101d9e0e/assets/podcast-kit-blue-sweep/vertical-preview.png",
+          "sha256": "abd37587f480101d9e0e93f082644d87f3c43eca4844d5cafba7fc7314e9c9e8"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/vertical.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/9e6bdff2b8bdf3b3c278/assets/podcast-kit-blue-sweep/vertical.png",
+          "sha256": "9e6bdff2b8bdf3b3c278d53102b7aaf483583d44f6998be7b4d726edb1c7f80c"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/vertical.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/dc80258a3aa3b0bd8fed/assets/podcast-kit-blue-sweep/vertical.svg",
+          "sha256": "dc80258a3aa3b0bd8fed5bd05528ad329d08e84ecc6c5134c197a313fc734c2b"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/vertical-labels.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/ed3aa0c618592d73a68a/assets/podcast-kit-blue-sweep/vertical-labels.png",
+          "sha256": "ed3aa0c618592d73a68ac62d93969c0692d514f3da81d047fef2139b39246beb"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-quote",
+      "title": "Quote card",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/quote.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/d28595a00d4681eced39/assets/podcast-kit-blue-sweep/quote.png",
+          "sha256": "d28595a00d4681eced39333efeb20fa819cdebed6c14e7538a8a87905a94445f"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/quote.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/d28595a00d4681eced39/assets/podcast-kit-blue-sweep/quote.png",
+          "sha256": "d28595a00d4681eced39333efeb20fa819cdebed6c14e7538a8a87905a94445f"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/quote.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f7fd09a5dc2eca6fa691/assets/podcast-kit-blue-sweep/quote.svg",
+          "sha256": "f7fd09a5dc2eca6fa691a711afc83cf117a88b8e9da21286197949ecda0dfc37"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-announcement",
+      "title": "Episode announcement",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/announcement.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/5244c9cdb5ca4631279f/assets/podcast-kit-blue-sweep/announcement.png",
+          "sha256": "5244c9cdb5ca4631279f5fff95a44c86874e280948cd4ec329f3baf4062324ea"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/announcement.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/5244c9cdb5ca4631279f/assets/podcast-kit-blue-sweep/announcement.png",
+          "sha256": "5244c9cdb5ca4631279f5fff95a44c86874e280948cd4ec329f3baf4062324ea"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/announcement.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/64353c5526f812ad78eb/assets/podcast-kit-blue-sweep/announcement.svg",
+          "sha256": "64353c5526f812ad78ebb1aadf855885b681879297359c2a170ccc5958d8ea73"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-endcard",
+      "title": "End card",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/endcard.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/83f7a252803d340420e5/assets/podcast-kit-blue-sweep/endcard.png",
+          "sha256": "83f7a252803d340420e57e8ce95c1628e4beb66c74f7c5105ee99b2f208e5173"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/endcard.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/83f7a252803d340420e5/assets/podcast-kit-blue-sweep/endcard.png",
+          "sha256": "83f7a252803d340420e57e8ce95c1628e4beb66c74f7c5105ee99b2f208e5173"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/endcard.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/a07146d63fc0e9218f55/assets/podcast-kit-blue-sweep/endcard.svg",
+          "sha256": "a07146d63fc0e9218f55162e213ae202606d9ace692c150b3733a97a9cd865cb"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-background",
+      "title": "Landscape background",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/background.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/4ed77c8616109db849e5/assets/podcast-kit-blue-sweep/background.png",
+          "sha256": "4ed77c8616109db849e57d025434e6689d5975a7b14c4bc5e410ec34dcbab955"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/background.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/4ed77c8616109db849e5/assets/podcast-kit-blue-sweep/background.png",
+          "sha256": "4ed77c8616109db849e57d025434e6689d5975a7b14c4bc5e410ec34dcbab955"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/background.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/38e3f452adda047906aa/assets/podcast-kit-blue-sweep/background.svg",
+          "sha256": "38e3f452adda047906aa1959c8b43fd6ddec813533ea070a9caa8aa0b0a09b60"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-square-background",
+      "title": "Square background",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/square-background.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/5e396c36047b06877bb3/assets/podcast-kit-blue-sweep/square-background.png",
+          "sha256": "5e396c36047b06877bb3ef9b9cb6ccb493bee02657ddf7b0f5aee33af15a23a1"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/square-background.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/5e396c36047b06877bb3/assets/podcast-kit-blue-sweep/square-background.png",
+          "sha256": "5e396c36047b06877bb3ef9b9cb6ccb493bee02657ddf7b0f5aee33af15a23a1"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/square-background.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/d5391defe9801f82d5b4/assets/podcast-kit-blue-sweep/square-background.svg",
+          "sha256": "d5391defe9801f82d5b4617c7eeb109a62a560c045fdefc77616970fa085e587"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-portrait-background",
+      "title": "Portrait background",
+      "group": "podcast",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/portrait-background.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/fc2abdbab7425bc775a7/assets/podcast-kit-blue-sweep/portrait-background.png",
+          "sha256": "fc2abdbab7425bc775a7b6acb6ca0da84b68c54719209fc93770bb1eda4cc57d"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/portrait-background.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/fc2abdbab7425bc775a7/assets/podcast-kit-blue-sweep/portrait-background.png",
+          "sha256": "fc2abdbab7425bc775a7b6acb6ca0da84b68c54719209fc93770bb1eda4cc57d"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/portrait-background.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/15b484bf9fae8801145f/assets/podcast-kit-blue-sweep/portrait-background.svg",
+          "sha256": "15b484bf9fae8801145fafcff4c2b9ad3e332df7438a9aaab3446dc297cbf093"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-linkedin-personal",
+      "title": "LinkedIn \u00b7 personal",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/linkedin-personal.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/27cf016f8f889604799a/assets/social-banner-kit/linkedin-personal.png",
+          "sha256": "27cf016f8f889604799a0386f962006b845781cdbd75156f2b05f932cbee1806"
+        },
+        {
+          "path": "assets/social-banner-kit/linkedin-personal.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/27cf016f8f889604799a/assets/social-banner-kit/linkedin-personal.png",
+          "sha256": "27cf016f8f889604799a0386f962006b845781cdbd75156f2b05f932cbee1806"
+        },
+        {
+          "path": "assets/social-banner-kit/linkedin-personal.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/393285531cf473e72f1e/assets/social-banner-kit/linkedin-personal.svg",
+          "sha256": "393285531cf473e72f1ed7dc07cf77e571edfbd2ebcc9dee381110225e7a0904"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-linkedin-company",
+      "title": "LinkedIn \u00b7 company Page",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/linkedin-company.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f375f2e98792dbd92f13/assets/social-banner-kit/linkedin-company.png",
+          "sha256": "f375f2e98792dbd92f133b5e5f5c9cf70b08694acf7c7daff6cbad43acf5ac00"
+        },
+        {
+          "path": "assets/social-banner-kit/linkedin-company.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f375f2e98792dbd92f13/assets/social-banner-kit/linkedin-company.png",
+          "sha256": "f375f2e98792dbd92f133b5e5f5c9cf70b08694acf7c7daff6cbad43acf5ac00"
+        },
+        {
+          "path": "assets/social-banner-kit/linkedin-company.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/53a9277b9c02f7089034/assets/social-banner-kit/linkedin-company.svg",
+          "sha256": "53a9277b9c02f7089034d67c9d3e57a137a1a31ad7af74f73535568e4cb47a44"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-youtube",
+      "title": "YouTube \u00b7 channel",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/youtube.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/0ae6a8e9fc8af70ae1f7/assets/social-banner-kit/youtube.png",
+          "sha256": "0ae6a8e9fc8af70ae1f79ad89a0b1a7bb8cc7f037f481c1a17428005fbc902c3"
+        },
+        {
+          "path": "assets/social-banner-kit/youtube.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/0ae6a8e9fc8af70ae1f7/assets/social-banner-kit/youtube.png",
+          "sha256": "0ae6a8e9fc8af70ae1f79ad89a0b1a7bb8cc7f037f481c1a17428005fbc902c3"
+        },
+        {
+          "path": "assets/social-banner-kit/youtube.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/c2c1cff96e65cf7a4855/assets/social-banner-kit/youtube.svg",
+          "sha256": "c2c1cff96e65cf7a4855deefea2becae124fde938a8f378f87ab0676291e9ee5"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-x",
+      "title": "X \u00b7 header",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/x.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/b4dfa3925a768f8bf2c0/assets/social-banner-kit/x.png",
+          "sha256": "b4dfa3925a768f8bf2c0ce0895bcadaba75077c32d0dbe17a498a4c14ba53968"
+        },
+        {
+          "path": "assets/social-banner-kit/x.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/b4dfa3925a768f8bf2c0/assets/social-banner-kit/x.png",
+          "sha256": "b4dfa3925a768f8bf2c0ce0895bcadaba75077c32d0dbe17a498a4c14ba53968"
+        },
+        {
+          "path": "assets/social-banner-kit/x.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/1ad68ed06847fd41630c/assets/social-banner-kit/x.svg",
+          "sha256": "1ad68ed06847fd41630cb070948c9da7da23337885ba2cc0b557afd159055c18"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-bluesky",
+      "title": "Bluesky \u00b7 header",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/bluesky.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/b4dfa3925a768f8bf2c0/assets/social-banner-kit/bluesky.png",
+          "sha256": "b4dfa3925a768f8bf2c0ce0895bcadaba75077c32d0dbe17a498a4c14ba53968"
+        },
+        {
+          "path": "assets/social-banner-kit/bluesky.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/b4dfa3925a768f8bf2c0/assets/social-banner-kit/bluesky.png",
+          "sha256": "b4dfa3925a768f8bf2c0ce0895bcadaba75077c32d0dbe17a498a4c14ba53968"
+        },
+        {
+          "path": "assets/social-banner-kit/bluesky.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/1ad68ed06847fd41630c/assets/social-banner-kit/bluesky.svg",
+          "sha256": "1ad68ed06847fd41630cb070948c9da7da23337885ba2cc0b557afd159055c18"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-mastodon",
+      "title": "Mastodon \u00b7 header",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/mastodon.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/b4dfa3925a768f8bf2c0/assets/social-banner-kit/mastodon.png",
+          "sha256": "b4dfa3925a768f8bf2c0ce0895bcadaba75077c32d0dbe17a498a4c14ba53968"
+        },
+        {
+          "path": "assets/social-banner-kit/mastodon.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/b4dfa3925a768f8bf2c0/assets/social-banner-kit/mastodon.png",
+          "sha256": "b4dfa3925a768f8bf2c0ce0895bcadaba75077c32d0dbe17a498a4c14ba53968"
+        },
+        {
+          "path": "assets/social-banner-kit/mastodon.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/1ad68ed06847fd41630c/assets/social-banner-kit/mastodon.svg",
+          "sha256": "1ad68ed06847fd41630cb070948c9da7da23337885ba2cc0b557afd159055c18"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-facebook",
+      "title": "Facebook \u00b7 cover",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/facebook.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f1bebd8c1ae162a8fc5a/assets/social-banner-kit/facebook.png",
+          "sha256": "f1bebd8c1ae162a8fc5ad84a9294b88560e70401be739187c3bce6b82f40978d"
+        },
+        {
+          "path": "assets/social-banner-kit/facebook.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f1bebd8c1ae162a8fc5a/assets/social-banner-kit/facebook.png",
+          "sha256": "f1bebd8c1ae162a8fc5ad84a9294b88560e70401be739187c3bce6b82f40978d"
+        },
+        {
+          "path": "assets/social-banner-kit/facebook.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/4ef7b52a696b237c588b/assets/social-banner-kit/facebook.svg",
+          "sha256": "4ef7b52a696b237c588b437a14716061dd636345561a58351c5f652e777d70b1"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-twitch",
+      "title": "Twitch \u00b7 profile banner",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/twitch.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/b89d4a237d013cd75048/assets/social-banner-kit/twitch.png",
+          "sha256": "b89d4a237d013cd75048c98b17544e08c3825e20108939899f778ad5fb6093e7"
+        },
+        {
+          "path": "assets/social-banner-kit/twitch.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/b89d4a237d013cd75048/assets/social-banner-kit/twitch.png",
+          "sha256": "b89d4a237d013cd75048c98b17544e08c3825e20108939899f778ad5fb6093e7"
+        },
+        {
+          "path": "assets/social-banner-kit/twitch.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/bc15002b4e5f9f3617e4/assets/social-banner-kit/twitch.svg",
+          "sha256": "bc15002b4e5f9f3617e446e9b24df468da99222b3efa17447c269aaf11df02d7"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-pinterest",
+      "title": "Pinterest \u00b7 business cover",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/pinterest.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7346c1ffadfbdffcb0b2/assets/social-banner-kit/pinterest.png",
+          "sha256": "7346c1ffadfbdffcb0b26d09ede777819e4cf54c1ecfcb0ef6952484f079a332"
+        },
+        {
+          "path": "assets/social-banner-kit/pinterest.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7346c1ffadfbdffcb0b2/assets/social-banner-kit/pinterest.png",
+          "sha256": "7346c1ffadfbdffcb0b26d09ede777819e4cf54c1ecfcb0ef6952484f079a332"
+        },
+        {
+          "path": "assets/social-banner-kit/pinterest.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/3804b2542aeeee6700a3/assets/social-banner-kit/pinterest.svg",
+          "sha256": "3804b2542aeeee6700a3dc1c8aa61c6078cb39faee848ed74b497d0d7e248378"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-tumblr",
+      "title": "Tumblr \u00b7 header",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/tumblr.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/d4f5dfd80e6d1ba6215e/assets/social-banner-kit/tumblr.png",
+          "sha256": "d4f5dfd80e6d1ba6215ebe5c13c194beed6879aee0fcaa81cf86674d979f6a8e"
+        },
+        {
+          "path": "assets/social-banner-kit/tumblr.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/d4f5dfd80e6d1ba6215e/assets/social-banner-kit/tumblr.png",
+          "sha256": "d4f5dfd80e6d1ba6215ebe5c13c194beed6879aee0fcaa81cf86674d979f6a8e"
+        },
+        {
+          "path": "assets/social-banner-kit/tumblr.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/47183e1bc72d3b8ee9d1/assets/social-banner-kit/tumblr.svg",
+          "sha256": "47183e1bc72d3b8ee9d166d8345a5995bcdf23c227146e5ac50449a43b04e2a6"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-reddit-desktop",
+      "title": "Reddit \u00b7 community desktop",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/reddit-desktop.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/ef5a9993a2899f7961b1/assets/social-banner-kit/reddit-desktop.png",
+          "sha256": "ef5a9993a2899f7961b107568a8b41065296ce25be77b14ffc4f8649b77fafc7"
+        },
+        {
+          "path": "assets/social-banner-kit/reddit-desktop.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/ef5a9993a2899f7961b1/assets/social-banner-kit/reddit-desktop.png",
+          "sha256": "ef5a9993a2899f7961b107568a8b41065296ce25be77b14ffc4f8649b77fafc7"
+        },
+        {
+          "path": "assets/social-banner-kit/reddit-desktop.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f53fa055cbe556ac3589/assets/social-banner-kit/reddit-desktop.svg",
+          "sha256": "f53fa055cbe556ac3589264198d841d10fec756c68cdc967cdcc816c7c1b98e4"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-reddit-mobile",
+      "title": "Reddit \u00b7 community mobile",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/reddit-mobile.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/59ed5d2f9bd377057ec4/assets/social-banner-kit/reddit-mobile.png",
+          "sha256": "59ed5d2f9bd377057ec4a2f6dc43a3d86473370761de23f09e2819d62f407bce"
+        },
+        {
+          "path": "assets/social-banner-kit/reddit-mobile.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/59ed5d2f9bd377057ec4/assets/social-banner-kit/reddit-mobile.png",
+          "sha256": "59ed5d2f9bd377057ec4a2f6dc43a3d86473370761de23f09e2819d62f407bce"
+        },
+        {
+          "path": "assets/social-banner-kit/reddit-mobile.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7cd0b21b9bc909c2413c/assets/social-banner-kit/reddit-mobile.svg",
+          "sha256": "7cd0b21b9bc909c2413c107fcda4db87c7c8787b49415800fa637cd8b314da58"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-discord-profile",
+      "title": "Discord \u00b7 profile banner",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/discord-profile.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/9cb70f57bdd799d334d2/assets/social-banner-kit/discord-profile.png",
+          "sha256": "9cb70f57bdd799d334d2bc62388ef0bb9e64e84186470835f879b3b2aeb97280"
+        },
+        {
+          "path": "assets/social-banner-kit/discord-profile.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/9cb70f57bdd799d334d2/assets/social-banner-kit/discord-profile.png",
+          "sha256": "9cb70f57bdd799d334d2bc62388ef0bb9e64e84186470835f879b3b2aeb97280"
+        },
+        {
+          "path": "assets/social-banner-kit/discord-profile.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/02e07f9937df670d02f0/assets/social-banner-kit/discord-profile.svg",
+          "sha256": "02e07f9937df670d02f053b5485f4c8c4529ec681a48a4eff868f821a90c10a5"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-discord-server",
+      "title": "Discord \u00b7 server banner",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/discord-server.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/5df319edae65bf263cdf/assets/social-banner-kit/discord-server.png",
+          "sha256": "5df319edae65bf263cdfc4f766ec3517bb2bca449223850a61e111cd18b46862"
+        },
+        {
+          "path": "assets/social-banner-kit/discord-server.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/5df319edae65bf263cdf/assets/social-banner-kit/discord-server.png",
+          "sha256": "5df319edae65bf263cdfc4f766ec3517bb2bca449223850a61e111cd18b46862"
+        },
+        {
+          "path": "assets/social-banner-kit/discord-server.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/dbcde7b681cdb2e5425d/assets/social-banner-kit/discord-server.svg",
+          "sha256": "dbcde7b681cdb2e5425d17a5f54c2ac89102c489ed107f681943ba6595d5329a"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-soundcloud",
+      "title": "SoundCloud \u00b7 header",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/soundcloud.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/91c384a9d6f8c685204e/assets/social-banner-kit/soundcloud.png",
+          "sha256": "91c384a9d6f8c685204e2f211d4e969fcb9f9811a0d34512fd15f565b71a8a5c"
+        },
+        {
+          "path": "assets/social-banner-kit/soundcloud.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/91c384a9d6f8c685204e/assets/social-banner-kit/soundcloud.png",
+          "sha256": "91c384a9d6f8c685204e2f211d4e969fcb9f9811a0d34512fd15f565b71a8a5c"
+        },
+        {
+          "path": "assets/social-banner-kit/soundcloud.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/d796ed2645329fc81e19/assets/social-banner-kit/soundcloud.svg",
+          "sha256": "d796ed2645329fc81e196829bb43b5093fc96402a7d9764150a47709927940b2"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-instagram-threads",
+      "title": "Instagram / Threads \u00b7 portrait post",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/instagram-threads.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/0f7cd36330ed7e8a6bb4/assets/social-banner-kit/instagram-threads.png",
+          "sha256": "0f7cd36330ed7e8a6bb43515b164487689c78533068bf480d340cb1707af4886"
+        },
+        {
+          "path": "assets/social-banner-kit/instagram-threads.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/0f7cd36330ed7e8a6bb4/assets/social-banner-kit/instagram-threads.png",
+          "sha256": "0f7cd36330ed7e8a6bb43515b164487689c78533068bf480d340cb1707af4886"
+        },
+        {
+          "path": "assets/social-banner-kit/instagram-threads.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/cc0daf8dd2d28ae98394/assets/social-banner-kit/instagram-threads.svg",
+          "sha256": "cc0daf8dd2d28ae98394b2fe438d00c85d24d91eb84a4a5a755e906b78d19bb2"
+        }
+      ]
+    },
+    {
+      "id": "social-kit-tiktok-reels",
+      "title": "TikTok / Reels \u00b7 vertical cover",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/social-banner-kit/tiktok-reels.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/389b9654db0d236093f6/assets/social-banner-kit/tiktok-reels.png",
+          "sha256": "389b9654db0d236093f676d4de5d449668a702393ae2220fb1f68556fd6cfb71"
+        },
+        {
+          "path": "assets/social-banner-kit/tiktok-reels.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/389b9654db0d236093f6/assets/social-banner-kit/tiktok-reels.png",
+          "sha256": "389b9654db0d236093f676d4de5d449668a702393ae2220fb1f68556fd6cfb71"
+        },
+        {
+          "path": "assets/social-banner-kit/tiktok-reels.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/66981a8eaa2be0b853e1/assets/social-banner-kit/tiktok-reels.svg",
+          "sha256": "66981a8eaa2be0b853e115d90fc80f0b36cae47f48bd7d6e3b2dc89dd54fa078"
+        }
+      ]
+    },
+    {
+      "id": "linkedin-art-blue-sweep",
+      "title": "04 \u00b7 Blue sweep",
+      "group": "social",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/linkedin-art/blue-sweep.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/27cf016f8f889604799a/assets/linkedin-art/blue-sweep.png",
+          "sha256": "27cf016f8f889604799a0386f962006b845781cdbd75156f2b05f932cbee1806"
+        },
+        {
+          "path": "assets/linkedin-art/blue-sweep.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/27cf016f8f889604799a/assets/linkedin-art/blue-sweep.png",
+          "sha256": "27cf016f8f889604799a0386f962006b845781cdbd75156f2b05f932cbee1806"
+        },
+        {
+          "path": "assets/linkedin-art/blue-sweep.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/393285531cf473e72f1e/assets/linkedin-art/blue-sweep.svg",
+          "sha256": "393285531cf473e72f1ed7dc07cf77e571edfbd2ebcc9dee381110225e7a0904"
+        }
+      ]
+    },
+    {
+      "id": "symbol-ink",
+      "title": "Recoup symbol / ink",
+      "group": "logos",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/logos/symbol-ink.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/5678fe5f1d96a453bc4a/assets/logos/symbol-ink.png",
+          "sha256": "5678fe5f1d96a453bc4a294aac9a762c01f85b00cf50c9a0fe9781b0f9c1fff4"
+        },
+        {
+          "path": "assets/logos/symbol-ink.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/df54603098144282663a/assets/logos/symbol-ink.svg",
+          "sha256": "df54603098144282663a276afc86e3e40155d07e3fb57b831bbc6803bc58e9ba"
+        },
+        {
+          "path": "assets/logos/symbol-ink.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/5678fe5f1d96a453bc4a/assets/logos/symbol-ink.png",
+          "sha256": "5678fe5f1d96a453bc4a294aac9a762c01f85b00cf50c9a0fe9781b0f9c1fff4"
+        }
+      ]
+    },
+    {
+      "id": "lockup-ink",
+      "title": "Recoup lockup / ink",
+      "group": "logos",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/logos/lockup-ink.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/72002ae87adbd57b50ef/assets/logos/lockup-ink.png",
+          "sha256": "72002ae87adbd57b50efa188315556a9e3d9cb9f28f89ed668670c25397d54ac"
+        },
+        {
+          "path": "assets/logos/lockup-ink.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/ff9ae0127fb2d164d398/assets/logos/lockup-ink.svg",
+          "sha256": "ff9ae0127fb2d164d398eb6149636029b59694869a1ff06cf43186e1b04ed228"
+        },
+        {
+          "path": "assets/logos/lockup-ink.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/72002ae87adbd57b50ef/assets/logos/lockup-ink.png",
+          "sha256": "72002ae87adbd57b50efa188315556a9e3d9cb9f28f89ed668670c25397d54ac"
+        }
+      ]
+    },
+    {
+      "id": "symbol-white",
+      "title": "Recoup symbol / white",
+      "group": "logos",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/logos/symbol-white.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/503ed4e9b410d1749ccb/assets/logos/symbol-white.png",
+          "sha256": "503ed4e9b410d1749ccb7671297cff8dc988c461c13be596df3c6a5530f942a8"
+        },
+        {
+          "path": "assets/logos/symbol-white.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/a3ee305e91ef392ff5fa/assets/logos/symbol-white.svg",
+          "sha256": "a3ee305e91ef392ff5fab9b9e49121607e35ef38d26409d098aaf2312072a7df"
+        },
+        {
+          "path": "assets/logos/symbol-white.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/503ed4e9b410d1749ccb/assets/logos/symbol-white.png",
+          "sha256": "503ed4e9b410d1749ccb7671297cff8dc988c461c13be596df3c6a5530f942a8"
+        }
+      ]
+    },
+    {
+      "id": "lockup-white",
+      "title": "Recoup lockup / white",
+      "group": "logos",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/logos/lockup-white.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/cdeae3a1c4fbeeef1c1c/assets/logos/lockup-white.png",
+          "sha256": "cdeae3a1c4fbeeef1c1ccb4d7e7d731b8b23aa20b683eae9416ca193e9080951"
+        },
+        {
+          "path": "assets/logos/lockup-white.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/e98ffd97619b53d6c4d1/assets/logos/lockup-white.svg",
+          "sha256": "e98ffd97619b53d6c4d10aab832c9234f026b4285f6334b0b667e0c625a23240"
+        },
+        {
+          "path": "assets/logos/lockup-white.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/cdeae3a1c4fbeeef1c1c/assets/logos/lockup-white.png",
+          "sha256": "cdeae3a1c4fbeeef1c1ccb4d7e7d731b8b23aa20b683eae9416ca193e9080951"
+        }
+      ]
+    },
+    {
+      "id": "symbol-blue",
+      "title": "Recoup symbol / blue",
+      "group": "logos",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/logos/symbol-blue.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/0a646034820b6c7c033e/assets/logos/symbol-blue.png",
+          "sha256": "0a646034820b6c7c033e573d717e2f175d649268715f27b90e4b6349c57f503f"
+        },
+        {
+          "path": "assets/logos/symbol-blue.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7f08674ec334b2b8dbb3/assets/logos/symbol-blue.svg",
+          "sha256": "7f08674ec334b2b8dbb38c410829658bde06f08f7372aa4b06262063d5050794"
+        },
+        {
+          "path": "assets/logos/symbol-blue.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/0a646034820b6c7c033e/assets/logos/symbol-blue.png",
+          "sha256": "0a646034820b6c7c033e573d717e2f175d649268715f27b90e4b6349c57f503f"
+        }
+      ]
+    },
+    {
+      "id": "lockup-blue",
+      "title": "Recoup lockup / blue",
+      "group": "logos",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/logos/lockup-blue.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/cfaf1e81353ffbe14b08/assets/logos/lockup-blue.png",
+          "sha256": "cfaf1e81353ffbe14b083175f7a3ecafa0291abb8d5a1b233fe9354a0b44e3cb"
+        },
+        {
+          "path": "assets/logos/lockup-blue.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/8eb6a0703dbad3f07564/assets/logos/lockup-blue.svg",
+          "sha256": "8eb6a0703dbad3f0756409d12d580cd52b23db6a78f385e2a29262ddfb4b9d9b"
+        },
+        {
+          "path": "assets/logos/lockup-blue.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/cfaf1e81353ffbe14b08/assets/logos/lockup-blue.png",
+          "sha256": "cfaf1e81353ffbe14b083175f7a3ecafa0291abb8d5a1b233fe9354a0b44e3cb"
+        }
+      ]
+    },
+    {
+      "id": "symbol-lime",
+      "title": "Recoup symbol / lime",
+      "group": "logos",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/logos/symbol-lime.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/47580be4e4ddfdd6eef4/assets/logos/symbol-lime.png",
+          "sha256": "47580be4e4ddfdd6eef45e82b1b754c9d728a1a18a55aad41a3258b8d818753f"
+        },
+        {
+          "path": "assets/logos/symbol-lime.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/9246ef7f2e2774f75f37/assets/logos/symbol-lime.svg",
+          "sha256": "9246ef7f2e2774f75f37b06dba23529cb5c8c2ae016de30266de5e088fa16126"
+        },
+        {
+          "path": "assets/logos/symbol-lime.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/47580be4e4ddfdd6eef4/assets/logos/symbol-lime.png",
+          "sha256": "47580be4e4ddfdd6eef45e82b1b754c9d728a1a18a55aad41a3258b8d818753f"
+        }
+      ]
+    },
+    {
+      "id": "lockup-lime",
+      "title": "Recoup lockup / lime",
+      "group": "logos",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/logos/lockup-lime.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/e6056146151cf34aa76f/assets/logos/lockup-lime.png",
+          "sha256": "e6056146151cf34aa76fb5ea7b754313b8ff7e03191806ed33b7c8ea65e52c03"
+        },
+        {
+          "path": "assets/logos/lockup-lime.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/7cdc83edff9759d2a972/assets/logos/lockup-lime.svg",
+          "sha256": "7cdc83edff9759d2a972217cfd99af183ac6674988bf2b59147cb258147c1bd4"
+        },
+        {
+          "path": "assets/logos/lockup-lime.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/e6056146151cf34aa76f/assets/logos/lockup-lime.png",
+          "sha256": "e6056146151cf34aa76fb5ea7b754313b8ff7e03191806ed33b7c8ea65e52c03"
+        }
+      ]
+    },
+    {
+      "id": "blue-sweep-podcast-white-logo",
+      "title": "White podcast logo \u00b7 padded",
+      "group": "logos",
+      "stage": "final",
+      "assets": [
+        {
+          "path": "assets/podcast-kit-blue-sweep/recoup-podcast-white-transparent.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/807f8afd94ea787e8d91/assets/podcast-kit-blue-sweep/recoup-podcast-white-transparent.png",
+          "sha256": "807f8afd94ea787e8d91947c3965e6802f5a377fafbf25a92a5fd52e14f06b89"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/recoup-podcast-white-transparent.png",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/807f8afd94ea787e8d91/assets/podcast-kit-blue-sweep/recoup-podcast-white-transparent.png",
+          "sha256": "807f8afd94ea787e8d91947c3965e6802f5a377fafbf25a92a5fd52e14f06b89"
+        },
+        {
+          "path": "assets/podcast-kit-blue-sweep/recoup-podcast-white-transparent.svg",
+          "url": "https://5zybebgzc9yyhaph.public.blob.vercel-storage.com/brand/f391bda7ef899914ae59/assets/podcast-kit-blue-sweep/recoup-podcast-white-transparent.svg",
+          "sha256": "f391bda7ef899914ae599bf8f6abee2bea54b3ef15f646a4be18faf1282479af"
+        }
+      ]
+    }
+  ],
+  "motionApproval": "No existing intro/outro/background-loop video is approved in this snapshot."
+}
