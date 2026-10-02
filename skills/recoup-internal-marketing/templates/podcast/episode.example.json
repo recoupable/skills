@@ -1,0 +1,10 @@
+{
+  "slug": "jane-doe",
+  "title": "Royalty statements will reconcile themselves within a year",
+  "date": "2026-10-09",
+  "guest": { "name": "Jane Doe", "role": "Founder & CEO, Example Rights Co" },
+  "host": { "name": "Patrick Sweetman", "role": "Cofounder, Recoup" },
+  "ghost": "RIGHTS × AI",
+  "topics": ["Statement formats", "Matching ISRCs", "Unclaimed royalties", "Audits", "AI agents in back office", "Quickfire"],
+  "release": { "when": "Sun 2026-10-11 17:55 local", "spotify_show_id": "2qOKySbQkldohO7vbSGIYz", "youtube_playlist": "PLGjXo1TfTj0w" }
+}

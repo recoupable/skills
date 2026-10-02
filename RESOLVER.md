@@ -92,6 +92,7 @@
 | "recoup-internal" + fleet-wide weekly usage review / week in review / business pulse (logins, Stripe, credits, gateway reconciliation, catalogs) | `recoup-internal-weekly-usage-review` |
 | "recoup-internal" + audit scheduled-task email health (what tasks emailed, how many empties the guard blocked) over a window | `recoup-internal-task-email-audit` |
 | "recoup-internal" + run the day's marketing on one of our own accounts / what should we post today / make today's video (workspace canon + socials scrape + topic pick + build) | `recoup-internal-marketing` |
+| "recoup-internal" + post-produce a recorded podcast episode from the raw files (edit, chapter graphics, intro, covers) and schedule it on Spotify/YouTube, or cut its shorts | `recoup-internal-marketing` |
 | "recoup-internal" + draft/ship/measure LinkedIn or X posts | `recoup-internal-social-ship-posts` |
 | "recoup-internal" + FaceTime-call style AI video ad (Grok Imagine 1.5 native-speech clips) | `recoup-internal-video-grok-1.5-imagine-facetime` |
 | "recoup-internal" + find, win or close Upwork contract work: run the daily pipeline, triage the client, verify claims against repos, draft the proposal + screening answers, pick the sample pack, set the rate, follow up, handle a reply, prep the client call, log the outcome | `recoup-internal-upwork` |

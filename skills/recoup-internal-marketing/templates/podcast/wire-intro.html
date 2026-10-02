@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<title>Recoup Podcast intro: {{GUEST_NAME}}</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: 'DM Sans'; src: url('assets/fonts/dm-sans.woff2') format('woff2'); font-weight: 100 1000; font-display: block; }
+  @font-face { font-family: 'IBM Plex Mono'; src: url('assets/fonts/ibm-plex-mono.woff2') format('woff2'); font-weight: 400; font-display: block; }
+  :root { --sky:#007EBD; --lime:#D6FF62; --forest:#132B26; --ink:#152E37; --muted:#586F78; --pale:#F0F7FA; }
+  body { margin: 0; background: var(--pale); }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: 'DM Sans', sans-serif; color: var(--ink); }
+  .mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
+
+  #bg { position: absolute; inset: 0; background: var(--pale); }
+  .gl { position: absolute; background: rgba(0,126,189,.16); }
+  .gh { left: 0; width: 1920px; height: 2px; transform-origin: left center; }
+  .gv { top: 0; width: 2px; height: 1080px; transform-origin: center top; }
+  #glow { position: absolute; width: 1400px; height: 1400px; left: -400px; top: -600px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(0,126,189,.28) 0%, rgba(0,126,189,0) 65%); }
+  #glow2 { position: absolute; width: 1200px; height: 1200px; right: -380px; bottom: -600px; border-radius: 50%;
+           background: radial-gradient(circle, rgba(214,255,98,.55) 0%, rgba(214,255,98,0) 62%); }
+
+  #lab1 { position: absolute; left: 120px; top: 110px; font-size: 30px; color: var(--ink); display: flex; align-items: center; gap: 18px; }
+  #lab1 i { display: block; width: 18px; height: 18px; border-radius: 50%; background: #D33A2C; }
+  #lab2 { position: absolute; right: 120px; top: 110px; font-size: 30px; color: var(--sky); }
+  .reg { position: absolute; width: 48px; height: 48px; border-color: var(--sky); border-style: solid; border-width: 0; }
+  #r1 { left: 70px; top: 70px; border-left-width: 5px; border-top-width: 5px; }
+  #r2 { right: 70px; top: 70px; border-right-width: 5px; border-top-width: 5px; }
+  #r3 { left: 70px; bottom: 70px; border-left-width: 5px; border-bottom-width: 5px; }
+  #r4 { right: 70px; bottom: 70px; border-right-width: 5px; border-bottom-width: 5px; }
+
+  #big { position: absolute; left: 110px; top: 300px; display: flex; align-items: baseline; gap: 40px; white-space: nowrap; }
+  #w-rights { font-size: 360px; font-weight: 800; letter-spacing: -.05em; line-height: .9; color: var(--ink); }
+  #w-ai { font-size: 360px; font-weight: 800; letter-spacing: -.05em; line-height: .9; color: var(--forest); background: var(--lime); padding: 0 34px 20px; border-radius: 28px; }
+  #sub { position: absolute; left: 120px; top: 720px; font-size: 34px; color: #3F5962; }
+
+  /* dark phase */
+  #dark { position: absolute; inset: 0; background: var(--forest); opacity: 0; }
+  #darkgrid { position: absolute; inset: 0; opacity: 0;
+    background-image: linear-gradient(rgba(214,255,98,.10) 2px, transparent 2px), linear-gradient(90deg, rgba(214,255,98,.10) 2px, transparent 2px);
+    background-size: 120px 120px; }
+  #ticker { position: absolute; left: 0; top: 860px; width: 1920px; height: 84px; background: var(--lime); overflow: hidden; opacity: 0; }
+  #tickrun { position: absolute; left: 0; top: 0; height: 84px; display: flex; align-items: center; gap: 60px; white-space: nowrap; font-size: 28px; color: var(--forest); }
+  #tickrun span::before { content: ''; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--forest); margin-right: 20px; vertical-align: middle; }
+  #lockup { position: absolute; left: 120px; top: 150px; width: 760px; height: auto; opacity: 0; }
+  #skybar { position: absolute; left: 120px; top: 330px; width: 1680px; height: 8px; background: var(--sky); transform-origin: left center; }
+  #eplab { position: absolute; left: 120px; top: 380px; font-size: 28px; color: var(--lime); opacity: 0; }
+  #title { position: absolute; left: 120px; top: 440px; width: 1640px; font-size: 104px; font-weight: 700; line-height: 1.04; letter-spacing: -.025em; color: #fff; }
+  #title .w { display: inline-block; opacity: 0; margin-right: .22em; }
+  #guest { position: absolute; left: 120px; top: 700px; display: flex; align-items: center; gap: 22px; opacity: 0; }
+  #guest .chip { background: var(--lime); color: var(--forest); font-size: 30px; padding: 12px 22px; border-radius: 12px; }
+  #guest .nm { font-size: 58px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
+  #guest .co { font-size: 30px; color: #C9D6D2; }
+  #flash { position: absolute; inset: 0; background: var(--sky); opacity: 0; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-width="1920" data-height="1080" data-duration="7">
+  <div id="bg"></div>
+  <div id="glow"></div>
+  <div id="glow2"></div>
+  <div class="gl gh" id="h1" style="top:240px"></div>
+  <div class="gl gh" id="h2" style="top:480px"></div>
+  <div class="gl gh" id="h3" style="top:720px"></div>
+  <div class="gl gh" id="h4" style="top:960px"></div>
+  <div class="gl gv" id="v1" style="left:360px"></div>
+  <div class="gl gv" id="v2" style="left:960px"></div>
+  <div class="gl gv" id="v3" style="left:1560px"></div>
+  <div id="r1" class="reg"></div><div id="r2" class="reg"></div><div id="r3" class="reg"></div><div id="r4" class="reg"></div>
+
+  <div id="lab1" class="mono"><i></i>Recoup Podcast · Live from the rights desk</div>
+  <div id="lab2" class="mono">Wire · {{DATE}}</div>
+  <div id="big"><div id="w-rights">Rights</div><div id="w-ai">× AI</div></div>
+  <div id="sub" class="mono">Catalog · licensing · AI · for music rights holders</div>
+
+  <div id="dark"></div>
+  <div id="darkgrid"></div>
+  <img id="lockup" src="assets/logos/recoup-podcast-white-transparent.png" alt="Recoup Podcast" />
+  <div id="skybar"></div>
+  <div id="eplab" class="mono">This episode</div>
+  <div id="title">{{TITLE_WORDS}}</div>
+  <div id="guest"><div class="chip mono">w/</div><div class="nm">{{GUEST_NAME}}</div><div class="co">{{GUEST_ROLE}}</div></div>
+  <div id="ticker"><div id="tickrun" class="mono">
+    {{TOPICS}}
+  </div></div>
+  <div id="flash"></div>
+
+  <audio id="sting" src="assets/sting.wav" data-start="0" data-duration="5.5" data-track-index="10" data-volume="1"></audio>
+</div>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+
+  // ambient
+  tl.fromTo("#glow", { x: 0, y: 0, scale: 1 }, { x: 180, y: 80, scale: 1.15, duration: 7, ease: "sine.inOut" }, 0);
+  tl.fromTo("#glow2", { x: 0, scale: 1 }, { x: -160, scale: .92, duration: 7, ease: "sine.inOut" }, 0);
+
+  // 0.0-0.8 grid draws in
+  tl.from(["#h1","#h2","#h3","#h4"], { scaleX: 0, duration: .7, ease: "power3.inOut", stagger: .07 }, 0.05);
+  tl.from(["#v1","#v2","#v3"], { scaleY: 0, duration: .7, ease: "power3.inOut", stagger: .08 }, 0.2);
+  tl.from(["#r1","#r2","#r3","#r4"], { scale: 0, opacity: 0, duration: .4, ease: "back.out(2)", stagger: .05 }, 0.5);
+
+  // 0.8 hit: label slams
+  tl.from("#lab1", { x: -120, opacity: 0, duration: .32, ease: "expo.out" }, 0.8);
+  tl.from("#lab1 i", { scale: 3, duration: .3, ease: "power2.out" }, 0.8);
+  tl.to("#lab1 i", { opacity: .25, duration: .2, yoyo: true, repeat: 5, ease: "none" }, 1.2);
+  // 1.15 hit
+  tl.from("#lab2", { x: 120, opacity: 0, duration: .3, ease: "expo.out" }, 1.15);
+  // 1.5 big hit: RIGHTS slams
+  tl.from("#w-rights", { y: 220, scaleY: 1.6, opacity: 0, transformOrigin: "left bottom", duration: .38, ease: "expo.out" }, 1.48);
+  tl.fromTo("#big", { x: 0 }, { x: -10, duration: .05, yoyo: true, repeat: 3, ease: "none" }, 1.5);
+  // 2.15 big hit: x AI
+  tl.from("#w-ai", { scale: 2.4, rotation: -8, opacity: 0, transformOrigin: "center center", duration: .34, ease: "back.out(1.6)" }, 2.13);
+  tl.from("#sub", { y: 30, opacity: 0, duration: .35, ease: "power2.out" }, 2.35);
+  tl.fromTo("#big", { x: 0 }, { x: 12, duration: .05, yoyo: true, repeat: 3, ease: "none" }, 2.15);
+
+  // 2.8 hard light -> dark
+  tl.to("#dark", { opacity: 1, duration: .06, ease: "none" }, 2.8);
+  tl.to("#darkgrid", { opacity: 1, duration: .3, ease: "none" }, 2.82);
+  tl.fromTo("#ticker", { opacity: 0, x: 1920 }, { opacity: 1, x: 0, duration: .45, ease: "expo.out" }, 2.85);
+  tl.fromTo("#tickrun", { x: 0 }, { x: -1400, duration: 4.1, ease: "none" }, 2.85);
+
+  // 3.3 lockup
+  tl.fromTo("#lockup", { opacity: 0, x: -60, scale: .92 }, { opacity: 1, x: 0, scale: 1, transformOrigin: "left center", duration: .45, ease: "expo.out" }, 3.28);
+  // 3.65 sky bar wipes
+  tl.fromTo("#skybar", { scaleX: 0 }, { scaleX: 1, duration: .55, ease: "power3.inOut" }, 3.62);
+  // 4.1 episode label
+  tl.fromTo("#eplab", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .3, ease: "power2.out" }, 4.08);
+  // 4.45 / 4.8 title words
+  tl.fromTo("#title .w", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: .32, ease: "power3.out", stagger: .07 }, 4.42);
+  // 5.6 guest
+  tl.fromTo("#guest", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4, ease: "expo.out" }, 5.55);
+  tl.from("#guest .chip", { scale: 0, duration: .35, ease: "back.out(2)" }, 5.6);
+  // 6.75 sky flash to hand off
+  tl.to("#flash", { opacity: 1, duration: .2, ease: "power2.in" }, 6.78);
+
+  window.__timelines["main"] = tl;
+</script>
+</body>
+</html>

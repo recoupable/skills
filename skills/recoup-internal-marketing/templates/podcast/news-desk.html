@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<title>{{TITLE}}</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: 'DM Sans'; src: url('assets/fonts/dm-sans.woff2') format('woff2'); font-weight: 100 1000; font-display: block; }
+  @font-face { font-family: 'IBM Plex Mono'; src: url('assets/fonts/ibm-plex-mono.woff2') format('woff2'); font-weight: 400; font-display: block; }
+  :root { --sky: #007EBD; --sky-text: #066A98; --lime: #D6FF62; --forest: #132B26; --ink: #152E37; --muted: #586F78; --pale: #F0F7FA; --border: #E2E9EB; --paper: #FCFEFE; }
+  body { margin: 0; background: var(--pale); }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: 'DM Sans', sans-serif; color: var(--ink); }
+  .mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+
+  #bg { position: absolute; inset: 0; background: var(--pale); z-index: 0; }
+  #grid { position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(rgba(0,126,189,.10) 2px, transparent 2px), linear-gradient(90deg, rgba(0,126,189,.10) 2px, transparent 2px); background-size: 120px 120px; }
+  .glow { position: absolute; border-radius: 50%; z-index: 0; }
+  #glow-sky { width: 1300px; height: 1300px; left: -380px; top: -520px; background: radial-gradient(circle, rgba(0,126,189,.26) 0%, rgba(0,126,189,0) 65%); }
+  #glow-lime { width: 1200px; height: 1200px; right: -360px; bottom: -560px; background: radial-gradient(circle, rgba(214,255,98,.55) 0%, rgba(214,255,98,0) 62%); }
+  #ghost { position: absolute; right: -40px; top: 690px; z-index: 0; font-weight: 800; font-size: 300px; letter-spacing: -.04em; color: rgba(0,126,189,.10); white-space: nowrap; }
+
+  #topbar { position: absolute; left: 60px; right: 60px; top: 44px; height: 64px; display: flex; align-items: center; gap: 28px; z-index: 30; }
+  #topbar img { height: 44px; width: auto; display: block; }
+  #topbar .sep { width: 2px; height: 36px; background: var(--ink); opacity: .25; }
+  #topbar .show { font-size: 22px; color: var(--ink); }
+  #topbar .chapter { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 22px; color: var(--ink); background: #fff; padding: 12px 20px; border-radius: 999px; box-shadow: 0 0 0 2px var(--border); white-space: nowrap; }
+  #topbar .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--sky); }
+
+  .tile { position: absolute; overflow: hidden; border-radius: 26px; background: var(--ink); z-index: 10; box-shadow: 0 0 0 4px #fff, 0 28px 70px rgba(21,46,55,.22); }
+  .tile video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ring { position: absolute; inset: 0; border-radius: 26px; box-shadow: inset 0 0 0 6px var(--sky); opacity: 0; z-index: 3; }
+  .tag { position: absolute; left: 20px; bottom: 20px; z-index: 4; display: flex; align-items: center; gap: 10px; background: rgba(19,43,38,.82); color: #fff; padding: 10px 16px; border-radius: 10px; font-size: 20px; }
+  .tag i { width: 10px; height: 10px; border-radius: 50%; background: var(--lime); display: block; }
+  #tile-g { left: 60px; top: 190px; width: 880px; height: 495px; }
+  #tile-h { left: 980px; top: 190px; width: 880px; height: 495px; }
+  .reg { position: absolute; width: 34px; height: 34px; z-index: 9; border-color: var(--sky); border-style: solid; border-width: 0; }
+  #reg-tl { left: 34px; top: 164px; border-left-width: 4px; border-top-width: 4px; }
+  #reg-tr { right: 34px; top: 164px; border-right-width: 4px; border-top-width: 4px; }
+  #reg-bl { left: 34px; top: 693px; border-left-width: 4px; border-bottom-width: 4px; }
+  #reg-br { right: 34px; top: 693px; border-right-width: 4px; border-bottom-width: 4px; }
+
+  .lt { position: absolute; top: 726px; z-index: 20; display: flex; align-items: stretch; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 60px rgba(21,46,55,.25); opacity: 0; }
+  .lt .bar { width: 22px; background: var(--lime); }
+  .lt .body { background: var(--forest); color: #fff; padding: 22px 34px 24px 28px; display: flex; flex-direction: column; gap: 6px; }
+  .lt .k { font-size: 20px; color: var(--lime); }
+  .lt .n { font-size: 54px; font-weight: 700; letter-spacing: -.01em; line-height: 1.05; }
+  .lt .t { font-size: 28px; color: #C9D6D2; }
+  .lt-g { left: 60px; } .lt-h { left: 980px; }
+
+  #chapter { position: absolute; left: 0; top: 0; width: 1920px; height: 1008px; z-index: 25; }
+  #chapter .panel { position: absolute; inset: 0; background: var(--forest); }
+  #chapter .inner { position: absolute; left: 140px; right: 140px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+  #chapter .num { font-size: 230px; font-weight: 800; color: var(--lime); line-height: .9; letter-spacing: -.04em; }
+  #chapter .k { font-size: 26px; color: var(--lime); }
+  #chapter h2 { margin: 0; font-size: 112px; font-weight: 700; color: #fff; letter-spacing: -.02em; line-height: 1.02; max-width: 1640px; }
+  #chapter .rule { height: 6px; width: 100%; background: var(--sky); }
+
+  .card { position: absolute; background: var(--paper); border-radius: 30px; z-index: 22; opacity: 0; box-shadow: 0 0 0 3px var(--border), 0 34px 90px rgba(21,46,55,.20); padding: 70px 90px; box-sizing: border-box; display: flex; flex-direction: column; gap: 26px; }
+  .ccard { left: 140px; top: 170px; width: 1640px; height: 790px; }
+  .bcard { left: 60px; top: 150px; width: 1352px; height: 810px; }
+  .card .src { display: flex; align-items: center; gap: 16px; font-size: 22px; color: var(--sky-text); }
+  .card .src b { background: var(--sky-text); color: #fff; padding: 6px 12px; border-radius: 8px; font-weight: 400; }
+  .card .topline { height: 8px; width: 160px; background: var(--sky); border-radius: 4px; }
+  .card .foot { margin-top: auto; font-size: 20px; color: var(--muted); display: flex; justify-content: space-between; gap: 40px; }
+  .card h3 { margin: 0; font-size: 64px; font-weight: 700; letter-spacing: -.02em; line-height: 1.06; }
+
+  .headline h2 { margin: 0; max-width: 1180px; font-size: 84px; line-height: 1.05; letter-spacing: -.02em; font-weight: 700; }
+  .bcard.headline h2 { font-size: 70px; max-width: 1000px; }
+  .headline p { margin: 0; font-size: 36px; line-height: 1.38; color: var(--muted); max-width: 1320px; }
+  .headline .stamp { position: absolute; right: 80px; top: 70px; width: 210px; height: 210px; border-radius: 50%; background: var(--lime); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--forest); transform: rotate(8deg); }
+  .headline .stamp .a { font-size: 20px; } .headline .stamp .b { font-size: 44px; font-weight: 800; letter-spacing: -.02em; }
+
+  .tline .rows { display: flex; flex-direction: column; }
+  .tline .row { display: grid; grid-template-columns: 220px 1fr; gap: 30px; padding: 22px 0; border-top: 3px solid var(--border); align-items: baseline; }
+  .tline .row .d { font-size: 24px; color: var(--sky-text); }
+  .tline .row .e { font-size: 34px; line-height: 1.25; }
+  .tline .row.hl { border-top-color: var(--sky); } .tline .row.hl .e { font-weight: 700; }
+
+  .stat .big { display: flex; align-items: flex-end; gap: 40px; }
+  .stat .num { font-size: 260px; font-weight: 800; letter-spacing: -.05em; line-height: .82; color: var(--sky); white-space: nowrap; }
+  .stat .unit { font-size: 58px; font-weight: 700; padding-bottom: 18px; line-height: 1.05; }
+  .stat .bar { height: 26px; border-radius: 13px; background: var(--border); position: relative; overflow: hidden; }
+  .stat .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: var(--lime); transform-origin: left center; display: block; }
+  .stat .scale { display: flex; justify-content: space-between; font-size: 22px; color: var(--muted); }
+  .stat .q { font-size: 38px; line-height: 1.3; }
+  em { font-style: normal; background: var(--lime); padding: 0 8px; }
+
+  .versus .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; flex: 1; min-height: 0; }
+  .versus .col { border-radius: 24px; padding: 44px 48px; display: flex; flex-direction: column; gap: 16px; }
+  .versus .col.a { background: var(--forest); color: #fff; }
+  .versus .col.b { background: #fff; box-shadow: 0 0 0 3px var(--border); }
+  .versus .col .who { font-size: 22px; } .versus .col.a .who { color: var(--lime); } .versus .col.b .who { color: var(--muted); }
+  .versus .col .v { font-size: 88px; font-weight: 800; letter-spacing: -.04em; line-height: .98; }
+  .versus .col.b .v { color: var(--ink); }
+  .versus .col p { margin: 0; font-size: 30px; line-height: 1.35; } .versus .col.a p { color: #C9D6D2; }
+
+  .quote .qmark { font-size: 220px; line-height: .6; height: 110px; font-weight: 800; color: var(--sky); }
+  .quote blockquote { margin: 0; font-size: 70px; line-height: 1.12; font-weight: 700; letter-spacing: -.02em; }
+  .bcard.quote blockquote { font-size: 58px; }
+
+  .list .chips { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .list .chip { display: flex; align-items: center; gap: 22px; background: #fff; box-shadow: 0 0 0 3px var(--border); border-radius: 18px; padding: 24px 28px; font-size: 34px; font-weight: 600; }
+  .list .chip span { font-size: 22px; color: var(--sky-text); font-weight: 400; }
+
+  #ticker { position: absolute; left: 0; right: 0; bottom: 0; height: 72px; background: var(--forest); z-index: 40; overflow: hidden; }
+  #ticker .lab { position: absolute; left: 0; top: 0; bottom: 0; width: 230px; background: var(--lime); color: var(--forest); display: flex; align-items: center; justify-content: center; font-size: 22px; z-index: 2; }
+  #ticker .run { position: absolute; left: 260px; top: 0; height: 72px; display: flex; align-items: center; gap: 56px; white-space: nowrap; font-size: 22px; color: #E6EEEC; }
+  #ticker .run span::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--sky); margin-right: 18px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-width="1920" data-height="1080" data-duration="{{DUR}}">
+  <div id="bg"></div>
+  <div id="grid"></div>
+  <div id="glow-sky" class="glow"></div>
+  <div id="glow-lime" class="glow"></div>
+  <div id="ghost">{{GHOST}}</div>
+
+  <div id="topbar">
+    <img src="assets/logos/lockup-ink.svg" alt="Recoup" />
+    <div class="sep"></div>
+    <div class="show mono">Recoup Podcast</div>
+    <div class="chapter mono"><div class="dot"></div><span>{{CHAPTER_LABEL}}</span></div>
+  </div>
+
+  <div id="reg-tl" class="reg"></div><div id="reg-tr" class="reg"></div><div id="reg-bl" class="reg"></div><div id="reg-br" class="reg"></div>
+
+  <div id="tile-g" class="tile">
+    <video id="vid-g" src="assets/guest.mp4" data-start="0" data-duration="{{DUR}}" data-track-index="0" muted playsinline></video>
+    <div id="ring-g" class="ring"></div>
+    <div class="tag mono"><i></i>{{GUEST_NAME}}</div>
+  </div>
+  <div id="tile-h" class="tile">
+    <video id="vid-h" src="assets/host.mp4" data-start="0" data-duration="{{DUR}}" data-track-index="1" muted playsinline></video>
+    <div id="ring-h" class="ring"></div>
+    <div class="tag mono"><i></i>{{HOST_NAME}}</div>
+  </div>
+
+  <audio id="mix" src="assets/mix.m4a" data-start="0" data-duration="{{DUR}}" data-track-index="10" data-volume="1"></audio>
+
+  {{LOWER_THIRDS}}
+
+  <!--CHAPTER-->
+  <section id="chapter" class="clip" data-start="0" data-duration="{{CH_END}}" data-track-index="29">
+    <div class="panel"></div>
+    <div class="inner">
+      <div class="k mono">Chapter</div>
+      <div class="num">{{CHAPTER_NUM}}</div>
+      <div id="chap-rule" class="rule"></div>
+      <h2>{{CHAPTER_TITLE}}</h2>
+    </div>
+  </section>
+  <!--/CHAPTER-->
+
+  {{CARDS}}
+
+  <div id="ticker">
+    <div class="lab mono">Sources</div>
+    <div id="run" class="run mono">{{TICKER}}</div>
+  </div>
+</div>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  const D = {{DUR}};
+
+  tl.fromTo("#glow-sky", { x: 0, y: 0, scale: 1 }, { x: 160, y: 90, scale: 1.12, duration: D, ease: "sine.inOut" }, 0);
+  tl.fromTo("#glow-lime", { x: 0, y: 0, scale: 1.05 }, { x: -140, y: -60, scale: .95, duration: D, ease: "sine.inOut" }, 0);
+  tl.fromTo("#ghost", { x: 0 }, { x: -420, duration: D, ease: "none" }, 0);
+  tl.fromTo("#run", { x: 0 }, { x: -Math.min(9000, 42 * D), duration: D, ease: "none" }, 0);
+
+  const LAY = {
+    A: { g: { left: 60, top: 190, width: 880, height: 495, opacity: 1, scale: 1 }, h: { left: 980, top: 190, width: 880, height: 495, opacity: 1, scale: 1 } },
+    B: { g: { left: 1452, top: 170, width: 408, height: 230, opacity: 1, scale: 1 }, h: { left: 1452, top: 430, width: 408, height: 230, opacity: 1, scale: 1 } },
+  };
+  const REG = ["#reg-tl", "#reg-tr", "#reg-bl", "#reg-br"];
+  let last = "C";
+  function shot(kind, t) {
+    const ease = "power3.inOut";
+    if (kind === "C") {
+      tl.to(["#tile-g", "#tile-h"], { opacity: 0, duration: .35, ease: "power2.in" }, t);
+      tl.to(REG, { opacity: 0, duration: .25 }, t);
+    } else {
+      const L = LAY[kind];
+      if (last === "C") {  // re-enter from hidden: place, then fade in
+        tl.set("#tile-g", { ...L.g, opacity: 0 }, t); tl.set("#tile-h", { ...L.h, opacity: 0 }, t);
+        tl.to(["#tile-g", "#tile-h"], { opacity: 1, duration: .45, ease: "power2.out", stagger: .06 }, t);
+      } else {
+        tl.to("#tile-g", { ...L.g, duration: .7, ease }, t);
+        tl.to("#tile-h", { ...L.h, duration: .7, ease }, t + .05);
+      }
+      tl.to(REG, { opacity: kind === "A" ? 1 : 0, duration: .35 }, t + (kind === "A" ? .3 : 0));
+    }
+    last = kind;
+  }
+  tl.set(["#tile-g", "#tile-h"], { opacity: 0 }, 0); tl.set(REG, { opacity: 0 }, 0);
+  {{SHOTS}}
+
+  // chapter card
+  //CHAPTER-JS
+  tl.fromTo("#chapter .panel", { scaleY: 0 }, { scaleY: 1, transformOrigin: "bottom", duration: .45, ease: "expo.out" }, 0);
+  tl.fromTo("#chapter .k", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: .4, ease: "power2.out" }, .2);
+  tl.fromTo("#chapter .num", { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: .55, ease: "back.out(1.6)" }, .22);
+  tl.fromTo("#chap-rule", { scaleX: 0 }, { scaleX: 1, transformOrigin: "left center", duration: .6, ease: "power3.inOut" }, .35);
+  tl.fromTo("#chapter h2", { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: .55, ease: "power3.out" }, .45);
+  //END-CHAPTER-JS
+  tl.from("#topbar", { y: -30, opacity: 0, duration: .6, ease: "power3.out" }, 0);
+
+  // active-speaker rings
+  const speak = {{SPEAK}};
+  for (const [k, spans] of Object.entries(speak)) for (const [a, b] of spans) {
+    tl.to(`#ring-${k}`, { opacity: 1, duration: .25, ease: "power1.out" }, a);
+    tl.to(`#ring-${k}`, { opacity: 0, duration: .35, ease: "power1.in" }, b);
+  }
+
+  function stag(sel, t, step) {
+    const els = document.querySelectorAll(sel + " .st");
+    els.forEach((el, i) => tl.fromTo(el, { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: .45, ease: i % 2 ? "power2.out" : "expo.out" }, t + i * step));
+  }
+  {{JS_CARDS}}
+  {{JS_LTS}}
+
+  window.__timelines["main"] = tl;
+</script>
+</body>
+</html>
