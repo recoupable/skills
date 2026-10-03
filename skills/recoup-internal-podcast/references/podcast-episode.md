@@ -113,7 +113,13 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    test the round trip on the unenhanced pack (`unpack` it, check 0 ms lag at several raw times). After Adobe:
    `enhance_pack.py <project> unpack <track> <enhanced.wav>` -> `raw/<track>-audio-enhanced.wav` (full length,
    silence outside the pieces); verify 0 ms offset again. Re-pack if a later cut change restores audio.
-12. **Assemble**: `python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced.wav] [--guest-audio raw/guest-audio-enhanced.wav]`
+   **Then gate the host track**: `python3 scripts/podcast/gate_host_audio.py <project>`. Adobe invents short,
+   low, voice-like sounds out of the host mic's room noise while the guest talks (second episode: 8 in the
+   edit, the owner heard one as "a very low voice, kinda creepy"). The script lists every span where the
+   enhanced track sounds without a host word, labels it INVENTED (original mic at the noise floor) or a real
+   laugh/"mm" (original louder), and writes `raw/host-audio-enhanced-gated.wav` with the invented ones
+   silenced and speech untouched. Assemble from the gated file, never the raw output.
+12. **Assemble**: `python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced-gated.wav] [--guest-audio raw/guest-audio-enhanced.wav]`
    -> `exports/final/episode.mp4` (one uniform encode, -14 LUFS, decode-checked) + `episode-audio.m4a` +
    `youtube-chapters.txt`.
 13. **Covers** (spec, title and description rules: `references/podcast-packaging.md`): `python3 scripts/podcast/make_cover.py ...` with the guest's PUBLISHED headshot (speaker
@@ -151,3 +157,6 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
 - **Spotify "This video can't be published"**: first suspect a stream-copied join (fixed in assemble.py),
   then the upload path (drag-and-drop by hand).
 - Chapter titles in `youtube-chapters.txt` must start at 0:00 and match the episode description.
+- **Adobe Enhance invents sound in silence** (second episode): its output can hold a ~1 s low "voice" where
+  the host said nothing. Chapter reviews use the raw mic, so nobody hears it until the final file. Always run
+  `gate_host_audio.py` before assembling; listen to its INVENTED spans in the final.
