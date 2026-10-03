@@ -1,0 +1,136 @@
+<!doctype html>
+<!-- Hybrid podcast short (1080x1920). Filled by scripts/podcast/shorts/build_hy.py; beats come from
+     <project>/edit/shorts/<sid>.html (CSS / HTML / JS sections). Do not hand-edit a built index.html. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>{{TITLE}}</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: 'DM Sans'; src: url('assets/fonts/dm-sans.woff2') format('woff2'); font-weight: 100 1000; font-display: block; }
+  @font-face { font-family: 'IBM Plex Mono'; src: url('assets/fonts/ibm-plex-mono.woff2') format('woff2'); font-weight: 400; font-display: block; }
+  :root { --sky: #007EBD; --sky-text: #066A98; --lime: #D6FF62; --forest: #132B26; --ink: #152E37; --muted: #586F78; --pale: #F0F7FA; --border: #E2E9EB; --paper: #FCFEFE; }
+  body { margin: 0; background: var(--pale); }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: 'DM Sans', sans-serif; color: var(--ink); }
+  .mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+  #bg { position: absolute; inset: 0; background: var(--pale); }
+  #grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,126,189,.10) 2px, transparent 2px), linear-gradient(90deg, rgba(0,126,189,.10) 2px, transparent 2px); background-size: 120px 120px; }
+  .glow { position: absolute; border-radius: 50%; }
+  #glow-sky { width: 1100px; height: 1100px; left: -420px; top: -360px; background: radial-gradient(circle, rgba(0,126,189,.26) 0%, rgba(0,126,189,0) 65%); }
+  #glow-lime { width: 1100px; height: 1100px; right: -420px; bottom: -380px; background: radial-gradient(circle, rgba(214,255,98,.55) 0%, rgba(214,255,98,0) 62%); }
+
+  #topbar { position: absolute; left: 40px; right: 40px; top: 110px; height: 56px; display: flex; align-items: center; gap: 22px; z-index: 30; }
+  #topbar img { height: 40px; } #topbar .sep { width: 2px; height: 32px; background: var(--ink); opacity: .25; } #topbar .show { font-size: 22px; }
+  #hook { position: absolute; left: 40px; right: 40px; top: 196px; z-index: 30; display: flex; border-radius: 24px; overflow: hidden; box-shadow: 0 24px 60px rgba(21,46,55,.22); }
+  #hook .bar { width: 18px; background: var(--lime); } #hook .body { background: var(--forest); color: #fff; padding: 30px 36px 34px 30px; flex: 1; }
+  #hook h1 { margin: 0; font-size: {{HOOK_SIZE}}px; line-height: 1.06; letter-spacing: -.02em; font-weight: 800; }
+
+  #stage { position: absolute; left: 40px; top: 440px; width: 1000px; height: 880px; border-radius: 28px; overflow: hidden; background: var(--paper); z-index: 10;
+           box-shadow: 0 0 0 3px var(--border), 0 34px 90px rgba(21,46,55,.20); }
+  #stage::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(0,126,189,.16) 2px, transparent 2px); background-size: 40px 40px; }
+  .scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
+  .scene svg { position: absolute; left: 0; top: 0; width: 1000px; height: 880px; overflow: visible; }
+  .kt { position: absolute; left: 0; right: 0; text-align: center; font-weight: 800; letter-spacing: -.03em; line-height: .95; }
+  .lab { position: absolute; left: 0; right: 0; text-align: center; font-size: 26px; color: var(--sky-text); }
+  .hl { background: var(--lime); padding: 0 .12em; border-radius: 8px; }
+
+  /* low kinetic lines keep clear of the guest circle (bottom-right) */
+  .kt[style*="top:6"], .kt[style*="top:7"] { right: 170px; }
+  {{CSS}}
+  #pip { position: absolute; left: 40px; top: 440px; width: 1000px; height: 880px; border-radius: 28px; overflow: hidden; z-index: 24; background: var(--ink); box-shadow: 0 0 0 4px #fff, 0 28px 70px rgba(21,46,55,.25); }
+  #pip video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{OBJ_POS}}; }
+  #pipring { position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 6px var(--sky); z-index: 2; opacity: 0; }
+  #who { position: absolute; left: 70px; top: 1190px; z-index: 24; background: var(--forest); color: #fff; border-radius: 14px; padding: 12px 20px; font-size: 26px; font-weight: 700; display: flex; flex-direction: column; gap: 2px; opacity: 0; }
+  #who span { font: 400 17px 'IBM Plex Mono', monospace; letter-spacing: .1em; color: var(--lime); text-transform: uppercase; }
+
+  #caps { position: absolute; left: 60px; right: 60px; top: 1420px; z-index: 26; height: 200px; }
+  .cap { position: absolute; left: 0; right: 0; top: 0; text-align: center; font-size: 62px; line-height: 1.12; font-weight: 800; letter-spacing: -.015em; color: var(--ink); opacity: 0; }
+  .cap span { display: inline-block; margin: 0 .12em; padding: 0 .1em; border-radius: 10px; }
+
+  #endcard { position: absolute; inset: 0; z-index: 60; }
+  #endcard .panel { position: absolute; inset: 0; background: var(--forest); }
+  #endcard .inner { position: absolute; left: 80px; right: 80px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 30px; }
+  #endcard img { width: 120px; } #endcard .k { font-size: 26px; color: var(--lime); }
+  #endcard h2 { margin: 0; font-size: 82px; font-weight: 800; color: #fff; letter-spacing: -.02em; line-height: 1.04; }
+  #endcard .rule { height: 6px; width: 100%; background: var(--sky); } #endcard .url { font-size: 54px; font-weight: 700; color: var(--lime); }
+  #endcard .plat { font-size: 24px; color: #C9D6D2; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-width="1080" data-height="1920" data-duration="{{DUR}}">
+  <div id="bg"></div><div id="grid"></div><div id="glow-sky" class="glow"></div><div id="glow-lime" class="glow"></div>
+  <div id="topbar"><img src="assets/logos/lockup-ink.svg" alt="Recoup" /><div class="sep"></div><div class="show mono">Recoup Podcast</div></div>
+  <div id="hook"><div class="bar"></div><div class="body"><h1>{{HOOK}}</h1></div></div>
+
+  <div id="stage">
+{{STAGE}}
+  </div>
+
+  <div id="pip"><video id="vid-g" src="assets/guest.mp4" data-start="0" data-duration="{{CLIP}}" data-track-index="0" muted playsinline></video><div id="pipring"></div></div>
+  <div id="who"><span>Guest</span>{{WHO}}</div>
+  <audio id="mix" src="assets/mix.m4a" data-start="0" data-duration="{{CLIP}}" data-track-index="10" data-volume="1"></audio>
+
+  <div id="caps">{{CAPS}}</div>
+
+  <section id="endcard" class="clip" data-start="{{CLIP}}" data-duration="{{END}}" data-track-index="50">
+    <div class="panel"></div>
+    <div class="inner">
+      <img src="assets/logos/symbol-white.svg" alt="" />
+      <div class="k mono">Full episode out now</div>
+      <h2>{{EP_TITLE}}</h2>
+      <div class="rule"></div>
+      <div class="url">{{END_URL}}</div>
+      <div class="plat mono">YouTube · Spotify · Apple Podcasts</div>
+    </div>
+  </section>
+</div>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  const D = {{DUR}}, CLIP = {{CLIP}};
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+
+  tl.fromTo("#glow-sky", { x: 0, y: 0, scale: 1 }, { x: 120, y: 160, scale: 1.12, duration: D, ease: "sine.inOut" }, 0);
+  tl.fromTo("#glow-lime", { x: 0, y: 0, scale: 1.05 }, { x: -100, y: -120, scale: .95, duration: D, ease: "sine.inOut" }, 0);
+  tl.from("#topbar", { y: -30, opacity: 0, duration: .5, ease: "power3.out" }, 0);
+  tl.from("#hook", { y: -40, opacity: 0, duration: .55, ease: "power3.out" }, .05);
+  tl.from("#stage", { y: 60, opacity: 0, duration: .5, ease: "power3.out" }, .1);
+  tl.from("#pip", { y: 60, opacity: 0, duration: .5, ease: "power3.out" }, .1);
+  tl.fromTo("#who", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: .5, ease: "expo.out" }, {{WHO_AT}});
+  tl.to("#who", { opacity: 0, x: 20, duration: .35 }, {{WHO_AT}} + 3.6);
+
+  function scene(id, a, b) {
+    tl.set(id, { autoAlpha: 1 }, a);
+    tl.fromTo(id, { scale: 1.08 }, { scale: 1, duration: .45, ease: "power3.out" }, a);
+    tl.set(id, { autoAlpha: 0 }, b);
+  }
+  const BIG = { left: 40, top: 440, width: 1000, height: 880, borderRadius: 28 }, SMALL = { left: 850, top: 1236, width: 190, height: 190, borderRadius: 95 };
+
+{{JS}}
+
+  // scenes -> beats: contiguous scenes form one beat; the guest video shrinks to the circle for each beat
+  SC.forEach(([id, a, b]) => scene(id, a, b));
+  const BEATS = []; SC.forEach(([id, a, b]) => { const P = BEATS[BEATS.length - 1]; if (P && a - P[1] < .3) P[1] = b; else BEATS.push([a, b]); });
+  for (const [a, b] of BEATS) {
+    if (a < .5) tl.set("#pip", SMALL, 0); else tl.to("#pip", { ...SMALL, duration: .45, ease: "power3.inOut" }, a - .3);
+    if (b < CLIP - .2) tl.to("#pip", { ...BIG, duration: .5, ease: "power3.inOut" }, b - .25);
+  }
+
+  // guest ring while the guest speaks
+  for (const [a, b] of {{GRING}}) { tl.to("#pipring", { opacity: 1, duration: .2 }, a); tl.to("#pipring", { opacity: 0, duration: .3 }, b); }
+
+  const caps = {{CAP_JS}};
+  caps.forEach(([id, a, b, ws]) => {
+    tl.set(`#${id}`, { opacity: 1 }, a); tl.set(`#${id}`, { opacity: 0 }, b);
+    ws.forEach(([j, s]) => tl.set(`#${id} span:nth-child(${j + 1})`, { backgroundColor: "#D6FF62" }, s)
+                             .set(`#${id} span:nth-child(${j + 1})`, { backgroundColor: "rgba(0,0,0,0)" }, ws[j + 1] ? ws[j + 1][1] : b));
+  });
+
+  tl.fromTo("#endcard .panel", { scaleY: 0 }, { scaleY: 1, transformOrigin: "bottom", duration: .45, ease: "expo.out" }, CLIP);
+  tl.from("#endcard .inner > *", { y: 40, opacity: 0, duration: .5, ease: "power3.out", stagger: .08 }, CLIP + .2);
+  window.__timelines["main"] = tl;
+</script>
+</body>
+</html>

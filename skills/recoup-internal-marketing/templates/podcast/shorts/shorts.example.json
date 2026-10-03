@@ -1,0 +1,13 @@
+{
+  "note": "Shorts cut list, RAW recording seconds, same piece format as edit/chapters.json (mute_host, mute_guest, host_only, video_from). Every window lies inside the approved episode edit and repeats its cuts and mutes. Filler trims are extra pieces. Copy each approved decision here with who approved it and when.",
+  "offsets": { "guest": 0.12, "host": 0.133 },
+  "host_video_fixed_start": 6.0,
+  "shorts": [
+    { "id": "s1", "day": "Mon", "hook": "Opt-in or opt-out: who decides if your songs train AI?", "hook_size": 58,
+      "pieces": [ { "in": 1039.50, "out": 1081.82, "mute_host": [[1058.40, 1059.30]], "note": "host backchannel muted, as in the episode" } ] },
+    { "id": "s2", "day": "Tue", "hook": "The one clause every AI license needs",
+      "pieces": [
+        { "in": 1881.57, "out": 1884.95, "note": "host asks the question" },
+        { "in": 1894.75, "out": 1919.16, "note": "filler trim: the hesitation before the answer is dropped (approved)" } ] }
+  ]
+}
