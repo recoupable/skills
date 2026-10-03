@@ -4,6 +4,7 @@ Usage:
   python3 scripts/podcast/cut.py <project> <chapter-id>                 # cameras + mix.m4a
   python3 scripts/podcast/cut.py <project> <chapter-id> --audio-only \
       [--host-audio raw/host-audio-enhanced.wav] [--mix-name mix-enhanced.m4a]
+  python3 scripts/podcast/cut.py <project> <short-id> --cutlist edit/shorts.json --out comp/shorts/<id>/assets
 
 <project>/edit/chapters.json holds, per chapter, `pieces` in RAW recording seconds:
   {"in": 957.55, "out": 959.40}                       plain piece
@@ -12,7 +13,8 @@ Usage:
   "video_from": 957.00                                 take the PICTURE from another raw time (cover the
                                                        splice with a full-frame card so lips never show)
 and top-level `offsets` {"guest": 0.12, "host": 0.133}: seconds the camera file lags its audio track
-(measure with camera_check.py). Output goes to <project>/comp/chapters/<id>/assets/.
+(measure with camera_check.py). Output goes to <project>/comp/chapters/<id>/assets/ (or --out).
+--cutlist reads another cut list in the same format, e.g. edit/shorts.json (entries under "shorts").
 Needs ffmpeg on PATH.
 """
 import json, os, subprocess, sys
@@ -26,10 +28,10 @@ opt = lambda k, d: args[args.index(k) + 1] if k in args else d
 HOST_AUDIO = os.path.join(PROJ, opt('--host-audio', 'raw/host-audio.m4a'))
 GUEST_AUDIO = os.path.join(PROJ, 'raw/guest-audio.m4a')
 MIX_NAME = opt('--mix-name', 'mix.m4a')
-spec = json.load(open(os.path.join(PROJ, 'edit/chapters.json')))
-ch = [c for c in spec['chapters'] if c['id'] == CID][0]
+spec = json.load(open(os.path.join(PROJ, opt('--cutlist', 'edit/chapters.json'))))
+ch = [c for c in spec.get('chapters') or spec['shorts'] if c['id'] == CID][0]
 P = ch['pieces']; off = spec['offsets']
-out = os.path.join(PROJ, 'comp/chapters', CID, 'assets'); os.makedirs(out, exist_ok=True)
+out = os.path.join(PROJ, opt('--out', os.path.join('comp/chapters', CID, 'assets'))); os.makedirs(out, exist_ok=True)
 FIXED = os.path.join(PROJ, 'raw/host-video-fixed.mp4')          # optional, from fix_host_video.py
 FIXED_T0 = spec.get('host_video_fixed_start', 6.0)
 

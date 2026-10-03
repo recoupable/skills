@@ -95,8 +95,11 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
      and re-read `status.publishAt` to confirm. Details in the account workspace `POSTING-PLAYBOOK.md`.
    - Same release minute on both. Verify every field from the platform's own data (download the stored
      thumbnail/art back), not from the form you filled.
-15. **Hand back to sales**: live links to the guest the day it publishes, day-7 follow-up. Shorts: the
-   strongest 20-60s answers (quote and stat cards make natural shorts) go through this skill's daily run.
+15. **Captions**: `python3 scripts/podcast/make_srt.py <project>` -> `exports/final/youtube-captions.srt`
+   (accurate names, speaker changes, sliver cues folded so YouTube accepts the file); upload in Studio:
+   video -> Details -> Subtitles (or Languages) -> ⋮ -> Upload file -> With timing.
+16. **Shorts**: `references/podcast-shorts.md` (clips table, hybrid format, one prototype, then the rest).
+17. **Hand back to sales**: live links to the guest the day it publishes (with the shorts folder), day-7 follow-up.
 
 ## Gotchas that cost real time on the first run
 

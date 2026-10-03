@@ -166,3 +166,4 @@
 {"intent": "Add Recoup login with Spotify to my release site and attribute connected fans to my artist account.", "expected": "recoup-content-connect-fans", "not": ["recoup-content-build-sites"]}
 {"intent": "recoup-internal produce the podcast episode from the raw Restream files and schedule it on Spotify and YouTube", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales"]}
 {"intent": "recoup-internal edit the podcast we recorded this morning and make its thumbnail", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales"]}
+{"intent": "recoup-internal make the seven vertical shorts from the podcast episode we just published", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales", "recoup-content-make-video"]}

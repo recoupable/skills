@@ -1,0 +1,50 @@
+<!--ANCHORS {
+ "consent": ["g", "right to consent", 1039], "optin1": ["g", "opt in,", 1039], "oio": ["g", "opt-in or opt-out", 1039],
+ "sys_end": ["g", "systems.", 1039], "tech": ["g", "tech company standpoint,", 1059], "wantout": ["g", "want opt-out,", 1059],
+ "rh": ["g", "rights holders want", 1059], "optin2": ["g", "to opt in,", 1059], "honored": ["g", "being honored,", 1059],
+ "now_end": ["g", "honored right now,", 1059]
+}-->
+<!-- Synthetic example (made-up guest lines). Copy to <project>/edit/shorts/<id>.html and re-anchor to the real
+     transcript. Two beats: a consent toggle that flips on the words, then a tug of war over its default.
+     Rules: state text lives ON the knob (a static OUT/IN label read wrong while the switch was ON); kinetic
+     text below top:600 is auto-padded clear of the guest circle; never use ids c0..cN (captions). -->
+<!--CSS-->
+  .tg { position: absolute; left: 180px; width: 640px; height: 250px; border-radius: 125px; background: #C9D6D2; box-shadow: inset 0 0 0 6px var(--ink); }
+  .tg .kn { position: absolute; left: 25px; top: 25px; width: 200px; height: 200px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 6px var(--ink), 0 14px 30px rgba(21,46,55,.3); }
+  .tg .kn span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 58px; font-weight: 800; letter-spacing: -.02em; color: var(--forest); }
+  .tg .ends { position: absolute; left: 30px; right: 30px; top: 270px; display: flex; justify-content: space-between; font: 400 22px "IBM Plex Mono", monospace; letter-spacing: .12em; color: var(--muted); }
+  .side { position: absolute; top: 560px; width: 380px; border-radius: 22px; padding: 22px 26px; font-size: 34px; font-weight: 800; line-height: 1.1; }
+  .side span { display: block; font: 400 20px 'IBM Plex Mono', monospace; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  #b1stamp { position: absolute; left: 270px; top: 120px; width: 460px; text-align: center; background: var(--forest); color: var(--lime); font-size: 76px; font-weight: 800; border-radius: 18px; padding: 8px 0; box-shadow: 0 0 0 6px var(--lime); }
+<!--HTML-->
+    <div id="b1a" class="scene">
+      <div class="lab mono" style="top:110px">Training consent</div>
+      <div id="tg1" class="tg" style="top:230px"><div class="ends"><span>OPT-OUT</span><span>OPT-IN</span></div><div class="kn"><span class="ko">OUT</span><span class="ki" style="opacity:0">IN</span></div></div>
+      <div id="b1who" class="kt" style="top:580px;font-size:44px;color:var(--muted);letter-spacing:0;font-weight:700">The artist decides</div>
+      <div id="b1q" class="kt" style="top:650px;font-size:76px"><span class="hl">OPT-IN</span> or OPT-OUT?</div>
+    </div>
+    <div id="b1b" class="scene">
+      <div id="tg2" class="tg" style="top:260px"><div class="kn"><span class="ko">OUT</span><span class="ki" style="opacity:0">IN</span></div></div>
+      <div id="sT" class="side" style="left:60px;background:var(--sky);color:#fff"><span>Tech companies</span>Want opt-out</div>
+      <div id="sR" class="side" style="left:560px;background:var(--forest);color:var(--lime)"><span style="color:#C9D6D2">Rights holders</span>Want opt-in</div>
+      <div id="b1stamp">HONORED ✓</div>
+    </div>
+<!--JS-->
+  const SC = [["#b1a", @consent - .3, @sys_end + .4], ["#b1b", @tech - .3, @now_end + 1.6]];
+  const KIN = { x: 390 }, KOUT = { x: 0 };
+  function flip(sel, toIn, t, d = .35) {
+    tl.to(`${sel} .kn`, { ...(toIn ? KIN : KOUT), duration: d, ease: "back.out(1.4)" }, t);
+    tl.to(sel, { backgroundColor: toIn ? "#D6FF62" : "#C9D6D2", duration: d * .8 }, t);
+    tl.to(`${sel} .ki`, { opacity: toIn ? 1 : 0, duration: d * .6 }, t); tl.to(`${sel} .ko`, { opacity: toIn ? 0 : 1, duration: d * .6 }, t);
+  }
+  tl.from("#tg1", { scale: .6, opacity: 0, duration: .45, ease: "back.out(1.6)" }, @consent - .2);
+  tl.from("#b1who", { y: 30, opacity: 0, duration: .4, ease: "expo.out" }, @consent + .3);
+  flip("#tg1", true, @optin1 - .1);
+  tl.fromTo("#b1q", { scale: 1.5, opacity: 0 }, { scale: 1, opacity: 1, duration: .4, ease: "back.out(1.6)" }, @oio - .1);
+  flip("#tg1", false, @oio + .5);
+  flip("#tg2", true, 0, .01);
+  tl.from("#sT", { x: -300, opacity: 0, duration: .45, ease: "power3.out" }, @tech - .1);
+  tl.from("#sR", { x: 300, opacity: 0, duration: .45, ease: "power3.out" }, @rh - .3);
+  flip("#tg2", false, @wantout);
+  flip("#tg2", true, @optin2 - .1);
+  tl.fromTo("#b1stamp", { scale: 2.2, rotation: 0, opacity: 0 }, { scale: 1, rotation: -6, opacity: 1, duration: .35, ease: "back.out(1.6)" }, @honored);
