@@ -167,3 +167,5 @@
 {"intent": "recoup-internal produce the podcast episode from the raw Restream files and schedule it on Spotify and YouTube", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales"]}
 {"intent": "recoup-internal edit the podcast we recorded this morning and make its thumbnail", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales"]}
 {"intent": "recoup-internal make the seven vertical shorts from the podcast episode we just published", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales", "recoup-content-make-video"]}
+
+{"intent": "recoup-internal build a speaking profile from my transcripts and make my spoken scripts less robotic", "expected": "recoup-internal-consulting-persona-script-voice", "not": ["recoup-content-write-caption"]}
