@@ -108,6 +108,10 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
 - **Never render during a live recording.** CPU load is the likely cause of Restream dropping the host
   camera to 14 fps. A background "kill at 8:30" timer was itself killed by the 2-hour background limit
   before firing; `render.sh` checks `STOP_AT` in its own loop instead.
+- **Host video drifts late after a camera freeze** (found 2026-10-07, +3.2 s on one episode): MP4 output
+  defaulted to VFR and dropped the fill frames. `fix_host_video.py` now forces `-fps_mode cfr`. After every
+  run, confirm each `edit/fixseg/*.mp4` duration equals its frame count / 30 and compare the fixed file
+  against the raw camera at a few points late in the recording before cutting.
 - **Lip sync looks wrong but measures right** = low camera frame rate, not timing. Measure before
   re-cutting (`lipsync.py` with the crop actually on the mouth).
 - **Background job limit (2 h)**: long queues stop mid-way; check `exports/` and resume the missing chapters.
