@@ -8,6 +8,11 @@ Writes <project>/raw/host-video-fixed.mp4 where t = raw - start. cut.py picks it
 (set "host_video_fixed_start" in chapters.json if start isn't 6.0). Interpolation runs ~8x slower than
 realtime on an Intel laptop; the rest is a fast fps conversion. Segments land in edit/fixseg/ so an
 interrupted run resumes. Check the result with lipsync.py and a frame strip before cutting.
+
+-fps_mode cfr is required: ffmpeg 7 writing MP4 defaults to VFR and drops the frames fps=30 duplicates
+across a camera freeze, so that segment's timestamps run longer than its frame count and every later
+segment plays late after the concat (+3.2 s on one episode, +0.8 s on another). After a run, check that
+each edit/fixseg/*.mp4 duration equals nb_frames / 30.
 """
 import json, os, subprocess, sys
 
@@ -34,7 +39,7 @@ for i, (a, b, interp) in enumerate(segs):
         continue
     vf = ('minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1' if interp else 'fps=30') + ',scale=896:504,setsar=1'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{a:.3f}', '-i', SRC, '-vf', vf, '-frames:v', str(round((b - a) * 30)),
-                    '-c:v', 'libx264', '-crf', '16', '-preset', 'veryfast', '-pix_fmt', 'yuv420p', '-an', out + '.tmp.mp4'], check=True)
+                    '-fps_mode', 'cfr', '-c:v', 'libx264', '-crf', '16', '-preset', 'veryfast', '-pix_fmt', 'yuv420p', '-an', out + '.tmp.mp4'], check=True)
     os.replace(out + '.tmp.mp4', out)
     print(f'{i:03d} {a:8.2f}-{b:8.2f} {"INTERP" if interp else "cfr"}', flush=True)
 open(f'{D}/list.txt', 'w').write(''.join(f"file '{os.path.basename(x)}'\n" for x in lst))
