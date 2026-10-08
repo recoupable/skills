@@ -8,7 +8,7 @@ Public skills for AI agents working in the music industry. Skills teach agents h
 
 ## Structure
 
-This repo **is a single flat plugin** rooted at the repo root: every skill lives in `skills/`, and the shared components (agents, hooks, references, templates, fixtures, the resolver) sit alongside it. It installs across every harness — as a Claude/agents marketplace plugin, a Codex plugin, or a bare `npx skills add recoupable/skills`.
+This repo **is a single flat plugin** rooted at the repo root: every skill lives in `skills/`, and the shared components (agents, MCP configuration, references, templates, fixtures, the resolver) sit alongside it. It installs across every harness — as a Claude/agents marketplace plugin, a Codex plugin, or a bare `npx skills add recoupable/skills`.
 
 ```text
 recoupable/skills/            ← the repo root IS the plugin
@@ -18,7 +18,8 @@ recoupable/skills/            ← the repo root IS the plugin
 │   ├── recoup-internal-dev-issue-tracker/
 │   └── ...                   (flat skill folders)
 ├── agents/                   ← specialized subagents
-├── hooks/                    ← lifecycle hooks (hooks.json + *.sh)
+├── .mcp.json                 ← Claude/Codex remote MCP configuration
+├── mcp.json                  ← Cursor remote MCP configuration
 ├── references/               ← shared docs (canonical sources for any vendored copies)
 ├── templates/                ← workspace scaffolds
 ├── fixtures/                 ← golden / demo data
@@ -36,7 +37,7 @@ recoupable/skills/            ← the repo root IS the plugin
 ## Glossary
 
 - **Skill** — a `SKILL.md` folder that teaches one task. Portable; runs on any agent.
-- **Plugin** — this repo, rooted at the repo root: it ships every skill in `skills/` **plus** agents, hooks, and shared references, installed through a runtime's plugin system or `npx skills`. A skill is a subset of the plugin. (No slash-`commands/` — skills only; see "No slash-commands".)
+- **Plugin** — this repo, rooted at the repo root: it ships every skill in `skills/` **plus** agents, MCP configuration, and shared references, installed through a runtime's plugin system or `npx skills`. A skill is a subset of the plugin. (No slash-`commands/` — skills only; see "No slash-commands".)
 - **Harness** — a runtime that loads skills/plugins: Claude Code, Codex, Cursor, or bare `npx skills`.
 - **Marketplace registry** — the single installable-plugin entry (`recoup-skills`, `source "."`), written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
 - **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json` (the references, templates, and fixtures shared across skills).
@@ -95,7 +96,7 @@ The whole repo is one flat plugin. There is **no `plugins/` directory** and no p
 
 - **Add a skill** by creating `skills/recoup-[domain]-[verb]-[noun]/SKILL.md` (see "Skill Format"), then add a route in `RESOLVER.md` and a fixture in `resolver-eval.jsonl`. CI fails on any skill that isn't reachable from the resolver.
 - **Manifests live at the repo root** — `.claude-plugin/plugin.json` (Claude), `.codex-plugin/plugin.json` (Codex), and the two `marketplace.json` files. Skills auto-resolve from `skills/`; you don't enumerate them in the manifest.
-- **Shared components sit at the root** too: `agents/`, `hooks/`, `references/`, `templates/`, `fixtures/`. A skill must still be **self-contained** — it may reference only files inside its own directory, so a skill that needs a shared reference vendors its own copy (Portable Skill Contract rule 5). The root `references/`/`templates/`/`fixtures/` hold the canonical copy for most shared files (a few shared only between sibling skills keep their canonical inside one skill); these roots are also used by `agents/` and `hooks/`.
+- **Shared components sit at the root** too: `agents/`, `references/`, `templates/`, `fixtures/`. A skill must still be **self-contained** — it may reference only files inside its own directory, so a skill that needs a shared reference vendors its own copy (Portable Skill Contract rule 5). The root `references/`/`templates/`/`fixtures/` hold the canonical copy for most shared files (a few shared only between sibling skills keep their canonical inside one skill); these roots are also used by `agents/`.
 - Every skill follows the **Portable Skill Contract** below.
 
 ## No slash-commands — skills only
@@ -125,8 +126,8 @@ What to do instead:
   not auto-fire.
 - **Never** add a `commands` path to any `plugin.json`.
 
-> Exception: hook **commands** in `hooks/hooks.json` (`"type": "command"`) are a
-> different thing — shell commands run on lifecycle events. Those are fine.
+Do not add lifecycle hook registrations or skill-frontmatter hooks. Keep checks
+as explicit skill steps and validators so the public plugin remains hook-free.
 
 ## The marketplace registry
 
@@ -151,7 +152,7 @@ The single plugin (`recoup-skills`, `source "."`) is listed in **two files that 
 Every skill must run on **any** harness (Claude Code, Codex, Cursor, bare `npx skills`) — not just as a Claude marketplace plugin. To guarantee this, each skill follows these rules. They are enforced by `scripts/portability_lint.py` in CI.
 
 1. **Self-contained.** A skill reads/executes **only files inside its own directory** (`references/`, `scripts/`, `templates/`, `fixtures/`). Never reference `../`, `../../references/`, another skill's directory, or a plugin-root `scripts/`/`templates/`.
-2. **No platform variables in the body.** Do **not** write `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_SKILL_DIR}`, or any `$CLAUDE_*` path. These only expand in JSON configs (hooks/`.mcp.json`) on Claude Code and **do not exist on other harnesses** — they ship as literal, broken strings. Use plain relative paths.
+2. **No platform variables in the body.** Do **not** write `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_SKILL_DIR}`, or any `$CLAUDE_*` path. These only expand in JSON configs (`.mcp.json`) on Claude Code and **do not exist on other harnesses** — they ship as literal, broken strings. Use plain relative paths.
 3. **Reference docs with backtick paths, never markdown links.** Write `` `references/foo.md` `` (a backtick path the agent can locate), not `[foo](./references/foo.md)`. Agents interpret markdown links as CWD-relative `Read` calls, and the CWD is never the skill directory.
 4. **Co-locate scripts; invoke relatively.** Ship scripts in the skill's own `scripts/` and call them as `python3 scripts/foo.py`. Add a one-line note that scripts ship alongside the skill. If a script imports a sibling or helper, that sibling must also live in the same `scripts/`. If a script needs a third-party package, **guard the import and name the package in the error** (`except ImportError: sys.exit("needs X — pip3 install X")`) rather than shipping a `requirements.txt` — the failing script then tells the agent exactly what to install.
 5. **Duplicate shared material; drift-check it.** If two skills need the same reference/script, **copy it into each** (do not centralize). Register every copy in `scripts/vendored.json` so `scripts/check_vendored.py` keeps them byte-identical. Vendoring is allowed; silent divergence is not.
@@ -170,7 +171,7 @@ python3 scripts/check_resolvable.py        # every skill reachable from RESOLVER
 python3 scripts/run_resolver_eval.py       # routing fixtures valid + full coverage
 ```
 
-**This repo is the flagship, hand-maintained plugin** — "a record label in a box" rooted at the repo root that ships the full platform in one install: artist setup and API access, research, catalog deals, content, song analysis, and releases — every skill (in `skills/`), agent, hook, reference, script, template, and fixture. It also ships Recoup's internal eng/ops skills (`recoup-internal-*`, staff-gated behind the `recoup-internal` keyword). Edit the skills directly.
+**This repo is the flagship, hand-maintained plugin** — "a record label in a box" rooted at the repo root that ships the full platform in one install: artist setup and API access, research, catalog deals, content, song analysis, and releases — every skill (in `skills/`), agent, MCP connection, reference, script, template, and fixture. It also ships Recoup's internal eng/ops skills (`recoup-internal-*`, staff-gated behind the `recoup-internal` keyword). Edit the skills directly.
 
 **Editing a shared (vendored) file:** change the *canonical* copy only, then re-sync every copy listed in `scripts/vendored.json` (there is no `--sync` flag — copy them yourself), then re-check. Groups come in two shapes: single files (`canonical`/`copies`) and whole directories (`canonical_dir`/`copies_dirs`):
 

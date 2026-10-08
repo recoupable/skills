@@ -15,13 +15,11 @@ export RECOUP_API_KEY="recoup_sk_..."
 export RECOUP_API="https://api.recoupable.dev/api"
 ```
 
-No key? Get one instantly (no dashboard, no email verification):
-
-```bash
-export RECOUP_API_KEY=$(curl -s -X POST "https://api.recoupable.dev/api/agents/signup" \
-  -H "Content-Type: application/json" \
-  -d '{"email":"agent+'$(date +%s)-$RANDOM'@recoupable.com"}' | jq -r .api_key)
-```
+Prefer an authenticated Recoup MCP tool when its discovered schema supports the
+requested operation. MCP OAuth tokens are managed by the host and must not be
+extracted for REST calls. These curl examples require separate REST credentials.
+If those are missing for a REST-only operation, explain the gap and ask the user
+to connect their real account. Never create a throwaway identity to bypass setup.
 
 ---
 

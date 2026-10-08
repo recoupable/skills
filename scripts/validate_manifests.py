@@ -85,12 +85,55 @@ def parity(claude: list[dict], agents: list[dict], problems: list[str]) -> None:
         problems.append(f"PARITY: in .agents only: {name} ({source} @ {version})")
 
 
+def validate_distribution(problems: list[str]) -> None:
+    """Keep the shipped package hook-free with one credential-free remote MCP."""
+    versions = set()
+    for folder, config in ((".claude-plugin", ".mcp.json"),
+                           (".codex-plugin", ".mcp.json"),
+                           (".cursor-plugin", "mcp.json")):
+        path = REPO_ROOT / folder / "plugin.json"
+        data, err = load_json(path)
+        if err or not isinstance(data, dict):
+            problems.append(f"{folder}/plugin.json: missing or invalid manifest")
+            continue
+        versions.add(data.get("version"))
+        if data.get("mcpServers") != f"./{config}":
+            problems.append(f"{folder}: expected explicit MCP config reference")
+        if "hooks" in data or "apps" in data:
+            problems.append(f"{folder}: lifecycle hooks and app references are not shipped")
+    for folder in (".claude-plugin", ".agents/plugins", ".cursor-plugin"):
+        data, err = load_json(REPO_ROOT / folder / "marketplace.json")
+        if err or not isinstance(data, dict):
+            problems.append(f"{folder}: missing or invalid marketplace")
+            continue
+        for entry in data.get("plugins", []):
+            if entry.get("name") == "recoup-skills":
+                versions.add(entry.get("version"))
+    if len(versions) != 1 or None in versions:
+        problems.append("All plugin and marketplace versions must match")
+    for name in (".mcp.json", "mcp.json"):
+        data, err = load_json(REPO_ROOT / name)
+        server = {"url": "https://api.recoupable.dev/mcp"}
+        if name == ".mcp.json":
+            server["type"] = "http"
+        if err or data != {"mcpServers": {"recoup": server}}:
+            problems.append(f"{name}: expected only the credential-free Recoup HTTP server")
+    if (REPO_ROOT / "hooks").exists() or (REPO_ROOT / ".app.json").exists():
+        problems.append("Do not ship lifecycle hooks or registered-app references")
+    for path in (REPO_ROOT / "skills").glob("*/SKILL.md"):
+        sections = path.read_text(encoding="utf-8").split("---", 2)
+        if len(sections) == 3 and re.search(r"^hooks\s*:", sections[1], re.MULTILINE):
+            problems.append(f"{path.relative_to(REPO_ROOT)}: remove skill lifecycle hooks")
+
+
 def main() -> int:
     problems: list[str] = []
 
+    validate_distribution(problems)
+
     # 1. JSON validity for every manifest/connector file.
     checked = 0
-    for fname in ("marketplace.json", "plugin.json", ".mcp.json"):
+    for fname in ("marketplace.json", "plugin.json", ".mcp.json", "mcp.json"):
         for path in discover(fname):
             checked += 1
             _, err = load_json(path)

@@ -1,7 +1,7 @@
 {
   "name": "recoup-skills",
   "displayName": "Recoup Skills",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "A record label in a box. Recoup turns your AI agent into a full music team \u2014 artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation \u2014 all in one install.",
   "author": {
     "name": "Recoup",
@@ -24,5 +24,6 @@
     "music-marketing",
     "analytics",
     "agent-skills"
-  ]
+  ],
+  "mcpServers": "./.mcp.json"
 }

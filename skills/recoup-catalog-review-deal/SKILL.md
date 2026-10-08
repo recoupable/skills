@@ -14,8 +14,8 @@ into it). The workspace schema is `references/deal-workspace.md`; the scaffold i
 
 ## Mode: review (the full diligence pipeline — gated)
 
-1. **Scaffold** `deals/{deal-id}/`. Treat `source/` as immutable (a PreToolUse hook
-   blocks writes to it on Claude Code).
+1. **Scaffold** `deals/{deal-id}/`. Treat `source/` as immutable.
+   Write derived results to the working folders; never overwrite original evidence.
 2. **Ingest** → run **ingest** mode.
 3. **Value** → run **value** mode.
 4. **Dashboard** → run **dashboard** mode.

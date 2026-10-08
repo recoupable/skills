@@ -1,0 +1,7 @@
+{
+  "name": "recoup-skills",
+  "version": "2.2.0",
+  "description": "Recoup music workflows and authenticated MCP tools.",
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}

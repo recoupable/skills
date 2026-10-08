@@ -4,18 +4,38 @@ AI agent skills for the music industry — a record label in a box. One install 
 
 ## Install
 
-### Claude Code / agents marketplace
+### Claude Code
 
 ```bash
 /plugin marketplace add recoupable/skills
 /plugin install recoup-skills@recoup
 ```
 
-### npx (any harness)
+### Codex and Cursor
+
+Install this repository through the host's plugin marketplace/local-plugin flow.
+The Codex manifest references `.mcp.json`; the Cursor manifest references `mcp.json`.
+Both configure the same remote Recoup server. No API key is bundled.
+
+### Connect Recoup
+
+After installing, authenticate the plugin's Recoup server in the host's connection
+UI (`/mcp` in Claude Code). Review the full `mcp:tools` permission, then verify with
+`list_artists`. The host stores and refreshes OAuth credentials. Existing limited
+connections need fresh consent and a tool refresh to gain full access.
+
+The MCP catalog currently offers 51 business tools; credential export is excluded.
+REST-only endpoints and scripts still need separate REST credentials. Installing
+skills alone does not make every API endpoint an MCP tool.
+
+### npx (skills only)
 
 ```bash
 npx skills add recoupable/skills
 ```
+
+This installs skill instructions only. Configure `https://api.recoupable.dev/mcp`
+separately in the host to use OAuth tools.
 
 ### Manual
 
@@ -90,7 +110,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 
 | Skill | What it does |
 |-------|-------------|
-| recoup-platform-connect-account | First-run setup: verify email, mint an API key |
+| recoup-platform-connect-account | Connect with MCP OAuth; REST credential fallback when needed |
 | recoup-platform-track-onboarding | Score an account against the activation funnel; route to the next step |
 | recoup-platform-build-os | Build the org's self-managing music-company OS (folders + brain + janitor + plugin), seeded from your live roster |
 | recoup-platform-api-access | Call the Recoup API & external connectors directly |
@@ -116,7 +136,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 Beyond the skills, the plugin bundles shared components at the repo root:
 
 - **`agents/`** — specialized subagents (deal QC, market scout, royalty audit, rights chain, valuation sensitivity, metadata reconciler, release readiness, research analyst)
-- **`hooks/`** — completion-gate and environment-check hooks
+- **`.mcp.json` / `mcp.json`** — the remote Recoup MCP connection
 - **`references/`, `templates/`, `fixtures/`** — shared docs, workspace scaffolds, and golden/demo data
 - **`RESOLVER.md`** — the routing table the agent uses to pick a skill
 - **`scripts/`** — repo validators (portability, vendoring, manifests, resolver reachability + eval)
@@ -163,4 +183,30 @@ Stop hook. Update to 2.1.1 and start a new session to unload a previously active
 skill hook. If the reviewer identifies itself as `recoup-catalogs-plugin`, update
 that separate plugin to 0.3.1 too (or disable it if you use this consolidated
 package). Organization-managed installs require the administrator to publish the
-update. Source-file protection and completion requirements remain in place.
+update. Completion requirements remain in place; version 2.2.0 also removes the source-file hook.
+
+
+### Hook-free MCP release (2.2.0)
+
+Removed both plugin-wide lifecycle hooks and all six skill-local Stop hooks.
+Visual inspection, release validators, and immutable-source instructions remain
+explicit workflow steps.
+Update/reinstall the plugin and start a new session to unload cached hooks; an
+organization-managed install needs its administrator to distribute the update.
+
+Connection setup prefers MCP OAuth and no longer edits global agent instructions.
+Missing API-key environment variables do not imply a disconnected MCP account.
+
+### OpenAI public directory
+
+This package includes the remote MCP endpoint in its initial submission and has
+no lifecycle hooks or registered-app references. Those packaging choices follow
+[OpenAI's submission requirements](https://developers.openai.com/plugins/deploy/submission).
+They do not establish directory approval. Domain verification, OAuth/tool scan,
+review-account setup, live test cases, and the review walkthrough still need to
+be completed in the publisher portal. Include MCP in the initial submission;
+OpenAI currently does not support adding it to an existing skills-only listing.
+
+Run the five validation gates in AGENTS.md before release. Also verify plugin
+installation, browser consent, tool discovery, a read, refresh and revocation in
+each supported host. JSON validation is not proof of a working host connection.

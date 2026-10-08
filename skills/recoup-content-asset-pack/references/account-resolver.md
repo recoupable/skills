@@ -4,7 +4,15 @@ Recoup content skills authenticate one of two ways and must pass the **right art
 identifier** to the right endpoint. Getting either wrong is the most common cause of a
 silent 401/404. Read this before writing curl calls.
 
-## 1. Auth — two modes
+## 1. Prefer the connected MCP
+
+For a matching operation, use the host's authenticated Recoup MCP tool and its
+actual input schema. OAuth credentials stay in the host; never extract them or
+put them in curl. Missing environment variables do not mean MCP is disconnected.
+Use `list_artists` for roster discovery. An empty roster can be legitimate.
+If the operation is not exposed by MCP, use the REST credentials below.
+
+### REST fallback — two modes
 
 Pick whichever credential the environment provides; prefer the API key when both exist.
 
@@ -25,8 +33,8 @@ fi
 # Use as:  curl -sS "${AUTH[@]}" "https://api.recoupable.dev/api/..."
 ```
 
-If neither is set, the user is not authenticated — tell them to sign in rather than
-retrying.
+If neither is set, REST credentials are unavailable. Use a matching authenticated
+MCP tool or explain which REST-only capability needs a separate credential.
 
 ## 2. Two different artist identifiers
 
