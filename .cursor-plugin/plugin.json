@@ -1,7 +1,16 @@
 {
   "name": "recoup-skills",
-  "version": "2.2.0",
-  "description": "Recoup music workflows and authenticated MCP tools.",
+  "version": "2.2.1",
+  "description": "Recoup is an agentic music company platform for managers, labels, artists, songwriters, producers, catalog teams, and publishers. Research music, develop songs and content, plan releases, and review catalogs with reusable skills and authenticated Recoup MCP tools.",
   "skills": "./skills/",
-  "mcpServers": "./mcp.json"
+  "mcpServers": "./mcp.json",
+  "author": {
+    "name": "Recoup",
+    "email": "support@recoupable.com",
+    "url": "https://recoupable.dev"
+  },
+  "homepage": "https://recoupable.dev",
+  "repository": "https://github.com/recoupable/skills",
+  "license": "AGPL-3.0-only",
+  "logo": "./assets/recoup-icon.png"
 }

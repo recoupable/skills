@@ -111,6 +111,28 @@ def validate_distribution(problems: list[str]) -> None:
                 versions.add(entry.get("version"))
     if len(versions) != 1 or None in versions:
         problems.append("All plugin and marketplace versions must match")
+    gemini, err = load_json(REPO_ROOT / "gemini-extension.json")
+    if err or not isinstance(gemini, dict) or gemini != {
+        "name": "recoup-skills", "version": next(iter(versions), None),
+        "mcpServers": {"recoup": {"httpUrl": "https://api.recoupable.dev/mcp"}},
+    }:
+        problems.append("gemini-extension.json: expected matching version and credential-free HTTP MCP")
+    codex, err = load_json(REPO_ROOT / ".codex-plugin/plugin.json")
+    interface = codex.get("interface", {}) if isinstance(codex, dict) else {}
+    for field, limit in (("displayName", 30), ("shortDescription", 30),
+                         ("longDescription", 4000), ("developerName", 80)):
+        value = interface.get(field)
+        if not isinstance(value, str) or not value.strip() or len(value) > limit:
+            problems.append(f"Codex interface.{field}: required, maximum {limit} characters")
+    for field in ("websiteURL", "supportURL", "privacyPolicyURL", "termsOfServiceURL"):
+        value = interface.get(field, "")
+        if not isinstance(value, str) or not value.startswith("https://") or len(value) > 1024:
+            problems.append(f"Codex interface.{field}: HTTPS listing URL required")
+    for field in ("logo", "composerIcon"):
+        value = interface.get(field, "")
+        if (not isinstance(value, str) or not value.startswith("./")
+                or ".." in Path(value).parts or not (REPO_ROOT / value).is_file()):
+            problems.append(f"Codex interface.{field}: bundled relative image required")
     for name in (".mcp.json", "mcp.json"):
         data, err = load_json(REPO_ROOT / name)
         server = {"url": "https://api.recoupable.dev/mcp"}

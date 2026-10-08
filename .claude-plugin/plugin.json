@@ -1,14 +1,14 @@
 {
   "name": "recoup-skills",
   "displayName": "Recoup Skills",
-  "version": "2.2.0",
-  "description": "A record label in a box. Recoup turns your AI agent into a full music team \u2014 artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation \u2014 all in one install.",
+  "version": "2.2.1",
+  "description": "Recoup is an agentic music company platform for managers, labels, artists, songwriters, producers, catalog teams, and publishers. Research music, develop songs and content, plan releases, and review catalogs with reusable skills and authenticated Recoup MCP tools.",
   "author": {
     "name": "Recoup",
     "email": "support@recoupable.com",
-    "url": "https://recoupable.com"
+    "url": "https://recoupable.dev"
   },
-  "homepage": "https://recoupable.com",
+  "homepage": "https://recoupable.dev",
   "repository": "https://github.com/recoupable/skills",
   "license": "AGPL-3.0-only",
   "keywords": [

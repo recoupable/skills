@@ -1,7 +1,6 @@
 # Recoup Skills
 
-AI agent skills for the music industry — a record label in a box. One install gives your agent the whole Recoup platform: artist setup & API access, research, catalog deals, content, song analysis, and releases.
-
+Recoup is an agentic music company platform for managers, labels, artists, songwriters, producers, catalog teams, and publishers. Research music, develop songs and content, plan releases, and review catalogs with reusable skills and authenticated Recoup MCP tools.
 ## Install
 
 ### Claude Code
@@ -16,6 +15,16 @@ AI agent skills for the music industry — a record label in a box. One install 
 Install this repository through the host's plugin marketplace/local-plugin flow.
 The Codex manifest references `.mcp.json`; the Cursor manifest references `mcp.json`.
 Both configure the same remote Recoup server. No API key is bundled.
+
+### Gemini CLI
+
+```bash
+gemini extensions install https://github.com/recoupable/skills
+```
+
+Authenticate with `/mcp auth recoup`. The root extension manifest uses Streamable
+HTTP; skills are discovered from `skills/`. This adapter requires a Gemini CLI
+version with extension skills and remote OAuth support.
 
 ### Connect Recoup
 
@@ -210,3 +219,30 @@ OpenAI currently does not support adding it to an existing skills-only listing.
 Run the five validation gates in AGENTS.md before release. Also verify plugin
 installation, browser consent, tool discovery, a read, refresh and revocation in
 each supported host. JSON validation is not proof of a working host connection.
+
+
+## Distribution and data handling
+
+Repository installation is separate from public directory approval. See
+[DISTRIBUTION.md](DISTRIBUTION.md) for platform routes, packaging, and review status.
+
+The bundle includes all public-source skills, including explicitly triggered internal
+staff workflows. The trigger is an instruction convention, not an authorization
+boundary. Use only accounts and workspaces you are authorized to access.
+
+Installation declares one remote connection, `https://api.recoupable.dev/mcp`,
+without credentials or lifecycle hooks. When invoked, skills can read and write
+workspace files, run bundled scripts and local commands, call Recoup REST endpoints,
+and use separately configured third-party tools. These include research, media
+generation, social publishing, CRM, email, and deployment services. Some internal
+media scripts upload files to external hosting or generation services; review the
+selected skill and script before authorizing uploads. Installation does not grant
+those services access or make their subscriptions available.
+
+The host controls local execution and stores connection credentials. Recoup and
+third-party services handle submitted data under their respective policies; this
+package does not guarantee a retention period across those services. Public
+source code contains no customer workspace or account credentials.
+
+[Support](https://recoupable.dev/contact) · [Privacy](https://recoupable.dev/privacy)
+· [Terms](https://recoupable.dev/terms).
