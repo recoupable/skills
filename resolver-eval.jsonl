@@ -169,3 +169,6 @@
 {"intent": "recoup-internal make the seven vertical shorts from the podcast episode we just published", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales", "recoup-content-make-video"]}
 
 {"intent": "recoup-internal build a speaking profile from my transcripts and make my spoken scripts less robotic", "expected": "recoup-internal-consulting-persona-script-voice", "not": ["recoup-content-write-caption"]}
+
+{"intent": "recoup-internal create a motion design feature announcement for Recoup Play", "expected": "recoup-internal-content-design-motion", "not": ["recoup-content-asset-pack", "recoup-content-make-video"]}
+{"intent": "make a whole content pack for my new song", "expected": "recoup-content-asset-pack", "not": ["recoup-internal-content-design-motion"]}

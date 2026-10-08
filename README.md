@@ -210,3 +210,7 @@ OpenAI currently does not support adding it to an existing skills-only listing.
 Run the five validation gates in AGENTS.md before release. Also verify plugin
 installation, browser consent, tool discovery, a read, refresh and revocation in
 each supported host. JSON validation is not proof of a working host connection.
+
+## Internal motion design
+
+`recoup-internal-content-design-motion` creates feature-announcement films, product demos and marketing motion graphics. Invoke with the literal `recoup-internal` keyword. It includes original motion kernels, executable tests and production/review guidance; it is not the customer release-pack generator. Private assets stay in the selected project workspace.

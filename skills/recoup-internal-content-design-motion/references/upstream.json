@@ -1,0 +1,39 @@
+{
+  "source": "sidneyswift/skills: design-visual-experiences",
+  "installed_source_version": "0.4.3",
+  "scope": "Original renderer-neutral kernels and their tests, copied unchanged. Recoup guidance is adapted separately. No source media, private project records, or external research corpus included.",
+  "files": [
+    {
+      "path": "assets/motion-kernel.mjs",
+      "sha256": "745290d2a7fc88e222712b55b38e06279718772f38946d060dc6ecaa9c1221ab"
+    },
+    {
+      "path": "scripts/test-motion.mjs",
+      "sha256": "159d6e2c61b377dce63d2d6c0e963b100d7b5a808206614c1f390159ab126ae1"
+    },
+    {
+      "path": "assets/scene-kernel.mjs",
+      "sha256": "f45f1211d6597c9d1903747f49bc4d8defcc44fe71571581155cc4ccdb1a9f3a"
+    },
+    {
+      "path": "scripts/test-scene.mjs",
+      "sha256": "0e9367fdeb4d0497ca2d56be16c82991eca3655ff00ca0fcfad9441fc964f665"
+    },
+    {
+      "path": "assets/choreography-kernel.mjs",
+      "sha256": "2c8ff549643bd2b1372cb77229465986a9e236be9babeb3f32334287120808dd"
+    },
+    {
+      "path": "scripts/test-choreography.mjs",
+      "sha256": "27e21df45097b3cfad7310390343b1f94f707b7ef5e77e0073d15622b34988e9"
+    },
+    {
+      "path": "assets/experience-kernel.mjs",
+      "sha256": "3168c99e192ec7c511498b5fcf778ea72cc558c8702c3da8c334fde5533e0ab2"
+    },
+    {
+      "path": "scripts/test-experience.mjs",
+      "sha256": "9b8279a2b1264eb8cb6cf621744fefa0c60573da78b020ef01819f5aa715e4c3"
+    }
+  ]
+}
