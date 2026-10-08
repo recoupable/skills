@@ -82,6 +82,7 @@
 
 | Intent | Skill |
 |---|---|
+| "recoup-internal" + design a feature-announcement film, product demo or marketing motion graphics | `recoup-internal-content-design-motion` |
 | "recoup-internal" + write/maintain a GitHub tracking issue | `recoup-internal-dev-issue-tracker` |
 | "recoup-internal" + implement/ship a tracked issue end-to-end (docs-first, TDD) | `recoup-internal-dev-ship-issue` |
 | "recoup-internal" + benchmark/audit/grade a skill pack or plugin | `recoup-internal-eval-skill-benchmark` |
