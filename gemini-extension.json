@@ -1,0 +1,9 @@
+{
+  "name": "recoup-skills",
+  "version": "2.2.1",
+  "mcpServers": {
+    "recoup": {
+      "httpUrl": "https://api.recoupable.dev/mcp"
+    }
+  }
+}

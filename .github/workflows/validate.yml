@@ -20,6 +20,8 @@ jobs:
         run: python3 scripts/check_vendored.py
       - name: Manifest + parity validation
         run: python3 scripts/validate_manifests.py
+      - name: Distribution archive isolation and reproducibility
+        run: python3 scripts/test_package_plugin.py
       # Single flat plugin at the repo root (skills/ + RESOLVER.md); the focused
       # source plugins were consolidated into it, so there is no bundle-drift gate.
       - name: Resolver reachability (no dark skills)

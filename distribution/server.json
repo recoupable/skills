@@ -1,0 +1,11 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.recoupable/recoup",
+  "title": "Recoup",
+  "description": "Authenticated music-company tools for artist research, content, releases, and catalog workflows.",
+  "version": "2.2.1",
+  "websiteUrl": "https://recoupable.dev",
+  "remotes": [
+    {"type": "streamable-http", "url": "https://api.recoupable.dev/mcp"}
+  ]
+}

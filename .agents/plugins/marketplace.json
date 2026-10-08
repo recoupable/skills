@@ -1,7 +1,7 @@
 {
   "name": "recoup",
   "metadata": {
-    "description": "A record label in a box \u2014 Recoup's full music team (artist research, content, song analysis, release campaigns, and catalog valuation) in one install."
+    "description": "Recoup is an agentic music company platform for managers, labels, artists, songwriters, producers, catalog teams, and publishers. Research music, develop songs and content, plan releases, and review catalogs with reusable skills and authenticated Recoup MCP tools."
   },
   "owner": {
     "name": "Recoup",
@@ -12,8 +12,8 @@
     {
       "name": "recoup-skills",
       "source": "./",
-      "version": "2.2.0",
-      "description": "A record label in a box. Recoup turns your AI agent into a full music team \u2014 artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation \u2014 all in one install.",
+      "version": "2.2.1",
+      "description": "Recoup is an agentic music company platform for managers, labels, artists, songwriters, producers, catalog teams, and publishers. Research music, develop songs and content, plan releases, and review catalogs with reusable skills and authenticated Recoup MCP tools.",
       "author": {
         "name": "Recoup",
         "email": "support@recoupable.com",
@@ -38,18 +38,21 @@
       ],
       "interface": {
         "displayName": "Recoup Skills",
-        "shortDescription": "A record label in a box \u2014 your AI music team in one install",
-        "longDescription": "The whole Recoup platform in one plugin: artist research and analytics, A&R and contact discovery, content and short-form video, song analysis, end-to-end release campaigns, and catalog valuation \u2014 everything your AI music team needs to run an artist's career.",
+        "shortDescription": "Your AI music company",
+        "longDescription": "Recoup is an agentic music company platform for managers, labels, artists, songwriters, producers, catalog teams, and publishers. Research music, develop songs and content, plan releases, and review catalogs with reusable skills and authenticated Recoup MCP tools. Connect a Recoup account for remote tools. Some workflows require separate REST credentials, third-party services, local software, or paid usage. Available actions depend on your account permissions and host capabilities. Internal staff workflows require an explicit recoup-internal request and their own authorized workspace.",
         "developerName": "Recoup",
-        "category": "Music",
+        "category": "Productivity",
         "capabilities": [
           "Read",
           "Write"
         ],
-        "websiteURL": "https://recoupable.com",
-        "brandColor": "#345A5D",
+        "websiteURL": "https://recoupable.dev",
+        "brandColor": "#007EBD",
         "composerIcon": "./assets/recoup-icon.png",
-        "logo": "./assets/recoup-icon.png"
+        "logo": "./assets/recoup-icon.png",
+        "supportURL": "https://recoupable.dev/contact",
+        "privacyPolicyURL": "https://recoupable.dev/privacy",
+        "termsOfServiceURL": "https://recoupable.dev/terms"
       }
     }
   ]
