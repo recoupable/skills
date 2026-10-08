@@ -213,4 +213,4 @@ each supported host. JSON validation is not proof of a working host connection.
 
 ## Internal motion design
 
-`recoup-internal-content-design-motion` creates feature-announcement films, product demos and marketing motion graphics. Invoke with the literal `recoup-internal` keyword. It includes original motion kernels, executable tests and production/review guidance; it is not the customer release-pack generator. Private assets stay in the selected project workspace.
+`recoup-internal-content-design-motion` creates feature-announcement films, product demos and marketing motion graphics. Invoke with the literal `recoup-internal` keyword. It includes original motion kernels, executable tests, image/video asset production, and a bundled independent gauntlet review loop against inspected references; it is not the customer release-pack generator. Private assets stay in the selected project workspace.

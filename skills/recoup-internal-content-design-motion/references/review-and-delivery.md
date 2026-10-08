@@ -9,3 +9,5 @@ Play and listen to the actual export when the available tools support perception
 Track distinct states: technical validation, visual inspection, perceptual playback, audio listening, human approval and publication. Preserve the approved artifact, source recipe, dependencies and hash. Concept approval does not approve weak media. A renderer pass or completed generation does not grant human approval.
 
 Provide playable export and editable source, with assets or a dependency manifest sufficient to recover them. Count actual independently exported assets separately from layout variants and illustrations embedded only in the film. State when the film demonstrates a future/concept workflow rather than live product output. Keep private evidence and artist assets out of this public skill. Publication remains a separate authorized action.
+
+For full films, execute the independent comparison and notes-to-revision loop in `references/gauntlet-loop.md`. A review paragraph without actual critic inspection and resolution of material findings does not satisfy it. Record generation-to-final-use lineage using `references/generated-assets.md`.

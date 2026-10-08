@@ -1,0 +1,85 @@
+{
+  "brief": {
+    "goal": "",
+    "requirements": [],
+    "approved_strengths": [],
+    "soundtrack": {
+      "source": "",
+      "sha256": "",
+      "start_seconds": null,
+      "speed": 1
+    }
+  },
+  "references": [],
+  "assets": [],
+  "rounds": [],
+  "user_notes": [],
+  "delivery": {
+    "export": "",
+    "sha256": "",
+    "editable_source": "",
+    "dependency_manifest": "",
+    "technical": "pending",
+    "frames": "pending",
+    "independent_review": "pending",
+    "playback": "pending",
+    "audio": "pending",
+    "human_approval": "pending",
+    "publication": "not_authorized",
+    "stop_reason": null
+  },
+  "record_shapes": {
+    "reference": {
+      "id": "",
+      "url": "",
+      "title": "",
+      "accessed_at": "",
+      "sha256": null,
+      "reviewed_ranges": [],
+      "limits": []
+    },
+    "asset": {
+      "id": "",
+      "medium": "image|video",
+      "job": "",
+      "tool": "",
+      "model": "",
+      "prompt_file": "",
+      "reference_hashes": [],
+      "settings": {},
+      "job_id": "",
+      "status": "requested",
+      "quoted_cost": null,
+      "confirmed_cost": null,
+      "file": "",
+      "sha256": "",
+      "selection_reason": "",
+      "rejection_reason": null,
+      "film_ranges": [],
+      "standalone_export": null
+    },
+    "round": {
+      "id": "",
+      "export": "",
+      "sha256": "",
+      "reference_ids": [],
+      "critic_id": "",
+      "fresh_context": false,
+      "inspection_ranges": [],
+      "limits": [],
+      "verdict": "pending",
+      "notes": [],
+      "repairs": [],
+      "next_export": null
+    },
+    "note": {
+      "origin": "user|critic",
+      "version": "",
+      "range": null,
+      "problem": "",
+      "fix": "",
+      "status": "open",
+      "verification": null
+    }
+  }
+}
