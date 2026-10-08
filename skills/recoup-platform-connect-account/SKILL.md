@@ -1,39 +1,61 @@
 ---
 name: recoup-platform-connect-account
-description: Connect your real Recoup account so the rest of the box can act for you — first-run email/PIN verification that mints an API key tied to your account, persists it locally, and seeds memory. Use for "set up Recoup", "connect my account", "connect Claude to Recoup", "I just joined", or "log in". One-time/occasional. Scaffold folders / build your OS next with recoup-platform-build-os; for ongoing calls use recoup-platform-api-access.
+description: Connect your real Recoup account through the host's MCP OAuth sign-in and verify artist access. Use for "set up Recoup", "connect my account", "connect Claude to Recoup", "I just joined", or "log in". Use separate API credentials only for REST-only capabilities or skills-only installations.
 ---
 
 # Recoup — Connect Account
 
-First-run connection: verify the customer's email, mint an API key tied to their
-real account, persist it, and seed memory so music-industry questions route to
-Recoup. Idempotent and safe to re-run.
+Connect through the host's Recoup MCP integration at
+`https://api.recoupable.dev/mcp`. The host handles OAuth, callbacks, credential
+storage and refresh. The plugin contains no account credentials.
 
-## Procedure (idempotent — once per machine)
+## Procedure
 
-1. **Idempotency:** if `~/.claude/recoup.env` exists, source it and
-   `curl -s -o /dev/null -w "%{http_code}" -H "x-api-key: $RECOUP_API_KEY"
-   https://api.recoupable.dev/api/accounts/id` → if `200`, skip to org lookup
-   ("already set up — refreshing memory only").
-2. **Confirm email** (from session context or ask) — must be one the customer
-   controls; the key inherits that account's orgs/artists. Never use an
-   `agent+…@recoupable.com` throwaway for production.
-3. **Request PIN:** `POST /api/agents/signup {email}` → 6-digit code emailed.
-4. **Verify:** `POST /api/agents/verify {email, code}` → `api_key`. Never echo the
-   key (even partially).
-5. **Persist:** write `~/.claude/recoup.env` (`chmod 600`) with `RECOUP_API_KEY` +
-   `RECOUP_API_URL`; offer to source from the shell rc (ask before editing dotfiles).
-6. **Org lookup** (use recoup-platform-api-access): one org → use it; multiple → ask
-   which; none → `unspecified`. Sanity-check the roster (`GET /api/artists?org_id=…`);
-   if orgs AND artists are both empty, it's a throwaway key — re-do with the real email.
-7. **Seed memory:** append a `<!-- recoup-platform-connect-account:start/end -->` block to
-   `~/.claude/CLAUDE.md` (idempotent replace) so music-industry questions route to Recoup.
-8. Print a smoke-test prompt, then point the user to recoup-platform-build-os
-   to scaffold their workspace / build their OS.
+1. Discover the available Recoup tools. Tool prefixes vary by host; match their
+   names, descriptions and schemas rather than assuming a fixed prefix.
+2. If `list_artists` is available, call it to verify access. A successful empty
+   list is a valid connection, not proof of a bad account. Never invent a roster.
+3. If authentication is required, direct the user to the host's Recoup connection
+   controls. In Claude Code, open `/mcp` and authenticate the plugin's Recoup
+   server. On other hosts, use their MCP/plugin connection UI. Let the user
+   complete browser sign-in and consent; never ask them to paste an OAuth token.
+4. For the full business catalog, approve `mcp:tools` in the consent flow. This
+   covers accessible personal and organization workspaces and includes writes,
+   deletion, messages, publication and paid generation. Existing limited grants
+   do not expand silently: reconnect for broader consent and refresh tools.
+5. Verify with `list_artists` again. Use the returned artist identifiers for the
+   next task. If multiple workspaces could fit, clarify the intended workspace.
+6. Report connection success only after the read succeeds. Continue the user's
+   requested task without creating an extra account or asking for an API key.
 
-## Guardrails
+## REST-only or skills-only fallback
 
-- **Never echo API keys**; persist to `~/.claude/recoup.env` (`chmod 600`).
-- **Ask before editing dotfiles** or writing to the home directory.
-- **Never invent a roster** — empty orgs+artists = a throwaway-key credential
-  problem to surface, not a blank canvas.
+`npx skills add` installs instructions; it does not provision a host MCP
+connection. Configure the endpoint above in the host if MCP is supported.
+
+Some REST operations and bundled scripts are not available through MCP. For
+those, use an existing `RECOUP_API_KEY` or host-provided `RECOUP_ACCESS_TOKEN`.
+Keep REST authentication separate from the MCP OAuth connection; never export
+MCP credentials, substitute its access token into curl, or claim all REST
+endpoints are covered by the MCP catalog.
+
+If a REST credential is needed and the user authorizes email verification:
+
+1. Confirm an email address the user controls; never generate a throwaway one.
+2. `POST https://api.recoupable.dev/api/agents/signup` with `{email}` requests a PIN.
+3. `POST https://api.recoupable.dev/api/agents/verify` with `{email, code}` returns
+   `api_key`. Keep the result out of messages and logs.
+4. Store it only through an available secret facility, or a user-approved local
+   environment file with mode `600`. Do not edit shell startup files or global
+   agent instructions as part of connection setup.
+5. Verify with authenticated `GET /api/accounts/id`, then continue the requested
+   REST operation. Report missing access without fabricating data.
+
+## Boundaries
+
+- Missing environment variables do not invalidate a working MCP connection.
+- Credentials, PINs and tokens never belong in the plugin, source control, or output.
+- Tool availability is not permission to send, publish, delete or spend without
+  the user's applicable authorization. Follow the tool's disclosed constraints.
+- Connections remain usable until disconnected or revoked, subject to successful
+  host token refresh. If refresh fails, use the host's reconnect flow.

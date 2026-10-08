@@ -9,9 +9,26 @@ The platform access layer: authenticate, talk to the Recoup REST API, and
 invoke external connectors. Base `https://api.recoupable.dev/api`; docs
 `https://docs.recoupable.dev` (`/llms.txt`, `/llms-full.txt`, OpenAPI JSONs).
 
-## Auth — one Bearer header, inline
+## Prefer authenticated MCP tools
 
-Every call uses the same header, dropped straight into the `curl` (no setup step):
+Discover the host's Recoup MCP catalog first. Use a matching tool when its actual
+schema and results cover the requested operation. Prefixes vary by host. Use
+`list_artists` for roster discovery and bind subsequent requests to returned IDs.
+Do not infer that every REST endpoint or external connector has an MCP equivalent.
+
+The host manages OAuth. Do not extract its token, ask for it, or put it into REST
+requests. A working MCP connection does not require environment variables.
+If only the limited catalog is available, reconnect with `mcp:tools` consent and
+refresh the host's tools. Do not initiate sends, publication, deletion or paid
+work merely because the tools are available.
+
+For an operation absent from MCP, retain the documented REST workflow below.
+If REST credentials are missing, explain that specific limitation; do not claim
+the entire Recoup connection is broken or create a throwaway account.
+
+## REST fallback — one Bearer header, inline
+
+Every REST call uses the same header, dropped straight into the `curl` (no setup step):
 the sandbox sets one of the two vars, and the API accepts a `recoup_sk_` key or a
 Privy JWT over `Bearer`.
 
@@ -20,7 +37,8 @@ curl -sS -H "Authorization: Bearer ${RECOUP_API_KEY:-$RECOUP_ACCESS_TOKEN}" \
   "https://api.recoupable.dev/api/artists/{id}/socials"
 ```
 
-If neither var is set, ask the user to authenticate — don't retry blindly.
+If neither variable is set, use an applicable connected MCP tool or request
+separate REST setup for the missing capability. Do not retry unauthenticated.
 
 ## Pick the artist mode first (guessing here fabricates artists)
 
@@ -40,7 +58,7 @@ optional — orgs are often empty, so don't stop when `organizations` is `[]`).
 > `/artists/{account_id}/socials` at all.
 
 **Stop rule — never invent a roster:** if `GET /accounts/id` resolves to an
-`agent+…@recoupable.com` email, or `organizations` and `artists` both return `[]`,
+`agent+…@recoupable.com` email,
 it's a throwaway key — say so and ask for a real-account key (or
 recoup-platform-connect-account). Don't fabricate an artist/roster to keep moving.
 

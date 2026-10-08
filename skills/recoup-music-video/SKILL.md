@@ -1,23 +1,6 @@
 ---
 name: recoup-music-video
 description: Make a narrative music video using the Small Room workflow — approved song, story bible, scene audit, character audition, props, location plates, shot list, reviewed stills and end frames, motion, and verified edit. Use for "make a music video", "turn this song into a film", or "follow the Small Room workflow". Reuse approved audio; stops at the asset unless publishing is requested.
-hooks:
-  Stop:
-    - hooks:
-        - type: prompt
-          timeout: 30
-          prompt: |
-            You are the analyze-gate reviewer for the recoup-music-video skill. The main agent is about to stop. Decide whether to block.
-
-            The rule: the agent must NOT claim a video is finished — 'ready', 'done', 'here's your music video', 'final', 'good to go', or any equivalent — unless an analyze-gate result for THAT render appears in the conversation. A render returning the right duration is NOT evidence it looks right; the agent cannot see motion without analyzing.
-
-            Decide:
-
-            1. If the agent produced or is presenting a generated VIDEO asset AND is claiming it is finished/ready AND there is no analyze-gate pass (or explicit visual inspection of read frames) for that asset in the conversation, block:
-            {"decision": "block", "reason": "video presented as ready without an analyze-gate pass", "systemMessage": "Read frames from the finished render (or POST /api/content/analyze) and review the result before claiming it's ready. If it fails, regenerate and re-analyze; if borderline, surface the analysis to the user instead of asserting success."}
-
-            2. Otherwise approve:
-            {"decision": "approve"}
 ---
 
 # Music video — the Small Room workflow
