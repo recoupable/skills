@@ -1,6 +1,6 @@
 ---
 name: recoup-minimax-music-3
-description: Generate an original song with MiniMax Music 3 on fal, for a film, an ad, a demo or a release. Covers the two inputs the model takes (a structured Caption and tagged Lyrics), how to write lyrics that survive generation, the exact fal call and its cost, and the checks to run on the returned audio before anything is built on top of it. Use when asked to "make a song", "generate a track", "write the song for this video", "score this", or when a music video needs a song that does not exist yet. For an artist's already-released song use recoup-internal-marketing's music-video.md instead; for analysing an existing recording use recoup-song-analyze-audio.
+description: Generate an original song with MiniMax Music 3 on fal, for a film, an ad, a demo or a release. Covers the two inputs the model takes (a structured Caption and tagged Lyrics), how to write lyrics that survive generation, the exact fal call and its cost, and the checks to run on the returned audio before anything is built on top of it. Use when asked to "make a song", "generate a track", "write the song for this video", "score this", or when a music video needs a song that does not exist yet. For an artist's already-released song use recoup-music-video instead; for analysing an existing recording use recoup-song-analyze-audio.
 ---
 
 # MiniMax Music 3
@@ -116,9 +116,8 @@ the scene table exists is a rebuild, not a fix.
 
 - The song is **downstream of the concept**, never upstream. Genre, length and structure all follow
   from what the film is. Generating a song first locks the timing before the story exists.
-- Hand the approved audio and its word times to `recoup-internal-marketing` (its video pipeline
-  reference owns scene windows, stills, motion and the composite) or to `recoup-music-video` for an
-  artist film built around a generated song.
+- Hand the approved audio and its word times to `recoup-music-video` for an artist film, or
+  `recoup-content-make-video` for short-form content.
 - The audio approval gate is the cheapest gate in a film build. A song change after compositing
   moves every beat and every caption; before it, it costs 22 cents.
 

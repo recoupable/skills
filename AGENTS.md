@@ -205,3 +205,17 @@ skills receive resolver coverage and version updates, and must pass all normal v
 Incoming `codex/sync-*` proposals are SSH-signed by the coordinator. Separate candidate and trusted-main
 receiver workflows validate files, verify the signature and publish through a PR. No private-source
 credentials or AI review key live here. Overlapping edits remain pending instead of overwriting either side.
+
+## Generated distribution packages
+
+Keep one authoring tree. `scripts/build_plugin_packages.py` generates the customer
+OpenAI package (excluding `recoup-internal-*`) and the full staff package. New
+customer skills are included automatically; do not maintain a second skill list
+or copy. Customer support files cannot depend on internal skills. Stage new files
+before local package builds, since the builder uses tracked paths. Run package
+tests and a local build in addition to the five gates above.
+
+Merges to main publish versioned GitHub ZIP releases through plugin-release.yml.
+Artifact versions are generated without commits to main. OpenAI directory upload,
+review and publication remain separate steps; do not equate a GitHub release with
+an approved directory update. See README for the release workflow.

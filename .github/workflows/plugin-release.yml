@@ -1,0 +1,73 @@
+name: Publish plugin packages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: plugin-packages
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate source and package boundaries
+        run: |
+          python3 scripts/portability_lint.py
+          python3 scripts/check_vendored.py
+          python3 scripts/validate_manifests.py
+          python3 scripts/check_resolvable.py
+          python3 scripts/run_resolver_eval.py
+          python3 -m unittest discover -s tests -p test_plugin_packages.py
+          node --test tests/consulting-brand.test.mjs tests/consulting-runtime.test.mjs
+          python3 -m unittest discover -s tests -p test_consulting_templates.py
+      - name: Assign stable release version
+        id: version
+        env:
+          RELEASE_SEQUENCE: ${{ github.run_number }}
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import os, subprocess
+          date = subprocess.check_output(['git','show','-s','--format=%cs','HEAD'],text=True).strip()
+          year,month,day = map(int,date.split('-'))
+          print(f'version={year}.{month*100+day}.{os.environ["RELEASE_SEQUENCE"]}')
+          PY
+      - name: Build both packages
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: python3 scripts/build_plugin_packages.py --version "$RELEASE_VERSION" --out dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: recoup-plugin-packages
+          path: dist/
+      - name: Publish GitHub release and submission handoff
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          TAG="plugin-v$RELEASE_VERSION"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            if [ "$(gh release view "$TAG" --json isDraft --jq .isDraft)" = false ]; then
+              echo "Release already published; immutable artifacts retained."
+              cat dist/OPENAI-SUBMISSION.md >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          else
+            gh release create "$TAG" --draft --target "$GITHUB_SHA" --title "Recoup $RELEASE_VERSION" --generate-notes --notes-file dist/OPENAI-SUBMISSION.md
+          fi
+          LATEST=false
+          if [ "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GITHUB_SHA" ]; then LATEST=true; fi
+          gh release upload "$TAG" dist/* --clobber
+          gh release edit "$TAG" --draft=false --latest="$LATEST"
+          cat dist/OPENAI-SUBMISSION.md >> "$GITHUB_STEP_SUMMARY"
