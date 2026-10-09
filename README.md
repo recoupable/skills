@@ -1,4 +1,4 @@
-# Recoup Skills
+# Recoup
 
 AI agent skills for the music industry — a record label in a box. One install gives your agent the whole Recoup platform: artist setup & API access, research, catalog deals, content, song analysis, and releases.
 
