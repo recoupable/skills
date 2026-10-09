@@ -61,7 +61,11 @@ def build(root, tracked, out, version, commit):
         files, skills = package_files(root, tracked, audience)
         for name in files:
             if name.endswith(('plugin.json','marketplace.json')) and name.startswith(('.codex-plugin/', '.claude-plugin/', '.cursor-plugin/', '.agents/plugins/')):
-                files[name] = (json.dumps(stamp_versions(json.loads(files[name]),version),indent=2)+'\n').encode()
+                metadata = stamp_versions(json.loads(files[name]), version)
+                if name == '.codex-plugin/plugin.json':
+                    host = 'ChatGPT' if audience == 'customer' else 'Codex'
+                    metadata.setdefault('interface', {})['shortDescription'] = f'A record label inside {host}'
+                files[name] = (json.dumps(metadata,indent=2)+'\n').encode()
         filename = f'recoup-{audience}-{version}.zip'
         with zipfile.ZipFile(out/filename,'w',zipfile.ZIP_DEFLATED) as z:
             for name,data in sorted(files.items()):

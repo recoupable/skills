@@ -38,7 +38,7 @@
       ],
       "interface": {
         "displayName": "Recoup",
-        "shortDescription": "A record label inside ChatGPT",
+        "shortDescription": "A record label powered by agents",
         "longDescription": "Let your agents create content, plan releases, reach new fans, and uncover opportunities across your catalog. Make music videos and cover art, research artists, discover talent, and build campaigns. Start with a song, an artist, or an entire catalog.",
         "developerName": "Recoup",
         "category": "Creativity",
