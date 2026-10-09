@@ -12,7 +12,7 @@
     {
       "name": "recoup-skills",
       "source": "./",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "description": "A record label in a box. Recoup turns your AI agent into a full music team \u2014 artist research and analytics, content and short-form video, song analysis, release campaigns, and catalog valuation \u2014 all in one install.",
       "author": {
         "name": "Recoup",
@@ -37,7 +37,7 @@
         "agent-skills"
       ],
       "interface": {
-        "displayName": "Recoup Skills",
+        "displayName": "Recoup",
         "shortDescription": "A record label in a box \u2014 your AI music team in one install",
         "longDescription": "The whole Recoup platform in one plugin: artist research and analytics, A&R and contact discovery, content and short-form video, song analysis, end-to-end release campaigns, and catalog valuation \u2014 everything your AI music team needs to run an artist's career.",
         "developerName": "Recoup",
