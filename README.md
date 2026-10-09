@@ -250,3 +250,12 @@ python3 scripts/build_plugin_packages.py --version 2026.1008.1 --out /tmp/recoup
 ```
 
 The builder reads tracked files, so untracked files are never silently shipped.
+
+### Platform-specific listing copy
+
+Claude and Cursor manifests name their respective hosts. Shared source metadata
+uses “A record label powered by agents.” The package builder sets the Codex-format
+manifest subtitle to “A record label inside ChatGPT” in the customer directory ZIP
+and “A record label inside Codex” in the full ZIP. These are build-time labels,
+not runtime host detection; direct repository installs use the source metadata.
+The long product description and skills remain shared.

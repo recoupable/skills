@@ -1,7 +1,7 @@
 {
   "name": "recoup-skills",
   "version": "2.2.3",
-  "description": "Recoup music workflows and authenticated MCP tools.",
+  "description": "A record label inside Cursor. Recoup music workflows and authenticated MCP tools.",
   "skills": "./skills/",
   "mcpServers": "./mcp.json"
 }

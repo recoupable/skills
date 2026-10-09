@@ -30,6 +30,9 @@ class PackagesTest(unittest.TestCase):
                 self.assertIn('skills/recoup-public/references/data.txt',z.namelist())
                 self.assertFalse(any('recoup-internal-' in n for n in z.namelist()))
                 self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['version'],'2026.1008.1')
+                self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['interface']['shortDescription'], 'A record label inside ChatGPT')
+            with zipfile.ZipFile(root/'out'/report['packages']['full']['file']) as z:
+                self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['interface']['shortDescription'], 'A record label inside Codex')
             self.assertEqual(json.loads((root/'.codex-plugin/plugin.json').read_text())['version'],'1.0.0')
             again=packages.build(root,files,root/'again','2026.1008.1','test-commit')
             self.assertEqual(report,again)
