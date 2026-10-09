@@ -34,7 +34,6 @@ If an external skill cannot be loaded, disclose that limitation and use the incl
 | Shot list | [higgsfield-shotlist-director](https://github.com/OSideMedia/higgsfield-ai-prompt-skill/tree/c0b73ab946df6658cca513db78bdc3909a655bfd/skills/higgsfield-shotlist-director) | Global style, reference glossary, named prompts, tempo and monotony audits |
 | Composition and verification | [hyperframes](https://github.com/recoupable/skills/tree/main/skills/hyperframes) and [hyperframes-cli](https://github.com/recoupable/skills/tree/main/skills/hyperframes-cli) | HTML timeline, captions, lint, snapshots, render and inspection |
 | Recoup authentication, when using its routes | [recoup-platform-api-access](https://github.com/recoupable/skills/tree/main/skills/recoup-platform-api-access) | Verify the account and API contract without exposing credentials |
-| Authorized Recoup staff publishing | [recoup-internal-social-ship-posts](https://github.com/recoupable/skills/tree/main/skills/recoup-internal-social-ship-posts) | Approved copy, platform publication, verification and logging |
 
 Small Room adapted these methods: its shot list was `SCRIPT.md`, its audition was silent,
 and its scene motion was H3 Max Turbo. Do not import the linked skills' Seedance multi-cut
@@ -102,8 +101,7 @@ instead go to Seedance 2.5 with the sheets as references, one take per song sect
 input filter (through fal) rejects every photoreal face of any origin but accepts a stylized one
 and holds it across shots. Cast photoreal from the user's references first, approve, then
 re-render every asset in one style string. Recipe, prompt architecture and costs live in
-the Seedance reference of the staff-only `recoup-internal-marketing` skill (*The decision gate*),
-not in this skill.
+`references/stylized-motion.md`.
 
 Stage a **silent five-second screen test** of an actual demanding beat from the film,
 using **H3 Max Turbo** at the settings in the production reference. It must prove the
@@ -240,6 +238,6 @@ Record what was inspected and any unresolved defects. Return the playable film, 
 duration, source artifacts and actual cost when reported; label estimates as estimates.
 Obtain the user's final viewing approval.
 
-Small Room then used `recoup-internal-social-ship-posts`. Hand off to that linked skill only
-for authorized Recoup staff publishing, honoring its scope. Video approval alone does not
-authorize posts. Otherwise finish at the approved asset.
+Finish at the approved asset. Publishing requires a separate user request naming the destination
+and account, an authorized publishing connection, and verification of the resulting post. Video
+approval alone does not authorize publication.

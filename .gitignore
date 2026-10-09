@@ -11,3 +11,5 @@ tests/*
 
 # internal research wiki — kept locally, not shipped in the marketplace
 docs/research/
+
+!tests/test_plugin_packages.py

@@ -214,3 +214,39 @@ each supported host. JSON validation is not proof of a working host connection.
 ## Internal motion design
 
 `recoup-internal-content-design-motion` creates feature-announcement films, product demos and marketing motion graphics. Invoke with the literal `recoup-internal` keyword. It includes original motion kernels, executable tests, image/video asset production, and a bundled independent gauntlet review loop against inspected references; it is not the customer release-pack generator. Private assets stay in the selected project workspace.
+
+## Automatic plugin packages
+
+Every merge to `main` validates and publishes a GitHub release with two ZIPs built
+from the same commit. No separate skill copies or manually maintained skill list
+are needed:
+
+- **Customer:** every skill except `recoup-internal-*`, its bundled support files,
+  the Codex manifest, assets and MCP configuration. Use this ZIP for OpenAI.
+- **Full:** all customer and staff skills plus the repository's shared components
+  and manifests. Internal naming describes audience, not repository privacy.
+
+New customer skills are included automatically. Staff skills must use the
+`recoup-internal-` prefix. Customer files must not refer to excluded internal
+skills; PR validation rejects those dependencies.
+
+The workflow stamps `YYYY.MMDD.run-number` versions into packaged manifests only
+(the middle number has no leading zero). Source manifests remain synchronized
+under the existing validation rules. Each release includes SHA-256 checksums,
+skill inventories, the source commit and OpenAI submission instructions. Failed
+uploads resume in a draft release before publication; published releases are
+retained unchanged.
+
+GitHub release publication is automatic. OpenAI directory updates still require
+uploading the customer ZIP, completing checks, review and publication in the
+publisher portal. This workflow does not promise automatic refresh of existing
+GitHub marketplace installations. It does not change the live MCP deployment.
+
+To build locally after staging new files:
+
+```bash
+python3 -m unittest discover -s tests -p test_plugin_packages.py
+python3 scripts/build_plugin_packages.py --version 2026.1008.1 --out /tmp/recoup-packages
+```
+
+The builder reads tracked files, so untracked files are never silently shipped.
