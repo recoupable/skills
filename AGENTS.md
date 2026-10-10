@@ -39,7 +39,7 @@ recoupable/skills/            ← the repo root IS the plugin
 - **Skill** — a `SKILL.md` folder that teaches one task. Portable; runs on any agent.
 - **Plugin** — this repo, rooted at the repo root: it ships every skill in `skills/` **plus** agents, MCP configuration, and shared references, installed through a runtime's plugin system or `npx skills`. A skill is a subset of the plugin. (No slash-`commands/` — skills only; see "No slash-commands".)
 - **Harness** — a runtime that loads skills/plugins: Claude Code, Codex, Cursor, or bare `npx skills`.
-- **Marketplace registry** — the single installable-plugin entry (`recoup-skills`, `source "."`), written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
+- **Marketplace registry** — the single installable-plugin entry (`recoup-plugin`, `source "."`), written in `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`.
 - **Canonical / vendored** — when two places need the same file, one copy is the *canonical* source and the rest are byte-identical *vendored* copies tracked in `scripts/vendored.json` (the references, templates, and fixtures shared across skills).
 - **Resolver** — the repo-root `RESOLVER.md` routing table that maps a user request to the one skill that should handle it. Skills stay flat and discoverable; there is no separate "router" entry-point skill. Reachability is enforced by `scripts/check_resolvable.py`.
 
@@ -131,7 +131,7 @@ as explicit skill steps and validators so the public plugin remains hook-free.
 
 ## The marketplace registry
 
-The single plugin (`recoup-skills`, `source "."`) is listed in **two files that must stay identical in content**:
+The single plugin (`recoup-plugin`, `source "."`) is listed in **two files that must stay identical in content**:
 
 - `.claude-plugin/marketplace.json` (Claude)
 - `.agents/plugins/marketplace.json` (Cursor / agents)
@@ -143,7 +143,7 @@ The single plugin (`recoup-skills`, `source "."`) is listed in **two files that 
 ## Naming & branding
 
 - Slugs are **plain-English, lowercase, hyphenated** — no filler suffixes: `recoup-song-find-hook`, not `recoup-song-find-hook-finder`.
-- **The plugin name drops any `-plugin` suffix**: `recoup-skills`, not `recoup-skills-plugin`.
+- **The package identifier is `recoup-plugin` across all harnesses; the display name is Recoup.**
 - Pattern: `recoup-[domain]-[verb]-[noun]` — four words, domain-first, so the `/` list auto-clusters by domain and every name says what it does. Domains are a small, stable set (`platform`, `roster`, `research`, `song`, `content`, `release`, `catalog`); a skill slots into an existing one. **Internal staff skills** add an `internal` segment — `recoup-internal-[domain]-[verb]-[noun]` (five tokens) — and are gated behind the literal `recoup-internal` trigger keyword in their `description`. The plugin routes to its skills through the root `RESOLVER.md` table — no separate router skill.
 - Preserve history on renames/moves with `git mv`, then update the `name:` frontmatter, cross-references, README tables, and `scripts/vendored.json` paths.
 

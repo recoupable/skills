@@ -107,7 +107,7 @@ def validate_distribution(problems: list[str]) -> None:
             problems.append(f"{folder}: missing or invalid marketplace")
             continue
         for entry in data.get("plugins", []):
-            if entry.get("name") == "recoup-skills":
+            if entry.get("name") == "recoup-plugin":
                 versions.add(entry.get("version"))
     if len(versions) != 1 or None in versions:
         problems.append("All plugin and marketplace versions must match")

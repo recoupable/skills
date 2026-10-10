@@ -8,7 +8,7 @@ AI agent skills for the music industry — a record label in a box. One install 
 
 ```bash
 /plugin marketplace add recoupable/skills
-/plugin install recoup-skills@recoup
+/plugin install recoup-plugin@recoup
 ```
 
 ### Codex and Cursor
@@ -275,3 +275,12 @@ The customer directory package uses the blue Recoup icon in
 `assets/recoup-customer-icon.png` for its logo and composer icon. The full
 marketplace package retains its source icon, making the two distributions
 visually distinguishable during installation and review.
+
+### Package identifier migration
+
+The package identifier changed from `recoup-skills` to `recoup-plugin` in 2.4.0.
+The display name remains Recoup and the repository remains `recoupable/skills`.
+Existing marketplace installations may require installing `recoup-plugin@recoup`
+and removing the old entry after verifying the replacement. Uploaded OpenAI drafts
+and workspace installations must be checked separately; a GitHub release does not
+confirm that those existing records accept an identifier change.
