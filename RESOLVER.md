@@ -38,6 +38,7 @@
 | analyze a song's audio: BPM/key/genre/mood, lyrics, mix critique | `recoup-song-analyze-audio` |
 | find the hook, best 5–15s to clip | `recoup-song-find-hook` |
 | playlist pitch + sync brief from the audio | `recoup-song-placement-pitch` |
+| check who wrote/produced/performed a song; compare credit records and supplied splits | `recoup-song-check-credits` |
 
 ### content — assets
 | Intent | Skill |
@@ -56,10 +57,15 @@
 |---|---|
 | plan/run a release, creative brief, rollout schedule, RELEASE.md/DSP pitch/one-sheet | `recoup-release-plan-rollout` |
 | did the single drop, launch-day alert | `recoup-release-track-drop` |
+| add a release from a supported link/export; available release details and ordered tracks | `recoup-release-add-release` |
+| check release metadata across sources; compare exports and correction receipts; did metadata changes reach a provider | `recoup-release-check-metadata` |
 
-### catalog — catalog deals
+### catalog — repertoire, contracts, publishing and deals
 | Intent | Skill |
 |---|---|
+| import a distributor/repertoire catalog spreadsheet; organize releases/recordings with unresolved rows | `recoup-catalog-import-catalog` |
+| explain a supplied music contract/license/publishing agreement and its obligations | `recoup-catalog-explain-contract` |
+| organize publishing repertoire, writer/publisher interests, registration references and mandates | `recoup-catalog-organize-publishing` |
 | review/underwrite a catalog deal, clean a data room, value with files, dashboard, IC memo | `recoup-catalog-review-deal` |
 | value a catalog from public data only (no seller files) | `recoup-catalog-estimate-value` |
 | measure an artist's NFT/onchain earnings, value an artist who sold music NFTs | `recoup-nft-valuation` |

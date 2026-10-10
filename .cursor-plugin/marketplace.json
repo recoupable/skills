@@ -13,7 +13,7 @@
       "name": "recoup-skills",
       "source": "./",
       "description": "A record label inside Cursor. Let your agents create content, plan releases, reach new fans, and uncover opportunities across your catalog. Make music videos and cover art, research artists, discover talent, and build campaigns. Start with a song, an artist, or an entire catalog.",
-      "version": "2.2.3",
+      "version": "2.3.0",
       "author": {
         "name": "Recoup",
         "email": "support@recoupable.com",
