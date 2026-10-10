@@ -270,3 +270,8 @@ manifest subtitle to “A record label inside ChatGPT” in the customer directo
 and “A record label inside Codex” in the full ZIP. These are build-time labels,
 not runtime host detection; direct repository installs use the source metadata.
 The long product description and skills remain shared.
+
+The customer directory package uses the blue Recoup icon in
+`assets/recoup-customer-icon.png` for its logo and composer icon. The full
+marketplace package retains its source icon, making the two distributions
+visually distinguishable during installation and review.
