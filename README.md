@@ -77,6 +77,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | recoup-song-analyze-audio | Understand a song from its audio (BPM/key/genre, lyrics, mix) |
 | recoup-song-find-hook | Find the most clip-worthy 5–15 seconds |
 | recoup-song-placement-pitch | Playlist/editorial pitch + sync brief from the audio |
+| recoup-song-check-credits | Compare writer, producer and performer credits; flag conflicting names, roles and supplied shares |
 
 ### content — media assets
 
@@ -97,14 +98,24 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 |-------|-------------|
 | recoup-release-plan-rollout | Plan & run a release end to end |
 | recoup-release-track-drop | Confirm a drop & build a launch-day alert |
+| recoup-release-add-release | Add a supported release link/export and show available details and ordered tracks |
+| recoup-release-check-metadata | Compare release records and track exactly which metadata corrections are confirmed |
 
-### catalog — catalog deals
+### catalog — repertoire, contracts, publishing and deals
 
 | Skill | What it does |
 |-------|-------------|
+| recoup-catalog-import-catalog | Organize a supplied catalog export with row references, counts and unresolved matches |
+| recoup-catalog-explain-contract | Explain a supplied music agreement with clause references and concrete obligations |
+| recoup-catalog-organize-publishing | Organize compositions, parties, recorded shares, registrations and administration details |
 | recoup-catalog-review-deal | Underwrite a deal end to end (data room → IC memo) |
 | recoup-catalog-estimate-value | Value a catalog from public data alone (no seller files) |
 | recoup-nft-valuation | Measure an artist's onchain NFT earnings & fold them into a valuation |
+
+The new release, catalog, credits, contract and publishing workflows can review supplied
+material with the host’s file tools. Saving/importing into Recoup requires the corresponding
+supported operation and access; a local worksheet is not a hosted import. No new backend
+capability ships with these skills.
 
 ### platform — operate the system
 

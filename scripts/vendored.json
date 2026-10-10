@@ -255,6 +255,17 @@
         "skills/recoup-internal-consulting-linkedin-publisher/scripts/check_public_copy.py",
         "skills/recoup-internal-consulting-nightly-content/scripts/check_public_copy.py"
       ]
+    },
+    {
+      "canonical": "references/music-business-records.md",
+      "copies": [
+        "skills/recoup-release-add-release/references/music-business-records.md",
+        "skills/recoup-release-check-metadata/references/music-business-records.md",
+        "skills/recoup-catalog-import-catalog/references/music-business-records.md",
+        "skills/recoup-song-check-credits/references/music-business-records.md",
+        "skills/recoup-catalog-explain-contract/references/music-business-records.md",
+        "skills/recoup-catalog-organize-publishing/references/music-business-records.md"
+      ]
     }
   ]
 }

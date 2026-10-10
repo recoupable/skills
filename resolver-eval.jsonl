@@ -173,3 +173,23 @@
 {"intent": "recoup-internal create a motion design feature announcement for Recoup Play", "expected": "recoup-internal-content-design-motion", "not": ["recoup-content-asset-pack", "recoup-content-make-video"]}
 {"intent": "make a whole content pack for my new song", "expected": "recoup-content-asset-pack", "not": ["recoup-internal-content-design-motion"]}
 {"intent": "recoup-internal generate images and videos for a launch film, then run the gauntlet against the Higgsfield reference and revise from my notes", "expected": "recoup-internal-content-design-motion", "not": ["recoup-content-asset-pack", "recoup-content-make-video"]}
+
+# --- concrete music business records workflows ---
+{"intent": "Add this album link to Recoup and show its tracks", "expected": "recoup-release-add-release", "not": ["recoup-release-plan-rollout", "recoup-release-track-drop"]}
+{"intent": "Add the release in this distributor export, preserving disc and track order", "expected": "recoup-release-add-release", "not": ["recoup-catalog-import-catalog"]}
+{"intent": "Put this single in Recoup; I am not asking for a campaign", "expected": "recoup-release-add-release", "not": ["recoup-release-plan-rollout"]}
+{"intent": "Check my release metadata against this distributor export", "expected": "recoup-release-check-metadata", "not": ["recoup-release-track-drop"]}
+{"intent": "Did these distributor credit corrections reach the Spotify listing?", "expected": "recoup-release-check-metadata", "not": ["recoup-song-check-credits"]}
+{"intent": "Compare UPC, explicit status and track order across these two release exports", "expected": "recoup-release-check-metadata", "not": ["recoup-release-add-release"]}
+{"intent": "Import my catalog from this distributor CSV", "expected": "recoup-catalog-import-catalog", "not": ["recoup-catalog-review-deal", "recoup-catalog-estimate-value"]}
+{"intent": "Organize this 200-recording repertoire spreadsheet and flag uncertain matches", "expected": "recoup-catalog-import-catalog", "not": ["recoup-roster-onboard"]}
+{"intent": "Load my catalog without valuing a deal or deleting repeat ISRC release memberships", "expected": "recoup-catalog-import-catalog", "not": ["recoup-catalog-review-deal"]}
+{"intent": "Check my song credits against this split sheet and producer agreement", "expected": "recoup-song-check-credits", "not": ["recoup-song-analyze-audio", "recoup-catalog-explain-contract"]}
+{"intent": "Who wrote and produced this recording according to these documents?", "expected": "recoup-song-check-credits", "not": ["recoup-research-artist-overview"]}
+{"intent": "Do the writer shares in these two split sheets for this song agree?", "expected": "recoup-song-check-credits", "not": ["recoup-catalog-organize-publishing"]}
+{"intent": "Explain this music contract and what each party must do", "expected": "recoup-catalog-explain-contract", "not": ["recoup-catalog-review-deal"]}
+{"intent": "What does this publishing agreement say about term and audit rights?", "expected": "recoup-catalog-explain-contract", "not": ["recoup-catalog-organize-publishing"]}
+{"intent": "Summarize this license; the repertoire exhibit and signatures are missing", "expected": "recoup-catalog-explain-contract", "not": ["recoup-catalog-estimate-value"]}
+{"intent": "Organize my publishing from these work lists and registration exports", "expected": "recoup-catalog-organize-publishing", "not": ["recoup-catalog-import-catalog"]}
+{"intent": "List my compositions, writers, publishers and administration mandates", "expected": "recoup-catalog-organize-publishing", "not": ["recoup-roster-list-artists"]}
+{"intent": "Which works in this supplied repertoire are missing publishing details?", "expected": "recoup-catalog-organize-publishing", "not": ["recoup-platform-track-onboarding"]}
