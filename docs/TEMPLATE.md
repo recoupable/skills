@@ -105,7 +105,7 @@ Accept reasonable defaults; confirm the derived names once before writing files.
 ### Derived names (compute these, then confirm)
 
 - **Marketplace name** = the short brand handle (recoup uses `recoup`). This is the `@`-suffix in plugin installs (`<plugin>@<marketplace>`).
-- **Repo-as-plugin name** = `<prefix>-skills` (e.g. `recoup-skills`) — the library plugin whose `skills` path is the top-level `./skills/`.
+- **Repo-as-plugin name** = `<prefix>-plugin` (e.g. `recoup-plugin`) — the library plugin whose `skills` path is the top-level `./skills/`.
 - **Plugin identifier** = `<prefix>-<group>` (kebab, lowercase). `group` = the install **audience**, not a fancy label.
 - **Plugin display label** = `<Brand> — <Group>` (e.g. `Recoup — Research`).
 - **Plugin skill identifier** = `<prefix>-<capability>` (kebab, lowercase) — named for **what it does**, never the owning team.
