@@ -65,6 +65,12 @@ def build(root, tracked, out, version, commit):
                 if name == '.codex-plugin/plugin.json':
                     host = 'ChatGPT' if audience == 'customer' else 'Codex'
                     metadata.setdefault('interface', {})['shortDescription'] = f'A record label inside {host}'
+                    if audience == 'customer':
+                        icon = 'assets/recoup-customer-icon.png'
+                        if icon not in files:
+                            raise ValueError(f'Missing customer icon: {icon}')
+                        metadata['interface']['logo'] = f'./{icon}'
+                        metadata['interface']['composerIcon'] = f'./{icon}'
                 files[name] = (json.dumps(metadata,indent=2)+'\n').encode()
         filename = f'recoup-{audience}-{version}.zip'
         with zipfile.ZipFile(out/filename,'w',zipfile.ZIP_DEFLATED) as z:

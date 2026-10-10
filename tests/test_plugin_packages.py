@@ -13,6 +13,7 @@ class PackagesTest(unittest.TestCase):
     def fixture(self, root):
         files={'.codex-plugin/plugin.json':json.dumps({'version':'1.0.0','skills':'./skills/'}),
                '.mcp.json':'{"mcpServers":{}}',
+               'assets/recoup-customer-icon.png':'customer-icon-fixture',
                'skills/recoup-public/SKILL.md':'Public instructions',
                'skills/recoup-internal-staff/SKILL.md':'Staff instructions',
                'skills/recoup-public/references/data.txt':'Bundled reference'}
@@ -28,6 +29,8 @@ class PackagesTest(unittest.TestCase):
             self.assertEqual(len(report['packages']['full']['skills']),2)
             with zipfile.ZipFile(root/'out'/report['packages']['customer']['file']) as z:
                 self.assertIn('skills/recoup-public/references/data.txt',z.namelist())
+                self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['interface']['logo'], './assets/recoup-customer-icon.png')
+                self.assertEqual(z.read('assets/recoup-customer-icon.png'), b'customer-icon-fixture')
                 self.assertFalse(any('recoup-internal-' in n for n in z.namelist()))
                 self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['version'],'2026.1008.1')
                 self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['interface']['shortDescription'], 'A record label inside ChatGPT')
