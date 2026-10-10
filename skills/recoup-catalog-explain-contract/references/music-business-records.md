@@ -25,9 +25,7 @@ session must be able to retrieve the result before calling it reusable in Recoup
 
 ## Discover the current save and review operations
 
-Use the connected MCP catalog and exact input schemas as the operation contract.
-For REST-only installations, consult https://docs.recoupable.dev/llms.txt and the
-relevant live endpoint documentation. Verify that an operation supports the intended
+Using the discovery route above, verify that an operation supports the intended
 workspace, source type, source version, saved result and readback before calling it.
 Do not infer availability from a historical implementation or from this skill.
 
@@ -38,9 +36,9 @@ use the actual schema, and never treat it as rights or distribution approval.
 
 There is no universal catalog, contract, credits or publishing importer supplied by
 these skills. Do not invent tools, endpoints or parser compatibility. Discover
-collection and private-storage support independently. The user's request to add a
-release covers ordinary read-only metadata lookup for that release; paid calls or
-broader collection need their own authorized scope.
+collection and private-storage support independently. Authorization is scoped to the
+specific request: a read-only lookup of one named item does not authorize paid calls
+or broader collection, which need their own authorized scope.
 
 ## Keep facts attributable and scoped
 
