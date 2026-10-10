@@ -34,9 +34,9 @@ without dropping troublesome rows or turning an import into a rights claim.
    file/version should not create duplicates; changed versions produce a change list
    and preserve history rather than overwrite accepted identity or rights decisions.
 6. Discover an importer that supports this format and workspace before writing.
-   Inspect existing catalogs and exact schemas. The basic `insert_catalog_songs`
-   operation can associate valid ISRCs with an existing catalog; it is not a general
-   spreadsheet importer and cannot save unresolved rows or full composition records.
+   Inspect existing catalogs and exact schemas. If an operation only associates
+   ISRCs with a catalog, it cannot be assumed to import a spreadsheet, unresolved
+   rows or full composition records. Verify its supported fields before use.
    Never use it as proof of complete import. Without suitable hosted support, return
    a labeled private catalog worksheet/export and review queue instead.
 7. Read back supported hosted writes and reconcile counts. Retain the import/version

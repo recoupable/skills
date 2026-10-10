@@ -22,16 +22,15 @@ track list where supported, plus the saved Recoup record or a labeled local work
 2. Inspect existing releases in that workspace. Reuse a verified same-provider release
    ID; retain uncertain matches for review. A reissue, edition or alternate product
    may be a separate release even when its title and songs match.
-3. On the hosted route, inspect `list_release_cases`, use `ingest_release` only for
-   supported URLs and read the returned case with `read_release_case`. These shapes
-   are in `references/music-business-records.md`. A link-only result remains “link
-   saved; tracks not collected”. Check the actual collection operation and any paid
-   scope before gathering metadata; do not invoke a collector speculatively. If the
-   connected catalog exposes `get_spotify_album`, inspect its current schema and
-   use the verified album ID to read public metadata/tracks, following pagination
-   through supported tools. Report these as retrieved observations unless a supported
-   operation actually saves them in the release case. A track-only link does not
-   authorize importing an entire album.
+3. On the hosted route, discover the saved-release list, submit and read operations
+   from the current tool catalog or REST contract. A link-only result remains “link
+   saved; tracks not collected”. Inspect the actual collection capability and any
+   paid scope before gathering metadata. The user's request to add a release covers
+   ordinary read-only lookup for that release, as described in
+   `references/music-business-records.md`; paid or broader collection requires
+   separately authorized scope. Use a verified provider release ID and supported
+   pagination. Report retrieved observations separately from tracks actually saved
+   in the release case. A track-only link does not authorize importing an entire album.
 4. On the supplied-export route, capture release/product IDs and each track's disc,
    position, title/version, credited artists and supplied recording IDs, retaining
    source rows. Preserve repeat tracks and disc order; never deduplicate track slots

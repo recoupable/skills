@@ -34,7 +34,7 @@ it. Compare supplied source versions; a correction request is not proof of deliv
    destination and fields were checked; one platform's update is not all-DSP proof.
 6. If recording a hosted metadata review, read the current case and fingerprint,
    check coverage and source changes, and obtain the user's actual review decision.
-   Use the discovered `review_release_case` contract; retain/read its receipt. A
+   Use the discovered metadata-review contract; retain/read its receipt. A
    discrepancy report by itself is not user acceptance or a distribution approval.
 
 ## Handoff

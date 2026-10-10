@@ -23,26 +23,24 @@ keys for retries. Read back the saved result and retain its returned identifier.
 uncertain response requires reconciliation, not a fresh create request. Another
 session must be able to retrieve the result before calling it reusable in Recoup.
 
-## Known Context operation shapes to check
+## Discover the current save and review operations
 
-The October 10, 2026 implementation snapshot uses an MCP `context` tool or REST
-`POST https://api.recoupable.dev/api/context` for these operations. Recheck current
-schema and availability before calling; not every operation or collector is deployed
-or enabled in every environment.
+Use the connected MCP catalog and exact input schemas as the operation contract.
+For REST-only installations, consult https://docs.recoupable.dev/llms.txt and the
+relevant live endpoint documentation. Verify that an operation supports the intended
+workspace, source type, source version, saved result and readback before calling it.
+Do not infer availability from a historical implementation or from this skill.
 
-- `list_release_cases`: optional `organization_id` and pagination cursor `after_id`.
-- `ingest_release`: `url`, `idempotency_key`, optional `organization_id`; saves a
-  supported release locator and returns a request, not proof of collected tracks.
-- `read_release_case`: `request_id`, optional `organization_id`; inspect tracks,
-  source manifest, pagination, gaps and current fingerprint.
-- `review_release_case`: `request_id`, current `fingerprint`, `decision` of
-  `reviewed` or `needs_changes`, `note`, `idempotency_key`, optional
-  `organization_id`; metadata review never approves ownership or distribution.
+Inspect saved releases before creating another. A release-link submission may retain
+only the URL; metadata retrieval and saving tracks can be separate operations. A
+metadata review may require a current fingerprint/version and a stable retry key;
+use the actual schema, and never treat it as rights or distribution approval.
 
 There is no universal catalog, contract, credits or publishing importer supplied by
-these skills. Do not invent MCP tools, endpoints or parser compatibility. Discover
-collection and private-storage support independently. A collector may require
-spending authorization even if registering a link is free.
+these skills. Do not invent tools, endpoints or parser compatibility. Discover
+collection and private-storage support independently. The user's request to add a
+release covers ordinary read-only metadata lookup for that release; paid calls or
+broader collection need their own authorized scope.
 
 ## Keep facts attributable and scoped
 
