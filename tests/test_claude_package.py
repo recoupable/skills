@@ -15,6 +15,7 @@ class ClaudePackageTest(unittest.TestCase):
             files = {
                 '.claude-plugin/plugin.json': json.dumps({'name': 'recoup-plugin', 'version': '1.0.0', 'mcpServers': './.mcp.json'}),
                 '.codex-plugin/plugin.json': '{}', '.mcp.json': '{"mcpServers":{}}',
+                'assets/recoup-customer-icon.png': 'icon-fixture',
                 'LICENSE': 'license', 'skills/recoup-research/SKILL.md': 'Research',
                 'skills/recoup-research/scripts/run.sh': '#!/bin/sh\ntrue\n',
                 'skills/recoup-internal-staff/SKILL.md': 'Staff',
@@ -29,6 +30,9 @@ class ClaudePackageTest(unittest.TestCase):
             self.assertFalse((out/'skills/recoup-internal-staff').exists())
             self.assertFalse((out/'.codex-plugin').exists())
             self.assertEqual(json.loads((out/'.claude-plugin/plugin.json').read_text())['version'], '2026.1011.1')
+            manifest = json.loads((out/'.claude-plugin/plugin.json').read_text())
+            self.assertEqual(manifest['icon'], './assets/recoup-customer-icon.png')
+            self.assertEqual(manifest['privacyPolicyUrl'], 'https://recoupable.dev/privacy')
             self.assertIn('Source commit: source', (out/'README.md').read_text())
             self.assertTrue((out/'skills/recoup-research/scripts/run.sh').stat().st_mode & 0o111)
             with self.assertRaisesRegex(ValueError, 'empty'):
