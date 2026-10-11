@@ -80,8 +80,10 @@ RESEARCH_ID=""  # Set only after inspecting the candidate's name and platform li
 Select the verified candidate's exact `id`; do not automatically choose the first
 match. An empty ID or failed lookup is an unavailable-data condition. Continue
 from workspace context and record the gap. Never fabricate an ID. If the server
-returns `Retry-After`, wait for that interval before a later retry; this helper
-allows at most three attempts, with a 90-second timeout per attempt.
+returns `Retry-After`, the caller must respect it before a later request. This
+helper returns immediately on `429`; it neither captures headers nor schedules
+that later request. It retries only network failures or `5xx`, at most three
+attempts with a 90-second timeout each.
 
 ## The signals and what each one *changes*
 

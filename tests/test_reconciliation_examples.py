@@ -93,8 +93,39 @@ esac; }}
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('Multiple', result.stderr)
 
+    def test_missing_artist_stops_before_downstream_calls(self):
+        result, _ = self.run_resolver('person@example.invalid', [])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('No visible artist', result.stderr)
+        self.assertNotIn('resolved:', result.stdout)
+
+    def test_incomplete_artist_identifiers_stop(self):
+        result, _ = self.run_resolver('person@example.invalid', [{'name': 'Artist', 'id': 'row_1'}])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('missing required identifiers', result.stderr)
+
 
 class EstimatorExamples(unittest.TestCase):
+    def run_api(self, payload):
+        path = ROOT / 'skills/recoup-catalog-estimate-value/scripts/estimate.py'
+        spec = importlib.util.spec_from_file_location('estimate', path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        response = subprocess.CompletedProcess([], 0, payload, '')
+        with patch.object(module, 'auth_header', return_value=[]), patch.object(module.subprocess, 'run', return_value=response):
+            return module.api('research/track/stats')
+
+    def test_empty_404_remains_missing_data(self):
+        self.assertEqual(self.run_api('\n404'), {})
+
+    def test_html_gateway_error_preserves_http_status(self):
+        with self.assertRaisesRegex(SystemExit, 'research HTTP 503'):
+            self.run_api('<html>Unavailable</html>\n503')
+
+    def test_non_json_billing_error_still_identifies_billing(self):
+        with self.assertRaisesRegex(SystemExit, 'billing \\(402\\)'):
+            self.run_api('\n402')
+
     def test_billing_url_exits_instead_of_returning_missing_counts(self):
         path = ROOT / 'skills/recoup-catalog-estimate-value/scripts/estimate.py'
         spec = importlib.util.spec_from_file_location('estimate', path)

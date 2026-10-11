@@ -55,15 +55,17 @@ def api(path, params=None, body=None, timeout=20):
     if result.returncode:
         sys.exit("ERROR: research request failed; no estimate produced from unavailable counts.")
     out, _, status = result.stdout.rpartition("\n")
+    if status == "404": return {}
+    if status == "402":
+        try: j = json.loads(out)
+        except (ValueError, TypeError): j = {}
+        link = j.get("billingUrl") or j.get("checkoutUrl") if isinstance(j, dict) else None
+        sys.exit(f"ERROR: research access requires billing (402). Review: {link or 'Check account billing'}")
+    if not status.isdigit() or not 200 <= int(status) < 300:
+        sys.exit(f"ERROR: research HTTP {status}; no estimate produced from failed requests.")
     try: j = json.loads(out)
     except (ValueError, TypeError):
         sys.exit("ERROR: invalid research response; no estimate produced.")
-    if status == "402":
-        link = j.get("billingUrl") or j.get("checkoutUrl") if isinstance(j, dict) else None
-        sys.exit(f"ERROR: research access requires billing (402). Review: {link or 'Check account billing'}")
-    if status == "404": return {}
-    if not status.isdigit() or not 200 <= int(status) < 300:
-        sys.exit(f"ERROR: research HTTP {status}; no estimate produced from failed requests.")
     return j
 
 def num(x):
