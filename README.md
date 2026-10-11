@@ -316,3 +316,16 @@ When updating an older workspace listing, preserve its package identity using
 `RECOUP_CHATGPT_WORKSPACE_PACKAGE_NAME`). OpenAI rejects an update that changes
 that identity. This affects only the workspace artifact; the public package
 remains `recoup-plugin`. The display name stays Recoup in both.
+
+### Claude directory bundle
+
+The release workflow also generates a customer-only Claude plugin on the
+`claude-directory` branch. Submit `recoupable/skills`, repository root, tracking
+`claude-directory` in Claude's **Plugin bundle** form. This includes the customer
+skills and Recoup MCP configuration; it excludes internal skills and staff agents.
+The MCP connector has its own separate directory submission.
+
+Merges to `main` regenerate the branch after validation. Configure Claude to
+track that branch so it discovers new releases automatically. Anthropic scanning,
+review, and publication remain separate from building or pushing the package.
+Do not edit the generated branch directly. Its README records source provenance.
