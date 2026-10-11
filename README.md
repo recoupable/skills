@@ -24,7 +24,8 @@ UI (`/mcp` in Claude Code). Review the full `mcp:tools` permission, then verify 
 `list_artists`. The host stores and refreshes OAuth credentials. Existing limited
 connections need fresh consent and a tool refresh to gain full access.
 
-The MCP catalog currently offers 51 business tools; credential export is excluded.
+Use authenticated tool discovery to inspect the business tools authorized in your
+host and workspace; credential export is excluded.
 REST-only endpoints and scripts still need separate REST credentials. Installing
 skills alone does not make every API endpoint an MCP tool.
 
@@ -53,7 +54,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 
 | Skill | What it does |
 |-------|-------------|
-| recoup-roster-add-artist | Onboard & enrich a new artist (the 8-call setup chain) |
+| recoup-roster-add-artist | Onboard & enrich a new artist (the 8-step onboarding workflow) |
 | recoup-roster-list-artists | See who's on your roster |
 | recoup-roster-onboard | Bootstrap an empty org's whole roster (bulk-onboard via parallel subagents) |
 | recoup-roster-manage-artist | Work inside one artist's folder — context, brand, songs, releases |
