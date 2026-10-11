@@ -16,6 +16,22 @@ Documentation: https://docs.recoupable.dev
 Support: agent@recoupable.dev
 Privacy: https://recoupable.dev/privacy
 
+## Execution and authentication
+
+The declared MCP server uses remote HTTPS and host-managed OAuth. This package
+does not register installation commands, lifecycle hooks, or a local MCP server.
+That does not mean every workflow is remote-only: skills include readable Python,
+JavaScript, and shell helpers that Claude may run for a user-requested task in a
+host that supports execution. Other workflows can generate site or workspace code.
+Inspect the skill and its scripts before granting execution permission.
+
+Prefer connected MCP tools. Optional REST examples and helpers use separately
+configured Recoup credentials, not tokens extracted from the host's OAuth session.
+Catalog research and email helpers can call the Recoup API directly. Do not read
+unrelated credentials or send Recoup credentials to another service. If a required
+tool, credential, or execution capability is unavailable, report that limitation.
+The bundled helper inventory below is generated from this exact release.
+
 ## Data handling and optional services
 
 The declared connector is Recoup at api.recoupable.dev. Authorized workflows can
@@ -77,7 +93,35 @@ retention policies. The plugin is not specifically intended for users under 18.
 - recoup-song-find-hook
 - recoup-song-placement-pitch
 
+## Bundled helpers
+
+- skills/recoup-catalog-estimate-value/scripts/build_report.py
+- skills/recoup-catalog-estimate-value/scripts/estimate.py
+- skills/recoup-catalog-estimate-value/scripts/fetch_album_tracks.py
+- skills/recoup-catalog-review-deal/scripts/_helpers.py
+- skills/recoup-catalog-review-deal/scripts/auto-column-map.py
+- skills/recoup-catalog-review-deal/scripts/build-deal-readiness.py
+- skills/recoup-catalog-review-deal/scripts/build-file-manifest.py
+- skills/recoup-catalog-review-deal/scripts/build-manual-review-queue.py
+- skills/recoup-catalog-review-deal/scripts/calculate-concentration.py
+- skills/recoup-catalog-review-deal/scripts/calculate-nps-nls-bridge.py
+- skills/recoup-catalog-review-deal/scripts/dataroom-hygiene-scan.py
+- skills/recoup-catalog-review-deal/scripts/extract-pdf-statement.py
+- skills/recoup-catalog-review-deal/scripts/normalize-royalty-statement.py
+- skills/recoup-catalog-review-deal/scripts/run-deal-checks.py
+- skills/recoup-catalog-review-deal/scripts/validate-dashboard.py
+- skills/recoup-catalog-review-deal/scripts/validate-deal-workspace.py
+- skills/recoup-catalog-review-deal/scripts/validate-evidence-ledger.py
+- skills/recoup-catalog-review-deal/scripts/validate-findings-evidence.py
+- skills/recoup-catalog-review-deal/scripts/validate-normalized-ledger.py
+- skills/recoup-catalog-review-deal/scripts/validate-workspace-consistency.py
+- skills/recoup-content-build-sites/scripts/find_references.py
+- skills/recoup-platform-build-os/evals/validate.py
+- skills/recoup-platform-email-helper/scripts/send-email.mjs
+- skills/recoup-release-plan-rollout/scripts/build_campaign_timeline.py
+- skills/recoup-release-plan-rollout/scripts/validate_release.py
+
 ## Release provenance
 
-Source commit: d87a83dcc05640cafbbff1939b600fa8aafb7614
-Version: 2026.1011.11
+Source commit: 9d630cc62b80e6f2438b4c04dad2ab1950938ecd
+Version: 2026.1011.12

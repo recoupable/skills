@@ -1,7 +1,7 @@
 {
   "name": "recoup-plugin",
   "displayName": "Recoup",
-  "version": "2026.1011.11",
+  "version": "2026.1011.12",
   "description": "A record label inside Claude. Let your agents create content, plan releases, reach new fans, and uncover opportunities across your catalog. Make music videos and cover art, research artists, discover talent, and build campaigns. Start with a song, an artist, or an entire catalog.",
   "author": {
     "name": "Recoup",
@@ -26,6 +26,6 @@
     "agent-skills"
   ],
   "mcpServers": "./.mcp.json",
-  "icon": "./assets/recoup-customer-icon.png",
+  "icon": "./branding/recoup-customer-icon.png",
   "privacyPolicyUrl": "https://recoupable.dev/privacy"
 }
