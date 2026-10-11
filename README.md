@@ -61,5 +61,5 @@ Privacy: https://recoupable.dev/privacy
 
 ## Release provenance
 
-Source commit: c104fa0da871979450d80a4c3740dcdef434d034
-Version: 2026.1011.9
+Source commit: c78bbe66e86b339f75fd767eaffe94be023cb82d
+Version: 2026.1011.10
