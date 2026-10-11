@@ -136,7 +136,7 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    (accurate names, speaker changes, sliver cues folded so YouTube accepts the file); upload in Studio:
    video -> Details -> Subtitles (or Languages) -> ⋮ -> Upload file -> With timing.
 16. **Shorts**: `references/podcast-shorts.md` (clips table, hybrid format, one prototype, then the rest).
-17. **Hand back to sales**: live links to the guest the day it publishes (with the shorts folder), day-7 follow-up.
+17. **Hand back to sales**: live links to the guest the day it publishes (with the shorts folder), the wrap-up email the day the last short posts (closes the run, asks for guest recommendations), day-7 follow-up. Templates in the `recoup-internal-sales` skill's `references/podcast-guest-pipeline.md`.
 
 ## Gotchas that cost real time on the first run
 
