@@ -189,9 +189,9 @@ The last of the {{n}} clips went out today, so the episode run is complete. Than
 {{One line acknowledging something they actually did, e.g. listened, reshared, posted a clip;
 leave it out if nothing happened.}}
 
-Attached is every post on every platform, as a one-page PDF and a spreadsheet, so you can
-reshare whichever channels suit you. The video files are still in the folder if you'd rather
-post from your own accounts: {{clips folder link}}
+Attached is a one-page recap of the episode and how each clip did, plus a spreadsheet with every
+post on every platform, so you can reshare whichever channels suit you. The video files are
+still in the folder if you'd rather post from your own accounts: {{clips folder link}}
 
 One ask before we close the thread: who should we have on next? {{Their strongest point from
 the episode, restated as they made it}} is the thread we want to keep pulling, so we're looking
@@ -201,31 +201,38 @@ described}}. If someone comes to mind, an intro or just a name helps.
 Recoup Podcast: https://recoupable.dev/podcast?utm_source=email&utm_medium=reply&utm_campaign=<yyyy-mm>&utm_content=<guest-slug>
 ```
 
-**The attachments: every post, every platform.** One row per post in a CSV
-(`item,title,date,platform,account,url`; item is `Full episode` or `Clip <n>`), built from the
-post ledger, every URL opened (200) before it goes in. `Full episode` rows are only the places the
-whole episode plays (YouTube, Spotify, Apple); a launch post that carries a clip is a clip post,
-not the episode (the first run listed the LinkedIn launch post as the episode, caught by the operator). The PDF is generated from the same CSV
-so the two never disagree:
+**The attachments: a one-page recap and every post.** The guest gets two files.
+
+- **Spreadsheet (the links):** one row per post, `item,title,date,platform,account,url,views,metric,as_of`
+  (item is `Full episode` or `Clip <n>`), built from the post ledger, every URL opened (200) before it goes
+  in. `Full episode` rows are only the places the whole episode plays (YouTube, Spotify, Apple); a launch
+  post that carries a clip is a clip post, not the episode (the first run listed the LinkedIn launch post
+  as the episode, caught by the operator). `views` is the platform's own count pulled that day (YouTube
+  views, Instagram plays, LinkedIn and X impressions), blank where none is readable (Spotify, Apple).
+- **PDF (the executive summary, not the links):** the episode recap (title, published date, length, a
+  two-sentence summary, five takeaways, three of the guest's lines word for word, the full-episode links)
+  and a table of how every clip did by platform, with the top clip marked. Summary and takeaways come from
+  the published description and the verified clip copy; every quote is checked against the transcript.
+  Generated from the spreadsheet plus a short `summary.json`, so the numbers never disagree:
 
 ```
-python3 scripts/podcast_posts_sheet.py <guest>-recoup-podcast-posts.csv --brand <recoup-sky brand kit> \
-  --guest "<Name>" --role "<Title>, <Company>" --company "<Company>" --role-url <company site> \
-  --slug <guest-slug> --campaign <yyyy-mm> --out posts-sheet.html --pdf recoup-podcast-posts-<guest-slug>.pdf
+python3 scripts/podcast_wrap_summary.py <guest>-recoup-podcast-posts.csv summary.json \
+  --brand <recoup-sky brand kit> --out recap.html --pdf recoup-podcast-recap-<guest-slug>.pdf
 ```
 
-It uses the same brand kit and layout as the guest brief and the timeline PDF (lockup header,
-sky labels, the meta strip, a pale card for the full episode, the forest note), so the guest's
-three PDFs read as one set. The script fails on more than one page, an em or en dash, or a CSV
-URL that did not become a link. Read the preview before attaching. Store the CSV, HTML and PDF
-in the private episode folder (`episodes/<date>-<slug>/release/wrap-up/`).
+  `summary.json` keys: `guest, role, company, role_url, slug, campaign, label, length, summary,
+  takeaways[], quotes[], as_of, sources` (the footer line: when the numbers were pulled and what each
+  platform's number means). It uses the same brand kit and layout as the guest brief and the timeline PDF
+  (lockup header, sky labels, the meta strip, pale card, forest note), so the guest's three PDFs read as one
+  set. The script fails on more than one page or an em or en dash. Read the preview before attaching.
+  Store the CSV, JSON, HTML and PDF in the private episode folder (`episodes/<date>-<slug>/release/wrap-up/`).
 
 Rules:
 
 1. **Make the guest ask specific.** Name the kinds of people, tied to the guest's own point on
    the episode. "Any recommendations?" gets a polite "I'll think about it" and no names.
 2. **Only real things.** A number (views across the clips, a tagged visit count) goes in only
-   if it was measured that day; a reshare or post is acknowledged only if it happened.
+   if it was pulled that day, with the pull time on the page; a reshare or post is acknowledged only if it happened.
    Otherwise leave both out rather than estimating.
 3. **Address everyone who was looped in.** A guest's comms team often joins the thread after
    recording; they are the people most likely to repost later, so they get the folder link too.
