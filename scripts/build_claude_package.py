@@ -18,6 +18,10 @@ def build(root, tracked, out, version, commit):
     files, skills = package_files(root, tracked, 'customer')
     files.pop('.codex-plugin/plugin.json')
     metadata = stamp_versions(json.loads((root/'.claude-plugin/plugin.json').read_text()), version)
+    if 'assets/recoup-customer-icon.png' not in files:
+        raise ValueError('Missing customer icon')
+    metadata['icon'] = './assets/recoup-customer-icon.png'
+    metadata['privacyPolicyUrl'] = 'https://recoupable.dev/privacy'
     files['.claude-plugin/plugin.json'] = (json.dumps(metadata, indent=2)+'\n').encode()
     files['README.md'] = ('''# Recoup
 
