@@ -203,7 +203,9 @@ Recoup Podcast: https://recoupable.dev/podcast?utm_source=email&utm_medium=reply
 
 **The attachments: every post, every platform.** One row per post in a CSV
 (`item,title,date,platform,account,url`; item is `Full episode` or `Clip <n>`), built from the
-post ledger, every URL opened (200) before it goes in. The PDF is generated from the same CSV
+post ledger, every URL opened (200) before it goes in. `Full episode` rows are only the places the
+whole episode plays (YouTube, Spotify, Apple); a launch post that carries a clip is a clip post,
+not the episode (the first run listed the LinkedIn launch post as the episode, caught by the operator). The PDF is generated from the same CSV
 so the two never disagree:
 
 ```
