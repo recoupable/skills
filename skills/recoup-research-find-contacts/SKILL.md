@@ -29,7 +29,7 @@ draft outreach only after the person is confirmed. Reference real specifics
 - **Draft, don't send** — anything touching a real human is presented for the user
   to send themselves.
 - **Never fabricate** a contact, email, or recent work.
-- **Credits:** surface `checkoutUrl` on `insufficient_credits`.
+- **Credits:** surface the static `billingUrl` on `insufficient_credits`; stop without retrying or initiating a charge.
 
 ## References
 

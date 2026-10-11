@@ -131,7 +131,7 @@ curl -s "$RECOUP_API/research/albums?artist_id=wjcgfd9i&is_primary=true&limit=50
 # Full track metadata + audio analysis (id from search type=tracks)
 curl -s "$RECOUP_API/research/track?id=1ik97vot" -H "x-api-key: $RECOUP_API_KEY" | jq '.track_info'
 
-# Playlists a specific track appears on (5 credits per call, paginates)
+# Playlists a specific track appears on (50,000 micro-dollar credits ($0.05) per successful call, paginates)
 curl -s "$RECOUP_API/research/track/playlists?id=1ik97vot&platform=spotify&status=current" \
   -H "x-api-key: $RECOUP_API_KEY" | jq '.placements'
 ```
@@ -291,18 +291,20 @@ A `metrics` call may return `202` with `{ status: "pending", state:
 
 ---
 
-## Credit costs
+## Credit costs and recovery
 
-Some endpoints cost more credits than others. If the account returns
-`{ "error": "insufficient_credits" }`, the response includes `remaining_credits`,
-`required_credits`, and a static `billingUrl` the user can visit to add credits.
+Credits are integer micro-dollars: 1,000,000 = $1.00. Successful read-only music
+research calls currently cost $0.05 (50,000 credits); web/events $0.01; deep $0.25;
+people $0.05; extract $0.05 per URL; enrich varies by processor tier ($0.05/$0.10/$0.25).
+Check the endpoint contract before fan-out. Provider quota or unavailable-source
+errors are distinct from a depleted Recoup balance.
 
-| Cost tier | Endpoints |
-| --------- | --------- |
-| Free / 1 credit | `search`, `profile`, `metrics`, `audience`, `similar`, `playlists`, `insights`, `tracks`, `career`, `milestones`, `urls`, `web` |
-| 5 credits | `lookup`, `albums`, `track`, `track/playlists` |
-| Higher (varies) | `enrich`, `deep`, `people`, `extract` (POST endpoints) |
+`402 insufficient_credits` includes `remaining_credits`, `required_credits` and a
+static `billingUrl`. Surface that link and stop. Do not retry indefinitely or
+create a Stripe session without authorization. Other plan/subscription gates can
+legitimately return `checkoutUrl`; distinguish by error type.
 
-Credit costs are approximate and may change. When you get a `402` or
-`insufficient_credits` error, surface it to the user with the checkout link —
-don't silently fail or retry.
+Fifteen legacy music-research routes remain in source after their docs removal.
+Their coverage and provider support are under evaluation (mono#325), not verified
+by this reference. Preserve returned provenance; do not relabel Songstats as
+Chartmetric or a measurement-store snapshot as fresh provider history.

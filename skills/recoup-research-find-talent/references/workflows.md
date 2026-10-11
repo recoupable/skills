@@ -307,7 +307,7 @@ curl -s "$RECOUP_API/research/track?id={track_id}" -H "$AUTH"
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=spotify" -H "$AUTH"
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=tiktok" -H "$AUTH"
 
-# 3. Playlist timeline for this track specifically (5 credits)
+# 3. Playlist timeline for this track specifically ($0.05 = 50,000 credits)
 curl -s "$RECOUP_API/research/track/playlists?id={track_id}&status=current" -H "$AUTH"
 curl -s "$RECOUP_API/research/track/playlists?id={track_id}&status=past&since=2025-01-01" -H "$AUTH"
 

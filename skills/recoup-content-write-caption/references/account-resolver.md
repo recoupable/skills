@@ -87,10 +87,9 @@ ARTIST_ROW_ID=$(echo "$ARTISTS_JSON" \
 artists"), drop the `select(.name==$n)` filter and present the full list
 (`.artists[] | [.name, .account_id] | @tsv`) for them to choose from — don't silently pick one.
 
-**Empty / wrong-account guard:** if `organizations` and `artists` both come back empty, or
-`GET /api/accounts/{accountId}` shows an `agent+…@recoupable.com` email, this credential is a
-throwaway / agent key, not the user's real account. Stop and ask for the right key — do **not**
-fabricate an artist. (See `recoup-platform-api-access`'s "Stop rule — never invent a roster".)
+**Access check:** an empty roster can be legitimate. Verify the credential's identity
+and authorized workspace before interpreting a missing artist. Do not create a
+disposable account, fabricate an artist or infer failed authentication from emptiness.
 
 If a real account simply has no row for a named artist, the artist doesn't exist yet — run the
 `recoup-roster-add-artist` skill before continuing. Do not invent an ID.
