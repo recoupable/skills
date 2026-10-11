@@ -59,8 +59,8 @@ these Recoup rules layered on top.
      (knowledge, research, plans, drafts). Entity creation is **API-first** — onboard a new artist
      with **`recoup-roster-add-artist`** (the 8-call create -> enrich chain), *then* its folder
      appears; never create an artist by `mkdir` alone. Use **`recoup-platform-api-access`** for raw
-     REST / connector calls. Empty orgs+artists usually means a throwaway key, not a blank label —
-     surface it, don't fabricate a roster.
+     REST / connector calls. An empty organization or artist list can be legitimate. Verify the
+     account identity and selected workspace before creating or attaching artists; never fabricate a roster.
 - **Reuse the platform; don't reinvent it.** In Phase 4, do **not** author `plugin/skills/` that
   duplicate Recoup capabilities — wire to the installed `recoup-*` skills: roster
   (`recoup-roster-*`), research (`recoup-research-*`), content (`recoup-content-*`), release

@@ -17,7 +17,7 @@ export RECOUP_API="https://api.recoupable.dev/api"   # auth header: x-api-key: $
   re-pitch opportunities.
 - `/similar` → `/playlists` on each peer → playlists hosting 2+ peers you're NOT on
   are the warmest targets (the gap analysis).
-- `/track/playlists?id={track_id}&editorial=true` (5 credits) for per-track
+- `/track/playlists?id={track_id}&editorial=true` ($0.05 = 50,000 micro-dollar credits) for per-track
   editorial coverage.
 - `/metrics` (`playlists_editorial_current`) to judge editorial vs algorithmic balance.
 
@@ -29,7 +29,7 @@ algorithmic, and which catalog tracks to push. Full chains in
 
 - **No invented placements.** `followers_total` is a formatted string ("34.3M") —
   parse it if sorting numerically.
-- **Credits:** surface `checkoutUrl` on `insufficient_credits`.
+- **Credits:** surface the static `billingUrl` on `insufficient_credits`; stop without retrying or initiating a charge.
 
 ## References
 

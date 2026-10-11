@@ -15,7 +15,7 @@ export RECOUP_API="https://api.recoupable.dev/api"
 ```
 
 All GET endpoints live under `$RECOUP_API/research` and auth with `x-api-key`.
-Backed by Songstats; entity IDs are short alphanumeric strings. Multi-step chains
+Recoup manages data connections; research IDs are opaque strings. Multi-step chains
 and the interpretation cheat sheet ship alongside this skill in
 `references/workflows.md` — read it before calling. Before any mode, check
 `context/artist.md` — don't re-research what's already known.
@@ -42,7 +42,8 @@ insights · Recommendations.
 ## Mode: audience
 
 `audience?artist=&platform=instagram|tiktok|youtube` is the geography + demos source.
-Pull age/gender/country, then answer the real question: where to grow, where to
+Inspect available geography and demographics; age/gender coverage is not guaranteed.
+Then answer the question: where to grow, where to
 tour, TikTok→Spotify conversion. Rank markets by opportunity, not a raw dump.
 
 ## Mode: competition
@@ -62,8 +63,8 @@ by signal strength.
 ## Graceful degradation
 
 If structured data is thin (empty results, thin profile+metrics, or a 501), fall
-through to recoup-research-the-web. Very emerging artists may have nothing in
-Songstats — the web is the alternative.
+through to recoup-research-the-web. Some emerging artists have no structured research data; use sourced web research
+and state the coverage gap.
 
 ## Guardrails
 

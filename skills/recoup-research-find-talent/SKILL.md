@@ -34,7 +34,7 @@ listeners + rising editorial pickup = the breakout window).
 
 - **No invented numbers.** Missing metric → `—`.
 - **Rank by the metrics snapshot**, not by `/similar` order (it has no stage/score).
-- **Credits:** surface `checkoutUrl` on `insufficient_credits`.
+- **Credits:** surface the static `billingUrl` on `insufficient_credits`; stop without retrying or initiating a charge.
 
 ## References
 

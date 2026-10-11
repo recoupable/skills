@@ -48,14 +48,24 @@ def auth_header():
 def api(path, params=None, body=None, timeout=20):
     url = f"{BASE}/{path}"
     if params: url += "?" + "&".join(f"{k}={v}" for k, v in params.items())
-    cmd = ["curl", "-sS", "--max-time", str(timeout)] + auth_header()
+    cmd = ["curl", "-sS", "--max-time", str(timeout), "-w", "\n%{http_code}"] + auth_header()
     if body is not None:
         cmd += ["-X", "POST", "-H", "Content-Type: application/json", "-d", json.dumps(body)]
-    out = subprocess.run(cmd + [url], capture_output=True, text=True).stdout
+    result = subprocess.run(cmd + [url], capture_output=True, text=True)
+    if result.returncode:
+        sys.exit("ERROR: research request failed; no estimate produced from unavailable counts.")
+    out, _, status = result.stdout.rpartition("\n")
+    if status == "404": return {}
+    if status == "402":
+        try: j = json.loads(out)
+        except (ValueError, TypeError): j = {}
+        link = j.get("billingUrl") or j.get("checkoutUrl") if isinstance(j, dict) else None
+        sys.exit(f"ERROR: research access requires billing (402). Review: {link or 'Check account billing'}")
+    if not status.isdigit() or not 200 <= int(status) < 300:
+        sys.exit(f"ERROR: research HTTP {status}; no estimate produced from failed requests.")
     try: j = json.loads(out)
-    except Exception: return {}
-    if isinstance(j, dict) and j.get("checkoutUrl"):
-        sys.exit(f"ERROR: out of credits (402). Top up at: {j['checkoutUrl']}")
+    except (ValueError, TypeError):
+        sys.exit("ERROR: invalid research response; no estimate produced.")
     return j
 
 def num(x):

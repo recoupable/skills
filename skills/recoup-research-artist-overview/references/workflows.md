@@ -4,8 +4,9 @@ Multi-step workflows that chain `/api/research/*` endpoints to answer strategic
 questions, plus the interpretation rules of thumb and cross-cutting synthesis
 patterns to apply once you have the data.
 
-The research API is backed by **Songstats** — IDs are short alphanumeric
-strings. Every workflow below uses endpoints that are live in production.
+Recoup manages its research data connections. Treat research IDs as opaque
+strings; select matches before reusing IDs. These workflows describe supported
+API requests, not verified coverage for every artist or platform.
 
 All examples assume:
 
@@ -307,7 +308,7 @@ curl -s "$RECOUP_API/research/track?id={track_id}" -H "$AUTH"
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=spotify" -H "$AUTH"
 curl -s "$RECOUP_API/research/metrics?artist={ARTIST}&source=tiktok" -H "$AUTH"
 
-# 3. Playlist timeline for this track specifically (5 credits)
+# 3. Playlist timeline for this track specifically ($0.05 = 50,000 credits per successful call; both calls total $0.10)
 curl -s "$RECOUP_API/research/track/playlists?id={track_id}&status=current" -H "$AUTH"
 curl -s "$RECOUP_API/research/track/playlists?id={track_id}&status=past&since=2025-01-01" -H "$AUTH"
 

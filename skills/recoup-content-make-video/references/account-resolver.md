@@ -18,7 +18,7 @@ Pick whichever credential the environment provides; prefer the API key when both
 
 | Credential | Header | Where it comes from |
 | --- | --- | --- |
-| `RECOUP_API_KEY` (`recoup_sk_…`) | `-H "x-api-key: $RECOUP_API_KEY"` | agent signup; see docs.recoupable.dev/agents |
+| `RECOUP_API_KEY` | `-H "x-api-key: $RECOUP_API_KEY"` | approved real-account REST setup; see docs.recoupable.dev/agents |
 | `RECOUP_ACCESS_TOKEN` | `-H "Authorization: Bearer $RECOUP_ACCESS_TOKEN"` | short-lived sandbox token |
 
 ```bash
@@ -36,20 +36,13 @@ fi
 If neither is set, REST credentials are unavailable. Use a matching authenticated
 MCP tool or explain which REST-only capability needs a separate credential.
 
-## 2. Two different artist identifiers
+## 2. Artist account identity
 
-The API exposes **two** IDs for an artist, and they are not interchangeable:
-
-- **`account_id`** — the underlying account that owns the artist. Content **creation**
-  endpoints (`POST /api/content/create`) key off this, **and so does
-  `GET /api/artists/{account_id}/socials`** (verified live 2026-06-07 — passing the row
-  `id` there returns `404 "Artist not found"`).
-- **`id`** — the artist row's primary key. Some per-artist resource endpoints under
-  `/api/artists/{id}/…` use this.
-
-Passing the wrong one returns a 404 from an endpoint that otherwise looks correct. **Capture
-both from the same list response, and try `account_id` first when a `/api/artists/{…}/` read
-404s.**
+Current `GET /api/artists` rows expose `account_id` and an `id` alias with the
+same artist account UUID. Use that UUID for content `artist_account_id` and
+`/api/artists/{id}/socials|posts|fans` reads. Do not substitute an internal
+profile-row key, a Spotify ID or an opaque research ID. Older saved IDs should
+be verified against the current authenticated roster before use.
 
 ## 3. Resolve from the workspace first
 
@@ -59,9 +52,8 @@ If `RECOUP.md` exists, its frontmatter already holds the IDs — read them, don'
 ARTIST_ID=$(sed -n 's/^artistId:[[:space:]]*//p' "$ARTIST_DIR/RECOUP.md")
 ```
 
-(`artistId` in `RECOUP.md` is the `account_id` captured at create time — the value
-`POST /api/content/*` wants. For `/api/artists/{id}/…` resource reads you may still need
-the row `id` from §4.)
+`artistId` in `RECOUP.md` is the artist `account_id` captured at create time,
+also used for the artist's resource reads.
 
 ## 4. Resolve from the API (no workspace)
 
@@ -70,29 +62,49 @@ spans every org the account belongs to. Org rows expose `organization_id` (pass 
 `org_id`), `organization_name`, and their own row `id`.
 
 ```bash
-ORG_ID="${RECOUP_ORG_ID:-$(curl -sS "${AUTH[@]}" \
-  "https://api.recoupable.dev/api/organizations" | jq -r '.organizations[0].organization_id')}"
+# Do not choose the first organization implicitly. Use the selected workspace,
+# or query the account scope when no organization is selected.
+ARTISTS_URL="https://api.recoupable.dev/api/artists"
+if [ -n "$RECOUP_ORG_ID" ]; then
+  ARTISTS_URL="$ARTISTS_URL?org_id=$RECOUP_ORG_ID"
+fi
+IDENTITY=$(curl --fail-with-body -sS "${AUTH[@]}" "https://api.recoupable.dev/api/accounts/id") || exit 1
+ACCOUNT_ID=$(printf '%s' "$IDENTITY" | jq -er '.accountId') || exit 1
+ACCOUNT=$(curl --fail-with-body -sS "${AUTH[@]}" "https://api.recoupable.dev/api/accounts/$ACCOUNT_ID") || exit 1
+# Verify this is the user's intended account before any roster mutation.
+if printf '%s' "$ACCOUNT" | jq -e '.account.email | test("^agent\\+.*@recoupable\\.(com|dev)$")' >/dev/null; then
+  echo "Disposable agent identity: connect the user's real account before creating artists." >&2
+  exit 1
+fi
+ARTISTS_JSON=$(curl --fail-with-body -sS "${AUTH[@]}" "$ARTISTS_URL") || exit 1
 
-# Capture BOTH ids for the matched artist.
-ARTISTS_JSON=$(curl -sS "${AUTH[@]}" \
-  "https://api.recoupable.dev/api/artists?org_id=$ORG_ID")
-
-ARTIST_ACCOUNT_ID=$(echo "$ARTISTS_JSON" \
-  | jq -r --arg n "$ARTIST_NAME" '.artists[] | select(.name==$n) | .account_id')
-ARTIST_ROW_ID=$(echo "$ARTISTS_JSON" \
-  | jq -r --arg n "$ARTIST_NAME" '.artists[] | select(.name==$n) | .id')
+MATCHES=$(printf '%s' "$ARTISTS_JSON" | jq --arg n "$ARTIST_NAME" '[.artists[] | select(.name==$n)]')
+MATCH_COUNT=$(printf '%s' "$MATCHES" | jq length)
+if [ "$MATCH_COUNT" -eq 0 ]; then
+  echo 'No visible artist matches; verify identity and workspace access before adding one.' >&2
+  return 1 2>/dev/null || exit 1
+elif [ "$MATCH_COUNT" -gt 1 ]; then
+  echo 'Multiple artists match; select the intended account ID or filter the selected workspace.' >&2
+  printf '%s' "$MATCHES" | jq '.[] | {id,account_id,name}' >&2
+  return 1 2>/dev/null || exit 1
+fi
+ARTIST_ACCOUNT_ID=$(printf '%s' "$MATCHES" | jq -r '.[0].account_id // empty')
+ARTIST_ROW_ID=$(printf '%s' "$MATCHES" | jq -r '.[0].id // empty')
+if [ -z "$ARTIST_ACCOUNT_ID" ] || [ -z "$ARTIST_ROW_ID" ]; then
+  echo 'Artist response is missing required identifiers; verify the current roster.' >&2
+  return 1 2>/dev/null || exit 1
+fi
 ```
 
 **Browsing instead of matching:** if the user hasn't named the artist (e.g. "pick one of my
 artists"), drop the `select(.name==$n)` filter and present the full list
 (`.artists[] | [.name, .account_id] | @tsv`) for them to choose from — don't silently pick one.
 
-**Empty / wrong-account guard:** if `organizations` and `artists` both come back empty, or
-`GET /api/accounts/{accountId}` shows an `agent+…@recoupable.com` email, this credential is a
-throwaway / agent key, not the user's real account. Stop and ask for the right key — do **not**
-fabricate an artist. (See `recoup-platform-api-access`'s "Stop rule — never invent a roster".)
+**Access check:** an empty roster can be legitimate. Verify the credential's identity
+and authorized workspace before interpreting a missing artist. Do not create a
+disposable account, fabricate an artist or infer failed authentication from emptiness.
 
-If a real account simply has no row for a named artist, the artist doesn't exist yet — run the
+If a real account simply has no visible row for a named artist, verify exact Spotify identity and access before attaching or creating the artist — run the
 `recoup-roster-add-artist` skill before continuing. Do not invent an ID.
 
 ## 5. Quick reference — which ID goes where
@@ -100,8 +112,6 @@ If a real account simply has no row for a named artist, the artist doesn't exist
 | Endpoint | Identifier |
 | --- | --- |
 | `POST /api/content/create`, `POST /api/content/*` (body `artist_account_id`) | `account_id` |
-| `GET /api/artists/{account_id}/socials` | `account_id` (verified 2026-06-07) |
-| `GET /api/artists/{id}/posts` | row `id` (try `account_id` first if it 404s) |
+| `GET /api/artists/{id}/socials`, `GET /api/artists/{id}/posts`, `GET /api/artists/{id}/fans` | Artist `account_id`; current list `id` is its alias |
 
-When a call 404s on an ID you believe is correct, try the other identifier before assuming
-the resource is missing.
+On `404`, verify the saved UUID, account and workspace access before retrying.

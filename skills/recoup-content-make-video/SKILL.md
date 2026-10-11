@@ -29,7 +29,8 @@ analyze and regenerate on failure), persist + commit. Real audio only.
   background, **burn in synced lyrics**, mux full-length. Don't reproduce third-party
   lyrics.
 - **visualizer** — seamless loop, **no text/logos** (Spotify rejects them), 9:16,
-  3–8s; use `first-last` with identical start/end frames; analyze-gate the seam.
+  3–8s; generate with identical `image_url` and `end_image_url` frames, then trim
+  if needed; analyze-gate the seam.
 - **reformat** — edit, don't generate: master → genuinely distinct per-platform cuts
   (never identical re-uploads — platforms suppress them). Lead 9:16 with the hook
   (use recoup-song-find-hook for the in-point); captions clear of UI safe zones.

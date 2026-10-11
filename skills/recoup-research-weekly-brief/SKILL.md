@@ -37,7 +37,7 @@ with "first reading" in the Δ column.
 
 - **Snapshots, not history** — deltas come from diffing your own prior file.
 - **No invented numbers / no causation without evidence.**
-- **Credits:** surface `checkoutUrl` on `insufficient_credits`.
+- **Credits:** surface the static `billingUrl` on `insufficient_credits`; stop without retrying or initiating a charge.
 
 ## References
 

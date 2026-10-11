@@ -53,7 +53,6 @@ do next. The checkpoint definitions, API calls, and scoring rules live in
 - Read-only: this skill never creates artists, tasks, or catalogs — it routes
   to the skill that does, and that skill asks its own confirmations.
 - Don't shame gaps ("you haven't done X") — frame as the next win.
-- An empty roster on a fresh key can be a throwaway-credential problem, not a
-  new account: if orgs AND artists are empty but the account is weeks old,
-  surface that (see recoup-platform-connect-account guardrails) instead of
-  restarting onboarding.
+- An empty roster can be legitimate. Verify the account identity and selected
+  workspace before restarting onboarding; stop if the credential identifies a
+  disposable `agent+` account instead of the user's intended account.

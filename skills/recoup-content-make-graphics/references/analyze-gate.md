@@ -27,7 +27,7 @@ the auth header as in the account-resolver reference (`x-api-key: $RECOUP_API_KE
 > (verified live) — the endpoint analyzes video only. To QA a still image (cover art,
 > thumbnail, quote card, carousel slide): **if your harness can view images, inspect the
 > downloaded file directly** (the honest substitute for the gate) and judge it against the
-> rubric below; otherwise animate a throwaway clip from it and analyze that, or surface the
+> rubric below; otherwise surface the
 > image to the user for sign-off. Do not claim a static image passed the analyze gate when the
 > endpoint never accepted it.
 
@@ -66,8 +66,10 @@ This makes "pass" mean *competitive with what this audience already rewarded*, n
 - **Borderline** → surface the analysis to the user and let them decide; don't silently
   pass it off as great.
 
-On Claude Code, the content skills that render pixels (make-video, make-graphics, asset-pack,
-reactive-post) each carry a `Stop` hook in their own `SKILL.md` frontmatter — scoped to that
-skill, so it only fires while the skill is active — that blocks "video/asset ready" claims with
-no analyze-gate pass in the conversation. Text-only skills (write-caption) render nothing and
-carry no such hook. Treat the analyze gate as mandatory for any skill that renders pixels.
+No Stop hook enforces this gate. The agent must record actual
+inspection evidence and any remaining uncertainty before delivery. Inspect still
+images directly where supported and call `/api/content/analyze` at each video checkpoint and use playback as additional
+motion QA.
+For lipsync, also verify an audio stream, listen to the selected clip and inspect
+mouth alignment; an audio stream alone is not proof of synchronization. Do not
+spend on an unnecessary throwaway animation merely to QA a still image.

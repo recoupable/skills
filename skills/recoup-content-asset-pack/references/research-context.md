@@ -23,45 +23,74 @@ If no credential or the research API is cold/erroring, **degrade gracefully**: g
 workspace context alone and note that signals were unavailable. Never block a content job on
 research.
 
-## Auth + the provider ID chain
+## Auth and research identifiers
 
 Research endpoints live under `https://api.recoupable.dev/api/research/…` and accept the
 same auth as everything else — reuse the `AUTH` array from the account-resolver reference
 (`x-api-key: $RECOUP_API_KEY` preferred, or `Authorization: Bearer $RECOUP_ACCESS_TOKEN`).
 
-Most research endpoints key off the **provider (Songstats) artist id** — an alphanumeric
-slug like `wjcgfd9i`, *not* the Recoup `account_id`/`id` and *not* the Spotify id. Resolve it
-once from the Spotify id in `RECOUP.md`, then reuse:
+Most artist research endpoints accept the selected search result's `id` or an
+artist name. Research IDs are opaque strings, separate from workspace account
+UUIDs and Spotify IDs. Resolve a name, inspect the match, and reuse its `id`:
+
+### Read without assuming a warm-up job
+
+These GET routes are synchronous. Empty successful data is not a cache-warming
+signal. Check HTTP success before reading JSON. Surface `402` with its `billingUrl`
+and stop the research reads. For transient network errors or `5xx`, use bounded retries;
+on `429`, defer research and respect `Retry-After` before a later attempt.
+never loop indefinitely or turn an unavailable count into zero.
 
 ```bash
 BASE="https://api.recoupable.dev/api"
-SPOTIFY_ID=$(sed -n 's/^spotifyArtistId:[[:space:]]*//p' "$ARTIST_DIR/RECOUP.md")
-
-PROVIDER_ID=$(curl -sSL --max-time 90 "${AUTH[@]}" \
-  "$BASE/research/lookup?spotifyId=$SPOTIFY_ID" \
-  | jq -r '.artist_info.songstats_artist_id // empty')
-```
-
-If `$PROVIDER_ID` is empty, the artist isn't matched on the provider — skip structured
-research and continue from workspace context. Don't fabricate an id.
-
-### Cold-cache retries (don't trust the first miss)
-
-The research API caches per artist. A first hit can return `status:"error"` or a `202
-refresh_pending` while it warms — that's transient, **not** "no data". Retry a couple of
-times before giving up:
-
-```bash
-research_get() {  # usage: research_get <path-with-query>
-  local out=""
+research_get() {
+  local path=$1 response body status attempt headers retry_after
+  shift
+  headers=$(mktemp) || return 1
   for attempt in 1 2 3; do
-    out=$(curl -sSL --max-time 90 "${AUTH[@]}" "$BASE/research/$1")
-    [ "$(echo "$out" | jq -r '.status // "error"')" = "success" ] && { echo "$out"; return 0; }
-    sleep 3
+    if response=$(curl -sS --max-time 90 -D "$headers" -w $'\n%{http_code}' \
+      "${AUTH[@]}" "$BASE/research${path:+/$path}" "$@"); then
+      status=${response##*$'\n'}
+      body=${response%$'\n'*}
+      case "$status" in
+        200) rm -f "$headers"; printf '%s' "$body"; return 0 ;;
+        402)
+          rm -f "$headers"
+          printf 'Research needs credits: %s\n' \
+            "$(printf '%s' "$body" | jq -r '.billingUrl // .error // "Check billing"')" >&2
+          return 1 ;;
+        429)
+          retry_after=$(awk 'tolower($1)=="retry-after:" {sub(/^[^:]*:[[:space:]]*/, ""); sub(/\r$/, ""); print}' "$headers")
+          rm -f "$headers"
+          printf 'Research step stopped. Retry-After: %s. Resume manually when allowed.\n' "${retry_after:-not provided}" >&2
+          return 1 ;;
+        5??) ;;
+        *) rm -f "$headers"; printf 'Research HTTP %s; resolve before resuming.\n' "$status" >&2; return 1 ;;
+      esac
+    fi
+    if [ "$attempt" -lt 3 ]; then sleep "$((attempt * 2))"; fi
   done
-  echo "$out"; return 1   # last body; caller degrades gracefully and notes the gap
+  rm -f "$headers"
+  echo 'Research unavailable after three attempts; use workspace context.' >&2
+  return 1
 }
 ```
+
+```bash
+if CANDIDATES=$(research_get "" --get --data-urlencode "q=$ARTIST_NAME" \
+  --data-urlencode "type=artists"); then
+  printf '%s' "$CANDIDATES" | jq '.results[]?'
+fi
+RESEARCH_ID=""  # Set only after inspecting the candidate's name and platform links.
+```
+
+Select the verified candidate's exact `id`; do not automatically choose the first
+match. An empty ID or failed lookup is an unavailable-data condition. Continue
+from workspace context and record the gap. Never fabricate an ID. If the server
+returns `Retry-After`, the caller must respect it before a later request. This
+helper prints the returned `Retry-After` header and stops immediately on `429`;
+the caller schedules that later request. It retries only network failures or `5xx`, at most three
+attempts with a 90-second timeout each.
 
 ## The signals and what each one *changes*
 
@@ -70,11 +99,11 @@ point of each row is the **decision it drives**, not the data itself.
 
 | Signal | Call | What it changes about the content |
 | --- | --- | --- |
-| **Song audio analysis** | `research/track?id=$TRACK_ID` | cut pacing, template look, caption energy (see "Audio drives the edit") |
-| **Playlist placements** | `research/playlists?id=$PROVIDER_ID` → `.placements` | name-drop the real flagship playlist in a promo/caption ("now on *Lorem Vitae*") |
-| **Per-platform snapshot** | `research/metrics?id=$PROVIDER_ID&source=tiktok` | pick the lead platform + a real, current number to feature |
-| **Career / activity feed** | `research/career?id=$PROVIDER_ID` | spot a fresh event worth reacting to (a sync, a chart entry, a co-sign) |
-| **Milestones** | `research/milestones?id=$PROVIDER_ID` | the "moment" trigger (see "React to a moment") |
+| **Track metadata and available audio analysis** | `research/track?id=$TRACK_ID` | cut pacing, template look, caption energy (see "Audio drives the edit") |
+| **Playlist placements** | `research/playlists?id=$RESEARCH_ID` → `.placements` | name-drop the real flagship playlist in a promo/caption ("now on *Lorem Vitae*") |
+| **Per-platform snapshot** | `research/metrics?id=$RESEARCH_ID&source=tiktok` | pick the lead platform + a real, current number to feature |
+| **Career / activity feed** | `research/career?id=$RESEARCH_ID` | spot a fresh event worth reacting to (a sync, a chart entry, a co-sign) |
+| **Milestones** | `research/milestones?id=$RESEARCH_ID` | the "moment" trigger (see "React to a moment") |
 | **Audience** | `context/audience.md` (workspace) | phrasing, slang, hashtags — workspace is authoritative here |
 | **Trend / what's around them** | `research/web`, `research/deep` (free-text) | current sound/format references (see "Trend awareness") |
 
@@ -86,18 +115,29 @@ feature a number you didn't get back.
 ## Audio drives the edit (P1)
 
 The song's audio analysis is the single highest-leverage signal for **video** jobs — it
-turns "make a clip" into "make a clip that *moves like this song*." Pull it once:
+turns "make a clip" into "make a clip that *moves like this song*." Read available fields once; missing analysis is not evidence of a zero value:
 
 ```bash
 # Resolve the track id for the song the content is about — from RELEASE.md if present, else
 # search. The search root is /research (NO trailing slash) with type=tracks:
-TRACK_ID=$(curl -sSL --max-time 90 "${AUTH[@]}" \
-  "$BASE/research?q=$(printf %s "$SONG_TITLE $ARTIST_NAME" | jq -sRr @uri)&type=tracks" \
-  | jq -r '.results[0].songstats_track_id // empty')
+if [ -z "$TRACK_ID" ]; then
+  if TRACK_CANDIDATES=$(research_get "" --get \
+    --data-urlencode "q=$SONG_TITLE $ARTIST_NAME" --data-urlencode "type=tracks"); then
+    printf '%s' "$TRACK_CANDIDATES" | jq '.results[]?'
+  fi
+  # Inspect title, artist and platform links, then set TRACK_ID to the verified result.
+fi
 
-# audio_analysis comes back as an ARRAY of {key, value} where value is a STRING — not a
+# When present, audio_analysis is an ARRAY of {key, value} where value is a STRING — not a
 # nested object — and tempo is keyed "tempo", not "bpm". Pull fields by key:
-AUDIO=$(research_get "track?id=$TRACK_ID")   # cold cache returns status:error first — the helper retries
+AUDIO='{}'
+if [ -n "$TRACK_ID" ]; then
+  if SIGNAL=$(research_get "track" --get --data-urlencode "id=$TRACK_ID"); then
+    AUDIO=$SIGNAL
+  else
+    echo 'Audio analysis unavailable; continue from workspace context.' >&2
+  fi
+fi
 af(){ echo "$AUDIO" | jq -r --arg k "$1" '.audio_analysis[]? | select(.key==$k) | .value'; }
 TEMPO=$(af tempo)        # BPM, e.g. 80.99
 ENERGY=$(af energy)      # 0–1
@@ -130,10 +170,10 @@ something real and build the content around it:
 ```bash
 # milestones is {milestones:[...]} (often empty). Inspect the object's fields before
 # formatting — naming varies — and degrade when there's nothing fresh:
-research_get "milestones?id=$PROVIDER_ID" \
+research_get "milestones?id=$RESEARCH_ID" \
   | jq -r 'if (.milestones|length)>0 then .milestones[-1] else "no fresh milestone" end'
 # The career feed is a richer activity stream — chart entries, syncs, co-signs:
-research_get "career?id=$PROVIDER_ID" \
+research_get "career?id=$RESEARCH_ID" \
   | jq -r '.career[0:5][]? | "\(.activity_date): \(.activity_text)"'
 ```
 
@@ -147,9 +187,8 @@ the evergreen ask.
 For "what's the move right now" / "make it feel current", pull lightweight web intelligence
 and let it inform the *reference points*, not the facts:
 
-```bash
-research_get "web?q=$(printf %s "$ARTIST_NAME current trends" | jq -sRr @uri)" | jq -r '.summary // .content'
-```
+Use the matching web-research MCP tool or the documented `POST /api/research/web`
+request schema. The GET helper above does not implement POST web/deep research.
 
 Use it to choose a format or sonic/visual reference that's actually current — never to invent
 a stat or a quote. Treat web/deep output as *direction*, and keep anything factual sourced

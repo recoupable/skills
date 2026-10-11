@@ -14,7 +14,7 @@ bundled references first: `references/workspace-context.md`,
 ## Procedure
 
 **Estimate + confirm cost before spending** (`POST /content/estimate`; on
-`insufficient_credits` surface `checkoutUrl`) — no silent 30-asset fan-outs. A
+`insufficient_credits` surface `billingUrl`) — no silent 30-asset fan-outs. A
 ~20-asset default: 6–10 video clips across looks (each led by a recoup-song-find-hook
 hook), 4–6 quote cards, 1 carousel, 1 visualizer, captions per asset. **Theme to the
 audience** (via recoup-research-artist-overview audience data) — bias looks/copy to
@@ -26,7 +26,7 @@ decline the farm, deliver the pack.
 
 ## Guardrails
 
-- **Estimate + confirm** before spending; surface `checkoutUrl` on insufficient credits.
+- **Estimate + confirm** before spending; surface `billingUrl` on insufficient credits.
 - **Analyze-gate every asset.**
 - **Stop at the assets** — no posting/scheduling.
 

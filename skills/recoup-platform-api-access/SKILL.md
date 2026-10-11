@@ -45,14 +45,16 @@ separate REST setup for the missing capability. Do not retry unauthenticated.
 - **A — any-artist research** (a name; no roster lookup) → Research endpoints.
 - **B — browse my roster** → Roster discovery (below).
 - **C — a specific roster artist** → Roster discovery, match the name, capture
-  `account_id` + row `id`.
+  the artist `account_id` (the current list `id` is its alias).
 - **D — add an artist** → use recoup-roster-add-artist.
 
 **Roster discovery:** `GET /accounts/id` → `GET /artists` (your roster; `org_id`
 optional — orgs are often empty, so don't stop when `organizations` is `[]`).
 
-> **Use `account_id`, not the list `id`, for every `/artists/{id}/*` sub-resource**
-> (socials/posts/fans key on `account_id`; the list's top-level `id` 404s). And
+> **Use the artist account UUID for every `/artists/{id}/*` sub-resource.**
+> Current roster rows return that UUID in both `account_id` and `id`. Do not use
+> an internal profile-row key, a Spotify ID or an opaque research ID. Verify
+> older saved IDs against the current authenticated roster.
 > **socials are embedded** in the `/artists` response as `account_socials`
 > (`username`, `followerCount`, `profile_url`) — read them there before calling
 > `/artists/{account_id}/socials` at all.
