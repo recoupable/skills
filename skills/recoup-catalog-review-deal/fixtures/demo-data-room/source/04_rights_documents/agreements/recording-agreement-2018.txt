@@ -1,0 +1,21 @@
+RECORDING AGREEMENT (DEMO PLACEHOLDER — NOT A REAL CONTRACT)
+
+This file represents the 2018 recording agreement between Mari Vega and
+Lane Music Holdings LLC. In a real data room this would be a signed PDF.
+For the demo, the relevant facts are:
+
+  Parties:        Lane Music Holdings LLC ("Company") and Mari Vega ("Artist")
+  Effective date: 2018-03-15
+  Term:           Initial term plus two option periods (option 1 exercised 2020-03-15)
+  Royalty rate:   18% of NLS, escalating to 20% at 1M paid downloads (not reached)
+  Producer:       Jordan Key — 4 producer points participation, retroactive to first record
+  Recoupment:     All recording costs cross-collateralized; recoupment ledger
+                  not provided in this data room (deliberate gap for diligence)
+  Reversion:      None
+  Territory:      World
+  Mechanicals:    Statutory rate, controlled-composition clause at 75% of stat
+
+KNOWN ISSUE FOR DILIGENCE:
+  The seller never attached the executed signature page to this PDF. The
+  unsigned working draft is what is filed here. Real diligence would
+  require the executed copy from counsel before close.

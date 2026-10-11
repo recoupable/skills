@@ -1,0 +1,38 @@
+deal:
+  deal_id: ""
+  deal_name: ""
+  workflow_type: "buy-side" # buy-side | seller-prep | financing
+  buyer_or_client: ""
+  valuation_date: ""
+  currency: "USD"
+
+scope:
+  rights_included:
+    - publishing
+    - masters
+  territories: []
+  excluded_assets: []
+  preliminary_or_full: "preliminary"
+
+valuation:
+  discount_rate: null
+  publishing_multiple_low: null
+  publishing_multiple_high: null
+  master_multiple_low: null
+  master_multiple_high: null
+  terminal_growth_or_decay: null
+
+normalization:
+  sync_treatment: "exclude_one_time"
+  pro_bonus_treatment: "separate_and_haircut"
+  reserve_treatment: "review_required"
+  recoupment_treatment: "model_when_available"
+  fx_source: ""
+
+materiality:
+  revenue_threshold: null
+  concentration_threshold_percent: 40
+  unsupported_income_threshold_percent: 5
+
+notes:
+  - "All assumptions must be confirmed or labeled as preliminary before external use."

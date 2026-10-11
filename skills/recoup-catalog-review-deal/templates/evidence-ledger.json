@@ -1,0 +1,16 @@
+{
+  "deal_id": "",
+  "generated_at": "",
+  "entries": [
+    {
+      "evidence_id": "EV-001",
+      "source_file": "source/example.pdf",
+      "source_type": "legal",
+      "locator": "page 1",
+      "extracted_field": "controlled_share",
+      "extracted_value": "100%",
+      "confidence": "example",
+      "notes": "Replace this example entry with real evidence."
+    }
+  ]
+}

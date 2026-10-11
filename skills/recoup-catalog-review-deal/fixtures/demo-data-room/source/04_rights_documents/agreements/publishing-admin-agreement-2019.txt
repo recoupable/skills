@@ -1,0 +1,20 @@
+PUBLISHING ADMINISTRATION AGREEMENT (DEMO PLACEHOLDER — NOT A REAL CONTRACT)
+
+This file represents the 2019 publishing administration agreement
+between Lane Music Publishing (catalog seller) and Atlas Songs (admin).
+In a real data room this would be a signed PDF.
+
+  Parties:        Lane Music Publishing ("Publisher") and Atlas Songs ("Admin")
+  Effective date: 2019-01-01
+  Term:           5-year initial, auto-renews for 1-year periods
+  Admin fee:      15% of gross publishing receipts
+  Territory:      World
+  Scope:          All Lane Music Publishing controlled compositions, including
+                  Mari Vega writer's-share publishing
+  Sub-publishers: Atlas appoints sub-publishers in EU, JP, AU at its discretion
+  Reserves:       30% on foreign mechanicals, released after 18 months
+
+KNOWN ISSUE FOR DILIGENCE:
+  Atlas Songs change-of-control / assignability clauses are not visible
+  in this excerpt — would need full agreement reviewed by counsel before
+  the publishing share can be transferred without consent.

@@ -1,0 +1,12 @@
+# Release facts the agent was given. Assumptions are allowed; hidden assumptions are not.
+artist:            # artist name
+artist_slug:       # lowercase-kebab
+release_title:     # track / EP / album title
+release_slug:      # lowercase-kebab
+release_type:      # single | EP | album | deluxe | remix | collab | soundtrack | catalog-reissue
+release_date:      # YYYY-MM-DD or TBD
+goal_metric:       # streams | saves | playlist adds | ticket sales | press
+creative_direction: # one line: vibe / themes / inspirations / collaborators
+channels:          # [IG, TikTok, X, YouTube, email, DSP, press]
+paid_budget:       # yes | no | amount
+asset_gaps:        # e.g. "no music video yet", "cover art not locked"
