@@ -16,6 +16,24 @@ Documentation: https://docs.recoupable.dev
 Support: agent@recoupable.dev
 Privacy: https://recoupable.dev/privacy
 
+## Data handling and optional services
+
+The declared connector is Recoup at api.recoupable.dev. Authorized workflows can
+read and save artist, contact, catalog, release, and account information. Saved
+Recoup content can remain longer than 30 days, until deletion or an applicable
+retention requirement ends; disconnecting Claude does not delete the account.
+See the privacy policy for retention, deletion, processors, and public assets.
+
+Some skills also describe optional tools outside the declared Recoup connector.
+ElevenLabs Scribe receives selected audio for transcription. Creative and site
+workflows can use separately connected Higgsfield tools or a provider selected
+by the user, such as fal.ai, receiving the prompts and reference assets needed
+for that step. A user-selected hosting service can receive site files when
+publishing is requested. These integrations require their own access and user
+authorization; installing this plugin does not grant it. Review the destination
+and inputs before sending data. External services apply their own privacy and
+retention policies. The plugin is not specifically intended for users under 18.
+
 ## Included skills
 
 - recoup-catalog-estimate-value
@@ -61,5 +79,5 @@ Privacy: https://recoupable.dev/privacy
 
 ## Release provenance
 
-Source commit: c78bbe66e86b339f75fd767eaffe94be023cb82d
-Version: 2026.1011.10
+Source commit: d87a83dcc05640cafbbff1939b600fa8aafb7614
+Version: 2026.1011.11
