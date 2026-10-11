@@ -20,7 +20,11 @@ def build(root, tracked, out, version, commit):
     metadata = stamp_versions(json.loads((root/'.claude-plugin/plugin.json').read_text()), version)
     if 'assets/recoup-customer-icon.png' not in files:
         raise ValueError('Missing customer icon')
-    metadata['icon'] = './assets/recoup-customer-icon.png'
+    # Keep listing artwork separate from skill-local assets/template directories.
+    for name in list(files):
+        if name.startswith('assets/'):
+            files['branding/' + name.removeprefix('assets/')] = files.pop(name)
+    metadata['icon'] = './branding/recoup-customer-icon.png'
     metadata['privacyPolicyUrl'] = 'https://recoupable.dev/privacy'
     files['.claude-plugin/plugin.json'] = (json.dumps(metadata, indent=2)+'\n').encode()
     files['README.md'] = ('''# Recoup
@@ -40,6 +44,22 @@ proposed publishing, sending, and other external actions before authorizing them
 Documentation: https://docs.recoupable.dev
 Support: agent@recoupable.dev
 Privacy: https://recoupable.dev/privacy
+
+## Execution and authentication
+
+The declared MCP server uses remote HTTPS and host-managed OAuth. This package
+does not register installation commands, lifecycle hooks, or a local MCP server.
+That does not mean every workflow is remote-only: skills include readable Python,
+JavaScript, and shell helpers that Claude may run for a user-requested task in a
+host that supports execution. Other workflows can generate site or workspace code.
+Inspect the skill and its scripts before granting execution permission.
+
+Prefer connected MCP tools. Optional REST examples and helpers use separately
+configured Recoup credentials, not tokens extracted from the host's OAuth session.
+Catalog research and email helpers can call the Recoup API directly. Do not read
+unrelated credentials or send Recoup credentials to another service. If a required
+tool, credential, or execution capability is unavailable, report that limitation.
+The bundled helper inventory below is generated from this exact release.
 
 ## Data handling and optional services
 
@@ -62,6 +82,10 @@ retention policies. The plugin is not specifically intended for users under 18.
 ## Included skills
 
 ''' + ''.join(f'- {name}\n' for name in skills) +
+        '\n## Bundled helpers\n\n' + ''.join(
+            f'- {name}\n' for name in sorted(files)
+            if name.startswith('skills/') and Path(name).suffix in {'.py', '.mjs', '.js', '.sh'}
+        ) +
         f'\n## Release provenance\n\nSource commit: {commit}\nVersion: {version}\n').encode()
     if 'LICENSE' not in files:
         raise ValueError('Missing LICENSE')
