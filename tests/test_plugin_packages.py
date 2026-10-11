@@ -1,9 +1,12 @@
 import importlib.util
 import json
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 import zipfile
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts'))
 
 spec=importlib.util.spec_from_file_location('packages',Path(__file__).resolve().parents[1]/'scripts/build_plugin_packages.py')
 packages=importlib.util.module_from_spec(spec)
@@ -39,6 +42,31 @@ class PackagesTest(unittest.TestCase):
             self.assertEqual(json.loads((root/'.codex-plugin/plugin.json').read_text())['version'],'1.0.0')
             again=packages.build(root,files,root/'again','2026.1008.1','test-commit')
             self.assertEqual(report,again)
+
+    def test_workspace_uses_registered_app_without_direct_mcp(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            path=root/'.codex-plugin/plugin.json'
+            metadata=json.loads(path.read_text()); metadata['mcpServers']='./.mcp.json'
+            path.write_text(json.dumps(metadata))
+            report=packages.build(root, files, root/'out', '2026.1011.1', 'test', 'asdk_app_example-1_x', 'recoup-skills')
+            with zipfile.ZipFile(root/'out'/report['packages']['workspace']['file']) as z:
+                manifest=json.loads(z.read('.codex-plugin/plugin.json'))
+                self.assertEqual(manifest['name'], 'recoup-skills')
+                self.assertNotIn('mcpServers', manifest)
+                self.assertNotIn('.mcp.json', z.namelist())
+                self.assertEqual(manifest['apps'], './.app.json')
+                self.assertEqual(json.loads(z.read('.app.json')), {'apps': {'recoup': {'id':'asdk_app_example-1_x', 'required':True}}})
+                self.assertEqual(manifest['interface']['logo'], './assets/recoup-customer-icon.png')
+                self.assertFalse(any('recoup-internal-' in n for n in z.namelist()))
+            with zipfile.ZipFile(root/'out'/report['packages']['customer']['file']) as z:
+                self.assertIn('.mcp.json', z.namelist())
+                self.assertNotIn('.app.json', z.namelist())
+            self.assertEqual(report['packages']['workspace']['skills'], report['packages']['customer']['skills'])
+            again=packages.build(root, files, root/'again', '2026.1011.1', 'test', 'asdk_app_example-1_x', 'recoup-skills')
+            self.assertEqual(report, again)
+            with self.assertRaisesRegex(ValueError, 'ChatGPT app ID'):
+                packages.build(root, files, root/'bad', '2026.1011.1', 'test', 'plugin_asdk_app_example')
 
     def test_new_customer_skill_is_automatically_included(self):
         with tempfile.TemporaryDirectory() as tmp:

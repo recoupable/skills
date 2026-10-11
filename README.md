@@ -284,3 +284,30 @@ Existing marketplace installations may require installing `recoup-plugin@recoup`
 and removing the old entry after verifying the replacement. Uploaded OpenAI drafts
 and workspace installations must be checked separately; a GitHub release does not
 confirm that those existing records accept an identifier change.
+
+### ChatGPT workspace testing on web and desktop
+
+Direct `.mcp.json` packages can appear as desktop-only in ChatGPT. For workspace
+testing, register the remote MCP app in ChatGPT first, then generate a customer
+package that references its `asdk_app_...` ID:
+
+```bash
+python3 scripts/build_plugin_packages.py --version 2026.1011.1 --out /tmp/recoup-packages --chatgpt-app-id asdk_app_YOUR_REGISTERED_ID
+```
+
+This adds `recoup-workspace-<version>.zip` alongside the normal customer and full
+ZIPs. It has the same customer skills and blue icon, but uses `.app.json` instead
+of direct MCP configuration. Upload it as an update to the workspace plugin and
+verify web opening and authentication. Its registered app must be accessible to
+the intended workspace users; packaging does not grant access.
+
+Set the repository Actions variable `RECOUP_CHATGPT_APP_ID` to generate this
+workspace ZIP on every release. No app ID is hardcoded into public source or the
+public submission package. Keep using the customer ZIP for the OpenAI publisher
+dashboard, where the submission has its own MCP registration.
+
+When updating an older workspace listing, preserve its package identity using
+`--workspace-name recoup-skills` (or set Actions variable
+`RECOUP_CHATGPT_WORKSPACE_PACKAGE_NAME`). OpenAI rejects an update that changes
+that identity. This affects only the workspace artifact; the public package
+remains `recoup-plugin`. The display name stays Recoup in both.
