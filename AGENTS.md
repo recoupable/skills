@@ -219,3 +219,9 @@ Merges to main publish versioned GitHub ZIP releases through plugin-release.yml.
 Artifact versions are generated without commits to main. OpenAI directory upload,
 review and publication remain separate steps; do not equate a GitHub release with
 an approved directory update. See README for the release workflow.
+
+The same release workflow exports a Claude customer source tree with
+`scripts/build_claude_package.py` and publishes it to `claude-directory`.
+This is generated distribution output, not a second authoring tree. Include
+`python3 -m unittest discover -s tests -p test_claude_package.py` when changing
+packaging. Submit that branch as a Plugin bundle, separately from the MCP connector.

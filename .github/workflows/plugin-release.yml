@@ -30,6 +30,7 @@ jobs:
           python3 scripts/check_resolvable.py
           python3 scripts/run_resolver_eval.py
           python3 -m unittest discover -s tests -p test_plugin_packages.py
+          python3 -m unittest discover -s tests -p test_claude_package.py
           node --test tests/consulting-brand.test.mjs tests/consulting-runtime.test.mjs
           python3 -m unittest discover -s tests -p test_consulting_templates.py
       - name: Assign stable release version
@@ -73,3 +74,32 @@ jobs:
           gh release upload "$TAG" dist/* --clobber
           gh release edit "$TAG" --draft=false --latest="$LATEST"
           cat dist/OPENAI-SUBMISSION.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build Claude directory source
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: python3 scripts/build_claude_package.py --version "$RELEASE_VERSION" --out "$RUNNER_TEMP/recoup-claude"
+      - name: Publish customer-only Claude branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          # Old queued releases must not replace a newer source tree.
+          if [ "$(git ls-remote origin refs/heads/main | cut -f1)" != "$GITHUB_SHA" ]; then
+            echo "Skipping Claude branch update: main has advanced."
+            exit 0
+          fi
+          gh auth setup-git
+          cd "$RUNNER_TEMP/recoup-claude"
+          git init -b claude-directory
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          if [ -n "$(git ls-remote origin refs/heads/claude-directory)" ]; then
+            git fetch --depth=1 origin claude-directory
+            git reset --soft FETCH_HEAD
+          fi
+          git add --all
+          git commit -m "Release Recoup Claude $RELEASE_VERSION from $GITHUB_SHA"
+          git push origin HEAD:refs/heads/claude-directory
