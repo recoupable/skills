@@ -37,7 +37,7 @@ curl -s "$RECOUP_API/research?q=Drake&type=artists" \
 
 Query params:
 
-- `q` (**required**) — a name (`Drake`, `Flowers`) ; use `/research/lookup` for a Spotify artist URL.
+- `q` (**required**) — query text, including a name or streaming-platform URL. Inspect the returned match; use `/research/lookup` for exact Spotify artist URL resolution.
 - `type` — `artists` (default), `tracks`, or `labels`. **These are the only
   three valid types.**
 - `limit` — max results (default `10`).
@@ -123,7 +123,7 @@ curl -s "$RECOUP_API/research/urls?artist=Drake" -H "x-api-key: $RECOUP_API_KEY"
 Discover the `id` via `GET /research?q=...&type=...` first.
 
 ```bash
-# Albums — note: artist_id (research ID), NOT name. is_primary=true requests primary-only filtering; data-connection support applies
+# Albums — artist_id (research ID), NOT name. is_primary defaults to true; false requests inclusion of non-primary entries when supported by the data connection.
 curl -s "$RECOUP_API/research/albums?artist_id=wjcgfd9i&is_primary=true&limit=50" -H "x-api-key: $RECOUP_API_KEY" | jq '.albums'
 
 # Full track metadata + audio analysis (id from search type=tracks)

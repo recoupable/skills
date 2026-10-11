@@ -17,7 +17,7 @@ elif [ -n "$RECOUP_ACCESS_TOKEN" ]; then
   AUTH=(-H "Authorization: Bearer $RECOUP_ACCESS_TOKEN")
 else
   echo "REST credentials unavailable; connect through the approved setup flow." >&2
-  exit 1
+  return 1 2>/dev/null || exit 1
 fi
 ```
 

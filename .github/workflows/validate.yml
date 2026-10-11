@@ -26,6 +26,8 @@ jobs:
         run: python3 scripts/check_resolvable.py
       - name: Resolver eval (routing fixtures + coverage)
         run: python3 scripts/run_resolver_eval.py
+      - name: Reconciliation example regressions
+        run: python3 -m unittest discover -s tests -p test_reconciliation_examples.py
       - uses: actions/setup-node@v4
         with:
           node-version: "22"

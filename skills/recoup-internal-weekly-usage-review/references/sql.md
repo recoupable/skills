@@ -25,11 +25,11 @@ LEFT JOIN LATERAL (SELECT email FROM account_emails
 WHERE ue.created_at >= :FROM AND ue.created_at < :TO
 GROUP BY ue.account_id, ae.email, a.name ORDER BY micro_dollars_used DESC;
 
--- 3. Model / flat-fee split (for the gateway reconciliation)
+-- 3. Usage grouped by model_id (endpoint/model aggregates, not provider attribution)
 SELECT model_id, COUNT(*), SUM(credits_deducted) AS micro_dollars
 FROM usage_events
 WHERE created_at >= :FROM AND created_at < :TO
-GROUP BY model_id ORDER BY micro_dollars DESC;   -- model_id may identify an endpoint or model; use provider/source for attribution rather than assuming NULL means flat-fee
+GROUP BY model_id ORDER BY micro_dollars DESC;   -- NULL is unknown attribution, not evidence of a flat fee
 
 -- 4. Balances for window-active accounts (negative = burning past zero)
 SELECT cu.account_id, ae.email, cu.remaining_credits, cu.timestamp

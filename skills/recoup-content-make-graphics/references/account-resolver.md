@@ -86,10 +86,14 @@ if printf '%s' "$ACCOUNT" | jq -e '.account.email | test("^agent\\+.*@recoupable
 fi
 ARTISTS_JSON=$(curl --fail-with-body -sS "${AUTH[@]}" "$ARTISTS_URL") || exit 1
 
-ARTIST_ACCOUNT_ID=$(echo "$ARTISTS_JSON" \
-  | jq -r --arg n "$ARTIST_NAME" '.artists[] | select(.name==$n) | .account_id')
-ARTIST_ROW_ID=$(echo "$ARTISTS_JSON" \
-  | jq -r --arg n "$ARTIST_NAME" '.artists[] | select(.name==$n) | .id')
+MATCHES=$(printf '%s' "$ARTISTS_JSON" | jq --arg n "$ARTIST_NAME" '[.artists[] | select(.name==$n)]')
+if [ "$(printf '%s' "$MATCHES" | jq length)" -gt 1 ]; then
+  echo 'Multiple artists match; select the intended workspace and row before continuing.' >&2
+  printf '%s' "$MATCHES" | jq '.[] | {id,account_id,organization_id,name}' >&2
+  return 1 2>/dev/null || exit 1
+fi
+ARTIST_ACCOUNT_ID=$(printf '%s' "$MATCHES" | jq -r '.[0].account_id // empty')
+ARTIST_ROW_ID=$(printf '%s' "$MATCHES" | jq -r '.[0].id // empty')
 ```
 
 **Browsing instead of matching:** if the user hasn't named the artist (e.g. "pick one of my

@@ -49,7 +49,7 @@ A platform-displayed play count is not a verified royalty-bearing stream count.
 - Tracks: `tracks`; catalog completeness and fields vary.
 - Related artists: `artists`; no weighted similarity score is calculated.
 - Artist playlists: `placements`; past scope is all-time and can include current placements.
-- Track playlists: `playlists`; filtering support and fields vary by data connection.
+- Track playlists: `placements`; filtering support and fields vary by data connection.
 - Audience: `audience`; geography, age and gender coverage are not guaranteed.
 - Platform links: `urls`, containing `{domain,url}` pairs.
 

@@ -33,29 +33,55 @@ Most artist research endpoints accept the selected search result's `id` or an
 artist name. Research IDs are opaque strings, separate from workspace account
 UUIDs and Spotify IDs. Resolve a name, inspect the match, and reuse its `id`:
 
-```bash
-BASE="https://api.recoupable.dev/api"
-RESEARCH_ID=$(curl --fail-with-body -sSL --max-time 90 "${AUTH[@]}" --get \
-  "$BASE/research" --data-urlencode "q=$ARTIST_NAME" --data-urlencode "type=artists" \
-  | jq -r '.results[0].id // empty')
-```
-
-Confirm the returned name and platform links before using the first match. An
-empty ID or failed lookup is an unavailable-data condition; continue from
-workspace context and record the gap. Never fabricate an ID.
-
 ### Read without assuming a warm-up job
 
 These GET routes are synchronous. Empty successful data is not a cache-warming
 signal. Check HTTP success before reading JSON. Surface `402` with its `billingUrl`
-and stop. For transient network errors, `429` or `5xx`, use bounded retries;
+and stop the research reads. For transient network errors or `5xx`, use bounded retries;
+on `429`, defer research and respect `Retry-After` before a later attempt.
 never loop indefinitely or turn an unavailable count into zero.
 
 ```bash
+BASE="https://api.recoupable.dev/api"
 research_get() {
-  curl --fail-with-body -sSL --max-time 90 "${AUTH[@]}" "$BASE/research/$1"
+  local path=$1 response body status attempt
+  shift
+  for attempt in 1 2 3; do
+    if response=$(curl -sSL --max-time 90 -w $'\n%{http_code}' \
+      "${AUTH[@]}" "$BASE/research${path:+/$path}" "$@"); then
+      status=${response##*$'\n'}
+      body=${response%$'\n'*}
+      case "$status" in
+        200) printf '%s' "$body"; return 0 ;;
+        402)
+          printf 'Research needs credits: %s\n' \
+            "$(printf '%s' "$body" | jq -r '.billingUrl // .error // "Check billing"')" >&2
+          return 1 ;;
+        429) echo 'Research rate limited; defer reads and respect Retry-After.' >&2; return 1 ;;
+        5??) ;;
+        *) printf 'Research HTTP %s; use workspace context.\n' "$status" >&2; return 1 ;;
+      esac
+    fi
+    if [ "$attempt" -lt 3 ]; then sleep "$((attempt * 2))"; fi
+  done
+  echo 'Research unavailable after three attempts; use workspace context.' >&2
+  return 1
 }
 ```
+
+```bash
+if CANDIDATES=$(research_get "" --get --data-urlencode "q=$ARTIST_NAME" \
+  --data-urlencode "type=artists"); then
+  printf '%s' "$CANDIDATES" | jq '.results[]?'
+fi
+RESEARCH_ID=""  # Set only after inspecting the candidate's name and platform links.
+```
+
+Select the verified candidate's exact `id`; do not automatically choose the first
+match. An empty ID or failed lookup is an unavailable-data condition. Continue
+from workspace context and record the gap. Never fabricate an ID. If the server
+returns `Retry-After`, wait for that interval before a later retry; this helper
+allows at most three attempts, with a 90-second timeout per attempt.
 
 ## The signals and what each one *changes*
 
@@ -85,13 +111,24 @@ turns "make a clip" into "make a clip that *moves like this song*." Read availab
 ```bash
 # Resolve the track id for the song the content is about — from RELEASE.md if present, else
 # search. The search root is /research (NO trailing slash) with type=tracks:
-TRACK_ID=$(curl --fail-with-body -sSL --max-time 90 "${AUTH[@]}" \
-  "$BASE/research?q=$(printf %s "$SONG_TITLE $ARTIST_NAME" | jq -sRr @uri)&type=tracks" \
-  | jq -r '.results[0].id // empty')
+if [ -z "$TRACK_ID" ]; then
+  if TRACK_CANDIDATES=$(research_get "" --get \
+    --data-urlencode "q=$SONG_TITLE $ARTIST_NAME" --data-urlencode "type=tracks"); then
+    printf '%s' "$TRACK_CANDIDATES" | jq '.results[]?'
+  fi
+  # Inspect title, artist and platform links, then set TRACK_ID to the verified result.
+fi
 
 # When present, audio_analysis is an ARRAY of {key, value} where value is a STRING — not a
 # nested object — and tempo is keyed "tempo", not "bpm". Pull fields by key:
-AUDIO=$(research_get "track?id=$TRACK_ID") || exit 1
+AUDIO='{}'
+if [ -n "$TRACK_ID" ]; then
+  if SIGNAL=$(research_get "track" --get --data-urlencode "id=$TRACK_ID"); then
+    AUDIO=$SIGNAL
+  else
+    echo 'Audio analysis unavailable; continue from workspace context.' >&2
+  fi
+fi
 af(){ echo "$AUDIO" | jq -r --arg k "$1" '.audio_analysis[]? | select(.key==$k) | .value'; }
 TEMPO=$(af tempo)        # BPM, e.g. 80.99
 ENERGY=$(af energy)      # 0–1
@@ -141,9 +178,8 @@ the evergreen ask.
 For "what's the move right now" / "make it feel current", pull lightweight web intelligence
 and let it inform the *reference points*, not the facts:
 
-```bash
-research_get "web?q=$(printf %s "$ARTIST_NAME current trends" | jq -sRr @uri)" | jq -r '.summary // .content'
-```
+Use the matching web-research MCP tool or the documented `POST /api/research/web`
+request schema. The GET helper above does not implement POST web/deep research.
 
 Use it to choose a format or sonic/visual reference that's actually current — never to invent
 a stat or a quote. Treat web/deep output as *direction*, and keep anything factual sourced

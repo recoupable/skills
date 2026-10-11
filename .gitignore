@@ -13,3 +13,4 @@ tests/*
 docs/research/
 
 !tests/test_plugin_packages.py
+!tests/test_reconciliation_examples.py
