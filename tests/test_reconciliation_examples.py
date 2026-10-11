@@ -93,13 +93,13 @@ esac; }}
         self.assertNotIn('/artists', calls)
 
     def test_real_identity_resolves_one_artist(self):
-        result, calls = self.run_resolver('person@example.invalid', [{'name': 'Artist', 'id': 'row_1', 'account_id': 'artist_1'}])
+        result, calls = self.run_resolver('person@example.invalid', [{'name': 'Artist', 'id': 'artist_1', 'account_id': 'artist_1'}])
         self.assertEqual(result.returncode, 0)
-        self.assertIn('resolved:row_1', result.stdout)
+        self.assertIn('resolved:artist_1', result.stdout)
         self.assertIn('/artists', calls)
 
     def test_ambiguous_names_require_selection(self):
-        artists = [{'name': 'Artist', 'id': 'row_1', 'account_id': 'artist_1'}, {'name': 'Artist', 'id': 'row_2', 'account_id': 'artist_2'}]
+        artists = [{'name': 'Artist', 'id': 'artist_1', 'account_id': 'artist_1'}, {'name': 'Artist', 'id': 'artist_2', 'account_id': 'artist_2'}]
         result, _ = self.run_resolver('person@example.invalid', artists)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('Multiple', result.stderr)

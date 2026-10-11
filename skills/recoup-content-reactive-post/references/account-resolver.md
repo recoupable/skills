@@ -112,6 +112,6 @@ If a real account simply has no visible row for a named artist, verify exact Spo
 | Endpoint | Identifier |
 | --- | --- |
 | `POST /api/content/create`, `POST /api/content/*` (body `artist_account_id`) | `account_id` |
-| `GET /api/artists/{id}/socials|posts|fans` | Artist `account_id`; current list `id` is its alias |
+| `GET /api/artists/{id}/socials`, `GET /api/artists/{id}/posts`, `GET /api/artists/{id}/fans` | Artist `account_id`; current list `id` is its alias |
 
 On `404`, verify the saved UUID, account and workspace access before retrying.
