@@ -46,6 +46,7 @@ jobs:
       - name: Build both packages
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          CHATGPT_APP_ID: ${{ vars.RECOUP_CHATGPT_APP_ID }}
         run: python3 scripts/build_plugin_packages.py --version "$RELEASE_VERSION" --out dist
       - uses: actions/upload-artifact@v4
         with:

@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -51,35 +52,47 @@ def stamp_versions(value, version):
         return [stamp_versions(v, version) for v in value]
     return value
 
-def build(root, tracked, out, version, commit):
+def build(root, tracked, out, version, commit, chatgpt_app_id=None):
+    if chatgpt_app_id and not re.fullmatch(r"asdk_app_[a-zA-Z0-9]+", chatgpt_app_id):
+        raise ValueError("ChatGPT app ID must start with asdk_app_ (not plugin_asdk_app_)")
     if not re.fullmatch(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)', version):
         raise ValueError('Version must be numeric semantic version')
     tracked = list(tracked)
     out.mkdir(parents=True, exist_ok=True)
     manifest = {'version': version, 'commit': commit, 'openai_status': 'upload_and_review_required', 'packages': {}}
-    for audience in ('customer', 'full'):
-        files, skills = package_files(root, tracked, audience)
+    audiences = ('customer', 'full', 'workspace') if chatgpt_app_id else ('customer', 'full')
+    for audience in audiences:
+        customer = audience != 'full'
+        files, skills = package_files(root, tracked, 'customer' if customer else 'full')
         for name in files:
             if name.endswith(('plugin.json','marketplace.json')) and name.startswith(('.codex-plugin/', '.claude-plugin/', '.cursor-plugin/', '.agents/plugins/')):
                 metadata = stamp_versions(json.loads(files[name]), version)
                 if name == '.codex-plugin/plugin.json':
-                    host = 'ChatGPT' if audience == 'customer' else 'Codex'
+                    host = 'ChatGPT' if customer else 'Codex'
                     metadata.setdefault('interface', {})['shortDescription'] = f'A record label inside {host}'
-                    if audience == 'customer':
+                    if customer:
                         icon = 'assets/recoup-customer-icon.png'
                         if icon not in files:
                             raise ValueError(f'Missing customer icon: {icon}')
                         metadata['interface']['logo'] = f'./{icon}'
                         metadata['interface']['composerIcon'] = f'./{icon}'
+                if audience == 'workspace' and name == '.codex-plugin/plugin.json':
+                    metadata.pop('mcpServers', None)
+                    metadata['apps'] = './.app.json'
                 files[name] = (json.dumps(metadata,indent=2)+'\n').encode()
+        if audience == 'workspace':
+            del files['.mcp.json']
+            files['.app.json'] = (json.dumps({'apps': {'recoup': {'id': chatgpt_app_id, 'required': True}}}, indent=2)+'\n').encode()
         filename = f'recoup-{audience}-{version}.zip'
         with zipfile.ZipFile(out/filename,'w',zipfile.ZIP_DEFLATED) as z:
             for name,data in sorted(files.items()):
                 info = zipfile.ZipInfo(name, (2020,1,1,0,0,0))
                 info.compress_type = zipfile.ZIP_DEFLATED
-                info.external_attr = (0o100755 if (root/name).stat().st_mode & 0o111 else 0o100644) << 16
+                info.external_attr = (0o100755 if (root/name).exists() and (root/name).stat().st_mode & 0o111 else 0o100644) << 16
                 z.writestr(info,data)
         manifest['packages'][audience] = {'file':filename,'skills':skills,'sha256':hashlib.sha256((out/filename).read_bytes()).hexdigest()}
+    if chatgpt_app_id:
+        manifest['packages']['workspace']['chatgpt_app_id'] = chatgpt_app_id
     (out/'release-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     (out/'OPENAI-SUBMISSION.md').write_text(f'''# Recoup {version}
 
@@ -93,14 +106,18 @@ This GitHub release is not evidence of OpenAI approval or publication.
 The full ZIP contains all staff and customer skills. Both packages come from this commit.
 Checksums and complete skill inventories are in release-manifest.json.
 ''')
+    if chatgpt_app_id:
+        with (out/'OPENAI-SUBMISSION.md').open('a') as instructions:
+            instructions.write(f'\nWorkspace testing: upload `recoup-workspace-{version}.zip` to the ChatGPT workspace plugin.\nIt references the registered app `{chatgpt_app_id}` and requires access to that app.\nDo not use this workspace-specific ZIP for public directory submission.\n')
     return manifest
 
 if __name__ == '__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--version',required=True)
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--chatgpt-app-id', default=os.environ.get('CHATGPT_APP_ID') or None)
     args=parser.parse_args()
     tracked=subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode().split('\0')
     commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
-    report=build(ROOT,filter(None,tracked),args.out,args.version,commit)
+    report=build(ROOT,filter(None,tracked),args.out,args.version,commit,args.chatgpt_app_id)
     print(json.dumps({k:len(v['skills']) for k,v in report['packages'].items()}))
