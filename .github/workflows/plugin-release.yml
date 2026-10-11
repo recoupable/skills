@@ -54,27 +54,6 @@ jobs:
         with:
           name: recoup-plugin-packages
           path: dist/
-      - name: Publish GitHub release and submission handoff
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          TAG="plugin-v$RELEASE_VERSION"
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            if [ "$(gh release view "$TAG" --json isDraft --jq .isDraft)" = false ]; then
-              echo "Release already published; immutable artifacts retained."
-              cat dist/OPENAI-SUBMISSION.md >> "$GITHUB_STEP_SUMMARY"
-              exit 0
-            fi
-          else
-            gh release create "$TAG" --draft --target "$GITHUB_SHA" --title "Recoup $RELEASE_VERSION" --generate-notes --notes-file dist/OPENAI-SUBMISSION.md
-          fi
-          LATEST=false
-          if [ "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GITHUB_SHA" ]; then LATEST=true; fi
-          gh release upload "$TAG" dist/* --clobber
-          gh release edit "$TAG" --draft=false --latest="$LATEST"
-          cat dist/OPENAI-SUBMISSION.md >> "$GITHUB_STEP_SUMMARY"
-
       - name: Build Claude directory source
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
@@ -103,3 +82,25 @@ jobs:
           git add --all
           git commit -m "Release Recoup Claude $RELEASE_VERSION from $GITHUB_SHA"
           git push origin HEAD:refs/heads/claude-directory
+
+      - name: Publish GitHub release and submission handoff
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          TAG="plugin-v$RELEASE_VERSION"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            if [ "$(gh release view "$TAG" --json isDraft --jq .isDraft)" = false ]; then
+              echo "Release already published; immutable artifacts retained."
+              cat dist/OPENAI-SUBMISSION.md >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          else
+            gh release create "$TAG" --draft --target "$GITHUB_SHA" --title "Recoup $RELEASE_VERSION" --generate-notes --notes-file dist/OPENAI-SUBMISSION.md
+          fi
+          LATEST=false
+          if [ "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GITHUB_SHA" ]; then LATEST=true; fi
+          gh release upload "$TAG" dist/* --clobber
+          gh release edit "$TAG" --draft=false --latest="$LATEST"
+          cat dist/OPENAI-SUBMISSION.md >> "$GITHUB_STEP_SUMMARY"
+
