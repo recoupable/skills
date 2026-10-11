@@ -70,12 +70,21 @@ spans every org the account belongs to. Org rows expose `organization_id` (pass 
 `org_id`), `organization_name`, and their own row `id`.
 
 ```bash
-ORG_ID="${RECOUP_ORG_ID:-$(curl -sS "${AUTH[@]}" \
-  "https://api.recoupable.dev/api/organizations" | jq -r '.organizations[0].organization_id')}"
-
-# Capture BOTH ids for the matched artist.
-ARTISTS_JSON=$(curl -sS "${AUTH[@]}" \
-  "https://api.recoupable.dev/api/artists?org_id=$ORG_ID")
+# Do not choose the first organization implicitly. Use the selected workspace,
+# or query the account scope when no organization is selected.
+ARTISTS_URL="https://api.recoupable.dev/api/artists"
+if [ -n "$RECOUP_ORG_ID" ]; then
+  ARTISTS_URL="$ARTISTS_URL?org_id=$RECOUP_ORG_ID"
+fi
+IDENTITY=$(curl --fail-with-body -sS "${AUTH[@]}" "https://api.recoupable.dev/api/accounts/id") || exit 1
+ACCOUNT_ID=$(printf '%s' "$IDENTITY" | jq -er '.accountId') || exit 1
+ACCOUNT=$(curl --fail-with-body -sS "${AUTH[@]}" "https://api.recoupable.dev/api/accounts/$ACCOUNT_ID") || exit 1
+# Verify this is the user's intended account before any roster mutation.
+if printf '%s' "$ACCOUNT" | jq -e '.account.email | test("^agent\\+.*@recoupable\\.(com|dev)$")' >/dev/null; then
+  echo "Disposable agent identity: connect the user's real account before creating artists." >&2
+  exit 1
+fi
+ARTISTS_JSON=$(curl --fail-with-body -sS "${AUTH[@]}" "$ARTISTS_URL") || exit 1
 
 ARTIST_ACCOUNT_ID=$(echo "$ARTISTS_JSON" \
   | jq -r --arg n "$ARTIST_NAME" '.artists[] | select(.name==$n) | .account_id')
@@ -91,7 +100,7 @@ artists"), drop the `select(.name==$n)` filter and present the full list
 and authorized workspace before interpreting a missing artist. Do not create a
 disposable account, fabricate an artist or infer failed authentication from emptiness.
 
-If a real account simply has no row for a named artist, the artist doesn't exist yet — run the
+If a real account simply has no visible row for a named artist, verify exact Spotify identity and access before attaching or creating the artist — run the
 `recoup-roster-add-artist` skill before continuing. Do not invent an ID.
 
 ## 5. Quick reference — which ID goes where

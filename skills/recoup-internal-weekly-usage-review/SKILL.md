@@ -112,9 +112,9 @@ Report which calls were denied rather than guessing.
 Run the SQL pack in `references/sql.md` (queries 1–10). Schema facts that make
 or break it:
 
-- The ledger is `usage_events`; `credits_deducted_cents` is the amount and
-  **1 credit = 1 cent** (`UNIT_AMOUNT_CENTS_PER_CREDIT = 1` in
-  `api/lib/stripe/createCreditsStripeSession.ts`).
+- The ledger is `usage_events`; `credits_deducted` is the integer micro-dollar amount.
+  **1,000,000 credits = $1.00**; divide summed amounts by 1,000,000 before
+  comparing with provider costs in USD. Verify the live schema before querying.
 - `credits_usage` is one balance-snapshot row per account (`remaining_credits`);
   its `timestamp` is last-update, often stale.
 - Account email lives in `account_emails` (1-to-many — LATERAL LIMIT 1).
@@ -143,7 +143,7 @@ GET https://ai-gateway.vercel.sh/v1/credits  # current balance — flag if < ~3 
 
 (The `api.vercel.com/v1/ai-gateway/*` paths do not exist.)
 
-Reconcile: gateway `total_cost` for the window vs `SUM(credits_deducted_cents)`
+Reconcile: gateway `total_cost` for the window vs `SUM(credits_deducted) / 1000000.0`
 (query 2), remembering that flat-fee charges (5¢ research, scrapes) are credits
 without gateway cost — subtract them (query 3 splits by model attribution)
 before naming the leakage number. Decompose any gap by API key first (a

@@ -19,7 +19,7 @@ The `artist_account_id` and existing post ids/URNs live in the account workspace
 ## The scrape
 
 ```bash
-# Costs 5 credits + 1 per requested post, PER PROFILE. Returns one {runId, datasetId} per profile.
+# Costs $0.05 + $0.01 per requested post (50,000 + 10,000 micro-dollar credits), PER PROFILE. Returns one {runId, datasetId} per profile.
 curl -sS -X POST "https://api.recoupable.dev/api/artist/socials/scrape" \
   -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" -H "Content-Type: application/json" \
   -d '{"artist_account_id":"<ARTIST_ACCOUNT_ID>","posts":20}'

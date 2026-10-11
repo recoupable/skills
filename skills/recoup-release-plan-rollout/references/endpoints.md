@@ -61,7 +61,7 @@ curl -s "$RECOUP_API/research/albums?artist_id=1l65tk4s&is_primary=true&limit=50
 # Full track metadata — needs a track id (from /research/tracks or search type=tracks)
 curl -s "$RECOUP_API/research/track?id=TRACK_ID" -H "x-api-key: $RECOUP_API_KEY" | jq
 
-# Playlists featuring a track (5 credits; paginates; supports filter flags)
+# Playlists featuring a track (50,000 credits ($0.05); paginates; supports filter flags)
 curl -s "$RECOUP_API/research/track/playlists?id=TRACK_ID&platform=spotify&editorial=true" -H "x-api-key: $RECOUP_API_KEY" | jq
 
 # Lookup an artist by platform URL or Spotify id
@@ -85,5 +85,6 @@ curl -s -X POST "$RECOUP_API/research/enrich"  -H "x-api-key: $RECOUP_API_KEY" -
 ## Credits
 
 On `insufficient_credits` the response carries `remaining_credits`,
-`required_credits`, and a `checkoutUrl`. `track`, `track/playlists`, `albums`,
-`lookup` cost more; surface the checkout link rather than retrying.
+`required_credits`, and a `billingUrl`. Stop and surface the billing settings link rather than
+retrying or opening a payment flow automatically. Provider-backed research success
+reads charge $0.05 (50,000 credits) each; inspect the endpoint contract for coverage.

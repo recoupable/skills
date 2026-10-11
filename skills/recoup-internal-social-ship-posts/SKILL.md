@@ -42,7 +42,7 @@ These are defaults, not laws — treat each as a hypothesis to keep testing, and
 Rank recent posts by engagement before writing. One bulk scrape covers all four platforms. Comments are the real signal for lead-gen posts (see CTA below).
 
 ```bash
-# One {runId, datasetId} per linked profile. Costs 5 credits + 1 per requested post, PER PROFILE.
+# One {runId, datasetId} per linked profile. Costs $0.05 + $0.01 per requested post (50,000 + 10,000 micro-dollar credits), PER PROFILE.
 curl -sS -X POST "https://api.recoupable.dev/api/artist/socials/scrape" \
   -H "Authorization: Bearer $RECOUP_ACCESS_TOKEN" -H "Content-Type: application/json" \
   -d '{"artist_account_id":"<ARTIST_ACCOUNT_ID>","posts":20}'

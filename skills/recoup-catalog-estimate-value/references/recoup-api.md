@@ -1,33 +1,30 @@
 # Recoup Research API — endpoints used by this skill
 
-All streaming data is pulled from the Recoup Research API. Spotify play counts
-come from Recoup's own measurement store (Apify-first, provenance-labeled);
-other sources are Songstats-backed. Base URL: `https://api.recoupable.dev/api`.
+All streaming data is pulled from the Recoup Research API. Spotify play counts prefer Recoup's own measurement store when an ISRC and
+explicit Spotify source are supplied. Missing store data and other sources fall
+back to Songstats; inspect provenance where present. Base URL: `https://api.recoupable.dev/api`.
 
 ## Authentication
 
 Send one of:
 
-- `x-api-key: $RECOUP_API_KEY` — a key from `https://chat.recoupable.dev/keys`,
-  or in one unauthenticated call:
-  ```bash
-  export RECOUP_API_KEY=$(curl -s -X POST "https://api.recoupable.dev/api/agents/signup" \
-    -H "Content-Type: application/json" \
-    -d '{"email":"agent+'$(date +%s)'@recoupable.com"}' | jq -r .api_key)
-  ```
-- `Authorization: Bearer $RECOUP_ACCESS_TOKEN` — already present inside a Recoup
-  sandbox.
+- `x-api-key: $RECOUP_API_KEY` — a key created for the user's real account
+  through account settings or the approved email/PIN verification flow.
+- `Authorization: Bearer $RECOUP_ACCESS_TOKEN` — an application-provided
+  Privy JWT. MCP OAuth credentials stay in the host and are separate from REST.
+
+Never create a disposable identity to recover access to a customer's catalog.
 
 `scripts/estimate.py` reads `RECOUP_API_KEY` first, then `RECOUP_ACCESS_TOKEN`.
 
 ## Endpoints
 
 ### `GET /research/track/stats` — per-track current stats
-Resolve by `isrc`, `songstats_track_id`, `spotify_track_id`, or
+Provide exactly one of `isrc`, `songstats_track_id`, `spotify_track_id`, or
 `apple_music_track_id`. `source` (required) is a comma list or `all`.
 Returns `stats: [{ source, data, data_source, captured_at? }]` + `track_info`.
 Spotify entries are served from the measurement store when an `isrc` is given
-(`data_source: "apify_spotify_playcount"`, ~24h freshness, no Songstats quota);
+and the store can answer (`data_source: "apify_spotify_playcount"`);
 other sources are Songstats (`data_source: "songstats"`). The per-source `data`
 includes the absolute play count:
 - spotify: `streams_total`
@@ -38,7 +35,7 @@ includes the absolute play count:
 
 ```bash
 curl -sS -H "x-api-key: $RECOUP_API_KEY" \
- "https://api.recoupable.dev/api/research/track/stats?isrc=USQY51771120&source=all"
+ "https://api.recoupable.dev/api/research/track/stats?isrc=USQY51771120&source=spotify"
 ```
 Note: `streams_total` may be returned as a numeric string (e.g. `"296422273.0"`)
 — parse as float.
@@ -103,16 +100,17 @@ Empty `deltas` (not an error) when history is insufficient.
 
 ## Rate-limit / robustness notes
 
-- Spotify reads never spend Songstats quota (store-served). The Songstats
-  rolling quota (~1,000 hits/30d) applies only to non-Spotify sources; for
-  portfolio-scale work, snapshot first instead of per-track polling.
-- Historic calls return a full daily series; for many tracks, request only the
-  sources you need and run sequentially with a per-call timeout (`curl
-  --max-time`). `estimate.py` does this and batches to avoid long single calls.
+- Current Songstats request quotas, activation and billing semantics remain
+  unverified. Store-served reads avoid Songstats, but fallback can consume quota.
+  Confirm the configured agreement before recurring or portfolio-scale fanout.
+- Historical availability varies by recording/source and stored captures. A
+  daily-series shape does not prove complete history. Inspect first/last dates
+  and gaps before annualizing; missing data is not zero.
 - Always handle `streams_total` as a possibly-stringified float.
-- Every read endpoint charges 5 credits and may return **402** with a
-  `checkoutUrl` when the account is out of credits; snapshots are uncharged
-  but capped per org per month.
+- Billed successful research reads charge $0.05 (50,000 micro-dollar credits) and may return **402** with a
+  `billingUrl` when credits are insufficient. Stop and surface it; do not retry
+  or initiate payment automatically. Snapshot estimates and limits have their
+  own contract and are not a guarantee of zero provider spend.
 - Calibration: snapshot-derived counts agreed with Songstats `streams_total`
   to ±0.1–1.7% on the 679-track Rostrum calibration set (2026-06-09) — label
   them platform-displayed play counts, not royalty-bearing streams.

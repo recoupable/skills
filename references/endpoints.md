@@ -5,8 +5,8 @@ parameter rules, response shapes, latency budgets, and platform source enums.
 
 These are the **current production endpoints** documented at
 <https://docs.recoupable.dev> (see the `/api-reference/research/*` pages).
-The research API is backed by **Songstats**, so entity IDs are short
-alphanumeric strings like `wjcgfd9i` (artists) or `1ik97vot` (tracks).
+Recoup manages its research data connections. Treat returned research `id` values
+as opaque strings. They are separate from workspace account UUIDs and platform IDs.
 
 All examples assume:
 
@@ -37,8 +37,7 @@ curl -s "$RECOUP_API/research?q=Drake&type=artists" \
 
 Query params:
 
-- `q` (**required**) — a name (`Drake`, `Flowers`) **or** a streaming URL
-  (`https://open.spotify.com/artist/...`).
+- `q` (**required**) — a name (`Drake`, `Flowers`) ; use `/research/lookup` for a Spotify artist URL.
 - `type` — `artists` (default), `tracks`, or `labels`. **These are the only
   three valid types.**
 - `limit` — max results (default `10`).
@@ -51,18 +50,17 @@ Response (`type=artists`):
   "status": "success",
   "results": [
     {
-      "id": "wjcgfd9i",              // provider-neutral ID — pass into detail endpoints
-      "songstats_artist_id": "wjcgfd9i",
+      "id": "wjcgfd9i",              // opaque research ID — pass into detail endpoints
       "name": "Drake",
       "avatar": "https://i.scdn.co/image/...",
-      "site_url": "https://songstats.com/artist/wjcgfd9i/drake"
+      "site_url": "https://example.com/artist/drake"
     }
     // ...
   ]
 }
 ```
 
-`type=tracks` results carry `songstats_track_id`, `release_date`, `is_remix`,
+`type=tracks` results can carry `release_date`, `is_remix`,
 and an `artists[]` array; `id` is the track ID for `/research/track`.
 
 > **No `beta`, no `platforms`, no `match_strength`.** The old beta engine and
@@ -73,10 +71,10 @@ and an `artists[]` array; `id` is the track ID for `/research/track`.
 
 ---
 
-## 2. Artist endpoints (accept `artist=` name **or** `id=` provider ID)
+## 2. Artist endpoints (accept `artist=` name **or** `id=` research ID)
 
 Every endpoint in this section takes **either** `artist=<name>` **or**
-`id=<provider artist id>`. Use the name for convenience; use the `id` (from
+`id=<research artist ID>`. Use the name for convenience; use the `id` (from
 search/lookup) when you need an exact entity.
 
 ```bash
@@ -125,7 +123,7 @@ curl -s "$RECOUP_API/research/urls?artist=Drake" -H "x-api-key: $RECOUP_API_KEY"
 Discover the `id` via `GET /research?q=...&type=...` first.
 
 ```bash
-# Albums — note: artist_id (provider ID), NOT name. is_primary=true (default) excludes features/compilations
+# Albums — note: artist_id (research ID), NOT name. is_primary=true requests primary-only filtering; data-connection support applies
 curl -s "$RECOUP_API/research/albums?artist_id=wjcgfd9i&is_primary=true&limit=50" -H "x-api-key: $RECOUP_API_KEY" | jq '.albums'
 
 # Full track metadata + audio analysis (id from search type=tracks)
@@ -231,8 +229,7 @@ track-level endpoint). Each placement:
 ### `/research/track/playlists` (track-level)
 
 Returns playlists featuring a specific track. Discover the track `id` via
-`GET /research?q=...&type=tracks`, or pass `q=` + optional `artist=`. **Costs 5
-credits per request.** Parameters: `id` or `q`(+`artist`), `platform`
+`GET /research?q=...&type=tracks`, or pass `q=` + optional `artist=`. **Costs 50,000 credits ($0.05) per request.** Parameters: `id` or `q`(+`artist`), `platform`
 (`spotify` default / `applemusic` / `deezer` / `amazon`), `status`
 (`current`/`past`), `limit`, `offset`, `since`, `until`, `sort`, plus filter
 flags.
@@ -278,18 +275,9 @@ Two gotchas:
   `platform=instagram|tiktok|youtube` (default `instagram`). Do **not** send
   `youtube_channel` there.
 
-A `metrics` call may return `202` with `{ status: "pending", state:
-"refresh_pending" }` while the provider refreshes. Retry the same call shortly.
-
-> **Provider gap (not yet queryable).** The underlying provider (Songstats) also
-> supplies `apple_music`, `amazon`, `shazam`, `itunes`, `tidal`, `beatport`,
-> `traxsource`, and `1001tracklists` data — and you'll even see some of these
-> `source` values appear inside `/research/career` and `/research/milestones`
-> activity feeds — but `/research/metrics` currently **rejects them**
-> (`status: "error"`). They are not available as metric snapshots today; don't
-> pass them to `metrics`. (Tracked as an API-side gap to expose.)
-
----
+`metrics` returns a synchronous current snapshot. It does not return a
+cache-warming `202 refresh_pending` response. Coverage can be incomplete even for
+an accepted source; do not retry an empty successful response as a warm-up step.
 
 ## Credit costs and recovery
 
@@ -306,5 +294,5 @@ legitimately return `checkoutUrl`; distinguish by error type.
 
 Fifteen legacy music-research routes remain in source after their docs removal.
 Their coverage and provider support are under evaluation (mono#325), not verified
-by this reference. Preserve returned provenance; do not relabel Songstats as
-Chartmetric or a measurement-store snapshot as fresh provider history.
+by this reference. Preserve returned provenance and capture dates. Missing provenance stays unknown;
+a stored snapshot is not automatically fresh research history.

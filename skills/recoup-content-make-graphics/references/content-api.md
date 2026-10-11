@@ -6,8 +6,20 @@ estimation. For auth + artist-ID resolution, use the account-resolver reference 
 skill bundles one; otherwise set the auth header inline (`x-api-key: $RECOUP_API_KEY`, or
 `Authorization: Bearer $RECOUP_ACCESS_TOKEN`).
 
-`BASE="https://api.recoupable.dev/api"`. Pass the auth header from `account-resolver.md`
-as `"${AUTH[@]}"` on every call.
+Select one REST credential before using these examples. Prefer a matching
+authenticated MCP tool when available; MCP OAuth credentials stay in the host.
+
+```bash
+BASE="https://api.recoupable.dev/api"
+if [ -n "$RECOUP_API_KEY" ]; then
+  AUTH=(-H "x-api-key: $RECOUP_API_KEY")
+elif [ -n "$RECOUP_ACCESS_TOKEN" ]; then
+  AUTH=(-H "Authorization: Bearer $RECOUP_ACCESS_TOKEN")
+else
+  echo "REST credentials unavailable; connect through the approved setup flow." >&2
+  exit 1
+fi
+```
 
 ## Endpoints
 
@@ -43,7 +55,8 @@ There is no `mode`, arbitrary `model`, `audio_url`, `video_url`, extend or refer
 mode on this primitive. Unsupported fields must not be silently ignored before paid
 work. For images, use `image_urls` (up to 10 unique references), not legacy `images` or
 `reference_image_url`. The compatibility release translates those image aliases;
-new examples must use the current field.
+new image examples must use the current field. The hosted `/content/create` pipeline
+retains its separate `images` input.
 
 Hosted lipsync is retained: use `POST /content/create` with `lipsync: true`, then poll
 its run. The coordinated API/worker repair restores selected-clip audio into the fixed
@@ -83,16 +96,19 @@ default.
 Polling pattern for the async ones:
 
 ```bash
-RUN_IDS=$(curl -sS -X POST "$BASE/content/create" "${AUTH[@]}" -H "Content-Type: application/json" \
-  -d "$(jq -n --arg a "$ARTIST_ACCOUNT_ID" --arg t "$TEMPLATE" '{artist_account_id:$a, template:$t}')" \
-  | jq -r '.runIds[]')
-RUN_ID=$(echo "$RUN_IDS" | head -1)
+CREATED=$(curl --fail-with-body -sS -X POST "$BASE/content/create" "${AUTH[@]}" -H "Content-Type: application/json" \
+  -d "$(jq -n --arg a "$ARTIST_ACCOUNT_ID" --arg t "$TEMPLATE" '{artist_account_id:$a, template:$t}')") || exit 1
+RUN_ID=$(printf '%s' "$CREATED" | jq -er '.runIds[0]') || exit 1
+printf 'Run ID: %s\n' "$RUN_ID"
 
 for ATTEMPT in $(seq 1 60); do
-  STATUS=$(curl --fail-with-body -sS "${AUTH[@]}" "$BASE/tasks/runs?runId=$RUN_ID" | jq -r '.runs[0].status') || exit 1
+  RUN=$(curl --fail-with-body -sS "${AUTH[@]}" "$BASE/tasks/runs?runId=$RUN_ID") || exit 1
+  STATUS=$(printf '%s' "$RUN" | jq -er '.runs[0].status') || exit 1
   case "$STATUS" in
     COMPLETED) break ;;
-    FAILED|CANCELED|CRASHED|SYSTEM_FAILURE|TIMED_OUT|EXPIRED) exit 1 ;;
+    FAILED|CANCELED|CRASHED|SYSTEM_FAILURE|INTERRUPTED)
+      printf '%s' "$RUN" | jq '.runs[0].error // {status: .runs[0].status}' >&2
+      exit 1 ;;
   esac
   sleep 10
 done

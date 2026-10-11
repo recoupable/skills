@@ -16,20 +16,20 @@ ORDER BY table_name, ordinal_position;
 
 -- 2. Per-account consumption in window
 SELECT ue.account_id, ae.email, a.name, COUNT(*) AS events,
-  SUM(ue.credits_deducted_cents) AS cents_used,
+  SUM(ue.credits_deducted) AS micro_dollars_used,
   MIN(ue.created_at) AS first_event, MAX(ue.created_at) AS last_event
 FROM usage_events ue
 LEFT JOIN accounts a ON a.id = ue.account_id
 LEFT JOIN LATERAL (SELECT email FROM account_emails
   WHERE account_id = ue.account_id LIMIT 1) ae ON true
 WHERE ue.created_at >= :FROM AND ue.created_at < :TO
-GROUP BY ue.account_id, ae.email, a.name ORDER BY cents_used DESC;
+GROUP BY ue.account_id, ae.email, a.name ORDER BY micro_dollars_used DESC;
 
 -- 3. Model / flat-fee split (for the gateway reconciliation)
-SELECT model, COUNT(*), SUM(credits_deducted_cents) AS cents
+SELECT model_id, COUNT(*), SUM(credits_deducted) AS micro_dollars
 FROM usage_events
 WHERE created_at >= :FROM AND created_at < :TO
-GROUP BY model ORDER BY cents DESC;   -- NULL model = flat-fee (research/scrape), not gateway-backed
+GROUP BY model_id ORDER BY micro_dollars DESC;   -- model_id may identify an endpoint or model; use provider/source for attribution rather than assuming NULL means flat-fee
 
 -- 4. Balances for window-active accounts (negative = burning past zero)
 SELECT cu.account_id, ae.email, cu.remaining_credits, cu.timestamp
@@ -85,22 +85,22 @@ WHERE esl.created_at >= :FROM AND esl.created_at < :TO
 GROUP BY esl.account_id, ae.email ORDER BY emails DESC;
 
 -- 8. Went silent (active prior week, zero this week — churn signal)
-WITH prior AS (SELECT account_id, SUM(credits_deducted_cents) AS prior_cents,
+WITH prior AS (SELECT account_id, SUM(credits_deducted) AS prior_micro_dollars,
     COUNT(*) AS prior_events
   FROM usage_events
   WHERE created_at >= :FROM - interval '7 days' AND created_at < :FROM
   GROUP BY account_id),
 cur AS (SELECT DISTINCT account_id FROM usage_events
   WHERE created_at >= :FROM AND created_at < :TO)
-SELECT p.account_id, ae.email, p.prior_cents, p.prior_events
+SELECT p.account_id, ae.email, p.prior_micro_dollars, p.prior_events
 FROM prior p LEFT JOIN cur c ON c.account_id = p.account_id
 LEFT JOIN LATERAL (SELECT email FROM account_emails
   WHERE account_id = p.account_id LIMIT 1) ae ON true
-WHERE c.account_id IS NULL ORDER BY p.prior_cents DESC;
+WHERE c.account_id IS NULL ORDER BY p.prior_micro_dollars DESC;
 
 -- 9. Daily totals (spike detection; expect a Monday cron pile-up)
 SELECT date_trunc('day', created_at)::date AS day, COUNT(*) AS events,
-  SUM(credits_deducted_cents) AS cents
+  SUM(credits_deducted) AS micro_dollars
 FROM usage_events WHERE created_at >= :FROM AND created_at < :TO
 GROUP BY 1 ORDER BY 1;
 
