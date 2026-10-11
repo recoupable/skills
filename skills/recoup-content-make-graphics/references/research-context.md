@@ -44,26 +44,33 @@ never loop indefinitely or turn an unavailable count into zero.
 ```bash
 BASE="https://api.recoupable.dev/api"
 research_get() {
-  local path=$1 response body status attempt
+  local path=$1 response body status attempt headers retry_after
   shift
+  headers=$(mktemp) || return 1
   for attempt in 1 2 3; do
-    if response=$(curl -sSL --max-time 90 -w $'\n%{http_code}' \
+    if response=$(curl -sS --max-time 90 -D "$headers" -w $'\n%{http_code}' \
       "${AUTH[@]}" "$BASE/research${path:+/$path}" "$@"); then
       status=${response##*$'\n'}
       body=${response%$'\n'*}
       case "$status" in
-        200) printf '%s' "$body"; return 0 ;;
+        200) rm -f "$headers"; printf '%s' "$body"; return 0 ;;
         402)
+          rm -f "$headers"
           printf 'Research needs credits: %s\n' \
             "$(printf '%s' "$body" | jq -r '.billingUrl // .error // "Check billing"')" >&2
           return 1 ;;
-        429) echo 'Research rate limited; defer reads and respect Retry-After.' >&2; return 1 ;;
+        429)
+          retry_after=$(awk 'tolower($1)=="retry-after:" {sub(/^[^:]*:[[:space:]]*/, ""); sub(/\r$/, ""); print}' "$headers")
+          rm -f "$headers"
+          printf 'Research step stopped. Retry-After: %s. Resume manually when allowed.\n' "${retry_after:-not provided}" >&2
+          return 1 ;;
         5??) ;;
-        *) printf 'Research HTTP %s; use workspace context.\n' "$status" >&2; return 1 ;;
+        *) rm -f "$headers"; printf 'Research HTTP %s; resolve before resuming.\n' "$status" >&2; return 1 ;;
       esac
     fi
     if [ "$attempt" -lt 3 ]; then sleep "$((attempt * 2))"; fi
   done
+  rm -f "$headers"
   echo 'Research unavailable after three attempts; use workspace context.' >&2
   return 1
 }
@@ -81,8 +88,8 @@ Select the verified candidate's exact `id`; do not automatically choose the firs
 match. An empty ID or failed lookup is an unavailable-data condition. Continue
 from workspace context and record the gap. Never fabricate an ID. If the server
 returns `Retry-After`, the caller must respect it before a later request. This
-helper returns immediately on `429`; it neither captures headers nor schedules
-that later request. It retries only network failures or `5xx`, at most three
+helper prints the returned `Retry-After` header and stops immediately on `429`;
+the caller schedules that later request. It retries only network failures or `5xx`, at most three
 attempts with a 90-second timeout each.
 
 ## The signals and what each one *changes*

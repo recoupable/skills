@@ -22,7 +22,7 @@ orphaned). The 8 steps:
 4. `GET /api/research/lookup?spotifyId={verifiedSpotifyId}` → capture the nonempty
    string `id` as `researchArtistId` in the frontmatter. It is an opaque research
    ID, separate from the artist account UUID and Spotify ID. Re-resolve older
-   `cmArtistId` values instead of copying them. When an ID is available, read
+   saved research IDs instead of copying them. When an ID is available, read
    `GET /api/research/profile|career|playlists?id={researchArtistId}`. Profile
    coverage may be partial; career is an activity feed and playlists returns
    `placements`. A successful lookup without an ID skips these reads; record the

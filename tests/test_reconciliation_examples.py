@@ -16,13 +16,18 @@ def blocks(name):
 
 
 class ResearchExamples(unittest.TestCase):
-    def run_helper(self, status):
+    def run_helper(self, status, retry_after=None):
         text = (ROOT / 'references/research-context.md').read_text()
         helper = re.search(r'research_get\(\) \{[\s\S]*?\n\}', text).group()
         with tempfile.TemporaryDirectory() as directory:
             log = Path(directory) / 'calls'
+            headers = '' if retry_after is None else f'''while [ "$#" -gt 0 ]; do
+  if [ "$1" = -D ]; then printf 'Retry-After: {retry_after}\\r\\n' > "$2"; break; fi
+  shift
+done'''
             mock = f'''BASE=https://example.invalid/api; AUTH=()
-curl() {{ echo call >> {log}; printf '%s\\n%s' '{{"billingUrl":"https://example.invalid/billing"}}' '{status}'; }}
+curl() {{ echo call >> {log}; {headers}
+printf '%s\\n%s' '{{"billingUrl":"https://example.invalid/billing"}}' '{status}'; }}
 sleep() {{ :; }}
 '''
             result = subprocess.run(['bash', '-c', mock + helper + '\nresearch_get "metrics?id=verified"'], capture_output=True, text=True)
@@ -44,6 +49,12 @@ sleep() {{ :; }}
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('Retry-After', result.stderr)
         self.assertEqual(calls, 1)
+
+    def test_rate_limit_surfaces_server_retry_interval(self):
+        result, calls = self.run_helper(429, retry_after=120)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(calls, 1)
+        self.assertIn('Retry-After: 120', result.stderr)
 
     def test_optional_audio_failure_continues_without_fabricated_values(self):
         audio = next(block for block in blocks('research-context.md') if 'AUDIO=' in block)
