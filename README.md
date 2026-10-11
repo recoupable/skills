@@ -305,3 +305,9 @@ Set the repository Actions variable `RECOUP_CHATGPT_APP_ID` to generate this
 workspace ZIP on every release. No app ID is hardcoded into public source or the
 public submission package. Keep using the customer ZIP for the OpenAI publisher
 dashboard, where the submission has its own MCP registration.
+
+When updating an older workspace listing, preserve its package identity using
+`--workspace-name recoup-skills` (or set Actions variable
+`RECOUP_CHATGPT_WORKSPACE_PACKAGE_NAME`). OpenAI rejects an update that changes
+that identity. This affects only the workspace artifact; the public package
+remains `recoup-plugin`. The display name stays Recoup in both.
