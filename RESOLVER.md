@@ -88,6 +88,7 @@
 
 | Intent | Skill |
 |---|---|
+| "recoup-internal" + make MCP extension thumbnails / looping workflow-card preview films | `recoup-internal-content-make-thumbnails` |
 | "recoup-internal" + design a feature-announcement film, product demo or marketing motion graphics | `recoup-internal-content-design-motion` |
 | "recoup-internal" + write/maintain a GitHub tracking issue | `recoup-internal-dev-issue-tracker` |
 | "recoup-internal" + implement/ship a tracked issue end-to-end (docs-first, TDD) | `recoup-internal-dev-ship-issue` |

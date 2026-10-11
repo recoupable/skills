@@ -223,6 +223,10 @@ Run the five validation gates in AGENTS.md before release. Also verify plugin
 installation, browser consent, tool discovery, a read, refresh and revocation in
 each supported host. JSON validation is not proof of a working host connection.
 
+## Internal MCP thumbnails
+
+`recoup-internal-content-make-thumbnails` creates cinematic animated previews for MCP extension workflow cards. Invoke with the literal `recoup-internal` keyword. It captures the eight-second human-action, physical-transformation, and title-reveal pattern, with scoped generation, visual review, and gallery playback verification. It ships in the full staff package and is excluded from the customer package.
+
 ## Internal motion design
 
 `recoup-internal-content-design-motion` creates feature-announcement films, product demos and marketing motion graphics. Invoke with the literal `recoup-internal` keyword. It includes original motion kernels, executable tests, image/video asset production, and a bundled independent gauntlet review loop against inspected references; it is not the customer release-pack generator. Private assets stay in the selected project workspace.

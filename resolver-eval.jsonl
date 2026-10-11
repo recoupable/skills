@@ -193,3 +193,6 @@
 {"intent": "Organize my publishing from these work lists and registration exports", "expected": "recoup-catalog-organize-publishing", "not": ["recoup-catalog-import-catalog"]}
 {"intent": "List my compositions, writers, publishers and administration mandates", "expected": "recoup-catalog-organize-publishing", "not": ["recoup-roster-list-artists"]}
 {"intent": "Which works in this supplied repertoire are missing publishing details?", "expected": "recoup-catalog-organize-publishing", "not": ["recoup-platform-track-onboarding"]}
+{"intent": "recoup-internal: make cinematic animated thumbnails for our MCP extension workflow cards", "expected": "recoup-internal-content-make-thumbnails", "not": ["recoup-content-make-graphics", "recoup-internal-content-design-motion"]}
+{"intent": "recoup-internal: recreate the Recoup gallery preview video style for the new catalog cards", "expected": "recoup-internal-content-make-thumbnails", "not": ["recoup-content-make-video"]}
+{"intent": "Make a thumbnail image for my new single", "expected": "recoup-content-make-graphics", "not": ["recoup-internal-content-make-thumbnails"]}
