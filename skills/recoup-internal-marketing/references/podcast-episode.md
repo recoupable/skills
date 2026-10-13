@@ -40,10 +40,23 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
 
 ## The run, in order (every stage revealed in Finder and approved before the next)
 
-1. **Intake.** Unzip the Restream audio zip and the two camera files into `raw/` under the names above.
-   Identify which camera is whom from a frame, not the filename.
+0. **Run from your own skills checkout.** Create a skills worktree on `origin/main` for the episode and
+   run every script from it; a shared checkout can sit on another branch with stale scripts.
+1. **Intake.** Restream delivers one zip of per-speaker audio (`<Name> — Camera — Audio 1.m4a`, one per
+   speaker) and one `.mkv` per camera, both named `...-restream.mkv`, the second with ` (1)`. Downloads
+   land as `Unconfirmed *.crdownload` until finished; watch for them rather than polling the owner. Rename
+   to `<first-name>-audio.m4a` / `<first-name>-video.mkv` and symlink the `host-*` / `guest-*` names above.
+   Identify which camera is whom from a frame (`ffmpeg -ss 600 -i <file> -frames:v 1 out.jpg`), never the
+   filename or download order. Note anything in the guest's frame worth using (a poster, an award).
 2. **Transcribe**: `python3 scripts/podcast/transcribe.py <project>` (ElevenLabs Scribe v2 per speaker,
    **never Whisper**). Each track holds only its speaker, so labels are free.
+2b. **Scan**: `python3 scripts/podcast/scan_transcripts.py <project>` writes `edit/words-{host,guest}.txt`
+   (take every in/out point from these, not from the merged transcript, which can misplace a fragment by
+   minutes) and prints the early-start host fragments and any dead air. **The host track reads digital zero
+   whenever the host is quiet** (mic gate or mute); that alone is not a dropout. Dead air inside the
+   interview usually means a line said while muted: on 2026-10-13 the host's sign-off was lost this way and
+   replaced with the host's own later repeat ("I wrapped up by saying thank you for joining us today, Tom").
+   Use Scribe to settle the recorder's mishearings and correct the Business recording notes.
 3. **Camera check**: `python3 scripts/podcast/camera_check.py <project>` prints each camera's offset against
    its audio track (put them in `chapters.json` offsets) and the stretches where a camera dropped frames.
    If the host was speaking during drops: `python3 scripts/podcast/fix_host_video.py <project>` (~8x
@@ -58,6 +71,9 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    - **Backchannels** ("Yeah", "Right") over the other speaker: mute them.
    - **Filler and rambles**: cut at word boundaries from the transcript, verify silence with `silencedetect`.
    - Trims inside a sentence must leave a grammatical sentence; read it back.
+5b. **Audio rough cut (gate)**: `python3 scripts/podcast/rough_audio.py <project>` renders the cut list as
+   audio only (`exports/rough-cut-audio.m4a` + chapter times), about a minute. The owner checks every
+   splice by ear before specs, cards or renders; a bad splice found after rendering costs a re-render.
 6. **Specs** (`edit/specs.py`, `templates/podcast/specs.example.py`): cards anchored to transcript phrases,
    so later trims never desync them. Research every external fact you put on a card and date it; the
    guest's claims are attributed "on this episode". **Quote cards are verbatim** (ellipses allowed): a

@@ -16,7 +16,7 @@ to run it the same way.
 | 3. Booked | The same day a time exists, a confirmation email in the invite's thread with the **timeline PDF** attached (see *Booked: the timeline PDF* below). It is the guest's written record of what happens next. | `Call Booked` |
 | 4. Record | Written consent, sent with the interview outline 48 hours before, covers: recording, publication on the named platforms, use of clips and of the guest's name, photo and company name, and the right to withdraw before publication. No consent on file, no recording. Then 30 to 60 minutes remotely: their history in the industry, where AI does real work in the business today, the numbers behind it. Recorder notes go to the private guest folder. | `Call Booked` |
 | 5. Publish | **Owned by marketing:** post-production through scheduling follows the `recoup-internal-marketing` skill's `references/podcast-episode.md`; sales resumes at the live-links email. Within 48 h, once the consent is on file and the guest has approved their cover photo: YouTube (show playlist), Spotify, Apple, socials; the episode is added to the site's `content/podcast/episodes.json` in the same PR; the guest gets the full episode and clips. | unchanged |
-| 6. Day 7 | One short email with three concrete things we could build for them, drawn from the call notes. One sentence each, no price. | `Scoping`, `project_type = Build` |
+| 6. Day 7 after release | One short email with three concrete things we could build for them, drawn from the call notes. One sentence each, no price. | `Scoping`, `project_type = Build` |
 | 7. Reply | A proposal for a 2 to 4 week build, priced from the current private rate card with a deposit plus delivery split, in the order `gtm/playbooks/discovery-and-proposals.md` (marketing repo) sets. Terms are proposals until accepted. | `Proposal Sent` |
 | 8. Deposit paid | The build runs. | `Won` |
 | 9. Delivered | Testimonial request and a post-mortem in the private guest folder. After three paid, completed, reviewed builds, review the rate. | unchanged |
@@ -148,6 +148,28 @@ scheduler). Nothing about the recording is left to the calendar invite alone.
 
 A confirmation without the PDF is incomplete: the timeline is what makes a cold guest show
 up prepared and makes the tag list theirs to correct before publication.
+
+### Right after the recording (same day)
+
+The recording is the discovery call; close it out before anyone opens the raw files. Learned on the
+2026-10-13 run, where the release plan, two deliverables and their dates were agreed only on tape.
+
+1. **File the recorder notes** in the private episode folder (`episodes/<date>-<slug>/recording/`):
+   the summary and the transcript, verbatim as pasted, each with a header that says where the interview
+   starts and ends and what is off air. Above the pasted summary, write what was agreed off air: release
+   date, every deliverable promised with its date (clip folder, live links, analytics), tag handles, cuts
+   or off-the-record requests, and any correction the guest made. Then two lists: the recorder's
+   mishearings (names, companies, products), and **claims to check before any card**: every figure the
+   guest gave, anything the guest corrected on tape, and dates that contradict the record. Check the
+   plan's never-raise items were not raised.
+2. **Write the episode README** status: recorded, consent, release and deliverables as agreed, next steps.
+   Update the plan's status line and the guest's email index.
+3. **CRM:** a note naming the files; complete the outline task; one dated runbook task per promise made
+   on tape, plus release day and the day-7 email. **Day 7 counts from release, not from the recording.**
+   The stage stays `Call Booked` until the episode is live.
+4. **Collect build angles** for the day-7 email while the call is fresh: each workflow the guest described,
+   with the numbers they gave. Not an offer until drafted and approved.
+5. **Hand over to marketing** at the raw files (`recoup-internal-marketing` → `references/podcast-episode.md`).
 
 ### The day-7 follow-up
 

@@ -188,7 +188,7 @@ this line on that data at the ~10-06 re-pull.
 
 A recorded Recoup Podcast interview is marketing's job from the raw files onward: edit, package, schedule
 on Spotify and YouTube, then cut the shorts. Follow `references/podcast-episode.md` in order: intake,
-ElevenLabs transcripts, camera check, the owner's cut decisions, chapter graphics anchored to transcript
+ElevenLabs transcripts, the fragment and dead-air scan, camera check, the owner's cut decisions, an audio-only rough cut the owner checks by ear, chapter graphics anchored to transcript
 phrases, a ~90s prototype, per-chapter renders reviewed one at a time, the opening (cold open + Wire
 intro), assembly, covers, YouTube captions (`scripts/podcast/make_srt.py`), then publish. The approved look is the news-desk template in
 `templates/podcast/news-desk.html`; the scripts in `scripts/podcast/` reproduce it from an episode
@@ -245,6 +245,6 @@ Scripts: `scripts/podcast/shorts/` (build_hy.py, render.sh); episode captions fo
 - `references/opus.md` — scheduling a slate through OpusClip: import with captions off, the manifest, per-platform body rules, pre-flight, `post list` as the only truth, teaser slates
 - `scripts/gen-voice.py`, `scripts/opus-import.mjs`, `scripts/opus-schedule.mjs` — the templates those references describe
 - `references/character-swap-edit.md` — recreating a trend by swapping the cast of a real performance clip (reAPI Seedance 2.5 edit): casting limits, the 3-reference rule, hosting, QC; script `scripts/reapi-edit.sh`
-- `references/podcast-episode.md` — a recorded podcast from raw Restream files to scheduled on Spotify + YouTube: the news-desk format, project layout, the ordered run with approval gates, splice patterns, publish traps; scripts `scripts/podcast/` (transcribe, camera_check, fix_host_video, cut, build, render.sh, make_intro, assemble, make_cover, lipsync) and templates `templates/podcast/` (news-desk, wire-intro, episode/chapters/specs examples); brand fonts and logos in `brand/`
+- `references/podcast-episode.md` — a recorded podcast from raw Restream files to scheduled on Spotify + YouTube: the news-desk format, project layout, the ordered run with approval gates, splice patterns, publish traps; scripts `scripts/podcast/` (transcribe, scan_transcripts, camera_check, fix_host_video, cut, rough_audio, build, render.sh, make_intro, assemble, make_cover, lipsync) and templates `templates/podcast/` (news-desk, wire-intro, episode/chapters/specs examples); brand fonts and logos in `brand/`
 - `references/podcast-shorts.md` — vertical shorts from a published episode: clips table gate, the approved HYBRID format (guest video + full-frame motion-graphic beats), beat design rules, build/snapshot/render loop, per-platform captions and UTMs, YouTube connector limits; scripts `scripts/podcast/shorts/` (build_hy.py, render.sh), `scripts/podcast/make_srt.py`, templates `templates/podcast/shorts/` (hybrid.html, shorts/beats examples)
 - **artist music video** lives in the separate `recoup-music-video` skill. Route there; do not rebuild the pipeline here.
