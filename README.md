@@ -11,6 +11,28 @@ AI agent skills for the music industry — a record label in a box. One install 
 /plugin install recoup-plugin@recoup
 ```
 
+#### Upgrade an older `recoup-skills` installation
+
+The package identifier changed to `recoup-plugin`. Refreshing the marketplace
+does not rename an installed plugin; updating `recoup-skills@recoup` can fail
+because that entry is no longer in the current catalog. For a user-scope install:
+
+```bash
+claude plugin marketplace update recoup
+claude plugin install recoup-plugin@recoup --scope user
+claude plugin disable recoup-skills@recoup --scope user
+```
+
+Disable the old package after the new installation succeeds, then reopen Claude
+Code and follow **Connect Recoup** below. If the old installation used a different
+scope, use that scope when disabling it. Disabling retains its cached files for
+rollback and avoids loading duplicate skill instructions.
+
+Check `claude plugin list` for the enabled current package and
+`claude mcp get plugin:recoup-plugin:recoup` for connection status. A connected
+server confirms transport and authentication; verify the actual authorized tools
+with a read-only request such as `list_artists` before relying on a workflow.
+
 ### Codex and Cursor
 
 Install this repository through the host's plugin marketplace/local-plugin flow.
