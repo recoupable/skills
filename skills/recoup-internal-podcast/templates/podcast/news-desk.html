@@ -77,9 +77,9 @@
   .tline .row .e { font-size: 34px; line-height: 1.25; }
   .tline .row.hl { border-top-color: var(--sky); } .tline .row.hl .e { font-weight: 700; }
 
-  .stat .big { display: flex; align-items: flex-end; gap: 40px; }
+  .stat .big { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 18px 40px; }
   .stat .num { font-size: 260px; font-weight: 800; letter-spacing: -.05em; line-height: .82; color: var(--sky); white-space: nowrap; }
-  .stat .unit { font-size: 58px; font-weight: 700; padding-bottom: 18px; line-height: 1.05; }
+  .stat .unit { flex: 1 1 420px; font-size: 58px; font-weight: 700; padding-bottom: 18px; line-height: 1.05; }
   .stat .bar { height: 26px; border-radius: 13px; background: var(--border); position: relative; overflow: hidden; }
   .stat .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: var(--lime); transform-origin: left center; display: block; }
   .stat .scale { display: flex; justify-content: space-between; font-size: 22px; color: var(--muted); }

@@ -94,7 +94,9 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    look approved once, then every chapter inherits it.
 8. **Build + check**: `python3 scripts/podcast/build.py <project> <ch> --recut`, then
    `npx --yes hyperframes snapshot --at <card midpoints> --no-end` in `comp/chapters/<ch>` and read the
-   contact sheet before rendering.
+   contact sheet before rendering. Also run `npx --yes hyperframes inspect --at <card midpoints> --json` and
+   fix every `text_box_overflow` on a card (a wide stat number once pushed its caption over the video tiles);
+   the `#ghost` word and ticker `SOURCES` overlaps are by design.
 9. **Render per chapter**: `STOP_AT=HHMM scripts/podcast/render.sh <project> ch04 ch01 ...` (approved chapter
    first). Open each in Finder as it lands; notes come back per chapter, the fix is one chapter re-render.
 10. **Opening**: `python3 scripts/podcast/make_intro.py <project> --show-assets <show assets dir>` then the
