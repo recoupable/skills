@@ -235,6 +235,10 @@ def build():
     for i, lt in enumerate(spec.get('lower_thirds', [])):
         s = max(ch.anchor(lt['at']) + 0.3, CH_END + 0.3 if CH_END else 0.4)
         lts.append(dict(lt, _s=round(s, 2), _e=round(min(s + lt.get('dur', 6.0), D), 2), _id=f'lt{i}'))
+        for cd in cards:                          # a lower third under a card renders hidden or half-covered
+            if cd['_s'] < lts[-1]['_e'] and lts[-1]['_s'] < cd['_e']:
+                print(f'WARN {CID}: lower third "{lt["n"]}" ({lts[-1]["_s"]:.1f}-{lts[-1]["_e"]:.1f}s) overlaps a {cd["shot"]} card '
+                      f'({cd["_s"]:.1f}-{cd["_e"]:.1f}s); move it to an open shot or shorten dur')
     sp = ch.speaking()
 
     cards_html = '\n  '.join(card_html(f'k{i}', cd) for i, cd in enumerate(cards))

@@ -88,6 +88,8 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
      on the card, files in `<project>/edit/art/` with `SOURCES.md` (Spotify via the Recoup API `/spotify/search`).
      Never substitute another artist's cover when the record isn't found. One cover on a side card; two
      covers need a full-frame C card (a two-cover B card squeezes the text off the card). No art on stat cards.
+   - **Lower thirds only on open shots**: a name tag under a card renders hidden or half-covered (Zac ch01,
+     2026-10-14). `build.py` warns on any overlap. With every host line under a card, the host usually gets no tag.
 7. **Prototype first**: build and render ~90s around the strongest chapter before anything else; get the
    look approved once, then every chapter inherits it.
 8. **Build + check**: `python3 scripts/podcast/build.py <project> <ch> --recut`, then
