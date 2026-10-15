@@ -78,6 +78,18 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    so later trims never desync them. Research every external fact you put on a card and date it; the
    guest's claims are attributed "on this episode". **Quote cards are verbatim** (ellipses allowed): a
    paraphrase inside quote marks is the defect the first run caught on four cards.
+   **Owner's standing rules (check every chapter before the prototype; the Zac prototype missed one, 2026-10-14):**
+   - **A card over every host question and recap**, mostly full-frame C (host camera is weak, 2026-10-06).
+   - **Guest focus**: shot A shows the guest large and the host as a small inset. `build.py` does this by
+     default; `"layout": "equal"` in `episode.json` restores side-by-side.
+   - **No more than 30 s of cameras only before a card** (2026-10-10). `build.py` prints `WARN` for each
+     longer stretch; fill it with a verbatim quote, list or stat from that stretch.
+   - **Album or single art when a record is named** (2026-10-10): `art=[('file.jpg', 'Artist', 'Title · year')]`
+     on the card, files in `<project>/edit/art/` with `SOURCES.md` (Spotify via the Recoup API `/spotify/search`).
+     Never substitute another artist's cover when the record isn't found. One cover on a side card; two
+     covers need a full-frame C card (a two-cover B card squeezes the text off the card). No art on stat cards.
+   - **Lower thirds only on open shots**: a name tag under a card renders hidden or half-covered (Zac ch01,
+     2026-10-14). `build.py` warns on any overlap. With every host line under a card, the host usually gets no tag.
 7. **Prototype first**: build and render ~90s around the strongest chapter before anything else; get the
    look approved once, then every chapter inherits it.
 8. **Build + check**: `python3 scripts/podcast/build.py <project> <ch> --recut`, then
@@ -90,9 +102,18 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
 11. **Host mic** (when it sounds muffled): measure first (band energy above 4 kHz vs the guest). Adobe
    Podcast Enhance (free tier: 30 min/file, 1 h/day, needs the owner's free account sign-in) cleaned noise
    and lifted presence but did NOT restore missing highs; synthetic highs (ffmpeg `aexciter`) measured
-   right but hissed on "s". The owner chose Adobe. Split the host track under 30 min at a silence, enhance
-   each half, join, verify 0 ms offset at several points, then pass it to assemble.
-12. **Assemble**: `python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced.wav]`
+   right but hissed on "s". The owner chose Adobe; it can be run on the guest track too (owner's call; keep it
+   only if it wins a blind A/B on the same sentence).
+   **Enhance only what the cut plays, after the rough cut is approved** (5b), never the raw track:
+   `python3 scripts/podcast/enhance_pack.py <project> pack host` (and `guest`) writes `enhance/<track>-used.wav`,
+   the pieces the cut uses minus that track's 3 s+ silences, one file per track. On 2026-10-14 the raw tracks
+   were 33 min each; packed, the host was 6.9 min (cards and cuts leave little host speech) and the guest 24 min:
+   31 min of quota instead of 66, both tracks in one day, one upload each instead of a split pair, and far less
+   upload, processing and download time. Check the total against the 1 h/day cap before uploading. Before uploading,
+   test the round trip on the unenhanced pack (`unpack` it, check 0 ms lag at several raw times). After Adobe:
+   `enhance_pack.py <project> unpack <track> <enhanced.wav>` -> `raw/<track>-audio-enhanced.wav` (full length,
+   silence outside the pieces); verify 0 ms offset again. Re-pack if a later cut change restores audio.
+12. **Assemble**: `python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced.wav] [--guest-audio raw/guest-audio-enhanced.wav]`
    -> `exports/final/episode.mp4` (one uniform encode, -14 LUFS, decode-checked) + `episode-audio.m4a` +
    `youtube-chapters.txt`.
 13. **Covers**: `python3 scripts/podcast/make_cover.py ...` with the guest's PUBLISHED headshot (speaker

@@ -5,6 +5,8 @@ Anchors are (speaker, "exact phrase from the transcript", raw_seconds_to_search_
 shot 'B' = card with the two anchors shrunk to a picture-in-picture column; 'C' = full-frame card.
 Facts on cards: the guest's own words (attributed "on this episode") or a source you have READ and dated.
 Anything inside a quote card must be verbatim (ellipses allowed); paraphrase goes on non-quote cards.
+Any card may add art=[('cover.jpg', 'Artist', 'Title · year')] (files in <project>/edit/art/) when a record is named.
+Rules: a card over every host question; never more than 30 s of cameras only (build.py warns); guest focus is the default layout.
 """
 EP = 'Jane Doe, on this episode'
 LT_G = dict(who='g', k='Guest', n='Jane Doe', t='Founder & CEO, Example Rights Co', dur=6.5)
