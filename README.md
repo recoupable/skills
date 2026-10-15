@@ -163,6 +163,7 @@ capability ships with these skills.
 | recoup-internal-funnel-valuation-pipeline | Work the Attio catalog-valuation sales funnel |
 | recoup-internal-account-health-report | Account-health snapshot for any Recoup account |
 | recoup-internal-marketing | The daily marketing run on our own accounts: workspace canon → socials scrape → topic pick → build → handoff |
+| recoup-internal-podcast | One Recoup Podcast episode: recording prep → post-production → covers → Spotify/YouTube → daily shorts |
 | recoup-internal-social-ship-posts | Draft, publish & measure LinkedIn/X posts |
 
 ## What else ships
