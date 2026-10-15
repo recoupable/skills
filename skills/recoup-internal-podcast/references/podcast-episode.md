@@ -1,9 +1,9 @@
 # Podcast episode: raw recording to scheduled release
 
-Marketing owns a Recoup Podcast episode from the moment the raw files exist to the moment it is
-scheduled on Spotify and YouTube, plus its shorts. Sales owns everything before (invite, booking,
-outline, consent, the recording) and after (live links to the guest, day-7 follow-up): see the
-`recoup-internal-sales` skill's podcast guest pipeline. First run: 2026-10-01/02, a 33-minute
+This file covers a Recoup Podcast episode from the moment the raw files exist to the moment it is
+scheduled on Spotify and YouTube, plus its shorts. The guest relationship before (invite, booking,
+outline, consent) and after (live links to the guest, day-7 follow-up) is the `recoup-internal-sales`
+skill's podcast guest pipeline; the recording setup is `references/recording-prep.md`. First run: 2026-10-01/02, a 33-minute
 two-person Restream interview, cut to 32:20, opening + 7 chapters, released on both platforms.
 
 Scripts and templates ship alongside this skill: `scripts/podcast/`, `templates/podcast/`, `brand/`.
@@ -116,7 +116,7 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
 12. **Assemble**: `python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced.wav] [--guest-audio raw/guest-audio-enhanced.wav]`
    -> `exports/final/episode.mp4` (one uniform encode, -14 LUFS, decode-checked) + `episode-audio.m4a` +
    `youtube-chapters.txt`.
-13. **Covers**: `python3 scripts/podcast/make_cover.py ...` with the guest's PUBLISHED headshot (speaker
+13. **Covers** (spec, title and description rules: `references/podcast-packaging.md`): `python3 scripts/podcast/make_cover.py ...` with the guest's PUBLISHED headshot (speaker
    page, company site; never a call screenshot), cut out with `rembg` (bria-rmbg, Python 3.12 venv, stub
    the `pymatting` imports). 16:9 thumbnail + 1:1 art.
 14. **Publish** (owner logs in, owner approves the final Publish/Schedule click):

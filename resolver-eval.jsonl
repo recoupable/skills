@@ -164,9 +164,9 @@
 
 {"intent": "Build an interactive fan site with a clear activity, using digital experience references to improve the concept and final implementation.", "expected": "recoup-content-build-sites", "not": ["recoup-content-make-graphics", "recoup-content-write-caption"]}
 {"intent": "Add Recoup login with Spotify to my release site and attribute connected fans to my artist account.", "expected": "recoup-content-connect-fans", "not": ["recoup-content-build-sites"]}
-{"intent": "recoup-internal produce the podcast episode from the raw Restream files and schedule it on Spotify and YouTube", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales"]}
-{"intent": "recoup-internal edit the podcast we recorded this morning and make its thumbnail", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales"]}
-{"intent": "recoup-internal make the seven vertical shorts from the podcast episode we just published", "expected": "recoup-internal-marketing", "not": ["recoup-internal-sales", "recoup-content-make-video"]}
+{"intent": "recoup-internal produce the podcast episode from the raw Restream files and schedule it on Spotify and YouTube", "expected": "recoup-internal-podcast", "not": ["recoup-internal-sales", "recoup-internal-marketing"]}
+{"intent": "recoup-internal edit the podcast we recorded this morning and make its thumbnail", "expected": "recoup-internal-podcast", "not": ["recoup-internal-sales", "recoup-internal-marketing"]}
+{"intent": "recoup-internal make the seven vertical shorts from the podcast episode we just published", "expected": "recoup-internal-podcast", "not": ["recoup-internal-sales", "recoup-internal-marketing", "recoup-content-make-video"]}
 
 {"intent": "recoup-internal build a speaking profile from my transcripts and make my spoken scripts less robotic", "expected": "recoup-internal-consulting-persona-script-voice", "not": ["recoup-content-write-caption"]}
 
@@ -196,3 +196,4 @@
 {"intent": "recoup-internal: make cinematic animated thumbnails for our MCP extension workflow cards", "expected": "recoup-internal-content-make-thumbnails", "not": ["recoup-content-make-graphics", "recoup-internal-content-design-motion"]}
 {"intent": "recoup-internal: recreate the Recoup gallery preview video style for the new catalog cards", "expected": "recoup-internal-content-make-thumbnails", "not": ["recoup-content-make-video"]}
 {"intent": "Make a thumbnail image for my new single", "expected": "recoup-content-make-graphics", "not": ["recoup-internal-content-make-thumbnails"]}
+{"intent": "recoup-internal prep tomorrow's podcast recording and check my camera frame rate", "expected": "recoup-internal-podcast", "not": ["recoup-internal-sales", "recoup-internal-marketing"]}
