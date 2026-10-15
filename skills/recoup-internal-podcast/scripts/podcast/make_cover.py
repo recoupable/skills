@@ -74,7 +74,8 @@ def cover(W, H):
     gh = round(gf.size * 1.35) + len(rl) * round(rf.size * 1.3) + round(0.04 * S)
     for frac in (0.089, 0.08, 0.072, 0.064, 0.058, 0.052):
         tf = font(500, round(frac * S)); pitch = round(tf.size * 1.27); lines = wrap(d, A.title, tf, col)
-        if bottom - gh - pitch * len(lines) >= top:
+        orphan = len(lines) > 1 and ' ' not in lines[-1].strip() and frac > 0.052
+        if bottom - gh - pitch * len(lines) >= top and not orphan:  # step down rather than leave one word alone
             break
     y = bottom
     for ln in reversed(rl):
