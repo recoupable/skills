@@ -11,7 +11,12 @@ Writes <project>/comp/chapters/<id>/index.html; cuts media first via cut.py when
 Every graphic is anchored to a transcript PHRASE in raw recording time, ('h'|'g', "phrase", search_after),
 and mapped through the chapter's cut pieces, so trimming the edit never knocks a card off its line.
 Card types: headline, tline, stat, versus, quote, list. Shots: 'B' = card + picture-in-picture anchors,
-'C' = full-frame card; the gaps between cards are shot 'A' (two anchors). A chapter opens on a full-frame
+'C' = full-frame card; the gaps between cards are shot 'A' (two anchors).
+Owner rules built in (Sweetman): shot A is GUEST FOCUS by default, guest tile large, host a small inset (2026-10-06:
+"minimize my video... keeping ancillary content as the main focus or the guest"); set "layout": "equal" in
+episode.json for the old side-by-side. Any card may carry art=[('file in <project>/edit/art', 'line 1', 'line 2'), ...]
+(1-2 covers; album/single art when a record is named, 2026-10-10; list sources in edit/art/SOURCES.md). The build
+warns on any camera-only stretch over 30 s (card-density rule, 2026-10-10): add a card there. A chapter opens on a full-frame
 chapter card unless its spec sets no_chapter (the cold open).
 Scripts ship alongside this skill (scripts/podcast/, templates/podcast/news-desk.html).
 """
@@ -117,6 +122,21 @@ class Chapter:
 
 
 e = H.escape
+GUEST_FOCUS_A = ('A: { g: { left: 150, top: 175, width: 1004, height: 565, opacity: 1, scale: 1 }, '
+                 'h: { left: 1300, top: 510, width: 408, height: 230, opacity: 1, scale: 1 } },')
+ART_CSS = """
+  .card.has-art > :not(.art):not(.stamp) { max-width: 760px; }
+  .ccard.has-art > :not(.art):not(.stamp) { max-width: 1000px; }
+  .card.has-two > :not(.art):not(.stamp) { max-width: 590px; }
+  .ccard.has-two > :not(.art):not(.stamp) { max-width: 880px; }
+  .card .art { position: absolute; right: 80px; top: 50%; margin-top: -250px; display: flex; gap: 28px; }
+  .card .art figure { margin: 0; width: 360px; display: flex; flex-direction: column; gap: 16px; }
+  .card .art.two figure { width: 250px; }
+  .card .art img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 18px; box-shadow: 0 0 0 3px var(--border), 0 24px 60px rgba(21,46,55,.22); }
+  .card .art figcaption { font-size: 24px; line-height: 1.25; color: var(--forest); }
+  .card .art figcaption b { display: block; font-weight: 700; }
+  .card .art figcaption span { opacity: .7; font-size: 20px; }
+"""
 
 
 def card_html(k, c):
@@ -152,6 +172,11 @@ def card_html(k, c):
         body = f'{src}{h3}<div class="chips">{chips}</div>{foot}'
     else:
         raise SystemExit(f'unknown card type {t}')
+    if c.get('art'):
+        figs = ''.join(f'<figure><img src="assets/art/{e(os.path.basename(a))}" alt=""><figcaption><b>{e(l1)}</b><span>{e(l2)}</span></figcaption></figure>'
+                       for a, l1, l2 in c['art'])
+        body += f'<div class="art st{" two" if len(c["art"]) > 1 else ""}">{figs}</div>'
+        cls += ' has-art' + (' has-two' if len(c['art']) > 1 else '')
     return f'<section id="{k}" class="card {cls} {t} clip" data-start="{c["_s"]:g}" data-duration="{round(c["_e"] - c["_s"], 2):g}" data-track-index="{c["_track"]}">{body}</section>'
 
 
@@ -163,6 +188,10 @@ def build():
     for sub in ('fonts', 'logos'):
         if not os.path.exists(f'{d}/assets/{sub}'):
             shutil.copytree(os.path.join(BRAND, sub), f'{d}/assets/{sub}')
+    for cd in spec['cards']:
+        for a, *_ in cd.get('art', []):
+            os.makedirs(f'{d}/assets/art', exist_ok=True)
+            shutil.copy(os.path.join(PROJ, 'edit/art', a), f'{d}/assets/art/')
     hf = f'{d}/hyperframes.json'
     if not os.path.exists(hf):
         json.dump({"$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
@@ -197,6 +226,11 @@ def build():
         t_free = cd['_e']
     if t_free < D - 0.5 and cur != 'A':
         shots.append((round(t_free - 0.1, 2), 'A'))
+    t_cov = CH_END                                 # card-density rule: no camera-only stretch over 30 s
+    for cd in cards + [dict(_s=D, _e=D)]:
+        if cd['_s'] - t_cov > 30:
+            print(f'WARN {CID}: {cd["_s"] - t_cov:.1f}s with cameras only at {t_cov:.1f}-{cd["_s"]:.1f}s; add a card')
+        t_cov = max(t_cov, cd['_e'])
     lts = []
     for i, lt in enumerate(spec.get('lower_thirds', [])):
         s = max(ch.anchor(lt['at']) + 0.3, CH_END + 0.3 if CH_END else 0.4)
@@ -229,7 +263,12 @@ def build():
         js_lts.append(f'tl.to("#{lt["_id"]}", {{ x: {dx // 2}, opacity: 0, duration: .4, ease: "power2.in" }}, {lt["_e"] - 0.4:g});')
     js_shots = '\n  '.join(f'shot("{k}", {t:g});' for t, k in shots)
 
-    out = open(TEMPLATE).read()
+    out = open(TEMPLATE).read().replace('</style>', ART_CSS + '</style>', 1)
+    if EP.get('layout', 'guest_focus') == 'guest_focus':
+        out2 = re.sub(r'A: \{ g: \{[^}]*\}, h: \{[^}]*\} \},', GUEST_FOCUS_A, out, count=1)
+        out2 = out2.replace('tl.to(REG, { opacity: kind === "A" ? 1 : 0, duration: .35 }', 'tl.to(REG, { opacity: 0, duration: .35 }')
+        assert out2 != out, 'guest-focus layout: shot A pattern not found in the template'
+        out = out2
     for k, v in {'{{TITLE}}': f'Recoup Podcast: {e(EP["guest"]["name"])}, {c["num"]} {title}', '{{DUR}}': f'{D:g}',
                  '{{CHAPTER_LABEL}}': f'{c["num"]} · {title}', '{{CHAPTER_NUM}}': c['num'], '{{CHAPTER_TITLE}}': title,
                  '{{CH_END}}': f'{CH_END:g}', '{{CARDS}}': cards_html, '{{LOWER_THIRDS}}': lt_html, '{{TICKER}}': ticker,

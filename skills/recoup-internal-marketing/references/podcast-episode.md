@@ -78,6 +78,16 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    so later trims never desync them. Research every external fact you put on a card and date it; the
    guest's claims are attributed "on this episode". **Quote cards are verbatim** (ellipses allowed): a
    paraphrase inside quote marks is the defect the first run caught on four cards.
+   **Owner's standing rules (check every chapter before the prototype; the Zac prototype missed one, 2026-10-14):**
+   - **A card over every host question and recap**, mostly full-frame C (host camera is weak, 2026-10-06).
+   - **Guest focus**: shot A shows the guest large and the host as a small inset. `build.py` does this by
+     default; `"layout": "equal"` in `episode.json` restores side-by-side.
+   - **No more than 30 s of cameras only before a card** (2026-10-10). `build.py` prints `WARN` for each
+     longer stretch; fill it with a verbatim quote, list or stat from that stretch.
+   - **Album or single art when a record is named** (2026-10-10): `art=[('file.jpg', 'Artist', 'Title · year')]`
+     on the card, files in `<project>/edit/art/` with `SOURCES.md` (Spotify via the Recoup API `/spotify/search`).
+     Never substitute another artist's cover when the record isn't found. One cover on a side card; two
+     covers need a full-frame C card (a two-cover B card squeezes the text off the card). No art on stat cards.
 7. **Prototype first**: build and render ~90s around the strongest chapter before anything else; get the
    look approved once, then every chapter inherits it.
 8. **Build + check**: `python3 scripts/podcast/build.py <project> <ch> --recut`, then
