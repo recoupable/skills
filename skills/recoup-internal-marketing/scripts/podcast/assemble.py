@@ -1,13 +1,15 @@
 """Assemble the final episode from approved blocks into ONE upload-ready file.
 
 Usage:
-  python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced.wav]
+  python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced.wav] [--guest-audio raw/guest-audio-enhanced.wav]
 
 Blocks, in order: <project>/exports/opening.mp4 (cold open + intro), then exports/<chapter>.mp4 for every
 chapter in edit/chapters.json except "ch00" (the cold open lives inside opening.mp4).
 --host-audio swaps in a cleaned host track (e.g. Adobe Podcast Enhance, joined back to full length):
 each chapter's mix is re-cut with the same pieces/mutes (cut.py --audio-only); the opening keeps its
 audio (the host is muted in the cold open). No video re-render is needed for an audio change.
+--guest-audio does the same for the guest track; it may be silent outside the pieces the cut plays
+(e.g. only the used spans were enhanced), since cut.py reads nothing else.
 
 Video is re-encoded once, uniformly (H.264 High 4.1, CFR 30, bt709). Do not stream-copy-join the
 blocks: the opening and the chapters come from different encoders, and Spotify for Creators rejected
@@ -23,6 +25,7 @@ if not args:
     sys.exit(__doc__)
 PROJ = os.path.abspath(args[0]); HERE = os.path.dirname(os.path.abspath(__file__))
 HOST = args[args.index('--host-audio') + 1] if '--host-audio' in args else None
+GUEST = args[args.index('--guest-audio') + 1] if '--guest-audio' in args else None
 E = f'{PROJ}/exports'; F = f'{E}/final'; os.makedirs(F, exist_ok=True)
 CH = [c for c in json.load(open(f'{PROJ}/edit/chapters.json'))['chapters'] if c['id'] != 'ch00']
 blocks = [(f'{E}/opening.mp4', 'Cold open + intro', None)] + [(f"{E}/{c['id']}.mp4", c['title'], c['id']) for c in CH]
@@ -40,8 +43,9 @@ open(f'{F}/youtube-chapters.txt', 'w').write('\n'.join(lines) + '\n'); print('\n
 # audio sources per block
 auds = []
 for b, _, cid in blocks:
-    if HOST and cid:
-        subprocess.run([sys.executable, f'{HERE}/cut.py', PROJ, cid, '--audio-only', '--host-audio', HOST, '--mix-name', 'mix-final.m4a'], check=True)
+    if (HOST or GUEST) and cid:
+        sw = (['--host-audio', HOST] if HOST else []) + (['--guest-audio', GUEST] if GUEST else [])
+        subprocess.run([sys.executable, f'{HERE}/cut.py', PROJ, cid, '--audio-only'] + sw + ['--mix-name', 'mix-final.m4a'], check=True)
         auds.append(f'{PROJ}/comp/chapters/{cid}/assets/mix-final.m4a')
     else:
         auds.append(b)

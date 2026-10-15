@@ -3,7 +3,7 @@
 Usage:
   python3 scripts/podcast/cut.py <project> <chapter-id>                 # cameras + mix.m4a
   python3 scripts/podcast/cut.py <project> <chapter-id> --audio-only \
-      [--host-audio raw/host-audio-enhanced.wav] [--mix-name mix-enhanced.m4a]
+      [--host-audio raw/host-audio-enhanced.wav] [--guest-audio raw/guest-audio-enhanced.wav] [--mix-name mix-enhanced.m4a]
   python3 scripts/podcast/cut.py <project> <short-id> --cutlist edit/shorts.json --out comp/shorts/<id>/assets
 
 <project>/edit/chapters.json holds, per chapter, `pieces` in RAW recording seconds:
@@ -26,7 +26,7 @@ PROJ, CID = os.path.abspath(args[0]), args[1]
 AUDIO_ONLY = '--audio-only' in args
 opt = lambda k, d: args[args.index(k) + 1] if k in args else d
 HOST_AUDIO = os.path.join(PROJ, opt('--host-audio', 'raw/host-audio.m4a'))
-GUEST_AUDIO = os.path.join(PROJ, 'raw/guest-audio.m4a')
+GUEST_AUDIO = os.path.join(PROJ, opt('--guest-audio', 'raw/guest-audio.m4a'))
 MIX_NAME = opt('--mix-name', 'mix.m4a')
 spec = json.load(open(os.path.join(PROJ, opt('--cutlist', 'edit/chapters.json'))))
 ch = [c for c in spec.get('chapters') or spec['shorts'] if c['id'] == CID][0]

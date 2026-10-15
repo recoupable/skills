@@ -90,9 +90,18 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
 11. **Host mic** (when it sounds muffled): measure first (band energy above 4 kHz vs the guest). Adobe
    Podcast Enhance (free tier: 30 min/file, 1 h/day, needs the owner's free account sign-in) cleaned noise
    and lifted presence but did NOT restore missing highs; synthetic highs (ffmpeg `aexciter`) measured
-   right but hissed on "s". The owner chose Adobe. Split the host track under 30 min at a silence, enhance
-   each half, join, verify 0 ms offset at several points, then pass it to assemble.
-12. **Assemble**: `python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced.wav]`
+   right but hissed on "s". The owner chose Adobe; it can be run on the guest track too (owner's call; keep it
+   only if it wins a blind A/B on the same sentence).
+   **Enhance only what the cut plays, after the rough cut is approved** (5b), never the raw track:
+   `python3 scripts/podcast/enhance_pack.py <project> pack host` (and `guest`) writes `enhance/<track>-used.wav`,
+   the pieces the cut uses minus that track's 3 s+ silences, one file per track. On 2026-10-14 the raw tracks
+   were 33 min each; packed, the host was 6.9 min (cards and cuts leave little host speech) and the guest 24 min:
+   31 min of quota instead of 66, both tracks in one day, one upload each instead of a split pair, and far less
+   upload, processing and download time. Check the total against the 1 h/day cap before uploading. Before uploading,
+   test the round trip on the unenhanced pack (`unpack` it, check 0 ms lag at several raw times). After Adobe:
+   `enhance_pack.py <project> unpack <track> <enhanced.wav>` -> `raw/<track>-audio-enhanced.wav` (full length,
+   silence outside the pieces); verify 0 ms offset again. Re-pack if a later cut change restores audio.
+12. **Assemble**: `python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced.wav] [--guest-audio raw/guest-audio-enhanced.wav]`
    -> `exports/final/episode.mp4` (one uniform encode, -14 LUFS, decode-checked) + `episode-audio.m4a` +
    `youtube-chapters.txt`.
 13. **Covers**: `python3 scripts/podcast/make_cover.py ...` with the guest's PUBLISHED headshot (speaker
