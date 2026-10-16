@@ -205,7 +205,9 @@ Add a route for the new skill in [`RESOLVER.md`](RESOLVER.md) and a fixture in `
 
 ## Internal consulting workflows
 
-The 63 `recoup-internal-consulting-*` skills cover client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
+AI strategy workflows now include team workflow discovery, project selection, and pilot review. They produce evidence registers, first-project briefs, and decisions that separate recovered capacity from confirmed cash effects. Each includes a portable blank template for the selected private business workspace.
+
+The 66 `recoup-internal-consulting-*` skills cover client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
 
 Business installs this same repository at `plugin/` as a pinned Git submodule. Consult its workspace rules before accessing data. Integration adapters, credentials and active schedules belong to the selected workspace; installing these skills does not configure them.
 
