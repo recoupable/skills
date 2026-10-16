@@ -6,7 +6,8 @@ Usage:
 Reads (all inside <project>):
   episode.json                  guest name/role, title; optional "shorts" block:
                                 {"who": "Jane Doe · Example Rights Co", "end_url": "recoupable.dev/podcast",
-                                 "object_position": "50% 30%", "host_audio": "raw/host-audio-enhanced.wav"}
+                                 "object_position": "50% 30%", "host_audio": "raw/host-audio-enhanced.wav",
+                                 "guest_audio": "raw/guest-audio-enhanced.wav"}
   edit/shorts.json              cut list in RAW seconds, same piece format as chapters.json (in/out, mute_host,
                                 mute_guest, host_only, video_from), top-level "offsets", and per short:
                                 {"id": "s1", "day": "Mon", "hook": "...", "hook_size": 66, "pieces": [...]}
@@ -162,6 +163,8 @@ def build(sid):
                '--out', os.path.join('comp/shorts', sid, 'assets')]
         if CFG.get('host_audio'):
             cut += ['--host-audio', CFG['host_audio']]
+        if CFG.get('guest_audio'):
+            cut += ['--guest-audio', CFG['guest_audio']]
         subprocess.run(cut, check=True)
     for sub in ('fonts', 'logos'):
         if not os.path.exists(f'{d}/assets/{sub}'):
@@ -172,7 +175,7 @@ def build(sid):
                    "registry": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry",
                    "paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}}, open(hf, 'w'), indent=2)
     CLIP = sh.total; D = round(CLIP + END, 2)
-    T = {k: sh.anchor(tuple(a), end=k.endswith('_end')) for k, a in anchors.items()}
+    T = {k: sh.anchor(tuple(a) if isinstance(a, list) else a, end=k.endswith('_end')) for k, a in anchors.items()}
     js = part('JS')
     for k in sorted(T, key=len, reverse=True):
         js = js.replace('@' + k, f'{T[k]:g}')
