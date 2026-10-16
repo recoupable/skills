@@ -197,6 +197,12 @@ Staff consulting capabilities use `recoup-internal-consulting-<skill-name>`. Kee
 
 ## Consulting synchronization
 
+AI strategy consulting is split into team workflow discovery (evidence collection), AI project
+selection (decisions and first-project briefs), and AI pilot review (measurement and next commitments).
+Their blank templates remain inside each skill; completed client records belong in the selected
+private business workspace. Update all three plugin manifests, including `.cursor-plugin/plugin.json`,
+and all three marketplace versions when releasing new capabilities.
+
 The private workspace coordinator synchronizes only `recoup-internal-consulting-*` skills in both
 directions. Main-branch edits are picked up by its five-minute polling schedule, subject to GitHub
 scheduling delays. Other Recoup skill domains and root packaging remain owned here. New consulting
