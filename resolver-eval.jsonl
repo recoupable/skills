@@ -4,6 +4,7 @@
 # Goal: prove each skill fires for a real phrasing, and the cross-skill forks route correctly.
 
 # --- platform ---
+{"intent":"recoup-internal verify the compiled CLI whoami output and HTTP errors without production credentials","expected":"recoup-internal-dev-verify-cli","not":["recoup-platform-api-access","recoup-platform-connect-account"]}
 {"intent": "set me up, verify my email and give me an api key", "expected": "recoup-platform-connect-account"}
 {"intent": "how far am I in setting up recoup, what should I do next", "expected": "recoup-platform-track-onboarding", "not": ["recoup-platform-connect-account"]}
 {"intent": "did I finish onboarding my account, show my activation checklist", "expected": "recoup-platform-track-onboarding"}
