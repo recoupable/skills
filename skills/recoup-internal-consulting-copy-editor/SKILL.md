@@ -16,6 +16,13 @@ label the result manual/unscored; never invent a numeric score or successful pro
 
 A second set of eyes on a finished draft. The review runs in a **fresh-context subagent** so it reads like a first-time editor, not the author. The **main agent implements** the edits, with judgment. This skill *uses* `recoup-internal-consulting-copy-writer` (the house voice + anti-slop standard) and `evals/content/score_run.py` (the check) — it does not redefine them.
 
+## Evidence and reader journey
+
+Read `references/evidence-to-draft.md` when drafting or revising public copy. Collect supported
+material, choose the reader journey, edit each channel independently and reconcile the actual
+artwork with the final argument. Record per-file decisions and distinguish batch review from
+individual fresh-context reviews. Existing publication authority and evidence rules still apply.
+
 ## Required public-content gate
 
 Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.

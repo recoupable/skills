@@ -16,6 +16,13 @@ the owner's actual customer understand it, trust it, care, and want to act? The 
 author. It returns **notes only**; the **main agent rewrites** from them. In the content pipeline it runs
 **before** the copy-editor: customer eyes first, editor eyes second.
 
+## Evidence and reader journey
+
+Read `references/evidence-to-draft.md` when drafting or revising public copy. Collect supported
+material, choose the reader journey, edit each channel independently and reconcile the actual
+artwork with the final argument. Record per-file decisions and distinguish batch review from
+individual fresh-context reviews. Existing publication authority and evidence rules still apply.
+
 ## Required public-content gate
 
 Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.

@@ -266,6 +266,14 @@
         "skills/recoup-catalog-explain-contract/references/music-business-records.md",
         "skills/recoup-catalog-organize-publishing/references/music-business-records.md"
       ]
+    },
+    {
+      "canonical": "references/evidence-to-draft.md",
+      "copies": [
+        "skills/recoup-internal-consulting-copy-writer/references/evidence-to-draft.md",
+        "skills/recoup-internal-consulting-copy-reviewer/references/evidence-to-draft.md",
+        "skills/recoup-internal-consulting-copy-editor/references/evidence-to-draft.md"
+      ]
     }
   ]
 }
