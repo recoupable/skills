@@ -9,7 +9,7 @@ Run the actual `recoupable/cli` executable and retain commands, output, exit cod
 
 ## Launch
 
-Use Node 22 or newer and pnpm. Select a clean, isolated CLI checkout at the revision under review. Record its commit and working-tree status. Preserve an existing dirty checkout by using a separate worktree. Set `CLI_REPO` to that checkout's absolute path and `CLI_EVIDENCE` to a fresh evidence directory outside it.
+Use Node 22 or newer and pnpm on macOS or Linux. The helper requires POSIX process groups and rejects unsupported operating systems before launching a CLI case. Select a clean, isolated CLI checkout at the revision under review. Record its commit and working-tree status. Preserve an existing dirty checkout by using a separate worktree. Set `CLI_REPO` to that checkout's absolute path and `CLI_EVIDENCE` to a fresh evidence directory outside it.
 
 Run from the CLI checkout:
 
@@ -46,7 +46,9 @@ Report a passing run as CLI behavior against synthetic HTTP fixtures. Backend av
 
 ## Cleanup
 
-On normal completion or a caught failure, the helper closes its own server, removes its temporary working directory, and preserves the evidence directory. Missing source metadata or build output produces a failed report before starting the server. Require both cleanup fields to be true and read the evidence file after exit. No background process should remain. An unwritable evidence directory prevents saving a report and is itself a failed attempt.
+Each CLI case has its own process group. When the direct child exits or exceeds ten seconds, the helper kills that group, including descendants with inherited or redirected output. Output pipes have one additional second to close before the case fails. Programs that deliberately leave the group to daemonize are unsupported; the helper does not claim to clean those unrelated groups.
+
+On normal completion or a caught failure, the helper closes its own server, removes its temporary working directory, and preserves the evidence directory. Missing source metadata or build output produces a failed report before starting the server. Require both cleanup fields to be true and read the evidence file after exit. No process in a case's group should remain running. An unwritable evidence directory prevents saving a report and is itself a failed attempt.
 
 Forced host termination can prevent this cleanup and the evidence write. The helper has no persistent recovery manifest. Treat that attempt as unverified. Use the host's process information to identify any surviving process from this run before cleanup; never kill by process name or assume that an old PID still belongs to this run.
 
