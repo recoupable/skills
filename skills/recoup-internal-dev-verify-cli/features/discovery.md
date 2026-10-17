@@ -15,8 +15,8 @@ Run `recoup --version` or `recoup --help`.
 
 Preconditions: the selected source has been built successfully in this run.
 
-- Drive the compiled binary with `--version`. Expect exit zero and the package version.
-- Drive it with `--help`. Expect exit zero and all listed command groups.
+- Drive the compiled binary with `--version` and no API key. Expect exit zero and the package version.
+- Drive it with `--help` and no API key. Expect exit zero and a standalone row for every listed command in the Commands section. Mentions elsewhere in help do not count.
 - Inspect the helper's request observations. Both commands must make zero requests.
 
 ## Gotchas

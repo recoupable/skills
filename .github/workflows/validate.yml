@@ -33,6 +33,8 @@ jobs:
           node-version: "22"
       - name: Consulting media and runtime regression checks
         run: node --test tests/consulting-brand.test.mjs tests/consulting-runtime.test.mjs
+      - name: CLI verification helper regressions
+        run: node --test tests/verify-cli.test.mjs
       - name: Consulting template and credential boundary checks
         run: python3 -m unittest discover -s tests -p test_consulting_templates.py
       - name: Plugin package boundaries and build

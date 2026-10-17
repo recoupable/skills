@@ -14,3 +14,7 @@ docs/research/
 
 !tests/test_plugin_packages.py
 !tests/test_reconciliation_examples.py
+!tests/verify-cli.test.mjs
+!tests/fixtures/
+tests/fixtures/*
+!tests/fixtures/verification-cli.mjs
