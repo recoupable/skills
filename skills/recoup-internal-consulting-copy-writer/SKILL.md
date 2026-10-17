@@ -12,6 +12,13 @@ private checkout for missing inputs. Use workspace identity, audience, pricing, 
 
 Write with context, taste, and a reason to speak. Apply with judgment. Spirit over letter.
 
+## Evidence and reader journey
+
+Read `references/evidence-to-draft.md` when drafting or revising public copy. Collect supported
+material, choose the reader journey, edit each channel independently and reconcile the actual
+artwork with the final argument. Record per-file decisions and distinguish batch review from
+individual fresh-context reviews. Existing publication authority and evidence rules still apply.
+
 ## Required public-content gate
 
 Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
