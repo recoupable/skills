@@ -4,7 +4,8 @@ Usage:
   python3 scripts/podcast/assemble.py <project> [--host-audio raw/host-audio-enhanced.wav] [--guest-audio raw/guest-audio-enhanced.wav]
 
 Blocks, in order: <project>/exports/opening.mp4 (cold open + intro), then exports/<chapter>.mp4 for every
-chapter in edit/chapters.json except "ch00" (the cold open lives inside opening.mp4).
+chapter in edit/chapters.json except "ch00" (the cold open lives inside opening.mp4), then exports/outro.mp4
+(the 12s CTA outro from make_intro.py; required, no chapter marker, it closes the last chapter).
 --host-audio swaps in a cleaned host track (e.g. Adobe Podcast Enhance, joined back to full length):
 each chapter's mix is re-cut with the same pieces/mutes (cut.py --audio-only); the opening keeps its
 audio (the host is muted in the cold open). No video re-render is needed for an audio change.
@@ -28,7 +29,7 @@ HOST = args[args.index('--host-audio') + 1] if '--host-audio' in args else None
 GUEST = args[args.index('--guest-audio') + 1] if '--guest-audio' in args else None
 E = f'{PROJ}/exports'; F = f'{E}/final'; os.makedirs(F, exist_ok=True)
 CH = [c for c in json.load(open(f'{PROJ}/edit/chapters.json'))['chapters'] if c['id'] != 'ch00']
-blocks = [(f'{E}/opening.mp4', 'Cold open + intro', None)] + [(f"{E}/{c['id']}.mp4", c['title'], c['id']) for c in CH]
+blocks = [(f'{E}/opening.mp4', 'Cold open + intro', None)] + [(f"{E}/{c['id']}.mp4", c['title'], c['id']) for c in CH] + [(f'{E}/outro.mp4', None, None)]
 for b, _, _ in blocks:
     if not os.path.exists(b):
         sys.exit('missing block: ' + b)
@@ -37,7 +38,9 @@ run = lambda a: subprocess.run(['ffmpeg', '-v', 'error', '-y'] + a, check=True)
 
 t = 0.0; lines = []
 for b, title, _ in blocks:
-    lines.append(f"{int(t // 60)}:{int(t % 60):02d} {title}"); t += dur(b)
+    if title:
+        lines.append(f"{int(t // 60)}:{int(t % 60):02d} {title}")
+    t += dur(b)
 open(f'{F}/youtube-chapters.txt', 'w').write('\n'.join(lines) + '\n'); print('\n'.join(lines))
 
 # audio sources per block
