@@ -11,7 +11,7 @@ cold open in front of the intro (assemble.py appends exports/outro.mp4 itself):
   (cd <project>/comp/intro && npx --yes hyperframes render -o ../../exports/intro.mp4)
   (cd <project>/comp/outro && npx --yes hyperframes render -o ../../exports/outro.mp4)
   ffmpeg -i exports/ch00.mp4 -i exports/intro.mp4 -filter_complex "[0:v]fps=30,format=yuv420p,setsar=1[v0];[1:v]fps=30,format=yuv420p,setsar=1[v1];[0:a]aresample=48000,aformat=channel_layouts=stereo[a0];[1:a]aresample=48000,aformat=channel_layouts=stereo[a1];[v0][a0][v1][a1]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" -c:v libx264 -crf 18 -c:a aac -b:a 256k exports/opening.mp4
-The show lockup PNG and Sid's sting are private brand assets (not in this public skill): pass their folder.
+The show lockup PNG and the show music (intro-sting.wav, 7.2 s with its own ring-out) are private brand assets (not in this public skill): pass their folder.
 Chosen in a three-way cookoff (wire / signal waveform / paper marker) on the first episode.
 """
 import argparse, html, json, os, shutil, sys

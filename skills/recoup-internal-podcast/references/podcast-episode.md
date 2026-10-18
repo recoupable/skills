@@ -26,6 +26,14 @@ highlight), `list` (numbered chips). Opening = a 6-14s cold open (the guest's st
 "Coming up" lower third) + the 7s **Wire intro** (`templates/podcast/wire-intro.html`). Every episode ends
 on the 12s **CTA outro** (`templates/podcast/wire-outro.html`: "Thanks for watching", recoupable.dev).
 
+### Sound (Pete Rango, sound design, 2026-10-08)
+
+- **Music ends on a slope, never a cut.** The show music (`intro-sting.wav` in the show assets, 7.2 s) carries its own
+  ~2 s ring-out; play it to the end. Sid approved the "newsdesk" track 2026-10-18 after the old sting's 0.2 s drop.
+  Do not fake a tail with echo repeats (the owner heard them); a new ending is a new take or a diffuse reverb ring-out.
+- **Sound effects sit under the voice.** High-pass any white-noise effect (whoosh, swipe) before setting its level,
+  then lower it: noise reads loud at low volume. One focused mixing pass on every effect before export.
+
 ### Motion grammar: huashu-art-motion (owner rule, 2026-10-18)
 
 Every graphic in the full episode and in the shorts follows the **huashu-art-motion** skill
