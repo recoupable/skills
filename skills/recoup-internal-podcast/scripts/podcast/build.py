@@ -10,13 +10,16 @@ Writes <project>/comp/chapters/<id>/index.html; cuts media first via cut.py when
 
 Every graphic is anchored to a transcript PHRASE in raw recording time, ('h'|'g', "phrase", search_after),
 and mapped through the chapter's cut pieces, so trimming the edit never knocks a card off its line.
-Card types: headline, tline, stat, versus, quote, list. Shots: 'B' = card + picture-in-picture anchors,
+Card types: headline, tline, stat, versus, quote, list, evidence (a real capture, huashu-art-motion Vox grammar). Shots: 'B' = card + picture-in-picture anchors,
 'C' = full-frame card; the gaps between cards are shot 'A' (two anchors).
 Owner rules built in (Sweetman): shot A is GUEST FOCUS by default, guest tile large, host a small inset (2026-10-06:
 "minimize my video... keeping ancillary content as the main focus or the guest"); set "layout": "equal" in
 episode.json for the old side-by-side. Any card may carry art=[('file in <project>/edit/art', 'line 1', 'line 2'), ...]
 (1-2 covers; album/single art when a record is named, 2026-10-10; list sources in edit/art/SOURCES.md). The build
-warns on any camera-only stretch over 30 s (card-density rule, 2026-10-10): add a card there. A chapter opens on a full-frame
+warns on any camera-only stretch over 15 s (card-density rule, 30 s 2026-10-10, 15 s 2026-10-18): add a card there.
+An evidence card puts a real capture on screen: img='file in <project>/edit/refs' (listed in edit/refs/SOURCES.md),
+mark=(x, y, w, h) in % of the image (measured on the capture, not eyeballed) swept with the highlighter on
+mark_at=('g'|'h', "phrase", after), and an optional verbatim tag line. A chapter opens on a full-frame
 chapter card unless its spec sets no_chapter (the cold open).
 Scripts ship alongside this skill (scripts/podcast/, templates/podcast/news-desk.html).
 """
@@ -166,6 +169,14 @@ def card_html(k, c):
                 f'<div class="col b st"><div class="who mono">{e(wb)}</div><div class="v">{e(vb)}</div><p>{e(pb)}</p></div></div>{foot}')
     elif t == 'quote':
         body = f'{src}<div class="qmark st">“</div><blockquote class="st">{c["q"]}</blockquote>{foot}'
+    elif t == 'evidence':
+        x, y, w, hh = c.get('mark', (0, 0, 0, 0))
+        mark = f'<i class="mark" style="left:{x}%;top:{y}%;width:{w}%;height:{hh}%"></i>' if c.get('mark') else ''
+        tag = f'<div class="etag">{c["tag"]}</div>' if c.get('tag') else ''
+        h3 = f'<h3>{e(c["h"])}</h3>' if c.get('h') else ''
+        body = (f'<div class="print"><span class="tape l"></span><span class="tape r"></span><div class="shot">'
+                f'<img src="assets/refs/{e(os.path.basename(c["img"]))}" alt="">{mark}</div></div>'
+                f'<div class="side">{src}{h3}{tag}{foot}</div>')
     elif t == 'list':
         chips = ''.join(f'<div class="chip st"><span class="mono">{i + 1:02d}</span>{e(x)}</div>' for i, x in enumerate(c['items']))
         h3 = f'<h3 class="st">{e(c["h"])}</h3>' if c.get('h') else ''
@@ -189,6 +200,9 @@ def build():
         if not os.path.exists(f'{d}/assets/{sub}'):
             shutil.copytree(os.path.join(BRAND, sub), f'{d}/assets/{sub}')
     for cd in spec['cards']:
+        if cd.get('img'):
+            os.makedirs(f'{d}/assets/refs', exist_ok=True)
+            shutil.copy(os.path.join(PROJ, 'edit/refs', cd['img']), f'{d}/assets/refs/')
         for a, *_ in cd.get('art', []):
             os.makedirs(f'{d}/assets/art', exist_ok=True)
             shutil.copy(os.path.join(PROJ, 'edit/art', a), f'{d}/assets/art/')
@@ -199,6 +213,7 @@ def build():
                    "paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}}, open(hf, 'w'), indent=2)
     D = ch.total
     CARD_GAP = 0.35
+    MAX_CAMERAS_ONLY = 15
     CH_MIN = 0.3 if spec.get('no_chapter') else 2.7
     cards = []
     for i, cd in enumerate(spec['cards']):
@@ -207,6 +222,8 @@ def build():
         cd['_e'] = ch.anchor(cd['end'], end=True) + cd.get('tail', 0.4) if 'end' in cd else cd['_s'] + cd['dur']
         cd['_e'] = min(cd['_e'], D)
         cd['_track'] = 30 + i
+        if 'mark_at' in cd:
+            cd['_mark'] = ch.anchor(cd['mark_at'])
         cards.append(cd)
     cards.sort(key=lambda x: x['_s'])
     for a, b in zip(cards, cards[1:]):           # no overlaps
@@ -226,9 +243,9 @@ def build():
         t_free = cd['_e']
     if t_free < D - 0.5 and cur != 'A':
         shots.append((round(t_free - 0.1, 2), 'A'))
-    t_cov = CH_END                                 # card-density rule: no camera-only stretch over 30 s
+    t_cov = CH_END                                 # card-density rule: no camera-only stretch over 15 s
     for cd in cards + [dict(_s=D, _e=D)]:
-        if cd['_s'] - t_cov > 30:
+        if cd['_s'] - t_cov > MAX_CAMERAS_ONLY:
             print(f'WARN {CID}: {cd["_s"] - t_cov:.1f}s with cameras only at {t_cov:.1f}-{cd["_s"]:.1f}s; add a card')
         t_cov = max(t_cov, cd['_e'])
     lts = []
@@ -251,9 +268,17 @@ def build():
     js_cards = []
     for i, cd in enumerate(cards):
         k = f'#k{i}'; s = cd['_s']; en = cd['_e']
-        frm = '{ y: 70, opacity: 0 }' if cd['shot'] == 'C' else '{ x: -80, opacity: 0 }'
-        js_cards.append(f'tl.fromTo("{k}", {frm}, {{ x: 0, y: 0, opacity: 1, duration: .55, ease: "power3.out" }}, {s:g});')
-        js_cards.append(f'stag("{k}", {s + 0.25:g}, {min(0.16, max(0.08, (en - s - 1.5) / 12)):.3f});')
+        if cd['type'] == 'evidence':                # Vox grammar: real material is simply there on the cut; elements step at 12 fps
+            js_cards.append(f'tl.fromTo("{k}", {{ opacity: 0 }}, {{ opacity: 1, duration: .12 }}, {s:g});')
+            if cd.get('tag'):
+                js_cards.append(f'tl.fromTo("{k} .etag", {{ x: 90, rotation: 12, opacity: 0 }}, {{ x: 0, rotation: -2, opacity: 1, duration: .55, ease: "steps(7)" }}, {s + 0.4:g});')
+            if cd.get('mark'):
+                ms = max(cd.get('_mark', s + 0.6), s + 0.3)
+                js_cards.append(f'tl.fromTo("{k} .mark", {{ scaleX: 0 }}, {{ scaleX: 1, duration: .9, ease: "steps(11)" }}, {ms:g});')
+        else:
+            frm = '{ y: 70, opacity: 0 }' if cd['shot'] == 'C' else '{ x: -80, opacity: 0 }'
+            js_cards.append(f'tl.fromTo("{k}", {frm}, {{ x: 0, y: 0, opacity: 1, duration: .55, ease: "power3.out" }}, {s:g});')
+            js_cards.append(f'stag("{k}", {s + 0.25:g}, {min(0.16, max(0.08, (en - s - 1.5) / 12)):.3f});')
         if cd['type'] == 'stat' and cd.get('left'):
             js_cards.append(f'tl.fromTo("{k} .bar i", {{ scaleX: 0 }}, {{ scaleX: 1, duration: 2.2, ease: "power2.inOut" }}, {s + 1.0:g});')
         if cd['type'] == 'headline' and cd.get('stamp'):
