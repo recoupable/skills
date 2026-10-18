@@ -33,16 +33,22 @@ Every graphic in the full episode and in the shorts follows the **huashu-art-mot
 writing specs. We take its grammar, not its engine or palette: cards are still HyperFrames in Recoup Sky.
 
 - **Real material is the main picture.** When the guest names a product, a page, a filing, a deal or an article,
-  capture it that day (`agent-browser set viewport 1280 900 2`, crop to what is said) into `edit/refs/` with a
-  `SOURCES.md` line, and use an `evidence` card: the capture fills ~64% of the card, the highlighter sweeps the
-  line on the spoken phrase (`mark_at`), measured box (`mark`) checked on a snapshot. Text-only cards are for
+  capture it that day into `edit/refs/` with a `SOURCES.md` line, and use an `evidence` card: the capture fills
+  ~64% of the card, the highlighter sweeps the line on the spoken phrase (`mark_at`). Text-only cards are for
   moments with nothing real to show.
+  `python3 scripts/podcast/capture_ref.py <url> "<exact page phrase>" edit/refs/<name>.jpg [height] [above]` hides
+  sticky chrome, crops around the phrase and prints the measured `mark`; `check_mark.py <img> x y w h` draws it.
+  Crop landscape (a tall crop is clipped on the card). Cloudflare-guarded blogs (Symphonic) open in a headed
+  browser (`agent-browser --headed`); a "Verify you are human" box (MBW) is never clicked for the owner: use another
+  outlet's report of the same story. A source you cannot find gets a quote card, not a stand-in.
 - **Material is simply there on the cut; elements step at 12 fps** (highlighter, tag). No bounce or drop-in on
   evidence; the camera stays still while someone reads.
 - **Numbers**: axis first, bars from zero on the word that says them, one lime bar against grey, a title that is the
   conclusion and can be derived from the bars, a source line.
 - **Rotate the reveal**: never the same card type and reveal three times in a row (huashu: 36 of 37 labels slid in
   the same way and the audience predicted them).
+- **The 15 s check ignores the screen-share shot** (`screen_share.py` adds it after the build): read `WARN`s inside a
+  shared-screen stretch as covered.
 - **Text to read sits on top**: no tile, tag or ticker over a card's words (also the lower-third rule above).
 
 ## Project layout (one folder per episode, in the marketing workspace; media is gitignored)

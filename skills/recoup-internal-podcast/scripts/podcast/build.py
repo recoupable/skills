@@ -174,8 +174,8 @@ def card_html(k, c):
         mark = f'<i class="mark" style="left:{x}%;top:{y}%;width:{w}%;height:{hh}%"></i>' if c.get('mark') else ''
         tag = f'<div class="etag">{c["tag"]}</div>' if c.get('tag') else ''
         h3 = f'<h3>{e(c["h"])}</h3>' if c.get('h') else ''
-        body = (f'<div class="print"><span class="tape l"></span><span class="tape r"></span><div class="shot">'
-                f'<img src="assets/refs/{e(os.path.basename(c["img"]))}" alt="">{mark}</div></div>'
+        body = (f'<div class="print"><span class="tape l"></span><span class="tape r"></span><div class="shot"><div class="pic">'
+                f'<img src="assets/refs/{e(os.path.basename(c["img"]))}" alt="">{mark}</div></div></div>'
                 f'<div class="side">{src}{h3}{tag}{foot}</div>')
     elif t == 'list':
         chips = ''.join(f'<div class="chip st"><span class="mono">{i + 1:02d}</span>{e(x)}</div>' for i, x in enumerate(c['items']))
