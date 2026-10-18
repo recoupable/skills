@@ -43,7 +43,8 @@ line ("songvest.com · Oct 2026"). Abstract stand-ins are rejected: a grid of ti
 replaced by the real offering page showing the fans' price. Capture with `agent-browser set viewport 430 932 3`
 (or `1280 900 2`) and crop single cards so the text stays readable at stage size; embed as data URIs.
 
-Two beat types, adapted from huashu-art-motion's Vox and finance-chart grammars, in the show palette (pale
+Two beat types from the installed huashu-art-motion skill's Vox and finance-chart grammars (see
+`references/podcast-episode.md`, Motion grammar), in the show palette (pale
 `#F0F7FA` ground, ink `#152E37` text, lime `#D6FF62` highlights with a forest `#132B26` outline; lime on pale
 has no contrast without it):
 

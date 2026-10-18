@@ -40,6 +40,8 @@ lockup PNG, the intro sting, the blue-sweep background) live in the operator's w
   shared checkouts mid-render.
 - **Never render during a live recording,** and render one chapter at a time.
 - **No em dashes in published copy** (titles, descriptions, cards, captions).
+- **Motion follows huashu-art-motion** (installed skill) in the full episode and the shorts: real captures on
+  screen, highlighter on the spoken line, numbers grown on the word. No more than 15 s of cameras only.
 - **Real facts on cards only.** Every figure and claim on a card is checked against the transcript and the
   source; the recorder's mishearings and the guest's on-tape corrections are listed before cards are written.
 

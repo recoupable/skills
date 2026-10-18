@@ -99,6 +99,22 @@
   .quote blockquote { margin: 0; font-size: 70px; line-height: 1.12; font-weight: 700; letter-spacing: -.02em; }
   .bcard.quote blockquote { font-size: 58px; }
 
+  .evidence { flex-direction: row; align-items: center; gap: 56px; padding: 60px 70px; }
+  .evidence .print { position: relative; flex: 0 0 64%; background: #fff; padding: 16px 16px 22px; box-shadow: 3px 6px 10px rgba(0,0,0,.28); transform: rotate(-1.2deg); }
+  .bcard.evidence .print { flex-basis: 62%; }
+  .evidence .shot { position: relative; max-height: 640px; overflow: hidden; }
+  .evidence .pic { position: relative; }
+  .evidence .shot img { display: block; width: 100%; }
+  .evidence .mark { position: absolute; background: rgba(214,255,98,.62); mix-blend-mode: multiply; box-shadow: 0 0 0 2px rgba(19,43,38,.55); border-radius: 4px; transform-origin: left center; }
+  .evidence .tape { position: absolute; top: -14px; width: 130px; height: 32px; background: rgba(214,255,98,.6); box-shadow: 0 0 0 1.5px rgba(19,43,38,.25); z-index: 2; }
+  .evidence .tape.l { left: 24px; transform: rotate(-6deg); } .evidence .tape.r { right: 24px; transform: rotate(5deg); }
+  .evidence .side { flex: 1; min-width: 0; overflow-wrap: anywhere; display: flex; flex-direction: column; gap: 26px; align-self: stretch; justify-content: center; }
+  .evidence .side h3 { font-size: 52px; }
+  .evidence .side .src { flex-wrap: wrap; }
+  .evidence .side .foot { flex-wrap: wrap; gap: 8px 24px; }
+  .evidence .etag { background: var(--forest); color: #fff; font-size: 34px; font-weight: 700; line-height: 1.22; padding: 22px 26px; border-radius: 10px; }
+  .evidence .etag em { color: var(--forest); }
+
   .list .chips { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   .list .chip { display: flex; align-items: center; gap: 22px; background: #fff; box-shadow: 0 0 0 3px var(--border); border-radius: 18px; padding: 24px 28px; font-size: 34px; font-weight: 600; }
   .list .chip span { font-size: 22px; color: var(--sky-text); font-weight: 400; }

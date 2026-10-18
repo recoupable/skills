@@ -20,10 +20,36 @@ cards, wire-style source cards, a SOURCES ticker. Three shots, cut by the graphi
 | B | a source, a number, a list is being discussed | the card, tiles shrunk to a picture-in-picture column |
 | C | chapter cards, cold-open quote, a headline, a big number | full-frame card, voice continues |
 
-Card types: `headline` (source + date + headline + standfirst + stamp), `tline` (dated rows), `stat` (big
+Card types: `evidence` (a real capture, taped, highlighter on the spoken line, verbatim tag, source line), `headline` (source + date + headline + standfirst + stamp), `tline` (dated rows), `stat` (big
 number, optional market-share-to-usage bar, quote), `versus` (two columns), `quote` (verbatim, lime
 highlight), `list` (numbered chips). Opening = a 6-14s cold open (the guest's strongest line, host muted,
 "Coming up" lower third) + the 7s **Wire intro** (`templates/podcast/wire-intro.html`).
+
+### Motion grammar: huashu-art-motion (owner rule, 2026-10-18)
+
+Every graphic in the full episode and in the shorts follows the **huashu-art-motion** skill
+(`npx skills add alchaincyf/huashu-art-motion -g`, pinned 8a0d7d7 on 2026-10-18). Read its SKILL.md
+"six ways it goes wrong", `references/动画语法/y2_vox.md` (evidence) and `t3_finance_chart.md` (numbers) before
+writing specs. We take its grammar, not its engine or palette: cards are still HyperFrames in Recoup Sky.
+
+- **Real material is the main picture.** When the guest names a product, a page, a filing, a deal or an article,
+  capture it that day into `edit/refs/` with a `SOURCES.md` line, and use an `evidence` card: the capture fills
+  ~64% of the card, the highlighter sweeps the line on the spoken phrase (`mark_at`). Text-only cards are for
+  moments with nothing real to show.
+  `python3 scripts/podcast/capture_ref.py <url> "<exact page phrase>" edit/refs/<name>.jpg [height] [above]` hides
+  sticky chrome, crops around the phrase and prints the measured `mark`; `check_mark.py <img> x y w h` draws it.
+  Crop landscape (a tall crop is clipped on the card). Cloudflare-guarded blogs (Symphonic) open in a headed
+  browser (`agent-browser --headed`); a "Verify you are human" box (MBW) is never clicked for the owner: use another
+  outlet's report of the same story. A source you cannot find gets a quote card, not a stand-in.
+- **Material is simply there on the cut; elements step at 12 fps** (highlighter, tag). No bounce or drop-in on
+  evidence; the camera stays still while someone reads.
+- **Numbers**: axis first, bars from zero on the word that says them, one lime bar against grey, a title that is the
+  conclusion and can be derived from the bars, a source line.
+- **Rotate the reveal**: never the same card type and reveal three times in a row (huashu: 36 of 37 labels slid in
+  the same way and the audience predicted them).
+- **The 15 s check ignores the screen-share shot** (`screen_share.py` adds it after the build): read `WARN`s inside a
+  shared-screen stretch as covered.
+- **Text to read sits on top**: no tile, tag or ticker over a card's words (also the lower-third rule above).
 
 ## Project layout (one folder per episode, in the marketing workspace; media is gitignored)
 
@@ -82,8 +108,8 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    - **A card over every host question and recap**, mostly full-frame C (host camera is weak, 2026-10-06).
    - **Guest focus**: shot A shows the guest large and the host as a small inset. `build.py` does this by
      default; `"layout": "equal"` in `episode.json` restores side-by-side.
-   - **No more than 30 s of cameras only before a card** (2026-10-10). `build.py` prints `WARN` for each
-     longer stretch; fill it with a verbatim quote, list or stat from that stretch.
+   - **No more than 15 s of cameras only between cards** (30 s on 2026-10-10, 15 s on 2026-10-18). `build.py` prints
+     `WARN` for each longer stretch; fill it with an evidence capture, a verbatim quote, list or stat from that stretch.
    - **Album or single art when a record is named** (2026-10-10): `art=[('file.jpg', 'Artist', 'Title · year')]`
      on the card, files in `<project>/edit/art/` with `SOURCES.md` (Spotify via the Recoup API `/spotify/search`).
      Never substitute another artist's cover when the record isn't found. One cover on a side card; two
