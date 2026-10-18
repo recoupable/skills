@@ -21,9 +21,9 @@ charges for builds (`references/podcast-packaging.md`).
 | 1. Recording prep | `references/recording-prep.md` | Host camera test at ~30 fps, or the low-fps plan agreed |
 | 2. Post-production | `references/podcast-episode.md` steps 0-12 | Owner approves the analysis, the audio rough cut, the prototype, each chapter and the assembled episode |
 | 3. Packaging | `references/podcast-packaging.md`, episode steps 13 and 15 | Owner approves title, description and both covers; the guest approves their cover photo |
-| 4. Publish | `references/podcast-episode.md` step 14 | Owner makes the Publish or Schedule click; every field re-read from the platform |
-| 5. Shorts | `references/podcast-shorts.md` | Clips table approved, then one prototype short, then the rest |
-| 6. Hand back | `references/podcast-episode.md` step 17 | Sales sends the live links |
+| 4. Publish | `references/podcast-episode.md` steps 14 and 16 (episode page) | Owner makes the Publish or Schedule click; every field re-read from the platform; the episode page merges after the release minute |
+| 5. Shorts | `references/podcast-shorts.md` | Clips table approved, then one prototype short (real references on screen; three directions when the look changes), then the rest |
+| 6. Hand back | `references/podcast-episode.md` step 18 | Sales sends the live links |
 
 Scripts ship alongside this skill: `scripts/podcast/` (run as `python3 scripts/podcast/<name>.py <project>`),
 `scripts/podcast/shorts/`, templates in `templates/podcast/`, fonts and logos in `brand/`. One project

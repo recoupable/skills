@@ -37,9 +37,28 @@ video, all motion graphics with the guest in a small circle, and hybrid. **Hybri
 
 ## 3. Beats: what to draw and the rules that cost us a re-render
 
-Pick the guest's most literal phrases and draw them literally: a metaphor ("toothpaste back in the tube"),
-a number (a 100-square grid that counts to the audience size, then lights up the share that applies), a
-contrast (a balance scale; a consent toggle), a process (pipes with notes flowing in and money flowing back).
+**Every beat shows a real reference, captured that day** (owner rule, 2026-10-17): the guest company's live
+product page, its logo, a real price or filing, the artwork of a song they name. Each carries a small source
+line ("songvest.com · Oct 2026"). Abstract stand-ins are rejected: a grid of tiles standing for "a catalog" was
+replaced by the real offering page showing the fans' price. Capture with `agent-browser set viewport 430 932 3`
+(or `1280 900 2`) and crop single cards so the text stays readable at stage size; embed as data URIs.
+
+Two beat types, adapted from huashu-art-motion's Vox and finance-chart grammars, in the show palette (pale
+`#F0F7FA` ground, ink `#152E37` text, lime `#D6FF62` highlights with a forest `#132B26` outline; lime on pale
+has no contrast without it):
+
+- **Evidence**: the real page as a taped print; a hand-drawn lime circle or highlighter sweep lands on the
+  spoken word; the guest's verbatim line as a forest tag. Contiguous evidence scenes keep the guest in the circle.
+- **Numbers**: axis and gridlines first, each bar grows from zero on the word that says it, one lime bar against
+  muted grey, a title that states the conclusion and can be derived from the bars ("Fans pay 2.5x what the catalog
+  cost" = 20 ÷ 8), a source line.
+
+- **First beat within ~5 s of the guest's first word**, not after a long talking-head stretch. Hide the name
+  tag when it starts: `tl.to("#who", { opacity: 0, duration: .25, overwrite: "auto" }, @first - .7)`.
+- **Measure, don't eyeball, annotation positions**: snapshot the frame, overlay a grid, and centre the circle
+  on its target (the owner caught a circle that missed the price by ~30 px).
+- **A new look gets three directions first**: three stills of the same moments, different compositions, owner
+  picks, then render.
 
 Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/beats.example.html`):
 `<!--ANCHORS {...}-->`, then `<!--CSS-->`, `<!--HTML-->`, `<!--JS-->`. JS defines
@@ -61,6 +80,8 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
   for visible content (seeking skips it); GSAP `onUpdate` counters are fine.
 - **Never use ids `c0..cN` in a scene**: they are the caption chunks. The builder refuses them (a scene
   counter once used `#c3`/`#c4` and froze a caption on screen).
+- **Never reuse the template's names** (`.cap .kt .lab .hl .mono .scene #who #stage #pip ...`): a scene class
+  `.cap` restyled every caption as uppercase mono.
 
 ## 4. Build, check, render (one prototype first)
 
@@ -70,7 +91,8 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
 3. `npx --yes hyperframes snapshot --at <every beat midpoint, the reveals, the morph back> --describe false --no-end`
    in `comp/shorts/s1`, and read the contact sheet: overlaps with the circle, clipped text, a caption stuck
    on screen, labels that contradict state.
-4. `STOP_AT=HHMM scripts/podcast/shorts/render.sh <project> s1:<slug>` -> `exports/shorts/<slug>.mp4`
+4. `STOP_AT=HHMM zsh scripts/podcast/shorts/render.sh <project> s1:<slug>` (zsh: under bash its `${0:A:h}`
+   breaks and every build fails) -> `exports/shorts/<slug>.mp4`
    (-14 LUFS). Open it in Finder for the owner.
 5. **Prototype one short, get the look approved, then build the rest.** Renders run ~3-5x realtime on the
    Intel laptop; one at a time (parallel load times out the headless-Chrome launch; render.sh retries).
