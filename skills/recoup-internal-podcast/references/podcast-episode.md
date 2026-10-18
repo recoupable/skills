@@ -23,7 +23,8 @@ cards, wire-style source cards, a SOURCES ticker. Three shots, cut by the graphi
 Card types: `evidence` (a real capture, taped, highlighter on the spoken line, verbatim tag, source line), `headline` (source + date + headline + standfirst + stamp), `tline` (dated rows), `stat` (big
 number, optional market-share-to-usage bar, quote), `versus` (two columns), `quote` (verbatim, lime
 highlight), `list` (numbered chips). Opening = a 6-14s cold open (the guest's strongest line, host muted,
-"Coming up" lower third) + the 7s **Wire intro** (`templates/podcast/wire-intro.html`).
+"Coming up" lower third) + the 7s **Wire intro** (`templates/podcast/wire-intro.html`). Every episode ends
+on the 12s **CTA outro** (`templates/podcast/wire-outro.html`: "Thanks for watching", recoupable.dev).
 
 ### Motion grammar: huashu-art-motion (owner rule, 2026-10-18)
 
@@ -125,8 +126,9 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    the `#ghost` word and ticker `SOURCES` overlaps are by design.
 9. **Render per chapter**: `STOP_AT=HHMM scripts/podcast/render.sh <project> ch04 ch01 ...` (approved chapter
    first). Open each in Finder as it lands; notes come back per chapter, the fix is one chapter re-render.
-10. **Opening**: `python3 scripts/podcast/make_intro.py <project> --show-assets <show assets dir>` then the
-   join command in its docstring -> `exports/opening.mp4`.
+10. **Opening + outro**: `python3 scripts/podcast/make_intro.py <project> --show-assets <show assets dir>`, render
+   `comp/intro` and `comp/outro`, then the join command in its docstring -> `exports/opening.mp4`.
+   `exports/outro.mp4` is required: assemble.py appends it and stops if it is missing.
 11. **Host mic** (when it sounds muffled): measure first (band energy above 4 kHz vs the guest). Adobe
    Podcast Enhance (free tier: 30 min/file, 1 h/day, needs the owner's free account sign-in) cleaned noise
    and lifted presence but did NOT restore missing highs; synthetic highs (ffmpeg `aexciter`) measured
