@@ -132,19 +132,28 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
      the same name exists). Upload the episode file **by drag-and-drop**: DevTools-automated upload of a
      ~700 MB file failed processing; the same file dragged in by hand worked. HTML description switch must
      be clicked through the DOM; timestamps in the description override auto-chapters. Two image slots:
-     16:9 video thumbnail and 1:1 episode art.
+     16:9 video thumbnail and 1:1 episode art. Hung episodes list: open it in a new tab. The description counter lags a
+     paste; it is not a failed fill. Replace a thumbnail by deleting the uploaded one first (that reveals Upload).
+     Nothing saves until the owner clicks **Schedule** on Review; the Review thumbnail preview is blank (10 s
+     signed URL), so check the stored image after saving.
    - **YouTube**: the Recoup connectors can't upload long-form (staging route 500s on large files; the
      Composio SDK base64s the file into one JS string, capping files near 400 MB). Owner uploads + schedules
      in Studio; then set title/description/tags/thumbnail/playlist through the connector
      (`YOUTUBE_UPDATE_VIDEO` with snake_case `video_id`; leave `privacy_status` out so `publishAt` survives),
-     and re-read `status.publishAt` to confirm. Details in the account workspace `POSTING-PLAYBOOK.md`.
+     and re-read `status.publishAt` to confirm. Keep these calls in `exports/final/youtube-finish.mjs`
+     (title read from `youtube-title.txt`, never touches visibility) so the next episode only changes the ID. Details in the account workspace `POSTING-PLAYBOOK.md`.
    - Same release minute on both. Verify every field from the platform's own data (download the stored
      thumbnail/art back), not from the form you filled.
 15. **Captions**: `python3 scripts/podcast/make_srt.py <project>` -> `exports/final/youtube-captions.srt`
-   (accurate names, speaker changes, sliver cues folded so YouTube accepts the file); upload in Studio:
+   (accurate names, speaker changes, sliver cues folded so YouTube accepts the file); then apply the episode's
+   known mishearings (the analysis list, e.g. Songvest -> SongVest, Hypnosis -> Hipgnosis, "gamer songs" -> GEMA); upload in Studio:
    video -> Details -> Subtitles (or Languages) -> ⋮ -> Upload file -> With timing.
-16. **Shorts**: `references/podcast-shorts.md` (clips table, hybrid format, one prototype, then the rest).
-17. **Hand back to sales**: live links to the guest the day it publishes (with the shorts folder), the wrap-up email the day the last short posts (closes the run, asks for guest recommendations), day-7 follow-up. Templates in the `recoup-internal-sales` skill's `references/podcast-guest-pipeline.md`.
+16. **Episode page** (marketing repo): entry in `content/podcast/episodes.json` (first = top card), 1280x720
+   cover in `public/podcast/<slug>-wide.jpg`, transcript `content/podcast/transcripts/<slug>.json` built from the
+   corrected captions (speaker turns alternate at `>>`; untangle overlapping speech by hand). Merge after the
+   release minute: the embed reads "private" until then.
+17. **Shorts**: `references/podcast-shorts.md` (clips table, hybrid format, one prototype, then the rest).
+18. **Hand back to sales**: live links to the guest the day it publishes (with the shorts folder), the wrap-up email the day the last short posts (closes the run, asks for guest recommendations), day-7 follow-up. Templates in the `recoup-internal-sales` skill's `references/podcast-guest-pipeline.md`.
 
 ## Gotchas that cost real time on the first run
 
