@@ -1,0 +1,61 @@
+{
+ "guest": "Alex Rivera",
+ "role": "Founder, Example Music",
+ "company": "Example Music",
+ "role_url": "https://example.com/",
+ "slug": "alex-rivera",
+ "campaign": "2030-03",
+ "episode_title": "An example episode title",
+ "youtube": "https://youtu.be/EXAMPLE",
+ "spotify": "https://open.spotify.com/episode/EXAMPLE",
+ "folder": "https://drive.google.com/drive/folders/EXAMPLE",
+ "tags": "tagging you and Example Music on LinkedIn, Instagram and X",
+ "badge": {
+  "clip": 1,
+  "text": "Live today"
+ },
+ "clips": [
+  {
+   "date": "2030-03-04",
+   "hook": "Most catalogs are priced on last year's streams",
+   "url": "https://drive.google.com/file/d/EXAMPLE-1/view",
+   "still": "stills/placeholder.jpg"
+  },
+  {
+   "date": "2030-03-05",
+   "hook": "Your merch never paid a royalty",
+   "url": "https://drive.google.com/file/d/EXAMPLE-2/view",
+   "still": "stills/placeholder.jpg"
+  },
+  {
+   "date": "2030-03-06",
+   "hook": "Same songs, two owners, two prices",
+   "url": "https://drive.google.com/file/d/EXAMPLE-3/view",
+   "still": "stills/placeholder.jpg"
+  },
+  {
+   "date": "2030-03-07",
+   "hook": "A bigger fund is not a better valuation",
+   "url": "https://drive.google.com/file/d/EXAMPLE-4/view",
+   "still": "stills/placeholder.jpg"
+  },
+  {
+   "date": "2030-03-08",
+   "hook": "AI licenses pay by market share. Not for long.",
+   "url": "https://drive.google.com/file/d/EXAMPLE-5/view",
+   "still": "stills/placeholder.jpg"
+  },
+  {
+   "date": "2030-03-09",
+   "hook": "Why fan shares can't trade yet",
+   "url": "https://drive.google.com/file/d/EXAMPLE-6/view",
+   "still": "stills/placeholder.jpg"
+  },
+  {
+   "date": "2030-03-10",
+   "hook": "He sold part of his own hit. Then it charted.",
+   "url": "https://drive.google.com/file/d/EXAMPLE-7/view",
+   "still": "stills/placeholder.jpg"
+  }
+ ]
+}

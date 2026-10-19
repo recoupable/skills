@@ -203,10 +203,18 @@ Is there any clip you'd rather we not post?
 line (name, role, company link), then a grid of clip cards (cover still, day and date, hook, "Watch clip"
 linking that clip's file in the Drive folder; today's card marked "Live today", or the guest's own pick
 marked as theirs), a full-episode card (YouTube, Spotify, the Drive folder) with the tag line, and a forest
-"Share any of them" note. Same brand kit as the guest's other PDFs (`references/pdf-house-style.md`).
-Card stills are the shorts' own covers; hooks are the approved clips table, word for word. Read the
-rendered page before attaching: one page, no dashes. Store the HTML, stills and PDF in the private episode
-folder (`episodes/<date>-<slug>/release/clips-sheet/`).
+"Share any of them" note. Same brand kit as the guest's other PDFs. Card stills are the shorts' own covers
+(scaled to 360x640); hooks are the approved clips table, word for word; each link is that clip's file in the
+Drive folder. Generated from a `clips.json`:
+
+```
+python3 scripts/podcast_clips_sheet.py clips.json --brand <recoup-sky brand kit> \
+  --out clips.html --pdf recoup-podcast-clips-<guest-slug>.pdf
+```
+
+  Keys and a runnable example: `templates/podcast-clips-sheet/clips.example.json`. The script fails on a
+  missing still or link, more than one page, or an em or en dash. Read the rendered page before attaching.
+  Store the JSON, stills, HTML and PDF in the private episode folder (`episodes/<date>-<slug>/release/clips-sheet/`).
 
 Rules:
 
