@@ -3,68 +3,20 @@
 Two checklists and the platform traps behind them. Every item here exists because it went wrong on a
 real run.
 
-## Gate zero: does the runner actually read your copy? (2026-08-12)
+## Gate zero: let the API check the shape (2026-10-19)
 
-**Every other item on the checklist below validates the copy you can see in the config. None of them
-validates that the runner will ever read it.** That gap shipped a post with an empty body.
-
-`post.mjs` dereferences a specific shape. Get it wrong and the field is `undefined`, the connector
-posts whatever it was handed, and **nothing warns you**:
-
-| Platform | What `post.mjs` reads | Wrong shape gives you |
-|---|---|---|
-| X | `cfg.copy.x.text`, `cfg.copy.x.reply` | a flat string on `x` posts the **video with no text** |
-| Instagram | `cfg.copy.ig` (a bare string) | an object throws `caption must be a valid string` |
-| YouTube | `cfg.copy.yt.title`, `cfg.copy.yt.description` | an untitled upload |
-| LinkedIn | `cfg.copy.li.body`, `cfg.copy.li.firstComment` | an empty share |
-| all | `cfg.accounts[platform]` | **silently defaults to sweetman** |
-
-X and Instagram want *opposite* shapes, and both directions have shipped.
-
-### Run this, and do not publish if it exits non-zero
-
-```bash
-node --input-type=module -e "
-import cfg from './content/<slug>/post.config.mjs';
-import { ACCOUNTS } from './lib/post/connectors.mjs';
-import fs from 'fs';
-let fail = 0;
-const chk = (l, ok, d='') => { console.log((ok?'  PASS  ':'  FAIL  ')+l+(d?'  '+d:'')); if(!ok) fail++; };
-const c = cfg;
-for (const p of Object.keys(c.copy)) {
-  if (p === 'x')  { const t = c.copy.x.text;
-                    // X weights every URL at 23 chars regardless of literal length
-                    const w = typeof t==='string' ? [...t.replace(/https?:\/\/\S+/g,'x'.repeat(23))].length : 999;
-                    chk('copy.x.text', typeof t==='string' && t.length>0, '('+w+' weighted)');
-                    chk('copy.x.text <= 280 weighted', w<=280); }
-  if (p === 'ig') chk('copy.ig is a bare string', typeof c.copy.ig==='string' && c.copy.ig.length>0);
-  if (p === 'yt') chk('copy.yt.title/.description', !!c.copy.yt?.title && !!c.copy.yt?.description);
-  if (p === 'li') chk('copy.li.body/.firstComment', !!c.copy.li?.body && !!c.copy.li?.firstComment);
-}
-for (const [p, name] of Object.entries(c.accounts || {}))
-  chk('accounts.'+p+' resolves', !!ACCOUNTS[name], '-> @'+(ACCOUNTS[name]?.xHandle || name));
-chk('accounts set for every platform being posted', Object.keys(c.accounts||{}).length > 0);
-for (const f of [c.video, c.cover, c.liImage].filter(Boolean))
-  chk('asset exists: '+f, fs.existsSync('content/<slug>/'+f));
-const all = JSON.stringify(c.copy);
-chk('no em/en dash', !/[—–]/.test(all));
-chk('no placeholders', !/<[A-Z ]+>|TBD/.test(all));
-console.log(fail ? '\n  '+fail+' FAILURE(S) - DO NOT PUBLISH' : '\n  pre-flight clean');
-process.exit(fail ? 1 : 0);
-"
-```
-
-It must be executable rather than a checklist item because a missing `accounts` key and a wrong copy shape
-are invisible to reading; `process.exit(1)` is not. Weighted length: URLs count as 23 characters regardless
-of real length, emoji and CJK count as 2.
+Video posts go through `POST /api/posts` (`recoup-internal-social-ship-posts` step 4). It rejects an unknown
+field, a missing per-platform field (YouTube `title`, a `description` everywhere else) and an over-limit body
+(X weighted length included) with a 400 before anything posts, and reads the published text back
+(`text_verified`). The old connector runner posted empty bodies silently (08-07, 08-12, 09-02); that class of
+bug is why it was retired. A post is done only at `status: "posted"` with `text_verified: true`.
 
 ## Pre-publish gate
 
 Run this against the final `post.config.mjs` **before** the publish command. It is fast and it has
 already caught a live defect.
 
-_Dashes, placeholders and the X character count are asserted by the gate-zero script above. What
-follows is the judgement the script cannot make._
+_The X character count is asserted by the API. What follows is the judgement it cannot make._
 
 - [ ] **Dashes: rewrite the sentence, do not swap the character.** A comma dropped where the dash was
       leaves the same over-hedged rhythm that gave it away. Split in two, or use a colon when the
@@ -97,7 +49,7 @@ follows is the judgement the script cannot make._
 
 ## Account routing
 
-Recoup official has no YouTube or LinkedIn connector and @recoupai replies 403 (unfixed since 2026-07-24,
+Recoup official has no YouTube connector (its LinkedIn connection posts to the company page) and @recoupai replies 403 (unfixed since 2026-07-24,
 so put the reply's content inline and set `reply: null`); verify the target account with
 `GET /api/connectors` before every publish (ACCOUNT.md owns the table):
 
@@ -136,7 +88,7 @@ the IG media endpoint's `permalink` + `caption`.
 | **X** | the **body text published** AND the **video attached** | public syndication endpoint, no auth: `GET https://cdn.syndication.twimg.com/tweet-result?id=<ID>&lang=en&token=a`. Check `text` is your copy, **not just** that `mediaDetails[].type` is `video`. On 2026-08-12 the media check passed on a tweet whose `text` was nothing but the `t.co` media link, and the run reported success. **A `text` field containing only a `t.co` URL means the body is empty.** |
 | **YouTube** | `privacyStatus: public`, `uploadStatus: processed`, **and the description survived** | read them off the `YOUTUBE_UPDATE_VIDEO` response envelope (`result.data.status` / `result.data.snippet`) |
 | **Instagram** | the reel URL resolves | `curl -o /dev/null -w "%{http_code}"` → 200 |
-| **LinkedIn** | the post URN **and** that the first comment landed | the runner returns `commentId`; a share URN with no `commentId` means the comment failed |
+| **LinkedIn** | the post URL **and** that the first comment landed | `post_url` + `text_verified` from `GET /api/posts/{id}`; open the post to check the owner's first comment |
 
 ### YouTube traps
 

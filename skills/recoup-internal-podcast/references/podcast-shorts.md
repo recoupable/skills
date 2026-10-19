@@ -112,6 +112,11 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
 - **Clips folder for the guest's team**: the final files in a view-only Drive folder linked from the
   live-links email (sharing is set to "anyone with the link" on send day). Check the uploads by file size.
 - **Same posting time daily** (B2B weekday late morning) so timing isn't a variable when results are read.
+- **Post with `POST /api/posts`**, all four platforms (instagram, x, youtube, linkedin), once the owner
+  approves the copy; mechanics in `recoup-internal-social-ship-posts` step 4. LinkedIn goes to the Recoup
+  company page (`sub_account_id` = its organization URN), with the short's cover as `cover_url`. The owner
+  adds the X link reply, the LinkedIn first comment and @-tags, the Instagram Collab invite, and the YouTube
+  Short's related video (the full episode; Studio only, see section 6). List all four in the hand-off.
 
 ## 6. What the Recoup YouTube connector can't do (Studio steps)
 

@@ -103,20 +103,16 @@ Comment-gate on LinkedIn; use a direct link (often in the first reply) on X.
 
 ## Step 4 — Publish
 
-Pick the path by platform and media type. **Confirm the exact parameter schema first** with `GET /api/connectors/actions` (it returns each action's JSON Schema) before composing a call.
+**Video posts on any platform go through `POST /api/posts`** (docs: `https://docs.recoupable.dev`, posts). One call per platform: `{account_id, platform: "instagram"|"x"|"youtube"|"linkedin", video_url, description, cover_url?, title?, tags?, sub_account_id?}` where `video_url`/`cover_url` are public URLs (stage local files to blob first). It returns `202 {id, status: "publishing"}`; poll `GET /api/posts/{id}?account_id=...` until `status` is `posted` and `text_verified` is `true`, and use the returned `post_url`. The schema is strict and per-platform: YouTube needs `title` and rejects `cover_url`; X and Instagram reject `title`/`tags`; a LinkedIn company-page post sets `sub_account_id` to the organization URN. A `409 ... not connected` means the wrong `account_id`, not a missing connection: pass the account that holds the connector. It does not post the X link reply or the LinkedIn first comment; do those with the connector actions below or by hand.
+
+Text, image and comment posts use the connector actions. **Confirm the exact parameter schema first** with `GET /api/connectors/actions` (it returns each action's JSON Schema) before composing a call.
 
 **LinkedIn**
 - Text or text + link card → `LINKEDIN_CREATE_LINKED_IN_POST` (`author`, `commentary`; add `contentLandingPage` for a link) or `LINKEDIN_CREATE_ARTICLE_OR_URL_SHARE`.
 - Text + image → stage the image (`LINKEDIN_INITIALIZE_IMAGE_UPLOAD` / `LINKEDIN_REGISTER_IMAGE_UPLOAD`, or `POST /api/connectors/files` with a public image URL), then pass the image URN in `LINKEDIN_CREATE_LINKED_IN_POST`'s `images` array.
 - Comment on a post → `LINKEDIN_CREATE_COMMENT_ON_POST`.
-- **Native video: not supported.** The LinkedIn connector exposes image upload only (no video upload/register action). Post videos **manually**. Get the author URN from `LINKEDIN_GET_MY_INFO`.
 
 **X (Twitter):** post with `TWITTER_CREATION_OF_A_POST` (`text`, optional `media_media_ids`; reply via `reply_in_reply_to_tweet_id`). Images upload via `TWITTER_UPLOAD_MEDIA`.
-
-Native video works, but the bytes can't go inline: `media` won't fetch a URL, and base64 hits the API's ~4.5MB body limit (`413`). Stage it server-side, then attach:
-1. `POST /api/connectors/files` with `{url, toolSlug:"TWITTER_UPLOAD_LARGE_MEDIA"}` — the server fetches the mp4 (host it anywhere public; read once) and returns `{s3key, name, mimetype}`.
-2. `TWITTER_UPLOAD_LARGE_MEDIA` with `parameters.media = {s3key, name, mimetype}` (the descriptor object, not a string) and `media_category:"tweet_video"`; wait for `processing_info.state: "succeeded"`.
-3. `TWITTER_CREATION_OF_A_POST` with the returned `media_media_ids:[id]`; put the link in a reply so the main post keeps its reach.
 
 ## Step 5 — Log and re-measure
 
