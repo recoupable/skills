@@ -172,6 +172,55 @@ The recording is the discovery call; close it out before anyone opens the raw fi
    with the numbers they gave. Not an offer until drafted and approved.
 5. **Hand over to post-production** at the raw files (`recoup-internal-podcast` → `references/podcast-episode.md`).
 
+### The live-links email (release day)
+
+Sent the day the full episode is live, after the first short posts, so the guest has every link before
+anyone else shares it. It delivers what was promised on tape: the links, the clips folder and the tag list.
+
+```
+Subject: Re: <invite subject>        (threaded on the guest's latest message, often their consent reply)
+To: the guest + anyone they looped in; CC the cofounder; BCC the operator
+
+Hi {{first_name}},
+
+The episode is live: {{episode title}}.
+
+YouTube: {{youtu.be link}}
+Spotify: {{episode link}}
+Episode page: {{site episode URL}}?utm_source=email&utm_medium=reply&utm_campaign=<YYYY-MM>&utm_content=<guest-slug>
+
+We cut {{n}} short clips and are posting one a day through {{last day}}, starting today with
+"{{clip 1 hook}}". The attached one-pager lists every clip, the day it goes out, and a link to watch it.
+All {{n}} are in this folder as vertical, captioned videos if you or your team want to post any of them:
+{{Drive folder link}}
+
+Each post tags {{you and the company, per platform, only the tags actually used}}.
+
+Is there any clip you'd rather we not post?
+```
+
+**The attachment: a one-page clips sheet.** Lockup header, "One clip a day, <first> to <last>", the guest
+line (name, role, company link), then a grid of clip cards (cover still, day and date, hook, "Watch clip"
+linking that clip's file in the Drive folder; today's card marked "Live today", or the guest's own pick
+marked as theirs), a full-episode card (YouTube, Spotify, the Drive folder) with the tag line, and a forest
+"Share any of them" note. Same brand kit as the guest's other PDFs (`references/pdf-house-style.md`).
+Card stills are the shorts' own covers; hooks are the approved clips table, word for word. Read the
+rendered page before attaching: one page, no dashes. Store the HTML, stills and PDF in the private episode
+folder (`episodes/<date>-<slug>/release/clips-sheet/`).
+
+Rules:
+
+1. **Share the folder on send day, then check it signed out.** Set the Drive folder to "anyone with the
+   link: viewer" just before sending; the folder and one clip URL must load without a login. Until then
+   every link in the email and the PDF is a dead end for the guest.
+2. **Only what is true today.** Tag only the platforms and handles the posts actually carry; a platform
+   promised on tape but not posted to is left out, not listed.
+3. **Same send path as every guest email:** threaded reply (`In-Reply-To` = the guest's latest Message-ID,
+   `References` = the whole chain), review copy to the operator first, exact draft approved, then send;
+   approval quote, Resend id and the review copy id in the sent record.
+4. **Close out:** guest email log row, episode README "Released" status, CRM note and the release-day
+   runbook task completed. The wrap-up and day-7 tasks stay open.
+
 ### The wrap-up email
 
 Sent the day the last short goes out, so the guest hears "it's done" from us instead of
