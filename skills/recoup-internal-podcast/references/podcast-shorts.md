@@ -115,7 +115,8 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
 - **Post with `POST /api/posts`**, all four platforms (instagram, x, youtube, linkedin), once the owner
   approves the copy; mechanics in `recoup-internal-social-ship-posts` step 4. LinkedIn goes to the Recoup
   company page (`sub_account_id` = its organization URN), with the short's cover as `cover_url`. The owner
-  adds the X link reply, the LinkedIn first comment and @-tags, and the Instagram Collab invite.
+  adds the X link reply, the LinkedIn first comment and @-tags, the Instagram Collab invite, and the YouTube
+  Short's related video (the full episode; Studio only, see section 6). List all four in the hand-off.
 
 ## 6. What the Recoup YouTube connector can't do (Studio steps)
 
