@@ -113,6 +113,10 @@ Part 2 — Stepping back (a few sentences, still in character):
 - Do you care about this? If not, why not?
 - Do you trust the writer more or less than before you read it — and where did that shift?
 - Would you forward or share it? To whom, and why — or what would turn your "no" into a "yes"?
+- Would the client recognize themselves or feel exposed by the combination of details? Quote what causes that concern.
+- Does this sound like someone talking to you, or corporate narration? Quote where the voice loses you.
+- Can you explain what the agent does, what a person still decides/checks, and why that matters? Flag where the agent connection disappears or feels tacked on; do not demand a human-approval step where none is useful.
+- Does the wording distinguish work already implemented from advice or an illustrative example?
 - How did you feel at the end?
 - The 1-2 changes that would most make you care.
 ```

@@ -43,7 +43,9 @@ Short paragraphs. 1–2 sentences default. 3–4 sometimes. Vary rhythm. Fragmen
 
 Use contractions: don't, can't, won't, it's, you're. Prefer active voice.
 
-Be specific. Use numbers, names, dates, prices, constraints, tradeoffs, real examples.
+Be specific about the work: inputs, actions, outputs, constraints and decisions. Use numbers, names,
+dates and prices only when they are necessary, supported and appropriate to disclose. Removing a
+name is not enough if the remaining details let a client recognize themselves.
 
 Plain uncertainty when uncertain: I think, probably, maybe. Take a stance when evidence supports one.
 
@@ -73,8 +75,12 @@ Before writing any published content, read references/voice-principles.md (`refe
 
 ## Specificity
 
-Weak: "The company faced challenges." → "The company missed payroll twice in 6 months."
-Weak: "The tool improves workflow." → "The tool removes 4 approval emails from the invoice process."
+Weak: "The tool improves workflow." → "The agent brings the invoice and purchase order together for review."
+Weak: "A finance lead prepares deliverables." → "You're putting together the monthly report."
+
+For Recoup business content, carry the specific agent task through the argument. Explain the human
+review or decision where it matters and why. Follow `references/public-content-quality.md` for the
+recognition test, conversational openings, evidence states and per-format review record.
 
 Use verified examples where permitted. Label invented scenarios and figures as illustrative at first use; never present them as a real customer story.
 

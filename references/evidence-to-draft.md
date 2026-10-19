@@ -10,7 +10,9 @@ not runtime dependencies. Follow the user's requested level of collaboration.
 ## 1. Collect the material before choosing a structure
 
 Read the existing draft and its authorized evidence. Note the specific scene, question, observation,
-quotation, example and useful disagreement. Keep attribution, dates and qualifications attached.
+quotation, example and useful disagreement. Keep attribution, dates and qualifications attached in the private evidence record. Apply the
+client-recognition test before selecting details for public copy; an accurate private fact is not
+automatically publishable.
 Do not invent a personal experience, customer result, number or emotional reaction to improve a hook.
 
 Separate observed results, proposals, current product behavior and illustrative examples. Check changing
@@ -28,6 +30,11 @@ the answer this piece can support and the next useful action.
 Arrange prerequisites before the points that depend on them. If a report promises to show change,
 identify both periods and the records to compare. If a workflow needs existing access, say so before
 describing what the request accomplished.
+
+For Recoup business content, identify the agent task that makes the subject useful: input, action,
+output, and the human decision or review when relevant. State the evidence status privately before
+writing: implemented, established method, proposed or illustrative. Build that connection through
+the argument instead of adding an AI sentence at the end.
 
 Use the title and opening to make a promise the body can fulfill. Prefer one worked example that
 develops through the explanation to several disconnected examples.
@@ -85,7 +92,9 @@ at article width. Image paths alone do not establish that the right artwork is e
 ## 6. Save a checkable revision record
 
 Keep evidence and review notes private. For each file, record its path, final content hash, disposition,
-review method, accepted changes and unresolved evidence or delivery needs. Preserve historical review
+review method, accepted changes and unresolved evidence or delivery needs. Record the client
+recognition finding, conversational-voice finding, agent task and human decision/review rationale
+for each file; use an explicit reason where a review point does not apply. Preserve historical review
 records as historical; do not carry their pass labels onto revised bytes.
 
 Keep source content in its canonical bundle. Calendars, previews and channel variants should point to

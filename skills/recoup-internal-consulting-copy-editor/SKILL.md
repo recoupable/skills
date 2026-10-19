@@ -83,6 +83,8 @@ Review the draft across these axes:
 - Confusing rhetoric: claims that don't land, buried logic, a section that doesn't deliver what its header promises.
 - Simpler said: the same point in fewer or plainer words, with no loss of meaning.
 - Narrative & storyline: the hook, the throughline, section order, transitions, momentum, and an ending that lands. Flag where the piece sags, repeats itself, or loses the reader.
+- Client recognition: unnecessary counts, dates, roles, quotes or unusual circumstances that identify a client in combination, even without a name. Preserve useful operational detail and private provenance; do not invent substitute facts.
+- Agent throughline: the opening, worked example and result explain a concrete agent task. Flag decorative AI mentions, unsupported implementation claims, vague human-review language and approval steps added without a reason. Explain who checks what at which point when relevant; do not make every piece use the same workflow.
 - Anything else a great editor would flag: title, evidence/specificity, balance, repetition, length.
 
 Hard rules:
