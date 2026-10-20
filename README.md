@@ -352,3 +352,5 @@ Merges to `main` regenerate the branch after validation. Configure Claude to
 track that branch so it discovers new releases automatically. Anthropic scanning,
 review, and publication remain separate from building or pushing the package.
 Do not edit the generated branch directly. Its README records source provenance.
+
+Unified artifact shapes, parity checks and the buyer manifest contract: [plugin distribution](references/plugin-distribution.md).

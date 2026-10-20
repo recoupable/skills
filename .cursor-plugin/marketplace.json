@@ -5,8 +5,8 @@
   },
   "owner": {
     "name": "Recoup",
-    "email": "support@recoupable.com",
-    "url": "https://recoupable.com"
+    "email": "agent@recoupable.dev",
+    "url": "https://recoupable.dev"
   },
   "plugins": [
     {
@@ -16,10 +16,10 @@
       "version": "2.4.1",
       "author": {
         "name": "Recoup",
-        "email": "support@recoupable.com",
-        "url": "https://recoupable.com"
+        "email": "agent@recoupable.dev",
+        "url": "https://recoupable.dev"
       },
-      "homepage": "https://recoupable.com",
+      "homepage": "https://recoupable.dev",
       "repository": "https://github.com/recoupable/skills",
       "license": "AGPL-3.0-only",
       "keywords": [

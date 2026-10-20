@@ -31,6 +31,7 @@ jobs:
           python3 scripts/run_resolver_eval.py
           python3 -m unittest discover -s tests -p test_plugin_packages.py
           python3 -m unittest discover -s tests -p test_claude_package.py
+          python3 -m unittest discover -s tests -p test_release_parity.py
           node --test tests/consulting-brand.test.mjs tests/consulting-runtime.test.mjs
           python3 -m unittest discover -s tests -p test_consulting_templates.py
       - name: Assign stable release version
@@ -44,20 +45,20 @@ jobs:
           year,month,day = map(int,date.split('-'))
           print(f'version={year}.{month*100+day}.{os.environ["RELEASE_SEQUENCE"]}')
           PY
-      - name: Build both packages
+      - name: Build all customer adapters and staff package
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
           CHATGPT_APP_ID: ${{ vars.RECOUP_CHATGPT_APP_ID }}
           CHATGPT_WORKSPACE_PACKAGE_NAME: ${{ vars.RECOUP_CHATGPT_WORKSPACE_PACKAGE_NAME }}
-        run: python3 scripts/build_plugin_packages.py --version "$RELEASE_VERSION" --out dist
+        run: |
+          : "${CHATGPT_APP_ID:?Configure RECOUP_CHATGPT_APP_ID to retain the registered workspace adapter}"
+          python3 scripts/build_plugin_packages.py --version "$RELEASE_VERSION" --out dist
+      - name: Verify all release artifacts before publication
+        run: python3 scripts/validate_release_parity.py --out dist
       - uses: actions/upload-artifact@v4
         with:
           name: recoup-plugin-packages
           path: dist/
-      - name: Build Claude directory source
-        env:
-          RELEASE_VERSION: ${{ steps.version.outputs.version }}
-        run: python3 scripts/build_claude_package.py --version "$RELEASE_VERSION" --out "$RUNNER_TEMP/recoup-claude"
       - name: Publish customer-only Claude branch
         env:
           GH_TOKEN: ${{ github.token }}
@@ -70,7 +71,7 @@ jobs:
             exit 0
           fi
           gh auth setup-git
-          cd "$RUNNER_TEMP/recoup-claude"
+          cd "$GITHUB_WORKSPACE/dist/claude"
           git init -b claude-directory
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -100,7 +101,7 @@ jobs:
           fi
           LATEST=false
           if [ "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GITHUB_SHA" ]; then LATEST=true; fi
-          gh release upload "$TAG" dist/* --clobber
+          gh release upload "$TAG" dist/*.zip dist/release-manifest.json dist/OPENAI-SUBMISSION.md --clobber
           gh release edit "$TAG" --draft=false --latest="$LATEST"
           cat dist/OPENAI-SUBMISSION.md >> "$GITHUB_STEP_SUMMARY"
 

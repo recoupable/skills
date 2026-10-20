@@ -57,8 +57,12 @@ class PackagesTest(unittest.TestCase):
                         packaged.write_bytes(original)
 
     def fixture(self, root):
-        files={'.codex-plugin/plugin.json':json.dumps({'version':'1.0.0','skills':'./skills/'}),
-               '.mcp.json':'{"mcpServers":{}}',
+        files={'.codex-plugin/plugin.json':json.dumps({'version':'1.0.0','skills':'./skills/','mcpServers':'./.mcp.json'}),
+               '.mcp.json':'{"mcpServers":{"recoup":{"type":"http","url":"https://api.recoupable.dev/mcp"}}}',
+               'mcp.json':'{"mcpServers":{"recoup":{"url":"https://api.recoupable.dev/mcp"}}}',
+               '.claude-plugin/plugin.json':json.dumps({'name':'recoup-plugin','version':'1.0.0','mcpServers':'./.mcp.json'}),
+               '.cursor-plugin/plugin.json':json.dumps({'name':'recoup-plugin','version':'1.0.0','mcpServers':'./mcp.json','skills':'./skills/'}),
+               'LICENSE':'license',
                'assets/recoup-customer-icon.png':'customer-icon-fixture',
                'skills/recoup-public/SKILL.md':'Public instructions',
                'skills/recoup-internal-staff/SKILL.md':'Staff instructions',
