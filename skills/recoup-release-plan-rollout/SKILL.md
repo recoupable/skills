@@ -13,6 +13,15 @@ writes to `releases/{artist-slug}/{release-slug}/`. The workspace schema is in
 (`build_campaign_timeline.py`, `validate_release.py`). Requires `RECOUP_API_KEY` for
 the brief/targeting stages.
 
+**Planning and media production are distinct.** For "create a release pack" or
+"content pack", use recoup-content-asset-pack. Do not present a schedule or brief
+as completed media. If the customer asks for a plan **and** a pack, carry the
+confirmed facts, creative direction and occasion into production without asking
+for the same context again. A catalog anniversary/reissue campaign date is not
+the recording's original release date; avoid new-release DSP deadlines when they
+do not apply. Connect through available MCP tools; do not treat a missing local
+API-key variable as proof that an authenticated host is disconnected.
+
 ## Mode: plan (the full workflow — don't stop between phases)
 
 Run every phase in order; **do not stop to ask what's next**. Stop only when the

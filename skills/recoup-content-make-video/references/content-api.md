@@ -23,6 +23,18 @@ fi
 
 ## Endpoints
 
+For a release/content pack, prefer connected `prepare_release_pack`,
+`estimate_release_pack`, `generate_release_pack`, `get_release_pack`,
+`retry_release_pack` and `upload_release_pack_asset` **when actually exposed**.
+They retain the brief, quote, approved ceiling and per-asset progress without an
+existing artist or repository. Use actual schemas and IDs. If those operations
+are absent, retain the brief and name the missing execution capability; never
+extract MCP OAuth credentials to simulate REST access. A working MCP connection
+does not imply that every REST primitive below is available to that host.
+
+The pack quote covers its selected scope. The legacy **GET** `/content/estimate`
+below is an advisory per-video estimate, not a complete mixed-media pack price.
+
 | Capability | Call | Notes |
 | --- | --- | --- |
 | Generate image | `POST $BASE/content/image` | **sync** (~15–20s) → `{imageUrl, images[]}`. `{prompt, image_urls?, num_images?}` |

@@ -5,6 +5,13 @@ exists, the artist's own files are the source of truth for who they are and how 
 sound. Read them before calling any API. The API is the *fallback* for when no workspace
 exists (mirrors the `recoup-platform-api-access` rule: "the filesystem is authoritative for this sandbox").
 
+An existing workspace is an input source, not a prerequisite. In a host without
+local files, use the supplied conversation/assets and authorized connected context.
+For a release pack, collect a compact campaign brief inline and preserve that job;
+do not create an artist, repository or full profile just to find context. Explicit
+current customer choices govern this campaign without silently overwriting the
+artist's maintained brand files.
+
 ## Context is OPTIONAL — three modes
 
 Content skills run in whichever mode fits the request. Context **enriches**; it is never a

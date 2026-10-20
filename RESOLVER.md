@@ -49,7 +49,7 @@
 | cover art / thumbnail / carousel / promo / quote card | `recoup-content-make-graphics` |
 | narrative music video from an approved song, or create the song first (Small Room workflow) | `recoup-music-video` |
 | short video / lyric video / visualizer / reformat for platforms | `recoup-content-make-video` |
-| a whole content pack (15–30 assets) for one song | `recoup-content-asset-pack` |
+| create a release pack / content pack for a song, anniversary, reissue, remix or catalog rediscovery | `recoup-content-asset-pack` |
 | react to a milestone/trend, make something timely | `recoup-content-reactive-post` |
 
 ### release — release workflow
