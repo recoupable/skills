@@ -109,7 +109,9 @@ sleep() { echo 'Unexpected retry' >&2; return 91; }
     def test_missing_or_malformed_links_remain_blocked(self):
         for runner in (self.run_research, self.run_estimator):
             for error, field in (("insufficient_credits", "billingUrl"), (PAYMENT_ERROR, "checkoutUrl")):
-                for value in (None, "", [], {}, 7, "not-a-url", "javascript:fixture", "https://"):
+                for value in (None, "", [], {}, 7, "not-a-url", "javascript:fixture", "https://",
+                              "https://@/setup", "https://:443/setup",
+                              "https://billing.fixture.invalid:bad/setup"):
                     with self.subTest(example=runner.__name__, field=field, value=value):
                         message = self.denied(runner, {"error": error, field: value})
                         self.assertIn("Check account billing", message)

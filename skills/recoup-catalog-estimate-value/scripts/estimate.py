@@ -20,9 +20,10 @@ Every track in the output carries `data_source`, `captured_at`, and
 Auth: env RECOUP_API_KEY (x-api-key) or RECOUP_ACCESS_TOKEN (Bearer).
 See references/methodology.md for the assumption set; defaults below.
 """
-import argparse, json, os, re, subprocess, sys, time, datetime as dt
+import argparse, json, os, subprocess, sys, time, datetime as dt
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import urlsplit
 
 BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.dev/api")
 
@@ -63,7 +64,13 @@ def api(path, params=None, body=None, timeout=20):
         if isinstance(j, dict):
             field = "billingUrl" if j.get("error") == "insufficient_credits" else "checkoutUrl"
             link = j.get(field)
-        if not isinstance(link, str) or not re.fullmatch(r"https://[^\s/?#]+([/?#][^\s]*)?", link, re.I):
+        try:
+            parsed = urlsplit(link) if isinstance(link, str) else None
+            if parsed:
+                parsed.port
+            if not (parsed and parsed.scheme == "https" and parsed.hostname and not any(c.isspace() for c in link)):
+                link = None
+        except (ValueError, TypeError):
             link = None
         sys.exit(f"ERROR: research access requires billing (402). Review: {link or 'Check account billing'}")
     if not status.isdigit() or not 200 <= int(status) < 300:

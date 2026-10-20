@@ -40,6 +40,8 @@ signal. Check HTTP success before reading JSON. On `402`, stop research reads:
 `insufficient_credits` uses `billingUrl`; the payment-method gate uses `checkoutUrl`.
 If the expected link is missing or malformed, ask the user to check account billing.
 Do not substitute the other link, follow it, create a session or initiate a purchase.
+Recovery-link validation uses Python 3's standard-library URL parser; if Python is
+unavailable, the helper uses the same account-billing fallback.
 For transient network errors or `5xx`, use bounded retries;
 on `429`, defer research and respect `Retry-After` before a later attempt.
 never loop indefinitely or turn an unavailable count into zero.
@@ -59,12 +61,20 @@ research_get() {
         200) rm -f "$headers"; printf '%s' "$body"; return 0 ;;
         402)
           rm -f "$headers"
-          recovery=$(printf '%s' "$body" | jq -r '
-            if type == "object" then
-              if .error == "insufficient_credits" then .billingUrl else .checkoutUrl end
-            else null end
-            | if type == "string" and test("^https://[^[:space:]/?#]+([/?#][^[:space:]]*)?$"; "i")
-              then . else "Check account billing" end
+          recovery=$(printf '%s' "$body" | python3 -c '
+import json, sys
+from urllib.parse import urlsplit
+try:
+    data = json.load(sys.stdin)
+    field = "billingUrl" if isinstance(data, dict) and data.get("error") == "insufficient_credits" else "checkoutUrl"
+    link = data.get(field) if isinstance(data, dict) else None
+    parsed = urlsplit(link) if isinstance(link, str) else None
+    if parsed:
+        parsed.port
+    usable = parsed and parsed.scheme == "https" and parsed.hostname and not any(c.isspace() for c in link)
+    print(link if usable else "Check account billing")
+except (ValueError, TypeError):
+    print("Check account billing")
           ' 2>/dev/null) || recovery=''
           printf 'Research access requires billing (402). Review: %s\n' \
             "${recovery:-Check account billing}" >&2
