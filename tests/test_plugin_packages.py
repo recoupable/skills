@@ -150,4 +150,26 @@ class PackagesTest(unittest.TestCase):
                 (root/name).write_text('Bundled fixture')
                 packages.package_files(root,files+[name],'customer')
 
+    def test_plain_recoup_url_ignores_sentence_punctuation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            (root/'skills/recoup-public/SKILL.md').write_text(
+                'See https://github.com/recoupable/skills/tree/main/skills/recoup-public. '
+                'Read https://github.com/recoupable/skills/blob/main/skills/recoup-public/references/data.txt, next.')
+            packages.package_files(root,files,'customer')
+
+    def test_markdown_support_links_are_checked_in_every_guide(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            guide='skills/recoup-public/references/next.md'
+            (root/guide).write_text('Read [the helper](./scripts/build#usage).')
+            (root/'skills/recoup-public/SKILL.md').write_text('Read [the guide](references/next.md).')
+            with self.assertRaisesRegex(ValueError,'references/next.md'):
+                packages.package_files(root,files,'customer')
+            with self.assertRaisesRegex(ValueError,'scripts/build#usage'):
+                packages.package_files(root,files+[guide],'customer')
+            script='skills/recoup-public/scripts/build'
+            (root/script).parent.mkdir(); (root/script).write_text('fixture')
+            packages.package_files(root,files+[guide,script],'customer')
+
 if __name__=='__main__': unittest.main()
