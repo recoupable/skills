@@ -28,7 +28,7 @@ Only start when the issue is a proper spec — it should carry a **Goal**, a **p
 
 Run it in order. Docs-first and tests-first are not optional — they are the method.
 
-**After every push that changes behavior — including review fixes, UI tweaks, and follow-up commits on an open PR — re-run steps 4→7 on that new commit before you say the work is done.** Unit tests alone are not enough. Do not hand back "fixed" or "addressed feedback" until the preview for *that* SHA is Ready, exercised live, and the results (with screenshots for **app and marketing** UI PRs) are posted on the PR. Skipping preview after a mid-PR change is the same failure mode as shipping untested code.
+**After every push that changes behavior — including review fixes, UI tweaks, and follow-up commits on an open PR — re-run steps 4→7 on that new commit before you say the work is done.** Unit tests alone are not enough. Do not hand back "fixed" or "addressed feedback" until the preview for *that* SHA is Ready, exercised live, and the results (with screenshots for **docs, app, and marketing** UI/docs PRs) are posted on the PR. Skipping preview after a mid-PR change is the same failure mode as shipping untested code.
 
 ## 1. Read the issue + the ground
 
@@ -77,7 +77,7 @@ Turn every **Done-when** criterion into a live check against the real preview UR
 - **Every status code** — including a **deliberately bad input** to confirm each 4xx (a non-UUID, an unknown id, a missing required param). This is how you confirm the documented error codes are real.
 - **Auth** — 401 without a key; confirm no secret/env value is echoed in any response.
 - **Cross-check the source of truth** — when it sharpens the assertion, query the DB / upstream directly (e.g. confirm a row's state, or that a per-item number is materially smaller than an aggregate). Capture **hard numbers**, not "looks right."
-- **UI PRs (app and marketing)** — drive the changed surface in a real browser (agent-browser or equivalent). For layout claims (centered modal, mobile sheet, pricing cards/tables, etc.), capture screenshots and, when useful, element bounding boxes vs viewport — not "looks fine locally." Screenshots are required for both `app` and `marketing` preview verification; host them in the PR **comment** (not as commits on the feature branch).
+- **UI / docs PRs (docs, app, and marketing)** — drive the changed surface in a real browser (agent-browser or equivalent). For **docs**, run local Mintlify (`npx mintlify@latest dev`) against the PR branch and screenshot every changed reference page plus the nav that surfaces them (confirm removed pages 404). For **app and marketing**, exercise layout claims (centered modal, mobile sheet, pricing cards/tables, etc.) and, when useful, capture element bounding boxes vs viewport — not "looks fine locally." Screenshots are required for `docs`, `app`, and `marketing` preview verification; host them in the PR **comment** (not as commits on the feature branch).
 
 ## 6. Reconcile docs ↔ API ↔ reality
 
@@ -90,7 +90,7 @@ All three must agree before you call it done. This step is the entire point of t
 
 ## 7. Comment on the PR as you test
 
-- Post your verification as a **results table on the PR** — *documented* vs *actual* for each path, with the hard numbers and status codes you observed. For **app and marketing UI PR preview testing**, always include screenshots in the PR comment alongside the results (desktop + mobile when layout matters). Do this on the api PR; comment on the docs PR too when you reconciled it. After a follow-up push, post a **new** comment for the new SHA (or clearly update) — do not leave only the old SHA's results.
+- Post your verification as a **results table on the PR** — *documented* vs *actual* for each path, with the hard numbers and status codes you observed. For **docs, app, and marketing** preview testing, always include screenshots in the PR comment alongside the results (desktop + mobile when layout matters; for docs, every changed Mintlify page). Do this on the api PR; comment on the docs PR with screenshots when you locally rendered it. After a follow-up push, post a **new** comment for the new SHA (or clearly update) — do not leave only the old SHA's results.
 - **Reply on review threads** when you address them, citing the commit **and** the preview verification for that commit.
 - **Triage bot review findings critically — validate before applying.** A bot's "P1" can be a false positive (a suggested revert that would reintroduce a bug; a "missing 501" the endpoint never emits). Confirm against the code/live behavior, then either fix it or reply with the reasoning for not. Don't rubber-stamp, don't blanket-dismiss.
 
@@ -125,6 +125,6 @@ gh pr comment <n> --repo recoupable/api --body-file results.md
 - [ ] Preview confirmed **built from your commit**; **every Done-when criterion** exercised against it with real data.
 - [ ] **Every behavior-changing push** (including review-fix rounds) was re-preview-tested on **that** SHA — not only the first implementation push.
 - [ ] Docs ↔ API ↔ live results **agree** (reconciled and re-pushed if not).
-- [ ] Verification **posted on the PR** with screenshots for **app and marketing** UI previews; bot findings **triaged** (validated, not rubber-stamped).
+- [ ] Verification **posted on the PR** with screenshots for **docs, app, and marketing** previews; bot findings **triaged** (validated, not rubber-stamped).
 - [ ] No secret value echoed anywhere — env-var names only.
 - [ ] On merge: tracking issue moved to **Done** (recoup-internal-dev-issue-tracker).
