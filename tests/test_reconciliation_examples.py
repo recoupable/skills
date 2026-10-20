@@ -28,7 +28,7 @@ class ResearchExamples(unittest.TestCase):
 done'''
             mock = f'''BASE=https://example.invalid/api; AUTH=()
 curl() {{ echo call >> {log}; {headers}
-printf '%s\\n%s' '{{"billingUrl":"https://example.invalid/billing"}}' '{status}'; }}
+printf '%s\\n%s' '{{"error":"insufficient_credits","billingUrl":"https://example.invalid/billing"}}' '{status}'; }}
 sleep() {{ :; }}
 '''
             result = subprocess.run(['bash', '-c', mock + helper + '\nresearch_get "metrics?id=verified"'], capture_output=True, text=True)
