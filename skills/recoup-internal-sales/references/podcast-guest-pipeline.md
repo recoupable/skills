@@ -163,8 +163,8 @@ it works" card with the studio link. Every prompt links a public, dated source r
 1. **Research** (save `research.md` beside the brief): career, company news, the guest's own words in the
    last 12 months, two or three trade-news items from the last quarter, and the tag list. Pull the guest's
    LinkedIn and Instagram posts through the Recoup API: create a research artist
-   (`<Guest> (podcast guest research)`), set its `profileUrls` (`LINKEDIN`, `INSTAGRAM`), then
-   `POST /api/socials/{id}/scrape?posts=20` and poll `GET /api/apify/runs/{runId}`. `posts` is a query
+   (`<Guest> (podcast guest research)`), set its `profileUrls` (`LINKEDIN`, `INSTAGRAM`), read the social ids from
+   `GET /api/artists/{id}/socials`, then `POST /api/socials/{social_id}/scrape?posts=20` and poll `GET /api/apify/runs/{runId}`. `posts` is a query
    parameter; in the body it is ignored and LinkedIn returns the profile only. Their most-liked recent post
    is often the best hook.
 2. **Scope:** honour any topic the guest ruled out; leave off controversy the guest has not raised and flag
