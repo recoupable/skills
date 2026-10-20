@@ -22,7 +22,7 @@ is the same: the next agent should not rediscover the process from scratch.
 3. **Extract the invariant process.** Keep the parts that repeat. Remove chat fragments, false starts,
    and one-off details.
 4. **Separate judgment from exact work.** The `SKILL.md` carries the process and decision rules.
-   Deterministic or mechanical work belongs in `scripts/`, `assets/`, or templates, with checks where
+   Deterministic or mechanical work belongs in the new skill's scripts, assets, or templates, with checks where
    practical.
 5. **Stage before publishing.** Draft in a dated `work/YYYY-MM-DD-skillify-{name}/` folder first.
    Never leave a half-working skill in `plugin/skills/`.
@@ -39,6 +39,6 @@ is the same: the next agent should not rediscover the process from scratch.
 
 ## Minimum skillified bundle
 - `plugin/skills/{name}/SKILL.md` with valid frontmatter and trigger-rich description.
-- Supporting `scripts/`, `assets/`, or `references/` only when they remove real repetition.
+- Supporting scripts, assets, or references in the new skill only when they remove real repetition.
 - A verification note in the staging folder or `SKILL.md` describing how it was tested.
 - A durable learning in `knowledge/` when the skill came from a failure or important decision.

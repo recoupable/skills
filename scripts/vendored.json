@@ -266,6 +266,12 @@
         "skills/recoup-catalog-explain-contract/references/music-business-records.md",
         "skills/recoup-catalog-organize-publishing/references/music-business-records.md"
       ]
+    },
+    {
+      "canonical": "references/normalization.md",
+      "copies": [
+        "skills/recoup-catalog-review-deal/references/normalization.md"
+      ]
     }
   ]
 }

@@ -7,7 +7,7 @@ from urllib.parse import unquote, urlsplit
 RECOUP_LINK = re.compile(
     r"https://github\.com/recoupable/skills/(?:blob|tree)/main/skills/[^\s<>`)]+"
 )
-LOCAL_REFERENCE = re.compile(r"`((?:references|scripts|templates|fixtures)/[^`\s<>]+)`")
+LOCAL_REFERENCE = re.compile(r"`((?:references|scripts|templates|fixtures)/[^`\s<>]*)`")
 
 
 def validate_customer_dependencies(files):
@@ -26,11 +26,14 @@ def validate_customer_dependencies(files):
                       any(p.startswith(target.rstrip('/') + '/') for p in files))
             if not exists:
                 raise ValueError(f'Customer file references missing packaged Recoup path: {name}: {url}')
-        # Entry points declare bundled dependencies. Supporting prose can name
-        # example scripts from the workflow it explains, rather than files to load.
-        if path.name != 'SKILL.md':
-            continue
+        # Progressive disclosure can load required helpers from any support guide.
+        # Concrete backticked support paths must exist; illustrative layouts belong
+        # in fenced examples, and optional external helpers must name their owner.
         for relative in LOCAL_REFERENCE.findall(text):
             target = PurePosixPath('skills', path.parts[1], relative)
-            if target.suffix and str(target) not in files:
+            if '..' in target.parts:
+                raise ValueError(f'Invalid bundled dependency in {name}: {relative}')
+            if str(target) not in files and not any(
+                p.startswith(str(target).rstrip('/') + '/') for p in files
+            ):
                 raise ValueError(f'Customer file references missing bundled file: {name}: {relative}')

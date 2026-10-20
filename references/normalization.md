@@ -73,8 +73,8 @@ It walks a whole directory in one call (no per-file loop), writes to a
 **separate** review ledger, and tags every row `match_confidence: low` /
 `notes: extracted from PDF, verify against source`. **Always spot-check against
 the source PDF and run `validate-normalized-ledger.py` before merging into
-`royalty-ledger.csv`.** Requires `pip3 install -r requirements.txt` (pdfplumber);
-without it the script exits with a clean `missing_dependency` status. Scanned /
+`royalty-ledger.csv`.** Requires `pip3 install pdfplumber`; without it the script
+exits with a clean `missing_dependency` status. Scanned /
 image-only PDFs (true OCR) are still out of scope, and these society templates
 are not yet covered by golden fixtures — treat output as a draft.
 
@@ -126,7 +126,10 @@ Use validation scripts and human review after normalization.
 
 ## How to know it works
 
-Use tests and validations:
+Validate customer output with the bundled `scripts/validate-normalized-ledger.py`
+and spot-check its lineage against the supplied source statement.
+The following regression commands are for a maintainer's source checkout, not
+additional helpers required in an installed customer skill:
 
 1. Run `python3 scripts/test-normalize-royalty-statement.py`.
 2. Run `python3 scripts/test-golden-fixtures.py` (CSV) and
@@ -151,12 +154,14 @@ generator's clean ledger count of 3,188 rows.
 
 ## Golden fixtures
 
-Golden fixtures live in `fixtures/golden/{provider-scenario}/`:
+Maintainer golden fixtures live in the public
+[source fixture suite](https://github.com/recoupable/skills/tree/main/fixtures/golden),
+with one directory per provider/scenario. They are not required customer input:
 
 - `input.csv` is a small provider-shaped source export.
 - `expected-royalty-ledger.csv` is the exact canonical output expected from the
   normalizer.
 
-The current fixtures are synthetic and documented in
-`fixtures/external-sources.md`. They are based on public schemas and official
-documentation, not private royalty data.
+The current fixtures are synthetic; their
+[source notes](https://github.com/recoupable/skills/blob/main/fixtures/external-sources.md)
+record public schemas and official documentation, not private royalty data.
