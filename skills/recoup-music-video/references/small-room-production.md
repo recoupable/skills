@@ -72,6 +72,28 @@ rates have expired or may change, so get a fresh quote and distinguish reported 
 estimates. Preserve provider request IDs and local artifacts when calls are slow; reconcile
 uncertain submissions instead of duplicating them.
 
+## Scribe compatibility checkpoint
+
+Inspected against API release `090f988060407e343d65dfdc3387156fb7dec0a5` on
+2026-10-20. The Small Room workflow still requires ElevenLabs Scribe word timestamps.
+Neither inspected Recoup transcription path establishes that capability:
+
+- `POST /api/content/transcribe` defaults to `fal-ai/whisper`. Its optional `model`
+  string is forwarded to the same Whisper-shaped input and `text`/`chunks` response
+  adapter; accepting a string does not prove Scribe compatibility.
+- `POST /api/transcribe` calls OpenAI `whisper-1` and saves account/artist files.
+  It is not a Scribe route and can write account data.
+
+Use an existing approved Scribe transcript for the exact recording or a separately
+authorized Scribe operation with word timestamps. If neither is available, report the
+capability gap before proceeding through timing-dependent production. Preserve the
+required provider; do not relabel a Whisper transcript or invent a model override.
+Adding a tested Scribe adapter to Recoup is API work, separate from these instructions.
+
+Sources: [content adapter](https://github.com/recoupable/api/blob/090f988060407e343d65dfdc3387156fb7dec0a5/lib/content/transcribe/transcribeAudio.ts),
+[content validator](https://github.com/recoupable/api/blob/090f988060407e343d65dfdc3387156fb7dec0a5/lib/content/transcribe/validateTranscribeAudioBody.ts),
+[stored transcription adapter](https://github.com/recoupable/api/blob/090f988060407e343d65dfdc3387156fb7dec0a5/lib/transcribe/transcribeAudio.ts).
+
 ## Why the linked skills are adapted
 
 Small Room used the character-design and scene-engine methods, plus shotlist-director's

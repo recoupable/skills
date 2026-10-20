@@ -82,4 +82,45 @@ class PackagesTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'excluded internal'):
                 packages.package_files(root,files,'customer')
 
+    def test_missing_recoup_web_dependency_blocks_customer_release(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            skill=root/'skills/recoup-public/SKILL.md'
+            skill.write_text('Use https://github.com/recoupable/skills/tree/main/skills/hyperframes')
+            # A local but untracked dependency is still absent from the customer ZIP.
+            dependency=root/'skills/hyperframes/SKILL.md'
+            dependency.parent.mkdir(); dependency.write_text('Composition')
+            with self.assertRaisesRegex(ValueError,'missing packaged Recoup path'):
+                packages.build(root,files,root/'out','2026.1020.1','test')
+            report=packages.build(root,files+['skills/hyperframes/SKILL.md'],root/'good','2026.1020.1','test')
+            with zipfile.ZipFile(root/'good'/report['packages']['customer']['file']) as z:
+                self.assertIn('skills/hyperframes/SKILL.md',z.namelist())
+
+    def test_blob_reference_requires_the_packaged_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            skill=root/'skills/recoup-public/SKILL.md'
+            skill.write_text('https://github.com/recoupable/skills/blob/main/skills/recoup-public/references/data.txt#example')
+            packages.package_files(root,files,'customer')
+            skill.write_text('https://github.com/recoupable/skills/blob/main/skills/recoup-public/references/missing.txt')
+            with self.assertRaisesRegex(ValueError,'missing packaged Recoup path'):
+                packages.package_files(root,files,'customer')
+
+    def test_bundled_reference_must_ship_with_the_skill(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            (root/'skills/recoup-public/SKILL.md').write_text('Read `references/composition.md`')
+            with self.assertRaisesRegex(ValueError,'missing bundled file'):
+                packages.package_files(root,files,'customer')
+            name='skills/recoup-public/references/composition.md'
+            (root/name).write_text('Local assembly; disclose unperformed reviews.')
+            packages.package_files(root,files+[name],'customer')
+
+    def test_supporting_prose_examples_are_not_declared_dependencies(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            name='skills/recoup-public/references/authoring.md'
+            (root/name).write_text('Example project layout: `scripts/example.py`')
+            packages.package_files(root,files+[name],'customer')
+
 if __name__=='__main__': unittest.main()
