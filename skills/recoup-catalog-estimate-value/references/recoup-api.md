@@ -15,7 +15,9 @@ Send one of:
 
 Never create a disposable identity to recover access to a customer's catalog.
 
-`scripts/estimate.py` reads `RECOUP_API_KEY` first, then `RECOUP_ACCESS_TOKEN`.
+The estimate-value workflow's `estimate.py` reads `RECOUP_API_KEY` first, then
+`RECOUP_ACCESS_TOKEN`. That helper belongs to the estimation workflow, not every
+skill that includes this shared API reference.
 
 ## Endpoints
 
@@ -57,7 +59,7 @@ curl -sS -H "x-api-key: $RECOUP_API_KEY" \
 ### `GET /spotify/album` — enumerate an album's tracks
 Returns the album with `tracks.items[].id` (Spotify track IDs) plus
 `copyrights` (the `℗` line) and `label`. Used by
-`scripts/fetch_album_tracks.py`.
+the estimate-value workflow's `fetch_album_tracks.py`.
 
 ### `GET /research/tracks` — all tracks for an artist (with ISRCs + Songstats ids)
 `?artist=<name>` or `?id=<provider id>`. Returns `tracks[]` with `isrcs` and

@@ -1,8 +1,9 @@
 # Methodology & Assumptions
 
 This file is the auditable assumption set behind every number the estimator
-produces. The defaults live in `scripts/estimate.py` (the `DEFAULTS` block) and
-can be overridden with `--config config.json`. Read this before quoting any
+produces. The estimate-value workflow's `estimate.py` supplies the `DEFAULTS`
+block and accepts `--config config.json`. This shared assumption reference does
+not require other workflows to run that estimator. Read this before quoting any
 figure, and cite the relevant lines when you present results.
 
 ## 1. Streams → gross receipts (master side)

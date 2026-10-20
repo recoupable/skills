@@ -89,7 +89,7 @@ verification, and user approval.
 1. Start from a proven result (accepted artifact, repeated task, or failure that should not recur).
 2. Draft in `work/YYYY-MM-DD-skillify-{name}/`, not directly in `plugin/skills/`.
 3. Extract the repeatable process and remove one-off chat/context.
-4. Put exact/mechanical work into `scripts/`, `assets/`, or templates only when it removes real
+4. Put exact/mechanical work into the new skill's scripts, assets, or templates only when it removes real
    repetition. Keep judgment and decision rules in `SKILL.md`.
 5. Verify with the strongest cheap check for the domain: a script test, a smoke command, a sample
    prompt replay, a fixture comparison, or a small review rubric.
@@ -103,4 +103,5 @@ as a draft, clearly not installed.
 Anthropic's `skill-creator` skill adds an eval/iterate loop: write 2-3 realistic test prompts, run
 with-skill vs. baseline, review outputs, and optimize the description for triggering accuracy. Use it
 when a skill is high-value and you want measured quality, not just vibes. It also ships
-`scripts/package_skill.py` to produce the `.skill` file.
+its own `package_skill.py` helper to produce the `.skill` file. That optional
+external helper is not bundled here; use it only when that skill is available.
