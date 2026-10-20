@@ -4,17 +4,15 @@ import json
 from pathlib import Path
 import re
 import subprocess
-from build_plugin_packages import package_files
-from plugin_package_metadata import stamp_versions
+from plugin_package_files import package_files
+from plugin_package_metadata import stamp_versions, release_provenance
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def build(root, tracked, out, version, commit):
+def customer_tree_files(root, tracked, version, commit):
     if not re.fullmatch(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)', version):
         raise ValueError('Version must be numeric semantic version')
-    if out.exists() and any(out.iterdir()):
-        raise ValueError('Output directory must be empty')
     files, skills = package_files(root, tracked, 'customer')
     files.pop('.codex-plugin/plugin.json')
     metadata = stamp_versions(json.loads((root/'.claude-plugin/plugin.json').read_text()), version)
@@ -89,6 +87,14 @@ retention policies. The plugin is not specifically intended for users under 18.
         f'\n## Release provenance\n\nSource commit: {commit}\nVersion: {version}\n').encode()
     if 'LICENSE' not in files:
         raise ValueError('Missing LICENSE')
+    files['RELEASE.json'] = (json.dumps(release_provenance(files, version, commit), indent=2)+'\n').encode()
+    return files, skills
+
+
+def build(root, tracked, out, version, commit):
+    if out.exists() and any(out.iterdir()):
+        raise ValueError('Output directory must be empty')
+    files, skills = customer_tree_files(root, tracked, version, commit)
     out.mkdir(parents=True, exist_ok=True)
     for name, data in files.items():
         path = out/name

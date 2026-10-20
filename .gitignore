@@ -21,3 +21,5 @@ docs/research/
 tests/fixtures/*
 !tests/fixtures/verification-cli.mjs
 !tests/fixtures/run-cli-child.mjs
+
+!tests/test_release_parity.py

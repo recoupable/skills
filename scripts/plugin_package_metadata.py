@@ -1,4 +1,5 @@
 """Host-specific metadata and submission instructions for generated packages."""
+import hashlib
 import json
 
 def stamp_versions(value, version):
@@ -13,8 +14,17 @@ def prepare_metadata(files, audience, version, chatgpt_app_id, workspace_name):
     for name in files:
         if name.endswith(('plugin.json','marketplace.json')) and name.startswith(('.codex-plugin/', '.claude-plugin/', '.cursor-plugin/', '.agents/plugins/')):
             metadata = stamp_versions(json.loads(files[name]), version)
+            if name.endswith('/plugin.json'):
+                metadata['name'] = 'recoup-plugin'
+            if 'author' in metadata:
+                metadata['author'].update(email='agent@recoupable.dev', url='https://recoupable.dev')
+            if 'homepage' in metadata:
+                metadata['homepage'] = 'https://recoupable.dev'
+            if 'interface' in metadata:
+                metadata['interface']['displayName'] = 'Recoup'
+                metadata['interface']['websiteURL'] = 'https://recoupable.dev'
             if name == '.codex-plugin/plugin.json':
-                host = 'ChatGPT' if customer else 'Codex'
+                host = 'ChatGPT' if audience in {'customer', 'workspace'} else 'Codex'
                 metadata.setdefault('interface', {})['shortDescription'] = f'A record label inside {host}'
                 if customer:
                     icon = 'assets/recoup-customer-icon.png'
@@ -43,8 +53,14 @@ Resolve scans, complete MCP/reviewer setup, submit for review, then publish afte
 This GitHub release is not evidence of OpenAI approval or publication.
 
 The full ZIP contains all staff and customer skills. Both packages come from this commit.
-Checksums and complete skill inventories are in release-manifest.json.
+Checksums, per-file customer content digests, source provenance and complete skill inventories are in release-manifest.json.\nThe buyer ZIP contains START HERE.html and one recoup-plugin folder; local ZIP contains that folder contents.\nThe Claude ZIP and generated claude/ tree use the same customer content. Host submission/approval remains separate.
 ''')
     if chatgpt_app_id:
         with (out/'OPENAI-SUBMISSION.md').open('a') as instructions:
             instructions.write(f'\nWorkspace testing: upload `recoup-workspace-{version}.zip` to the ChatGPT workspace plugin.\nIt references the registered app `{chatgpt_app_id}` and requires access to that app.\nDo not use this workspace-specific ZIP for public directory submission.\n')
+
+
+def release_provenance(files, version, commit):
+    content = {name: hashlib.sha256(data).hexdigest() for name, data in files.items() if name.startswith('skills/')}
+    digest = hashlib.sha256(json.dumps(content, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    return {'version': version, 'commit': commit, 'customer_content_sha256': digest}
