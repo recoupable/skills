@@ -23,6 +23,7 @@ See references/methodology.md for the assumption set; defaults below.
 import argparse, json, os, subprocess, sys, time, datetime as dt
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import urlsplit
 
 BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.dev/api")
 
@@ -59,7 +60,18 @@ def api(path, params=None, body=None, timeout=20):
     if status == "402":
         try: j = json.loads(out)
         except (ValueError, TypeError): j = {}
-        link = j.get("billingUrl") or j.get("checkoutUrl") if isinstance(j, dict) else None
+        link = None
+        if isinstance(j, dict):
+            field = "billingUrl" if j.get("error") == "insufficient_credits" else "checkoutUrl"
+            link = j.get(field)
+        try:
+            parsed = urlsplit(link) if isinstance(link, str) else None
+            if parsed:
+                parsed.port
+            if not (parsed and parsed.scheme == "https" and parsed.hostname and not any(c.isspace() for c in link)):
+                link = None
+        except (ValueError, TypeError):
+            link = None
         sys.exit(f"ERROR: research access requires billing (402). Review: {link or 'Check account billing'}")
     if not status.isdigit() or not 200 <= int(status) < 300:
         sys.exit(f"ERROR: research HTTP {status}; no estimate produced from failed requests.")
