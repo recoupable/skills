@@ -1,6 +1,7 @@
 """Exercise shipped shell/Python examples with mocked responses, never the network."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -114,6 +115,146 @@ esac; }}
         result, _ = self.run_resolver('person@example.invalid', [{'name': 'Artist', 'id': 'row_1'}])
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('missing required identifiers', result.stderr)
+
+
+class RosterOnboardingExamples(unittest.TestCase):
+    helper = ROOT / 'skills/recoup-roster-add-artist/scripts/onboarding_examples.sh'
+    spotify_id = '0123456789ABCDEFGHIJKL'
+    org_id = '00000000-0000-4000-8000-000000000001'
+    artist_id = '00000000-0000-4000-8000-000000000002'
+
+    def run_example(self, command, status=201, payload=None, transport_exit=0):
+        if payload is None:
+            payload = {'artist': {'id': self.artist_id, 'account_id': self.artist_id}}
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            log = directory / 'calls.jsonl'
+            curl = directory / 'curl'
+            curl.write_text('''#!/usr/bin/env python3
+import json, os, sys
+with open(os.environ['MOCK_CALLS'], 'a') as output:
+    output.write(json.dumps(sys.argv[1:]) + '\\n')
+if int(os.environ['MOCK_EXIT']) == 0:
+    print(os.environ['MOCK_PAYLOAD'] + '\\n' + os.environ['MOCK_STATUS'], end='')
+sys.exit(int(os.environ['MOCK_EXIT']))
+''')
+            curl.chmod(0o755)
+            environment = {**os.environ, 'PATH': str(directory) + os.pathsep + os.environ['PATH'],
+                           'RECOUP_API_KEY': 'fixture-only', 'RECOUP_ACCESS_TOKEN': '',
+                           'MOCK_CALLS': str(log), 'MOCK_PAYLOAD': json.dumps(payload),
+                           'MOCK_STATUS': str(status), 'MOCK_EXIT': str(transport_exit)}
+            result = subprocess.run(['bash', '-c', 'source "$1"\n' + command, 'fixture', str(self.helper)],
+                                    env=environment, capture_output=True, text=True)
+            calls = [json.loads(line) for line in log.read_text().splitlines()] if log.exists() else []
+            return result, calls
+
+    def test_canonical_create_sends_exact_identity_and_workspace_and_retains_created_result(self):
+        result, calls = self.run_example(
+            f'''onboard_spotify_artist 'Artist "A"' '{self.spotify_id}' '{self.org_id}' ''')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][-1], 'https://api.recoupable.dev/api/artists')
+        self.assertEqual(calls[0][calls[0].index('-X') + 1], 'POST')
+        body = json.loads(calls[0][calls[0].index('--data') + 1])
+        self.assertEqual(body, {'name': 'Artist "A"', 'spotify_artist_id': self.spotify_id,
+                                'organization_id': self.org_id})
+        self.assertEqual(json.loads(result.stdout), {
+            'spotify_artist_id': self.spotify_id, 'organization_id': self.org_id,
+            'artist_account_id': self.artist_id, 'create_http_status': 201, 'outcome': 'created'})
+
+    def test_existing_canonical_keeps_returned_id_and_reused_200_outcome(self):
+        result, calls = self.run_example(
+            f"onboard_spotify_artist Artist '{self.spotify_id}' '{self.org_id}'", status=200)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(calls), 1)
+        receipt = json.loads(result.stdout)
+        self.assertEqual((receipt['artist_account_id'], receipt['create_http_status'], receipt['outcome']),
+                         (self.artist_id, 200, 'reused'))
+
+    def test_http_errors_do_not_retry_or_fall_back_to_name_only(self):
+        for status in [401, 403, 409, 402, 429, 503]:
+            with self.subTest(status=status):
+                result, calls = self.run_example(
+                    f"onboard_spotify_artist Artist '{self.spotify_id}' '{self.org_id}'",
+                    status=status, payload={'error': 'Stop', 'billingUrl': 'https://example.invalid/billing'})
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(len(calls), 1)
+                self.assertEqual(json.loads(calls[0][calls[0].index('--data') + 1])['spotify_artist_id'], self.spotify_id)
+                self.assertEqual(result.stdout, '')
+
+    def test_unresolved_identity_stops_before_any_mutation(self):
+        result, calls = self.run_example(f"onboard_spotify_artist Artist unresolved '{self.org_id}'")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(calls, [])
+
+    def test_conflicting_returned_id_aliases_require_reconciliation(self):
+        result, calls = self.run_example(
+            f"onboard_spotify_artist Artist '{self.spotify_id}' '{self.org_id}'",
+            payload={'artist': {'id': self.artist_id, 'account_id': 'different-artist'}})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(result.stdout, '')
+
+    def test_manual_creation_is_an_explicit_separate_request(self):
+        result, calls = self.run_example(f"onboard_manual_artist Artist '{self.org_id}' confirmed-manual")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(json.loads(calls[0][calls[0].index('--data') + 1]),
+                         {'name': 'Artist', 'organization_id': self.org_id})
+        self.assertEqual(json.loads(result.stdout)['spotify_artist_id'], None)
+
+    def test_manual_creation_without_deliberate_confirmation_makes_no_request(self):
+        result, calls = self.run_example(f"onboard_manual_artist Artist '{self.org_id}'")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(calls, [])
+
+    def test_lost_acknowledgment_then_new_session_reconciliation_is_read_only(self):
+        command = f"onboard_spotify_artist Artist '{self.spotify_id}' '{self.org_id}'"
+        failed, writes = self.run_example(command, transport_exit=7)
+        self.assertNotEqual(failed.returncode, 0)
+        self.assertEqual(len(writes), 1)
+        self.assertEqual(failed.stdout, '')
+        roster = {'artists': [{'id': self.artist_id, 'account_id': self.artist_id,
+                              'name': 'Artist', 'account_socials': [
+                                  {'profile_url': f'https://open.spotify.com/artist/{self.spotify_id}'}]}]}
+        result, reads = self.run_example(
+            f"reconcile_spotify_artist '{self.spotify_id}' '{self.org_id}'", status=200, payload=roster)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(reads), 1)
+        self.assertEqual(reads[0][reads[0].index('-X') + 1], 'GET')
+        self.assertEqual(reads[0][-1], f'https://api.recoupable.dev/api/artists?org_id={self.org_id}')
+        self.assertEqual(json.loads(result.stdout), {
+            'spotify_artist_id': self.spotify_id, 'organization_id': self.org_id,
+            'artist_account_id': self.artist_id, 'roster_http_status': 200, 'reconciliation': 'matched'})
+
+    def test_same_name_with_another_spotify_identity_is_not_a_reconciled_match(self):
+        roster = {'artists': [{'id': self.artist_id, 'account_id': self.artist_id, 'name': 'Artist',
+                              'account_socials': [{'link': 'https://open.spotify.com/artist/ZZZZZZZZZZZZZZZZZZZZZZ'}]}]}
+        result, calls = self.run_example(
+            f"reconcile_spotify_artist '{self.spotify_id}' '{self.org_id}'", status=200, payload=roster)
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(json.loads(result.stdout)['reconciliation'], 'not_found')
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][calls[0].index('-X') + 1], 'GET')
+
+    def test_reconciliation_keeps_saved_id_and_does_not_replace_it_on_conflict(self):
+        roster = {'artists': [{'id': self.artist_id, 'account_id': self.artist_id,
+                              'account_socials': [{'link': f'https://open.spotify.com/artist/{self.spotify_id}'}]}]}
+        result, calls = self.run_example(
+            f"reconcile_spotify_artist '{self.spotify_id}' '{self.org_id}' saved-other-artist",
+            status=200, payload=roster)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(result.stdout, '')
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][calls[0].index('-X') + 1], 'GET')
+
+    def test_reconciliation_denial_never_attempts_another_write(self):
+        result, calls = self.run_example(
+            f"reconcile_spotify_artist '{self.spotify_id}' '{self.org_id}'",
+            status=403, payload={'error': 'Access denied'})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][calls[0].index('-X') + 1], 'GET')
 
 
 class EstimatorExamples(unittest.TestCase):
