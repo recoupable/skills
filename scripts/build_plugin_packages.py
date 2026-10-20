@@ -9,6 +9,7 @@ import re
 import subprocess
 import zipfile
 from plugin_package_metadata import prepare_metadata, write_handoff
+from plugin_package_dependencies import validate_customer_dependencies
 
 ROOT = Path(__file__).resolve().parents[1]
 INTERNAL = re.compile(r'\brecoup-internal-[a-z0-9-]+')
@@ -38,6 +39,8 @@ def package_files(root, tracked, audience):
             if INTERNAL.search(text):
                 raise ValueError(f'Customer file references excluded internal skill: {name}')
         result[name] = data
+    if audience == 'customer':
+        validate_customer_dependencies(result)
     for required in ('.codex-plugin/plugin.json', '.mcp.json'):
         if required not in result:
             raise ValueError(f'Missing {required}')

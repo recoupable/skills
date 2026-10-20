@@ -82,4 +82,94 @@ class PackagesTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'excluded internal'):
                 packages.package_files(root,files,'customer')
 
+    def test_missing_recoup_web_dependency_blocks_customer_release(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            skill=root/'skills/recoup-public/SKILL.md'
+            skill.write_text('Use https://github.com/recoupable/skills/tree/main/skills/hyperframes')
+            # A local but untracked dependency is still absent from the customer ZIP.
+            dependency=root/'skills/hyperframes/SKILL.md'
+            dependency.parent.mkdir(); dependency.write_text('Composition')
+            with self.assertRaisesRegex(ValueError,'missing packaged Recoup path'):
+                packages.build(root,files,root/'out','2026.1020.1','test')
+            report=packages.build(root,files+['skills/hyperframes/SKILL.md'],root/'good','2026.1020.1','test')
+            with zipfile.ZipFile(root/'good'/report['packages']['customer']['file']) as z:
+                self.assertIn('skills/hyperframes/SKILL.md',z.namelist())
+
+    def test_blob_reference_requires_the_packaged_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            skill=root/'skills/recoup-public/SKILL.md'
+            skill.write_text('https://github.com/recoupable/skills/blob/main/skills/recoup-public/references/data.txt#example')
+            packages.package_files(root,files,'customer')
+            skill.write_text('https://github.com/recoupable/skills/blob/main/skills/recoup-public/references/missing.txt')
+            with self.assertRaisesRegex(ValueError,'missing packaged Recoup path'):
+                packages.package_files(root,files,'customer')
+
+    def test_bundled_reference_must_ship_with_the_skill(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            (root/'skills/recoup-public/SKILL.md').write_text('Read `references/composition.md`')
+            with self.assertRaisesRegex(ValueError,'missing bundled file'):
+                packages.package_files(root,files,'customer')
+            name='skills/recoup-public/references/composition.md'
+            (root/name).write_text('Local assembly; disclose unperformed reviews.')
+            packages.package_files(root,files+[name],'customer')
+
+    def test_supporting_prose_examples_are_not_declared_dependencies(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            name='skills/recoup-public/references/authoring.md'
+            (root/name).write_text('Example project layout:\n```text\nscripts/example.py\n```')
+            packages.package_files(root,files+[name],'customer')
+
+    def test_required_normalizer_in_supporting_guide_must_ship(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            guide='skills/recoup-public/references/normalization.md'
+            script='skills/recoup-public/scripts/normalize-royalty-statement.py'
+            (root/'skills/recoup-public/SKILL.md').write_text('Read `references/normalization.md`')
+            (root/guide).write_text('Use `scripts/normalize-royalty-statement.py` for first-pass CSV normalization.')
+            (root/script).parent.mkdir(); (root/script).write_text('print("fixture")')
+            with self.assertRaisesRegex(ValueError,'normalization.md: scripts/normalize-royalty-statement.py'):
+                packages.build(root,files+[guide],root/'missing','2026.1020.1','test')
+            report=packages.build(root,files+[guide,script],root/'complete','2026.1020.1','test')
+            with zipfile.ZipFile(root/'complete'/report['packages']['customer']['file']) as z:
+                self.assertIn(script,z.namelist())
+
+    def test_extensionless_and_directory_dependencies_must_ship(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            skill=root/'skills/recoup-public/SKILL.md'
+            for relative in ['scripts/check', 'references/checks/', 'templates/']:
+                skill.write_text(f'Read `{relative}`')
+                with self.assertRaisesRegex(ValueError,'missing bundled file'):
+                    packages.package_files(root,files,'customer')
+                name='skills/recoup-public/'+relative+('guide.md' if relative.endswith('/') else '')
+                (root/name).parent.mkdir(parents=True,exist_ok=True)
+                (root/name).write_text('Bundled fixture')
+                packages.package_files(root,files+[name],'customer')
+
+    def test_plain_recoup_url_ignores_sentence_punctuation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            (root/'skills/recoup-public/SKILL.md').write_text(
+                'See https://github.com/recoupable/skills/tree/main/skills/recoup-public. '
+                'Read https://github.com/recoupable/skills/blob/main/skills/recoup-public/references/data.txt, next.')
+            packages.package_files(root,files,'customer')
+
+    def test_markdown_support_links_are_checked_in_every_guide(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            guide='skills/recoup-public/references/next.md'
+            (root/guide).write_text('Read [the helper](./scripts/build#usage).')
+            (root/'skills/recoup-public/SKILL.md').write_text('Read [the guide](references/next.md).')
+            with self.assertRaisesRegex(ValueError,'references/next.md'):
+                packages.package_files(root,files,'customer')
+            with self.assertRaisesRegex(ValueError,'scripts/build#usage'):
+                packages.package_files(root,files+[guide],'customer')
+            script='skills/recoup-public/scripts/build'
+            (root/script).parent.mkdir(); (root/script).write_text('fixture')
+            packages.package_files(root,files+[guide,script],'customer')
+
 if __name__=='__main__': unittest.main()
