@@ -10,8 +10,8 @@ campaign / doc are the individual stages, runnable alone. Everything reads from 
 writes to `releases/{artist-slug}/{release-slug}/`. The workspace schema is in
 `references/release-workspace.md` (read it first); the scaffold is in
 `templates/release-workspace/`. Deterministic helpers ship in `scripts/`
-(`build_campaign_timeline.py`, `validate_release.py`). Requires `RECOUP_API_KEY` for
-the brief/targeting stages.
+(`build_campaign_timeline.py`, `validate_release.py`). REST brief/targeting calls
+require `RECOUP_API_KEY`; authenticated MCP alternatives use the host connection.
 
 **Planning and media production are distinct.** For "create a release pack" or
 "content pack", use recoup-content-asset-pack. Do not present a schedule or brief
@@ -22,9 +22,23 @@ the recording's original release date; avoid new-release DSP deadlines when they
 do not apply. Connect through available MCP tools; do not treat a missing local
 API-key variable as proof that an authenticated host is disconnected.
 
+## Hosts without files or Python
+
+Use the conversation and any authorized saved job/brief as the workspace when the
+host cannot create files or run scripts. Reuse supplied facts and produce the
+brief, phase-based plan and master release summary inline. Use an exposed
+calendar/date tool for exact date calculations; otherwise keep relative timing
+and label exact dated scheduling as unverified. Review completeness explicitly
+against the sections in the template; never claim the Python validator ran.
+Missing local scripts, folders or optional research are scoped gaps, not a reason
+to restart onboarding. For a combined plan-and-pack request, continue the pack
+with the same brief once its inputs are sufficient; unavailable planning extras
+do not block independently actionable media production. Do not claim a complete
+filesystem bundle or verified dated schedule when those checks could not run.
+
 ## Mode: plan (the full workflow — don't stop between phases)
 
-Run every phase in order; **do not stop to ask what's next**. Stop only when the
+On hosts with files and Python, run every phase in order; **do not stop to ask what's next**. Stop only when the
 workspace is populated (brief + campaign + RELEASE.md exist) or a hard blocker hits.
 
 1. **Intake + scaffold (≤30s).** Confirm release facts in one prompt (artist, title,
@@ -47,7 +61,7 @@ workspace is populated (brief + campaign + RELEASE.md exist) or a hard blocker h
    `python3 scripts/validate_release.py releases/{artist-slug}/{release-slug}` — it
    must return `status: "ok"`; fix anything in `missing[]` and re-run, then dispatch
    the release-readiness-reviewer agent when available; otherwise perform that
-   review explicitly. These completion checks apply on every host.
+   review explicitly. On hosts without those capabilities, use the explicit portable branch above.
 
 End with the landing card: workspace path, "open first" list (RELEASE.md, brief/,
 campaign/, targeting/, reports/), an honest "what I did NOT do and why" bullet per
@@ -82,9 +96,9 @@ recoup-content-write-caption. Never fabricate placements/press — blank + flag 
 ## Guardrails
 
 - **No mid-workflow stops** in plan mode — run the next phase anyway.
-- **One workspace** — everything under `releases/{artist-slug}/{release-slug}/`.
-- **Deterministic dates** — `build_campaign_timeline.py`, never by hand.
-- **Completion gate** — `validate_release.py` must say `ok` before "ready".
+- **One continuing brief** — use `releases/{artist-slug}/{release-slug}/` where supported; otherwise conversation/job state.
+- **Deterministic dates** — use the script or a supported date tool; otherwise label dates unverified.
+- **Completion gate** — files/Python: validator must say `ok`; other hosts: explicitly review supported outputs and disclose unrun checks.
 - **Never fabricate** release facts, numbers, placements, or press — blank + flag.
 
 ## References
