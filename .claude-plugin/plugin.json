@@ -1,14 +1,14 @@
 {
   "name": "recoup-plugin",
   "displayName": "Recoup",
-  "version": "2026.1020.34",
+  "version": "2026.1020.35",
   "description": "A record label inside Claude. Let your agents create content, plan releases, reach new fans, and uncover opportunities across your catalog. Make music videos and cover art, research artists, discover talent, and build campaigns. Start with a song, an artist, or an entire catalog.",
   "author": {
     "name": "Recoup",
-    "email": "support@recoupable.com",
-    "url": "https://recoupable.com"
+    "email": "agent@recoupable.dev",
+    "url": "https://recoupable.dev"
   },
-  "homepage": "https://recoupable.com",
+  "homepage": "https://recoupable.dev",
   "repository": "https://github.com/recoupable/skills",
   "license": "AGPL-3.0-only",
   "keywords": [
