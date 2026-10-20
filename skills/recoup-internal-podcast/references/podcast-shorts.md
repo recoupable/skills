@@ -113,7 +113,9 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
   live-links email (sharing is set to "anyone with the link" on send day). Check the uploads by file size.
 - **Same posting time daily** (B2B weekday late morning) so timing isn't a variable when results are read.
 - **Post with `POST /api/posts`**, all four platforms (instagram, x, youtube, linkedin), once the owner
-  approves the copy; mechanics in `recoup-internal-social-ship-posts` step 4. LinkedIn goes to the Recoup
+  approves the copy; mechanics in `recoup-internal-social-ship-posts` step 4. Once the first short posts
+  clean, schedule the rest of the run with `publish_at` at that same time each day (one call per platform
+  per short), and check the dates against the clips table before and after. LinkedIn goes to the Recoup
   company page (`sub_account_id` = its organization URN), with the short's cover as `cover_url`. The owner
   adds the X link reply, the LinkedIn first comment and @-tags, the Instagram Collab invite, and the YouTube
   Short's related video (the full episode; Studio only, see section 6). List all four in the hand-off.
@@ -122,6 +124,6 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
 
 The connector uploads videos (`YOUTUBE_UPLOAD_VIDEO` / `YOUTUBE_MULTIPART_UPLOAD_VIDEO`, staged files),
 posts comments (`YOUTUBE_POST_COMMENT`), and edits/removes/reorders playlist items. It **cannot** schedule a
-publish time (upload private, flip public on the day, or schedule in Studio), pin a comment, add a caption
+publish time (use `POST /api/posts` with `publish_at` instead), pin a comment, add a caption
 track, or set a Short's related video. Episode captions: `python3 scripts/podcast/make_srt.py <project>`, then
 in Studio: video -> Details -> Subtitles (or Languages) -> ⋮ -> Upload file -> With timing.
