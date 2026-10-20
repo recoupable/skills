@@ -155,6 +155,10 @@ curl -sS -X PATCH "$BASE/content" "${AUTH[@]}" -H "Content-Type: application/jso
 
 ## Spend discipline
 
-Generation costs credits (model-specific; the estimate endpoint is advisory and is not a price guarantee). For multi-asset runs (packs,
-per-track fan-outs) call `GET $BASE/content/estimate` and confirm with the user before fanning
-out. On a 402 / `insufficient_credits`, surface the `billingUrl` — don't silently retry.
+Generation costs credits. For release packs, obtain the complete job quote from
+`estimate_release_pack` and approve its current revision and ceiling before
+`generate_release_pack`. The legacy `GET $BASE/content/estimate` is only an advisory
+per-video estimate for standalone workflows; it cannot authorize a mixed-media pack.
+For other multi-asset fan-outs, disclose the complete expected scope/cost and get
+approval before production. On a 402 / `insufficient_credits`, surface the
+`billingUrl` — don't silently retry.
