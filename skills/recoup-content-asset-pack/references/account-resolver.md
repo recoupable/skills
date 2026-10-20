@@ -12,6 +12,12 @@ put them in curl. Missing environment variables do not mean MCP is disconnected.
 Use `list_artists` for roster discovery. An empty roster can be legitimate.
 If the operation is not exposed by MCP, use the REST credentials below.
 
+**Artist resolution is operation-specific.** A release pack can retain a supplied
+song and campaign brief without an existing artist or GitHub workspace. Prefer
+the connected pack operations when exposed; do not create an artist or run roster
+onboarding just because the roster is empty. Resolve an artist ID only when the
+selected operation actually requires one. Keep the original job through sign-in.
+
 ### REST fallback — two modes
 
 Pick whichever credential the environment provides; prefer the API key when both exist.
@@ -104,8 +110,11 @@ artists"), drop the `select(.name==$n)` filter and present the full list
 and authorized workspace before interpreting a missing artist. Do not create a
 disposable account, fabricate an artist or infer failed authentication from emptiness.
 
-If a real account simply has no visible row for a named artist, verify exact Spotify identity and access before attaching or creating the artist — run the
-`recoup-roster-add-artist` skill before continuing. Do not invent an ID.
+If an **artist-bound operation** requires an artist and no row is visible, verify
+exact identity and access before offering to attach/create one. Use
+`recoup-roster-add-artist` only for that requested roster action. Other content
+operations can continue from supplied inputs without an artist ID. Do not invent
+an ID or interpret absent roster data as authorization to create one.
 
 ## 5. Quick reference — which ID goes where
 

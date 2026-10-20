@@ -1,0 +1,71 @@
+{
+  "purpose": "Fresh-host acceptance rubric, not a claim that host execution was tested. Use only exposed tool schemas; no paid generation without a bounded approved quote.",
+  "cases": [
+    {
+      "id": "first-use",
+      "request": "Create a release pack for me.",
+      "context": "No connection, no artist, no assets.",
+      "must": [
+        "Keep pack intent; ask once for artist/title, usable audio, occasion and creative references or permission to propose.",
+        "No required roster, GitHub, valuation or general onboarding."
+      ]
+    },
+    {
+      "id": "audio-first",
+      "request": "Make a pack for this song.",
+      "context": "Audio attachment, artist/title supplied; creative defaults accepted.",
+      "must": [
+        "Analyze actual recording; label suggested direction and hook.",
+        "Retain brief through OAuth; empty roster is valid."
+      ]
+    },
+    {
+      "id": "anniversary",
+      "request": "Celebrate the tenth anniversary of this recording.",
+      "context": "Song and original release date supplied.",
+      "must": [
+        "Use anniversary context and original recording; never invent release dates or historical performance."
+      ]
+    },
+    {
+      "id": "remix",
+      "request": "Promote this remix, not the original.",
+      "context": "Two recordings share a title.",
+      "must": [
+        "Resolve exact selected version before any paid generation."
+      ]
+    },
+    {
+      "id": "plan-only",
+      "request": "Plan a release for me.",
+      "context": "No media requested.",
+      "must": [
+        "Route to rollout planning; do not quote or generate a pack."
+      ]
+    },
+    {
+      "id": "shortfall",
+      "request": "Generate the approved pack.",
+      "context": "Quote returned credit shortfall.",
+      "must": [
+        "Preserve job and brief; show billingUrl; no purchase or automatic paid retry."
+      ]
+    },
+    {
+      "id": "interrupted",
+      "request": "Continue my pack.",
+      "context": "Some assets complete, one provider request uncertain.",
+      "must": [
+        "Read existing job; retain finished assets; reconcile uncertain provider request before retry."
+      ]
+    },
+    {
+      "id": "older-connection",
+      "request": "Make this release pack.",
+      "context": "Required pack tools missing.",
+      "must": [
+        "Name missing capability and retain brief; do not claim prompts are generated assets."
+      ]
+    }
+  ]
+}

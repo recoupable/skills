@@ -272,6 +272,12 @@
       "copies": [
         "skills/recoup-catalog-review-deal/references/normalization.md"
       ]
+    },
+    {
+      "canonical": "references/release-pack-brief.md",
+      "copies": [
+        "skills/recoup-content-asset-pack/references/release-pack-brief.md"
+      ]
     }
   ]
 }

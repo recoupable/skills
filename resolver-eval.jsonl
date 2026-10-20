@@ -198,3 +198,9 @@
 {"intent": "recoup-internal: recreate the Recoup gallery preview video style for the new catalog cards", "expected": "recoup-internal-content-make-thumbnails", "not": ["recoup-content-make-video"]}
 {"intent": "Make a thumbnail image for my new single", "expected": "recoup-content-make-graphics", "not": ["recoup-internal-content-make-thumbnails"]}
 {"intent": "recoup-internal prep tomorrow's podcast recording and check my camera frame rate", "expected": "recoup-internal-podcast", "not": ["recoup-internal-sales", "recoup-internal-marketing"]}
+{"intent": "Create a release pack for this song.", "expected": "recoup-content-asset-pack", "not": ["recoup-release-plan-rollout", "recoup-roster-onboard"]}
+{"intent": "Make a content pack for the tenth anniversary of this recording.", "expected": "recoup-content-asset-pack"}
+{"intent": "Create a release pack for our remix using this audio and artwork.", "expected": "recoup-content-asset-pack"}
+{"intent": "Give this catalog song another moment with a release pack.", "expected": "recoup-content-asset-pack"}
+{"intent": "I have no Recoup artist yet. Create a release pack from this audio.", "expected": "recoup-content-asset-pack", "not": ["recoup-roster-onboard"]}
+{"intent": "Plan a release rollout schedule, no media production yet.", "expected": "recoup-release-plan-rollout", "not": ["recoup-content-asset-pack"]}

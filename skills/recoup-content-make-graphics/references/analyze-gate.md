@@ -1,6 +1,6 @@
 # Analyze gate — verify visual output before claiming "done"
 
-The agent cannot see pixels. A render can come back the right size, format, and duration
+Do not assume a successful render is good. It can have the right size, format, and duration
 while being glitchy, empty, off-brand, or showing the wrong subject. **Do not tell the
 user an asset is ready until you've inspected it.** `POST /api/content/analyze` is the
 agent's eyes.
@@ -68,8 +68,17 @@ This makes "pass" mean *competitive with what this audience already rewarded*, n
 
 No Stop hook enforces this gate. The agent must record actual
 inspection evidence and any remaining uncertainty before delivery. Inspect still
-images directly where supported and call `/api/content/analyze` at each video checkpoint and use playback as additional
-motion QA.
+images directly where supported. For a connected release-pack job, use its actual
+QA receipts and preview/playback capabilities first; do not demand separate REST
+credentials or repeat an already completed inspection. For standalone video
+workflows without pack QA receipts, use the exposed analysis tool (or
+`/api/content/analyze` when REST is available) at each checkpoint, with playback
+as additional motion QA. If inspection is unavailable, report that gap.
 For lipsync, also verify an audio stream, listen to the selected clip and inspect
 mouth alignment; an audio stream alone is not proof of synchronization. Do not
 spend on an unnecessary throwaway animation merely to QA a still image.
+
+Connected pack-job QA receipts can supply inspection evidence when actually
+returned. A requested analysis is not a passed analysis. For all music-bearing
+assets, verify the correct recording and audio window as well as the audible
+stream and timing; visual-only scores cannot establish that the music is right.
