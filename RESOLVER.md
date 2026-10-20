@@ -90,8 +90,7 @@
 |---|---|
 | "recoup-internal" + make MCP extension thumbnails / looping workflow-card preview films | `recoup-internal-content-make-thumbnails` |
 | "recoup-internal" + design a feature-announcement film, product demo or marketing motion graphics | `recoup-internal-content-design-motion` |
-| "recoup-internal" + write/maintain a GitHub tracking issue | `recoup-internal-dev-issue-tracker` |
-| "recoup-internal" + implement/ship a tracked issue end-to-end (docs-first, TDD) | `recoup-internal-dev-ship-issue` |
+| "recoup-internal" + write/maintain/implement/ship a GitHub issue (tracking issues, docs-first delivery, TDD) | `recoup-internal-dev` |
 | "recoup-internal" + verify compiled CLI command discovery, account output, credential failures, or HTTP errors | `recoup-internal-dev-verify-cli` |
 | "recoup-internal" + benchmark/audit/grade a skill pack or plugin | `recoup-internal-eval-skill-benchmark` |
 | "recoup-internal" + run the daily sales sweep / who to follow up with (Stripe + Privy + valuations + Attio + credits + tasks + chats) | `recoup-internal-sales` |

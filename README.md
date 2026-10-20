@@ -156,8 +156,7 @@ capability ships with these skills.
 
 | Skill | What it does |
 |-------|-------------|
-| recoup-internal-dev-issue-tracker | Write & maintain high-signal GitHub tracking issues |
-| recoup-internal-dev-ship-issue | Deliver a tracked issue end-to-end (docs-first, TDD) |
+| recoup-internal-dev | Write, maintain & ship GitHub issues end-to-end (tracking issues, docs-first, TDD) |
 | recoup-internal-eval-skill-benchmark | Benchmark a skill pack/plugin against the frontier |
 | recoup-internal-sales | Daily sales sweep across Stripe/Privy/valuations/Attio/credits/tasks/chats → one ranked follow-up list |
 | recoup-internal-funnel-valuation-pipeline | Work the Attio catalog-valuation sales funnel |

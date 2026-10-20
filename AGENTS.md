@@ -15,7 +15,7 @@ recoupable/skills/            ← the repo root IS the plugin
 ├── skills/                   ← every skill (recoup-[domain]-[verb]-[noun]); recoup-internal-* are staff-gated
 │   ├── recoup-roster-add-artist/
 │   ├── recoup-research-the-web/
-│   ├── recoup-internal-dev-issue-tracker/
+│   ├── recoup-internal-dev/
 │   └── ...                   (flat skill folders)
 ├── agents/                   ← specialized subagents
 ├── .mcp.json                 ← Claude/Codex remote MCP configuration
