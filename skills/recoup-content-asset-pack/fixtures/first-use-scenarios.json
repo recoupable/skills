@@ -110,6 +110,43 @@
         "Keep an honest conversational checkpoint and name the unavailable capability.",
         "Do not send unsupported fields or claim generated boards exist."
       ]
+    },
+    {
+      "id": "recoup-first-reference-pass",
+      "request": "Make a pack for my artist using what you already have.",
+      "context": "Authorized matching Recoup artist has instructions, image and knowledge links; local folder contains an older campaign.",
+      "must": [
+        "Inspect saved Recoup context before asking for branding or handles.",
+        "Current release choices govern the world; stale local campaigns do not override them.",
+        "A returned link is not a claim its contents were inspected."
+      ]
+    },
+    {
+      "id": "selected-folder-only",
+      "request": "Use this folder of photos and the attached recording.",
+      "context": "Host has selected-folder access and no matching Recoup artist.",
+      "must": [
+        "Inspect the selected files without searching the whole computer or creating an artist.",
+        "Keep a private attributed collection and use supported upload operations for selected production images."
+      ]
+    },
+    {
+      "id": "public-namesake",
+      "request": "Find photos for this artist and run with it.",
+      "context": "Two public artists share a name and neither profile is linked to the supplied recording.",
+      "must": [
+        "Ask one focused identity question before using likeness; delegation does not resolve namesakes.",
+        "Do not select the first search result or invent a face."
+      ]
+    },
+    {
+      "id": "expired-reference",
+      "request": "Continue the pack we prepared last week.",
+      "context": "Saved private source URL expired; original source key is retained.",
+      "must": [
+        "Use a supported refresh/read operation and preserve original attribution.",
+        "Update and requote the same pack when required; do not invent a fresh URL or submit an expired input."
+      ]
     }
   ]
 }
