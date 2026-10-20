@@ -276,7 +276,7 @@ Fields: `stage`, `buyer_or_referrer` (Buyer / Referrer / Unknown), `project_type
 - **The podcast is the top of this funnel.** Cold outreach is a podcast invite, the
   episode is the discovery call, and the day-7 follow-up is three builds we could do.
   Guests are `lead_source = Podcast` on this list, mapped onto the existing stages; the
-  loop with its consent gate and the invite, wrap-up and day-7 templates are in
+  loop and the invite, wrap-up and day-7 templates are in
   `references/podcast-guest-pipeline.md`; the episode itself (post-production, episode copy,
   covers, publishing, shorts) is the `recoup-internal-podcast` skill. **Run its five-point invite checklist before any
   review copy** (subject `Interview request: <topic>`, no body sign-off, no stock close,
@@ -674,4 +674,4 @@ major-label exec, and a dormant power user. What actually mattered.
 - `references/meeting-prep.md` — prep for a booked call: the pitch, the meeting plan, the PDFs to deliver.
 - `references/credits-mechanics.md` — how `checkAndResetCredits` behaves, before you quote a balance.
 - `references/tooling-gotchas.md` — Privy / Stripe / Supabase / Attio quirks and dead columns.
-- `references/podcast-guest-pipeline.md` — the podcast-invite top of funnel: loop + Attio mapping with the consent gate, the booking confirmation with the timeline PDF, the invite template and its pre-review checklist, threaded nudges, the wrap-up email (last short day: thank-you, one-page episode recap PDF with clip performance via `scripts/podcast_wrap_summary.py` + every-post CSV, specific guest-recommendation ask), running the day (status first, research budget, verification ladder), day-7 template, what to measure. Episode copy, covers and publishing moved to `recoup-internal-podcast`.
+- `references/podcast-guest-pipeline.md` — the podcast-invite top of funnel: loop + Attio mapping, the booking confirmation with the timeline PDF, the 48-hour guest brief (research incl. the Recoup API LinkedIn scrape), the invite template and its pre-review checklist, threaded nudges, the wrap-up email (last short day: thank-you, one-page episode recap PDF with clip performance via `scripts/podcast_wrap_summary.py` + every-post CSV, specific guest-recommendation ask), running the day (status first, research budget, verification ladder), day-7 template, what to measure. Episode copy, covers and publishing moved to `recoup-internal-podcast`.

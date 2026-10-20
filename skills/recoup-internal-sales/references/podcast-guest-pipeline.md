@@ -14,7 +14,7 @@ to run it the same way.
 | 1. Invite | Ten invites a day to qualified leads: people who own or run a music business and have said something public about AI or automation in it within the last 12 months. The invite sells the episode, not Recoup. | `New`, `lead_source = Podcast`; `project_type` stays unset until discovery confirms a build |
 | 2. Reply | Any reply. Flag after 3 days with no time on the calendar, ahead of anything further down the board. | `In Conversation` |
 | 3. Booked | The same day a time exists, a confirmation email in the invite's thread with the **timeline PDF** attached (see *Booked: the timeline PDF* below). It is the guest's written record of what happens next. | `Call Booked` |
-| 4. Record | Written consent, sent with the interview outline 48 hours before, covers: recording, publication on the named platforms, use of clips and of the guest's name, photo and company name, and the right to withdraw before publication. No consent on file, no recording. Then 30 to 60 minutes remotely: their history in the industry, where AI does real work in the business today, the numbers behind it. Recorder notes go to the private guest folder. | `Call Booked` |
+| 4. Record | The guest brief (see *48 hours before: the guest brief*) goes out 48 hours before. Booking the recording and joining it is the guest's consent to recording and publication; the timeline PDF has already named the platforms and the tag list. Do not ask for a written consent reply (operator ruling 2026-10-19). A guest who withdraws before publication is not published. Then 30 to 60 minutes remotely: their history in the industry, where AI does real work in the business today, the numbers behind it. Recorder notes go to the private guest folder. | `Call Booked` |
 | 5. Publish | **Owned by the podcast skill:** post-production through scheduling follows the `recoup-internal-podcast` skill's `references/podcast-episode.md`; sales resumes at the live-links email. Within 48 h, once the consent is on file and the guest has approved their cover photo: YouTube (show playlist), Spotify, Apple, socials; the episode is added to the site's `content/podcast/episodes.json` in the same PR; the guest gets the full episode and clips. | unchanged |
 | 5b. Wrap-up | The day the last short posts (about a week after the episode): one threaded email that closes the run and asks for guest recommendations (see *The wrap-up email*). Goes to the guest and anyone they looped in (comms, assistant). | unchanged |
 | 6. Day 7 after release | One short email with three concrete things we could build for them, drawn from the call notes. One sentence each, no price. | `Scoping`, `project_type = Build` |
@@ -121,11 +121,15 @@ scheduler). Nothing about the recording is left to the calendar invite alone.
 
 1. **Fix the calendar invite first.** Title `Recoup Podcast recording: <Guest Name>`, the
    recording-studio link as the location, and the scheduler's auto-generated video link
-   and reschedule text removed. A booking made on the guest's own scheduler carries *their*
+   and reschedule text removed. A guest who books through our own sales scheduler gets its
+   meeting link and sales description: replace both with the studio link and the house
+   recording description. A booking made on the guest's own scheduler carries *their*
    video link; the guest must get ours from us.
 2. **Build the timeline PDF.** One Letter page, house style (`references/pdf-house-style.md`),
-   titled *Your episode, step by step*, with the guest's name, title and company. Three
-   numbered steps, each with a real date:
+   titled *Your episode, step by step*, with the guest's name, title and company, then a
+   *Recent episodes* strip: the latest three published episodes, each with its official site
+   cover (`https://recoupable.dev/podcast/<slug>-wide.jpg`), release date, guest and company.
+   Three numbered steps, each with a real date:
    1. *Your interview outline arrives*: the date, 48 hours before the recording.
    2. *We record*: date and time in the guest's timezone, the studio named, "join from the
       link in your calendar invite", scheduled length and expected recording length.
@@ -143,12 +147,36 @@ scheduler). Nothing about the recording is left to the calendar invite alone.
 4. **Approval as usual:** the exact draft and the PDF shown to the operator; a review copy
    when they ask for one. The approval quote goes in the sent record.
 5. **Close out:** stage `Call Booked`, the sent file names the PDF, and two dated runbook
-   tasks: the outline plus written consent 48 hours before, and a studio test the day
-   before. The consent gate in step 4 of the loop still applies: no consent on file, no
-   recording.
+   tasks: the guest brief 48 hours before, and a studio test the day before.
 
 A confirmation without the PDF is incomplete: the timeline is what makes a cold guest show
 up prepared and makes the tag list theirs to correct before publication.
+
+### 48 hours before: the guest brief
+
+One Letter page in the guest's language, same brand kit as the timeline: a topic label linked to its
+source, the episode question as the headline, the guest line, a date / time (guest's timezone) / length /
+studio strip, a short "no script" intro, six or seven timed segments to about 30 minutes (one marked as the
+big one; each tagged *Your story* or *In the news*), a quickfire row, a "one thing to bring" card and a "how
+it works" card with the studio link. Every prompt links a public, dated source read at the page.
+
+1. **Research** (save `research.md` beside the brief): career, company news, the guest's own words in the
+   last 12 months, two or three trade-news items from the last quarter, and the tag list. Pull the guest's
+   LinkedIn and Instagram posts through the Recoup API: create a research artist
+   (`<Guest> (podcast guest research)`), set its `profileUrls` (`LINKEDIN`, `INSTAGRAM`), read the social ids from
+   `GET /api/artists/{id}/socials`, then `POST /api/socials/{social_id}/scrape?posts=20` and poll `GET /api/apify/runs/{runId}`. `posts` is a query
+   parameter; in the body it is ignored and LinkedIn returns the profile only. Their most-liked recent post
+   is often the best hook.
+2. **Scope:** honour any topic the guest ruled out; leave off controversy the guest has not raised and flag
+   it to the operator; material the guest sent privately shapes the questions but is not cited.
+3. **Build and render:** start from the latest sent brief's HTML in the private episode folder
+   (`episodes/<date>-<slug>/guest-brief/guest-brief.html`), render with
+   `scripts/build_pdf.py --max-pages 1` and read the preview. A page that spills with room
+   to spare usually has an unbalanced `</div>`.
+4. **Email:** threaded reply, brief attached; one line on where the conversation starts, the studio link,
+   and an answer to anything the guest asked (a late start, a time zone). No consent ask, no sign-off.
+   Review copy, approval, send, then close out: sent record, email log row, README status, CRM note,
+   brief task completed, studio-check task.
 
 ### Right after the recording (same day)
 
@@ -163,7 +191,7 @@ The recording is the discovery call; close it out before anyone opens the raw fi
    mishearings (names, companies, products), and **claims to check before any card**: every figure the
    guest gave, anything the guest corrected on tape, and dates that contradict the record. Check the
    plan's never-raise items were not raised.
-2. **Write the episode README** status: recorded, consent, release and deliverables as agreed, next steps.
+2. **Write the episode README** status: recorded, release and deliverables as agreed, next steps.
    Update the plan's status line and the guest's email index.
 3. **CRM:** a note naming the files; complete the outline task; one dated runbook task per promise made
    on tape, plus release day and the day-7 email. **Day 7 counts from release, not from the recording.**
@@ -178,7 +206,7 @@ Sent the day the full episode is live, after the first short posts, so the guest
 anyone else shares it. It delivers what was promised on tape: the links, the clips folder and the tag list.
 
 ```
-Subject: Re: <invite subject>        (threaded on the guest's latest message, often their consent reply)
+Subject: Re: <invite subject>        (threaded on the guest's latest message)
 To: the guest + anyone they looped in; CC the cofounder; BCC the operator
 
 Hi {{first_name}},
