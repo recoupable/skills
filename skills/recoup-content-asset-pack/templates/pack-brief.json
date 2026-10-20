@@ -12,6 +12,7 @@
     "original_release_date": null,
     "campaign_date": null,
     "creative_direction": null,
+    "creative_context": null,
     "allow_creative_defaults": false,
     "reference_image_urls": [],
     "constraints": [],
