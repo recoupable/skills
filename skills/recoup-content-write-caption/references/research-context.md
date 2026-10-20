@@ -36,15 +36,18 @@ UUIDs and Spotify IDs. Resolve a name, inspect the match, and reuse its `id`:
 ### Read without assuming a warm-up job
 
 These GET routes are synchronous. Empty successful data is not a cache-warming
-signal. Check HTTP success before reading JSON. Surface `402` with its `billingUrl`
-and stop the research reads. For transient network errors or `5xx`, use bounded retries;
+signal. Check HTTP success before reading JSON. On `402`, stop research reads:
+`insufficient_credits` uses `billingUrl`; the payment-method gate uses `checkoutUrl`.
+If the expected link is missing or malformed, ask the user to check account billing.
+Do not substitute the other link, follow it, create a session or initiate a purchase.
+For transient network errors or `5xx`, use bounded retries;
 on `429`, defer research and respect `Retry-After` before a later attempt.
 never loop indefinitely or turn an unavailable count into zero.
 
 ```bash
 BASE="https://api.recoupable.dev/api"
 research_get() {
-  local path=$1 response body status attempt headers retry_after
+  local path=$1 response body status attempt headers retry_after recovery
   shift
   headers=$(mktemp) || return 1
   for attempt in 1 2 3; do
@@ -56,8 +59,15 @@ research_get() {
         200) rm -f "$headers"; printf '%s' "$body"; return 0 ;;
         402)
           rm -f "$headers"
-          printf 'Research needs credits: %s\n' \
-            "$(printf '%s' "$body" | jq -r '.billingUrl // .error // "Check billing"')" >&2
+          recovery=$(printf '%s' "$body" | jq -r '
+            if type == "object" then
+              if .error == "insufficient_credits" then .billingUrl else .checkoutUrl end
+            else null end
+            | if type == "string" and test("^https://[^[:space:]/?#]+([/?#][^[:space:]]*)?$"; "i")
+              then . else "Check account billing" end
+          ' 2>/dev/null) || recovery=''
+          printf 'Research access requires billing (402). Review: %s\n' \
+            "${recovery:-Check account billing}" >&2
           return 1 ;;
         429)
           retry_after=$(awk 'tolower($1)=="retry-after:" {sub(/^[^:]*:[[:space:]]*/, ""); sub(/\r$/, ""); print}' "$headers")
