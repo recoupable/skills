@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -13,6 +14,48 @@ packages=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(packages)
 
 class PackagesTest(unittest.TestCase):
+    def test_customer_recovery_examples_execute_from_foreign_working_directory(self):
+        source_root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            tracked = subprocess.check_output(
+                ["git", "ls-files", "-z"], cwd=source_root, text=True,
+            ).split("\0")
+            report = packages.build(
+                source_root, filter(None, tracked), root / "packages", "0.0.0", "local-fixture",
+            )
+            install = root / "isolated-install"
+            with zipfile.ZipFile(root / "packages" / report["packages"]["customer"]["file"]) as archive:
+                archive.extractall(install)
+            foreign = root / "unrelated-project"
+            foreign.mkdir()
+            command = [
+                sys.executable, str(source_root / "tests/test_billing_recovery_examples.py"),
+                "--installed-root", str(install),
+            ]
+            def run_installed():
+                return subprocess.run(
+                    command, cwd=foreign, capture_output=True, text=True, timeout=60,
+                )
+            result = run_installed()
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("Ran 35 tests", result.stderr)
+            self.assertIn("OK", result.stderr)
+            for name in (
+                "skills/recoup-content-make-video/references/research-context.md",
+                "skills/recoup-catalog-estimate-value/scripts/estimate.py",
+            ):
+                with self.subTest(missing_packaged_file=name):
+                    packaged = install / name
+                    original = packaged.read_bytes()
+                    try:
+                        packaged.unlink()
+                        failed = run_installed()
+                        self.assertNotEqual(failed.returncode, 0, "Must not fall back to source files")
+                        self.assertIn("FileNotFoundError", failed.stderr)
+                    finally:
+                        packaged.write_bytes(original)
+
     def fixture(self, root):
         files={'.codex-plugin/plugin.json':json.dumps({'version':'1.0.0','skills':'./skills/'}),
                '.mcp.json':'{"mcpServers":{}}',

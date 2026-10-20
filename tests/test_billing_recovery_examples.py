@@ -1,10 +1,17 @@
-"""Execute the shipped recovery examples against synthetic 402 responses only."""
+"""Execute the shipped recovery examples against synthetic responses only.
+
+Use --installed-root /path/to/extracted-customer for all five packaged guides
+and the packaged estimator, including from an unrelated working directory.
+This is an isolated file-install fixture, not named-client discovery or live auth.
+"""
+import argparse
 import importlib.util
 import json
 import os
 from pathlib import Path
 import re
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -16,8 +23,11 @@ PAYMENT_ERROR = "A payment method is required. Add a card to continue."
 
 
 class BillingRecoveryExamples(unittest.TestCase):
+    research_reference = ROOT / "references/research-context.md"
+    estimator_script = ROOT / "skills/recoup-catalog-estimate-value/scripts/estimate.py"
+
     def run_research(self, payload, status=402):
-        text = (ROOT / "references/research-context.md").read_text()
+        text = self.research_reference.read_text()
         helper = re.search(r"research_get\(\) \{[\s\S]*?\n\}", text).group()
         with tempfile.TemporaryDirectory() as directory:
             log = Path(directory) / "calls"
@@ -44,7 +54,7 @@ sleep() { echo 'Unexpected retry' >&2; return 91; }
             return result.returncode, result.stdout, result.stderr, calls
 
     def run_estimator(self, payload, status=402):
-        path = ROOT / "skills/recoup-catalog-estimate-value/scripts/estimate.py"
+        path = self.estimator_script
         spec = importlib.util.spec_from_file_location("recovery_estimate", path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -137,4 +147,24 @@ sleep() { echo 'Unexpected retry' >&2; return 91; }
 
 
 if __name__ == "__main__":
-    unittest.main()
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--installed-root", type=Path)
+    arguments, remaining = parser.parse_known_args()
+    if arguments.installed_root:
+        installed = arguments.installed_root.resolve()
+        suite = unittest.TestSuite()
+        for skill in ("recoup-content-asset-pack", "recoup-content-make-graphics",
+                      "recoup-content-make-video", "recoup-content-reactive-post",
+                      "recoup-content-write-caption"):
+            case = type(
+                "Installed_" + skill.replace("-", "_"),
+                (BillingRecoveryExamples,),
+                {
+                    "research_reference": installed / "skills" / skill / "references/research-context.md",
+                    "estimator_script": installed / "skills/recoup-catalog-estimate-value/scripts/estimate.py",
+                },
+            )
+            suite.addTests(unittest.defaultTestLoader.loadTestsFromTestCase(case))
+        result = unittest.TextTestRunner(verbosity=2).run(suite)
+        raise SystemExit(0 if result.wasSuccessful() else 1)
+    unittest.main(argv=[sys.argv[0], *remaining])
