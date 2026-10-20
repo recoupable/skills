@@ -9,7 +9,7 @@ One Recoup Podcast episode, from the studio to the last short. The other two ski
 
 | Before | This skill | After |
 |---|---|---|
-| `recoup-internal-sales`: invite, nudges, booking and the timeline PDF, outline and written consent, same-day CRM close-out | recording prep → post-production → packaging → publish → shorts | `recoup-internal-sales`: live links to the guest, wrap-up and day-7 emails. `recoup-internal-marketing`: which short goes out today, measured against the funnel |
+| `recoup-internal-sales`: invite, nudges, booking and the timeline PDF, guest brief, same-day CRM close-out | recording prep → post-production → packaging → publish → shorts | `recoup-internal-sales`: live links to the guest, wrap-up and day-7 emails. `recoup-internal-marketing`: which short goes out today, measured against the funnel |
 
 The podcast is the top of the agency sales funnel, so every public piece is also sales copy for a firm that
 charges for builds (`references/podcast-packaging.md`).
@@ -32,7 +32,7 @@ lockup PNG, the intro sting, the blue-sweep background) live in the operator's w
 
 ## Guardrails
 
-- **No consent on file, no recording, no publication.** The sales guest pipeline holds the consent gate.
+- **Booking and joining the recording is the guest's consent;** a guest who withdraws before publication is not published. The sales guest pipeline owns the guest side.
 - **Every stage is shown to the owner and approved before the next one.** Record each decision with who and
   when in the episode's `edit/ANALYSIS.md`; never re-ask an approved decision.
 - **Nothing goes public without the owner's explicit go-ahead,** and the owner makes the final click.

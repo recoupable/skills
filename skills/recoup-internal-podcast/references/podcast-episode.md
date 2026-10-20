@@ -2,7 +2,7 @@
 
 This file covers a Recoup Podcast episode from the moment the raw files exist to the moment it is
 scheduled on Spotify and YouTube, plus its shorts. The guest relationship before (invite, booking,
-outline, consent) and after (live links to the guest, day-7 follow-up) is the `recoup-internal-sales`
+guest brief) and after (live links to the guest, day-7 follow-up) is the `recoup-internal-sales`
 skill's podcast guest pipeline; the recording setup is `references/recording-prep.md`. First run: 2026-10-01/02, a 33-minute
 two-person Restream interview, cut to 32:20, opening + 7 chapters, released on both platforms.
 
@@ -71,7 +71,7 @@ content/podcast-<guest>/
   exports/                ch00..chNN.mp4, opening.mp4, final/
 ```
 
-Business keeps the plan, Granola notes, consent and the episode README (link it, don't copy).
+Business keeps the plan, Granola notes and the episode README (link it, don't copy).
 
 ## The run, in order (every stage revealed in Finder and approved before the next)
 
