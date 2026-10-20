@@ -133,6 +133,9 @@ The internal namespace is a routing convention, not an access-control boundary.
 | recoup-internal consulting: Build a transcript-grounded persona speaking profile or improve spoken scripts without losing the speaker’s voice | `recoup-internal-consulting-persona-script-voice` |
 | recoup-internal consulting: Apply when writing any text for or as the user: social posts, emails, newsletters, landing pages, ads, blog posts, video scripts, sales copy, messages, or any published content | `recoup-internal-consulting-copy-writer` |
 | recoup-internal consulting: Advance a deal cleanly when its state changes | `recoup-internal-consulting-deal-stage-mover` |
+| recoup-internal consulting: Discover recurring team work with an operator questionnaire and evidence register | `recoup-internal-consulting-team-workflow-discovery` |
+| recoup-internal consulting: Choose a first AI project or review existing initiatives with owners and explicit prerequisites | `recoup-internal-consulting-ai-project-selection` |
+| recoup-internal consulting: Define pilot measures or evaluate AI results, recovered capacity, cash effects, and a continuation decision | `recoup-internal-consulting-ai-pilot-review` |
 | recoup-internal consulting: Analyze a sales/discovery call transcript to surface stakes, pain points, success metrics, objections, gaps, and buyer qualification | `recoup-internal-consulting-discovery-analysis` |
 | recoup-internal consulting: Fan one source insight into several scheduled, segment-routed email touches (trend-jack, proof, insight, build-in-public, 1:1 nudge) staged as drafts, never one-offs | `recoup-internal-consulting-email-atomizer` |
 | recoup-internal consulting: Identify land-and-expand opportunities within a client | `recoup-internal-consulting-expansion-spotter` |

@@ -198,3 +198,8 @@
 {"intent": "recoup-internal: recreate the Recoup gallery preview video style for the new catalog cards", "expected": "recoup-internal-content-make-thumbnails", "not": ["recoup-content-make-video"]}
 {"intent": "Make a thumbnail image for my new single", "expected": "recoup-content-make-graphics", "not": ["recoup-internal-content-make-thumbnails"]}
 {"intent": "recoup-internal prep tomorrow's podcast recording and check my camera frame rate", "expected": "recoup-internal-podcast", "not": ["recoup-internal-sales", "recoup-internal-marketing"]}
+
+# --- consulting AI strategy and measurement ---
+{"intent": "recoup-internal consulting: Discover recurring team work with an operator questionnaire and evidence register", "expected": "recoup-internal-consulting-team-workflow-discovery", "not": ["recoup-internal-consulting-ai-project-selection", "recoup-internal-consulting-ai-pilot-review"]}
+{"intent": "recoup-internal consulting: Choose a first AI project or review existing initiatives with owners and explicit prerequisites", "expected": "recoup-internal-consulting-ai-project-selection", "not": ["recoup-internal-consulting-team-workflow-discovery", "recoup-internal-consulting-ai-pilot-review"]}
+{"intent": "recoup-internal consulting: Define pilot measures or evaluate AI results, recovered capacity, cash effects, and a continuation decision", "expected": "recoup-internal-consulting-ai-pilot-review", "not": ["recoup-internal-consulting-team-workflow-discovery", "recoup-internal-consulting-ai-project-selection"]}
