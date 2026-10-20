@@ -120,8 +120,9 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-platform-email-helper/scripts/send-email.mjs
 - skills/recoup-release-plan-rollout/scripts/build_campaign_timeline.py
 - skills/recoup-release-plan-rollout/scripts/validate_release.py
+- skills/recoup-roster-add-artist/scripts/onboarding_examples.sh
 
 ## Release provenance
 
-Source commit: 260c9be318c8d160d828763086e4832bf4c91985
-Version: 2026.1020.31
+Source commit: 3e4a1dde2fec9c65131824b0ab52684560d9ec00
+Version: 2026.1020.32
