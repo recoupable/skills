@@ -171,6 +171,11 @@ python3 scripts/check_resolvable.py        # every skill reachable from RESOLVER
 python3 scripts/run_resolver_eval.py       # routing fixtures valid + full coverage
 ```
 
+For workspace/consulting ownership guidance, also run
+`python3 -m unittest discover -s tests -p test_business_workspace.py`. Its synthetic
+Mono/Business fixture verifies both documented paths reach the same Skills owner
+and rejects a nested checkout even when that directory exists.
+
 **This repo is the flagship, hand-maintained plugin** — "a record label in a box" rooted at the repo root that ships the full platform in one install: artist setup and API access, research, catalog deals, content, song analysis, and releases — every skill (in `skills/`), agent, MCP connection, reference, script, template, and fixture. It also ships Recoup's internal eng/ops skills (`recoup-internal-*`, staff-gated behind the `recoup-internal` keyword). Edit the skills directly.
 
 **Editing a shared (vendored) file:** change the *canonical* copy only, then re-sync every copy listed in `scripts/vendored.json` (there is no `--sync` flag — copy them yourself), then re-check. Groups come in two shapes: single files (`canonical`/`copies`) and whole directories (`canonical_dir`/`copies_dirs`):

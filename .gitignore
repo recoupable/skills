@@ -8,6 +8,7 @@ tests/*
 !tests/consulting-brand.test.mjs
 !tests/consulting-runtime.test.mjs
 !tests/test_consulting_templates.py
+!tests/test_business_workspace.py
 
 # internal research wiki — kept locally, not shipped in the marketplace
 docs/research/

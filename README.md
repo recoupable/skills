@@ -206,7 +206,30 @@ Add a route for the new skill in [`RESOLVER.md`](RESOLVER.md) and a fixture in `
 
 The 63 `recoup-internal-consulting-*` skills cover client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
 
-Business installs this same repository at `plugin/` as a pinned Git submodule. Consult its workspace rules before accessing data. Integration adapters, credentials and active schedules belong to the selected workspace; installing these skills does not configure them.
+### Mono Business workspace
+
+Mono's Business uses the shared sibling `skills/` checkout. Both starting
+directories below refer to the same owning Skills repository:
+
+| Starting directory | Skills repository | Skill authoring path |
+| --- | --- | --- |
+| Mono root | `skills/` | `skills/skills/<skill-name>/SKILL.md` |
+| Business root | `../skills/` | `../skills/skills/<skill-name>/SKILL.md` |
+
+Do not create `business/plugin/` or copy skills into Business. Commit Skills
+changes in the Skills repository and Business records in the Business repository,
+with separate feature branches and PRs targeting `main`. Follow Mono's existing
+coordinator rules for parent references after release; a commit in either
+repository does not publish the other.
+
+For another selected workspace, resolve its authoring repository from that
+workspace's `AGENTS.md`; do not assume a universal nested plugin layout.
+Integration adapters, credentials and active schedules belong to that workspace.
+Installing a skill does not configure them or authorize source ingestion. Mono's
+Business runs no unattended source-ingestion worker; the separate private sync
+coordinator remains outside this workspace.
+
+### Consulting media
 
 Media skills bundle the Recoup Sky identity, DM Sans, IBM Plex Mono, exact logos and approved Finals references. Video engines and modes are supporting GUIDE.md files under the HyperFrames skill. Third-party assets retain their notices; personal-use replica and Virgil font binaries are excluded.
 
