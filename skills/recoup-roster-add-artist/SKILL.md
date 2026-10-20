@@ -80,6 +80,7 @@ onboard_spotify_artist "$ARTIST_NAME" "$SPOTIFY_ARTIST_ID" "$ORGANIZATION_ID"
 The one-request example prints the verified identity, organization, returned
 artist ID, `create_http_status` and `outcome`; persist those actual values in
 `RECOUP.md`. It performs no enrichment and no automatic retry or fallback.
+Credentials pass to curl through stdin headers, not process arguments or files.
 
 **Manual/name-only onboarding is separate.** If there is no verified Spotify
 identity and the user deliberately wants a manual artist, record mode `manual`
@@ -103,7 +104,10 @@ when known, and create status/outcome before any new mutation. If the authentica
 account or selected organization has changed, stop and re-establish the intended
 scope instead of moving the run. Read `GET /api/artists?org_id={savedOrganizationId}`;
 reconcile by exact verified Spotify association and the saved artist account ID,
-not by display name. The read-only example is:
+not by display name. Stored profile URLs can omit the scheme; matching also
+accepts the API's locale URL and Spotify URI forms, while preserving the exact
+case-sensitive ID. Never lowercase an artist ID to force a match. The read-only
+example is:
 
 ```bash
 reconcile_spotify_artist "$SPOTIFY_ARTIST_ID" "$ORGANIZATION_ID" "${SAVED_ARTIST_ACCOUNT_ID:-}"

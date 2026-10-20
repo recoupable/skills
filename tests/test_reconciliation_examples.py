@@ -134,6 +134,11 @@ class RosterOnboardingExamples(unittest.TestCase):
 import json, os, sys
 with open(os.environ['MOCK_CALLS'], 'a') as output:
     output.write(json.dumps(sys.argv[1:]) + '\\n')
+headers = [sys.argv[index + 1] for index, value in enumerate(sys.argv[:-1]) if value == '-H']
+if '@-' in headers:
+    headers.extend(sys.stdin.read().splitlines())
+if 'Authorization: Bearer fixture-only' not in headers:
+    sys.exit(91)
 if int(os.environ['MOCK_EXIT']) == 0:
     print(os.environ['MOCK_PAYLOAD'] + '\\n' + os.environ['MOCK_STATUS'], end='')
 sys.exit(int(os.environ['MOCK_EXIT']))
@@ -255,6 +260,41 @@ sys.exit(int(os.environ['MOCK_EXIT']))
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual(len(calls), 1)
         self.assertEqual(calls[0][calls[0].index('-X') + 1], 'GET')
+
+    def test_reconciliation_accepts_stored_url_forms_without_changing_spotify_id_case(self):
+        for url in [f'open.spotify.com/artist/{self.spotify_id}',
+                    f'https://open.spotify.com/artist/{self.spotify_id}',
+                    f'open.spotify.com/intl-us/artist/{self.spotify_id}?si=fixture',
+                    f'spotify:artist:{self.spotify_id}']:
+            with self.subTest(url=url):
+                roster = {'artists': [{'id': self.artist_id, 'account_id': self.artist_id,
+                                      'account_socials': [{'profile_url': url}]}]}
+                result, calls = self.run_example(
+                    f"reconcile_spotify_artist '{self.spotify_id}' '{self.org_id}'", status=200, payload=roster)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(json.loads(result.stdout)['artist_account_id'], self.artist_id)
+                self.assertEqual(len(calls), 1)
+
+    def test_case_changed_spotify_id_is_not_an_exact_identity_match(self):
+        roster = {'artists': [{'id': self.artist_id, 'account_id': self.artist_id,
+                              'account_socials': [{'profile_url': f'open.spotify.com/artist/{self.spotify_id.lower()}'}]}]}
+        result, calls = self.run_example(
+            f"reconcile_spotify_artist '{self.spotify_id}' '{self.org_id}'", status=200, payload=roster)
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(json.loads(result.stdout)['reconciliation'], 'not_found')
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][calls[0].index('-X') + 1], 'GET')
+
+    def test_post_and_reconciliation_authenticate_without_credentials_in_process_arguments(self):
+        commands = [f"onboard_spotify_artist Artist '{self.spotify_id}' '{self.org_id}'",
+                    f"reconcile_spotify_artist '{self.spotify_id}' '{self.org_id}'"]
+        for command in commands:
+            with self.subTest(command=command):
+                payload = {'artists': []} if command.startswith('reconcile') else None
+                result, calls = self.run_example(command, status=200, payload=payload)
+                self.assertIn(result.returncode, [0, 2], result.stderr)
+                self.assertEqual(len(calls), 1)
+                self.assertNotIn('fixture-only', ' '.join(calls[0]))
 
 
 class EstimatorExamples(unittest.TestCase):

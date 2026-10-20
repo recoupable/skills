@@ -7,8 +7,9 @@ roster_post_artist() {
   local token="${RECOUP_API_KEY:-${RECOUP_ACCESS_TOKEN:-}}"
   [ -n "$token" ] || { echo 'Configure a Recoup credential first.' >&2; return 1; }
   response=$(curl -sS --max-time 90 -X POST \
-    -H "Authorization: Bearer $token" -H 'Content-Type: application/json' \
-    --data "$body" -w '\n%{http_code}' https://api.recoupable.dev/api/artists) || {
+    -H @- -H 'Content-Type: application/json' \
+    --data "$body" -w '\n%{http_code}' https://api.recoupable.dev/api/artists \
+    <<< "Authorization: Bearer $token") || {
     echo 'Request outcome unknown. Keep the checkpoint and reconcile before another mutation.' >&2
     return 1
   }
@@ -62,13 +63,14 @@ reconcile_spotify_artist() {
   jq -en --arg spotify "$spotify" --arg org "$org" '
     ($spotify | test("^[A-Za-z0-9]{22}$")) and
     ($org | test("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"))' >/dev/null || return 1
-  response=$(curl -sS --max-time 90 -X GET -H "Authorization: Bearer $token" \
-    -w '\n%{http_code}' "https://api.recoupable.dev/api/artists?org_id=$org") || return 1
+  response=$(curl -sS --max-time 90 -X GET -H @- \
+    -w '\n%{http_code}' "https://api.recoupable.dev/api/artists?org_id=$org" \
+    <<< "Authorization: Bearer $token") || return 1
   status="${response##*$'\n'}"; payload="${response%$'\n'*}"
   [ "$status" = 200 ] || { printf 'Roster HTTP %s; stop.\n' "$status" >&2; return 1; }
   matches=$(printf '%s' "$payload" | jq -ec --arg spotify "$spotify" '
     .artists | arrays | map(select(any(.account_socials[]?;
-      (.profile_url // .link // "") | test("^https://open\\.spotify\\.com/artist/" + $spotify + "([?].*)?$"))))') || return 1
+      (.profile_url // .link // "") | test("^(?:(?:https?://)?open[.]spotify[.]com/(?:intl-[a-z]{2}/)?artist/|spotify:artist:)" + $spotify + "(?:[/?#].*)?$"))))') || return 1
   case "$(printf '%s' "$matches" | jq 'length')" in
     0)
       jq -cn --arg spotify "$spotify" --arg org "$org" \
