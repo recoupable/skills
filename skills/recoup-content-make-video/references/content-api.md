@@ -1,5 +1,20 @@
 # Content API (`/api/content/*`) — the building blocks
 
+### Optional saved creative direction
+
+Inspect the connected pack schema before sending `brief.creative_context`.
+Supported connections can save attributed references, up to three direction
+candidates, a starting point, `working_mode` (`autonomous` or `guided`) and a
+selection identifying the customer or agent who chose it. Guided final production
+requires customer selection. Autonomous mode has the agent select its direction
+and continue. This records a creative decision, not budget approval.
+
+References declare `reference_only` or `production` usage; only selected production
+images join the generation inputs, within the existing five-image limit. Direction
+changes follow the same job revision and quote invalidation. A real supplied board
+URL is optional. Saving a candidate does not generate a board or collect public
+artist imagery. Older connections without this object keep their existing fields.
+
 Every Recoup content skill is built on these endpoints. This is the shared contract:
 endpoints, house video frame controls, templates, the async create→poll pattern, and cost
 estimation. For auth + artist-ID resolution, use the account-resolver reference when the
