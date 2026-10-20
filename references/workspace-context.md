@@ -89,8 +89,11 @@ curl -sS "$AUTH_HEADER" "https://api.recoupable.dev/api/artists/$ARTIST_ID/posts
 curl -sS "$AUTH_HEADER" "https://api.recoupable.dev/api/artists/$ARTIST_ID/socials" | jq
 ```
 
-If neither workspace context nor API posts are available, **say so and ask the user for
-voice guidance** rather than producing a generic, off-brand result.
+If neither workspace context nor API posts are available, say so. For a release
+pack, reuse supplied direction or already authorized creative defaults; label any
+proposed voice as new creative work. Ask for voice guidance only when that gap
+still blocks the request. Do not restart intake after the customer said to propose
+a direction from the music.
 
 ## 5. Write outputs BACK into the workspace
 
