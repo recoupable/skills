@@ -47,6 +47,58 @@ connected socials, valuation, catalog claim or complete dated release plan.
 | Timeout or partial failure | Read saved job/attempt state; keep successes; do not resubmit an uncertain paid attempt |
 | Completed first result | Continue agreed batch; offer reusable profile/context save afterward |
 
+## Creative direction and working mode
+
+Reuse authorized Recoup context, then selected files/artwork/screenshots/links,
+then accessible public references for actual gaps. Keep a private reference list
+with the correct artist/release, source and purpose. Reference-only inspiration
+does not automatically become production imagery. Use host capabilities honestly;
+blocked Instagram access is a gap, not a completed review. Current customer
+direction takes precedence over stale campaign context.
+
+The three starting points are **established**, **rough idea**, and **none**.
+Preserve an established world. Develop a rough idea faithfully. With no direction,
+take creative responsibility and label the resulting world as a proposal.
+
+**Run with it** lets the agent select a direction and continue. **Show me directions
+first** pauses for a customer selection or feedback, then continues the agreed pack
+without per-asset approval. Three distinct boards are useful when exploring from
+zero; an established world normally needs one assembled direction. Only show real
+supplied or actually generated boards as boards. A concept described in text remains
+a concept. Automatic board generation and collection depend on available authorized
+tools; do not claim the saved-state API creates them.
+
+Where the actual pack schema exposes `creative_context`, use this optional object:
+
+- `starting_point`: `established`, `rough_idea` or `none`.
+- `working_mode`: `autonomous` or `guided`.
+- `references`: up to20 items with distinct `id`, `title`, accessible HTTPS `url`,
+  `media_type` (`image`, `document` or `link`), `source_kind` (`recoup`, `customer`,
+  `public` or `generated`) and `usage` (`reference_only` or `production`).
+- `directions`: up to3 items with distinct `id`, `name`, `concept`, optional
+  `palette`, `typography`, real supplied `board_url` and `reference_ids` from this
+  manifest. Keep concepts concise; the current API exposes their exact limits.
+- `selection`: `direction_id`, `selected_by` (`customer` or `agent`) and an honest
+  `decision_note`. It must reference a direction in this same brief.
+
+An unresolved creative object can be saved, but cannot quote or generate final
+assets. Guided mode requires the customer's direction selection; an agent choice
+is not customer approval. Autonomous mode should have the agent choose and save
+the world rather than restart a creative interview. Selection records a creative
+choice, not spending approval. Existing budget authorization remains required.
+
+Only image manifest items explicitly marked `production` and referenced by the
+selected direction become generation inputs. Together with legacy explicit
+`reference_image_urls`, the current limit is five distinct images. The source
+manifest remains unchanged; the selected direction is projected into production
+prompts and input snapshots. Updating direction/mode uses the same job's current
+revision and invalidates the old quote. Do not carry an earlier production-image
+projection back as newly supplied source references.
+
+If the host's schema lacks this object, keep the checkpoint in the conversation
+or supported local file, follow the selected review preference and do not send
+unsupported fields or claim server-enforced direction selection is available.
+
 ## Pack tools and portable checkpoints
 
 Prefer the connected pack tools when discovered. `prepare_release_pack` retains

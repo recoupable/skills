@@ -13,9 +13,12 @@ the customer to general onboarding when they already asked you to make it.
 
 ## Procedure
 
-1. **Keep the request, find the gaps.** Read the conversation, supplied audio,
-   artwork and references first. Reuse authorized artist/release context when it
-   exists; `references/workspace-context.md` describes local files, not a
+1. **Keep the request, find the gaps.** Read the conversation and reuse relevant
+   authorized Recoup artist/release context before asking for facts again. Then
+   gather supplied audio, artwork, screenshots and selected files or links. Use
+   accessible, correctly matched public references only to fill useful gaps;
+   never pretend to read a blocked profile or search the whole computer.
+   `references/workspace-context.md` describes local files, not a
    requirement to create them. If connected Context tools can read/compile a
    selected saved brief, use their actual schemas and coverage. Research is
    enrichment, not a gate. Do not import a whole catalog for one pack.
@@ -24,9 +27,12 @@ the customer to general onboarding when they already asked you to make it.
    Read `references/song-sourcing.md` only if the song is missing. Resolve remix
    and namesake ambiguity before production. Analyze available audio and choose
    a useful hook; metadata alone is not listening. Never substitute another song.
-3. **Ask once, only for essentials.** Establish artist/title, usable audio,
+3. **Ask briefly, only for essentials.** Establish artist/title, usable audio,
    occasion, and direction/references or permission to propose a direction. Reuse
-   anything already known. Offer clear defaults for audience, platforms and
+   anything already known. A friendly gap question is "Got artwork, past posts,
+   or a look you want me to build on? Send it over or tell me where to find it."
+   Distinguish established direction, a rough idea and no direction. Keep this
+   release's visual world separate from older artist campaigns. Offer clear defaults for audience, platforms and
    primary action; label them as proposals. No invented brand identity, lyrics,
    anniversary dates or metrics. Use `templates/pack-brief.json` as a compact
    checkpoint where files are supported; the host conversation and pack job must
@@ -37,7 +43,18 @@ the customer to general onboarding when they already asked you to make it.
    valid account. An existing artist, social connection, valuation, catalog claim
    or GitHub workspace is not a pack prerequisite. Never create a throwaway
    account, extract OAuth credentials or redirect into bulk roster onboarding.
-5. **Prepare the same durable job.** Prefer `prepare_release_pack`,
+5. **Choose the level of creative involvement.** Default to **Run with it** when
+   the customer delegates creative decisions. Offer **Show me directions first**
+   when they want feedback before full production. Ask only if that preference is
+   unclear: "Want me to run with it, or show you a few directions first?"
+   Preserve established direction; develop a rough idea; propose distinct worlds
+   when there is no direction. See `references/release-pack-brief.md` for the
+   saved creative state. A supplied board can be reviewed now. Generate new boards
+   only through a real, available capability with its spending authorization;
+   this skill does not make an unavailable mood-board generator exist. Never label
+   a text concept as a generated board. The guided checkpoint is direction
+   selection, not a mandatory approval for every asset.
+6. **Prepare the same durable job.** Prefer `prepare_release_pack`,
    `get_release_pack`, `estimate_release_pack`, `generate_release_pack`,
    `retry_release_pack` and `upload_release_pack_asset` when actually exposed.
    Use their returned job IDs, revisions, readiness and next actions. A selected
@@ -45,7 +62,13 @@ the customer to general onboarding when they already asked you to make it.
    Do not claim a newer tool exists on an older connection. If an operation is
    missing, name it, retain the brief and explain the specific next step. A
    missing REST credential does not invalidate working MCP authentication.
-6. **Show direction + scope + complete budget.** Default to 15 creative pieces:
+   When the discovered schema supports `brief.creative_context`, save references,
+   candidates, working mode and selection there. Record whether the customer or
+   agent selected the direction and the actual decision context; never invent
+   customer approval. Guided mode requires customer selection before final quote
+   or generation. Autonomous mode records the agent's selected world and continues.
+   Keep source inspiration separate from explicitly selected production images.
+7. **Show direction + scope + complete budget.** Default to 15 creative pieces:
    eight clips, four quote cards, one artwork, one carousel and one visualizer,
    each with a caption. Adapt to the requested scope. Count a carousel as one
    piece; disclose its slides and format variants separately. Get the complete
@@ -53,7 +76,7 @@ the customer to general onboarding when they already asked you to make it.
    current input/revision and maximum budget. The legacy **GET**
    `/content/estimate` is advisory per video, not a complete mixed-pack quote.
    Surface the returned `billingUrl` on credit shortfall; do not buy or retry.
-7. **Produce, inspect, continue.** Pass the exact brief, music window, occasion,
+8. **Produce, inspect, continue.** Pass the selected direction, exact brief, music window, occasion,
    aesthetic, voice and constraints into production. Produce a representative
    asset early and continue the approved batch without another mandatory approval
    stop, unless the customer requested a preview checkpoint. Use one coherent
@@ -61,7 +84,7 @@ the customer to general onboarding when they already asked you to make it.
    Inspect the real outputs using `references/analyze-gate.md`; verify audio,
    framing, text and brief fit. A prompt, render request or generated-but-unchecked
    file is not a usable finished asset.
-8. **Deliver and preserve progress.** Read the job and its export/manifest.
+9. **Deliver and preserve progress.** Read the job and its export/manifest.
    Present previews, usable file links, captions, components/variants and honest
    gaps. Retain successful work on failure and retry only failed stages within
    budget; reconcile an uncertain submission before any duplicate paid work.

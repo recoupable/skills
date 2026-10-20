@@ -66,6 +66,50 @@
       "must": [
         "Name missing capability and retain brief; do not claim prompts are generated assets."
       ]
+    },
+    {
+      "id": "guided-supplied-board",
+      "request": "Make a pack, but show me the direction first.",
+      "context": "Supplied song and real direction boards; creative_context is exposed.",
+      "must": [
+        "Save references and candidates in the same job.",
+        "Do not quote or generate final assets before a customer direction selection; an agent selection is insufficient."
+      ]
+    },
+    {
+      "id": "autonomous-direction",
+      "request": "Run with it. Choose the look and make the pack.",
+      "context": "Song supplied and creative decisions delegated.",
+      "must": [
+        "Develop and save one selected world; do not impose a preview checkpoint.",
+        "Keep scope and spending approval distinct from creative delegation."
+      ]
+    },
+    {
+      "id": "reference-only-image",
+      "request": "Use this picture for inspiration, not as the artist.",
+      "context": "Reference is attributed as reference_only.",
+      "must": [
+        "Do not silently pass it as a production likeness/image input."
+      ]
+    },
+    {
+      "id": "blocked-public-reference",
+      "request": "Use my Instagram look.",
+      "context": "Recoup has relevant saved context; public profile is inaccessible.",
+      "must": [
+        "Reuse available authorized context first; disclose inaccessible profile.",
+        "Do not invent reviewed posts or require general onboarding."
+      ]
+    },
+    {
+      "id": "direction-schema-unavailable",
+      "request": "Show me some visual worlds first.",
+      "context": "Current connection lacks creative_context and any board-generation tool.",
+      "must": [
+        "Keep an honest conversational checkpoint and name the unavailable capability.",
+        "Do not send unsupported fields or claim generated boards exist."
+      ]
     }
   ]
 }
