@@ -37,6 +37,8 @@ jobs:
         run: node --test tests/verify-cli.test.mjs tests/run-cli-case.test.mjs
       - name: Consulting template and credential boundary checks
         run: python3 -m unittest discover -s tests -p test_consulting_templates.py
+      - name: Business shared Skills ownership
+        run: python3 -m unittest discover -s tests -p test_business_workspace.py
       - name: Plugin package boundaries and build
         run: |
           python3 -m unittest discover -s tests -p test_plugin_packages.py
