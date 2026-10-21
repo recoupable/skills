@@ -34,7 +34,7 @@ for i, (a, b, interp) in enumerate(segs):
         continue
     vf = ('minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1' if interp else 'fps=30') + ',scale=896:504,setsar=1'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{a:.3f}', '-i', SRC, '-vf', vf, '-frames:v', str(round((b - a) * 30)),
-                    '-c:v', 'libx264', '-crf', '16', '-preset', 'veryfast', '-pix_fmt', 'yuv420p', '-an', out + '.tmp.mp4'], check=True)
+                    '-fps_mode', 'cfr', '-c:v', 'libx264', '-crf', '16', '-preset', 'veryfast', '-pix_fmt', 'yuv420p', '-an', out + '.tmp.mp4'], check=True)
     os.replace(out + '.tmp.mp4', out)
     print(f'{i:03d} {a:8.2f}-{b:8.2f} {"INTERP" if interp else "cfr"}', flush=True)
 open(f'{D}/list.txt', 'w').write(''.join(f"file '{os.path.basename(x)}'\n" for x in lst))
