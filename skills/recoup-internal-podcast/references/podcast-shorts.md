@@ -92,10 +92,12 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
 3. `npx --yes hyperframes snapshot --at <every beat midpoint, the reveals, the morph back> --describe false --no-end`
    in `comp/shorts/s1`, and read the contact sheet: overlaps with the circle, clipped text, a caption stuck
    on screen, labels that contradict state.
-4. `STOP_AT=HHMM zsh scripts/podcast/shorts/render.sh <project> s1:<slug>` (zsh: under bash its `${0:A:h}`
+4. Sandbox path: `node --env-file=<env> scripts/podcast/sandbox/studio.mjs run <project> s1` (`build` instead of
+   `run` for steps 1-2; `references/podcast-sandbox.md`). Local path:
+   `STOP_AT=HHMM zsh scripts/podcast/shorts/render.sh <project> s1:<slug>` (zsh: under bash its `${0:A:h}`
    breaks and every build fails) -> `exports/shorts/<slug>.mp4`
    (-14 LUFS). Open it in Finder for the owner.
-5. **Prototype one short, get the look approved, then build the rest.** Renders run ~3-5x realtime on the
+5. **Prototype one short, get the look approved, then build the rest.** Local renders run ~3-5x realtime on the
    Intel laptop; one at a time (parallel load times out the headless-Chrome launch; render.sh retries).
    A background queue can be cut off: re-run the missing shorts.
 

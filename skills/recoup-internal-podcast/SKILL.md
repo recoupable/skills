@@ -25,6 +25,10 @@ charges for builds (`references/podcast-packaging.md`).
 | 5. Shorts | `references/podcast-shorts.md` | Clips table approved, then one prototype short (real references on screen; three directions when the look changes), then the rest |
 | 6. Hand back | `references/podcast-episode.md` step 18 | Sales sends the live links |
 
+**Where it runs:** read `~/.config/recoup/podcast-sandbox.json` before post-production. `"default": "sandbox"`
+means every re-cut, build and render runs on Vercel Sandbox through `scripts/podcast/sandbox/studio.mjs`
+(`references/podcast-sandbox.md`); no file means the local commands in the references.
+
 Scripts ship alongside this skill: `scripts/podcast/` (run as `python3 scripts/podcast/<name>.py <project>`),
 `scripts/podcast/shorts/`, templates in `templates/podcast/`, fonts and logos in `brand/`. One project
 folder per episode, outside this skill (layout in `references/podcast-episode.md`). Private show assets (the
@@ -38,7 +42,10 @@ lockup PNG, the intro sting, the blue-sweep background) live in the operator's w
 - **Nothing goes public without the owner's explicit go-ahead,** and the owner makes the final click.
 - **Run scripts from a skills worktree of your own** on `origin/main`; parallel sessions switch or delete
   shared checkouts mid-render.
-- **Never render during a live recording,** and render one chapter at a time.
+- **Sandbox default means sandbox only.** With `"default": "sandbox"`, never run `cut.py`, `build.py`,
+  `build_hy.py`, `render.sh` or `hyperframes render` on the laptop, not even a quick re-cut; ask the owner first.
+- **Nothing heavy during a live recording:** no local renders (and locally, one chapter at a time), no
+  media uploads to the sandbox drive (they compete with Restream for the connection).
 - **No em dashes in published copy** (titles, descriptions, cards, captions).
 - **Motion follows huashu-art-motion** (installed skill) in the full episode and the shorts: real captures on
   screen, highlighter on the spoken line, numbers grown on the word. No more than 15 s of cameras only.
@@ -50,4 +57,5 @@ lockup PNG, the intro sting, the blue-sweep background) live in the operator's w
 - `references/recording-prep.md` — the day-before studio test (frame-rate check, the phone-camera fallback), what not to run during the take, the dropout scan after
 - `references/podcast-episode.md` — raw Restream files to scheduled episode: the news-desk format, project layout, the ordered run with approval gates, enhancing only what the cut plays, assembly, publish traps
 - `references/podcast-packaging.md` — premium episode copy (title shape, description, cold open, back catalog), the cover spec, guest photo sourcing, Spotify for Creators edits
+- `references/podcast-sandbox.md` — the optional Vercel Sandbox path: which operators use it, what stays local, one-time setup, media upload, build/run jobs, gotchas
 - `references/podcast-shorts.md` — vertical shorts: the clips table gate, the hybrid format, beat design, build/snapshot/render, per-platform captions and UTMs
