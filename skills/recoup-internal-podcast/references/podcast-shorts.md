@@ -60,7 +60,7 @@ has no contrast without it):
 - **Source lines say exactly what the print is** and never put her quote under a document as if it said it:
   "GMG release, Apr 6 2026 · quotes: this episode"; a frame of her screen share is "<product>, as <guest>
   showed it on the podcast". Keep them <= ~46 characters.
-- **First beat ~3.9-5 s in**: the name tag needs >= 3 s on screen, then the first beat. Hide the tag when it
+- **First beat ~4.3-5 s in**: the name tag shows from 0.6 s and needs >= 3 s on screen before it hides (0.7 s before the first beat). Hide the tag when it
   starts: `tl.to("#who", { opacity: 0, duration: .25, overwrite: "auto" }, @first - .7)`.
 - **2-4 beats, her face >= 25% of the runtime**, no beat over ~18 s; video gaps between beats >= 3 s, otherwise
   make the scenes contiguous (a 1 s face flash between beats reads as a flicker).

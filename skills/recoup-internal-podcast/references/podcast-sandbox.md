@@ -62,8 +62,8 @@ tell the owner which of these is next and how long it takes locally before runni
   snapshot storage; the runner opts out for every job.
 - **Command working directory is the image's home, not `/vercel/sandbox`**: relative paths fail. The runner
   uses absolute paths.
-- **One read-write mount per drive.** Parallel jobs mount a read-only drive snapshot; `media` is the only
-  writer.
+- **One read-write mount per drive.** Parallel jobs mount a read-only drive snapshot; `media` and
+  `enhanced` write to it, so never run those two at the same time.
 - **Rebuilds drop episode-only overlays.** `render.sh` rebuilds the comp; a chapter that needs
   `edit/screen_share.py` is built, overlaid and rendered by the runner directly.
 - **macOS tar metadata**: archives made without `--no-xattrs` print a provenance warning per file on Linux.

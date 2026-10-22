@@ -192,6 +192,8 @@ async function workspace(proj, tag, { vcpus = 8, writable = false } = {}) {
   const sbx = await Sandbox.create({ ...auth, source: { type: "snapshot", snapshotId }, resources: { vcpus }, timeout: 3 * 60 * 60e3,
     persistent: false, mounts: { "/media": writable ? drive : drive.snapshot() } });
   log(tag, `sandbox ${sbx.name}`);
+  // a failure while setting up must still stop the sandbox, or it bills until its 3 h timeout
+  try {
   const skillTar = tarOf("skill.tgz", SKILL, ["scripts", "templates", "brand"], ["__pycache__"]);
   const extra = ["enhance/host-used-map.json", "enhance/guest-used-map.json", "enhance/guest-used-split.json"].filter((f) => fs.existsSync(path.join(proj, f)));
   const projTar = tarOf("proj.tgz", proj, ["episode.json", "edit", ...extra], ["fixseg", "intake", "sharecheck", "__pycache__"]);
@@ -201,12 +203,15 @@ async function workspace(proj, tag, { vcpus = 8, writable = false } = {}) {
   }
   // a real raw/ dir of links, so scripts that write next to the raw media (unpack, gate) can
   await sh(sbx, tag, `mkdir -p /work/proj/raw /work/proj/exports && for f in /media/${slug}/raw/*; do ln -sfn "$(readlink -f "$f")" /work/proj/raw/$(basename "$f"); done`, { quiet: true });
+  } catch (e) { await stop(sbx, tag); throw e; }
   return sbx;
 }
 
 async function enhanced(proj, hostWav, guestWavs) {
   const slug = path.basename(proj), sbx = await workspace(proj, "enhanced", { vcpus: 4, writable: true });
   try {
+    // drop the links to last run's outputs so unpack and gate write new files, not through links into the drive
+    await sh(sbx, "enhanced", "rm -f /work/proj/raw/*-audio-enhanced.wav /work/proj/raw/host-audio-enhanced-gated.wav", { quiet: true });
     await sh(sbx, "enhanced", "pip install -q numpy 2>&1 | tail -1", { quiet: true });
     await sh(sbx, "enhanced", "mkdir -p /work/in", { quiet: true });
     await upload(sbx, hostWav, "/work/in/host.wav");
