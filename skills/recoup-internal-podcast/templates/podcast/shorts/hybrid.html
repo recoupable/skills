@@ -111,8 +111,11 @@
 {{JS}}
 
   // scenes -> beats: contiguous scenes form one beat; the guest video shrinks to the circle for each beat
-  SC.forEach(([id, a, b]) => scene(id, a, b));
   const BEATS = []; SC.forEach(([id, a, b]) => { const P = BEATS[BEATS.length - 1]; if (P && a - P[1] < .3) P[1] = b; else BEATS.push([a, b]); });
+  // a beat's first scene shows as the video starts shrinking (a - .3), so the stage is never empty white
+  // and its last scene stays up until the video has grown back over it (b + .3), or under the end card's wipe
+  SC.forEach(([id, a, b]) => scene(id, BEATS.some(([s]) => s === a) && a >= .5 ? a - .3 : a,
+                                   !BEATS.some(([, e]) => e === b) ? b : b < CLIP - .2 ? b + .3 : CLIP + .6));
   for (const [a, b] of BEATS) {
     if (a < .5) tl.set("#pip", SMALL, 0); else tl.to("#pip", { ...SMALL, duration: .45, ease: "power3.inOut" }, a - .3);
     if (b < CLIP - .2) tl.to("#pip", { ...BIG, duration: .5, ease: "power3.inOut" }, b - .25);
@@ -124,6 +127,7 @@
   const caps = {{CAP_JS}};
   caps.forEach(([id, a, b, ws]) => {
     tl.set(`#${id}`, { opacity: 1 }, a); tl.set(`#${id}`, { opacity: 0 }, b);
+    tl.fromTo(`#${id}`, { scale: .86, y: 10 }, { scale: 1, y: 0, duration: .22, ease: "back.out(2.2)" }, a);   // pop in ~7 frames
     ws.forEach(([j, s]) => tl.set(`#${id} span:nth-child(${j + 1})`, { backgroundColor: "#D6FF62" }, s)
                              .set(`#${id} span:nth-child(${j + 1})`, { backgroundColor: "rgba(0,0,0,0)" }, ws[j + 1] ? ws[j + 1][1] : b));
   });

@@ -54,8 +54,17 @@ has no contrast without it):
   muted grey, a title that states the conclusion and can be derived from the bars ("Fans pay 2.5x what the catalog
   cost" = 20 ÷ 8), a source line.
 
-- **First beat within ~5 s of the guest's first word**, not after a long talking-head stretch. Hide the name
-  tag when it starts: `tl.to("#who", { opacity: 0, duration: .25, overwrite: "auto" }, @first - .7)`.
+- **The hook must be true** to what the guest says inside the clip, and every on-screen claim gets a row in
+  `edit/shorts/<id>.facts.md` (on screen / source / exact wording / date checked). The ledger caught a false
+  hook ("Her AI tried to name her platform": she named the platform, her AI tried to name a product).
+- **Source lines say exactly what the print is** and never put her quote under a document as if it said it:
+  "GMG release, Apr 6 2026 · quotes: this episode"; a frame of her screen share is "<product>, as <guest>
+  showed it on the podcast". Keep them <= ~46 characters.
+- **First beat ~3.9-5 s in**: the name tag needs >= 3 s on screen, then the first beat. Hide the tag when it
+  starts: `tl.to("#who", { opacity: 0, duration: .25, overwrite: "auto" }, @first - .7)`.
+- **2-4 beats, her face >= 25% of the runtime**, no beat over ~18 s; video gaps between beats >= 3 s, otherwise
+  make the scenes contiguous (a 1 s face flash between beats reads as a flicker).
+- **At most 5 filler trims per short**, cut at word boundaries with ~0.04 s margin; read the joined sentence back.
 - **Measure, don't eyeball, annotation positions**: snapshot the frame, overlay a grid, and centre the circle
   on its target (the owner caught a circle that missed the price by ~30 px).
 - **A new look gets three directions first**: three stills of the same moments, different compositions, owner
@@ -68,9 +77,9 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
 - **Anchor every reveal to a transcript phrase**, never a timecode (`"name": ["g", "phrase", raw_after]`,
   `@name` in JS; `_end` names anchor to the phrase's last word). Trims then never desync a beat.
 - **One idea per scene.** A scene changes when her sentence does.
-- **Let viewers read it.** Never let text appear less than ~2 s before its scene ends. A checklist that
-  landed as the scene closed was unreadable and had to be re-rendered: hold the scene ~1.5 s past the
-  last reveal, and stagger reveals on the spoken words.
+- **Let viewers read it**: every text stays on screen >= letters/15 + 1.5 s. `scripts/podcast/shorts/readcheck.js`
+  seeks the built comp and lists every failure; run it in an open browser tab on `comp/shorts/<id>/index.html`
+  (chrome-devtools `evaluate_script` with `sourcePath`) and extend holds until `fails` is empty.
 - **Labels show state.** A toggle with static OUT/IN labels read "OUT" while switched on; put the state
   text on the knob.
 - **Keep low text clear of the circle**: kinetic text below `top:600` gets right padding automatically
@@ -89,9 +98,11 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
 1. Media: `build_hy.py` cuts it on first build (`cut.py --cutlist edit/shorts.json`); pass the cleaned
    host track via episode.json `shorts.host_audio` if the episode used one.
 2. `python3 scripts/podcast/shorts/build_hy.py <project> s1`
-3. `npx --yes hyperframes snapshot --at <every beat midpoint, the reveals, the morph back> --describe false --no-end`
-   in `comp/shorts/s1`, and read the contact sheet: overlaps with the circle, clipped text, a caption stuck
-   on screen, labels that contradict state.
+3. Run readcheck.js (section 3). After the render, pull frames with ffmpeg from the MP4 (a 0.1 s strip at every
+   morph in and out, a 0.5 s contact sheet) and read them: overlaps with the circle, clipped text, a stuck
+   caption, an empty stage. Then an independent agent that did not build the short scores it (hook,
+   truthfulness, readability, captions, fidelity, motion, pacing) as SHIP or FIX with timecodes. `hyperframes
+   snapshot` is a full headless render: on a shared machine run it on the sandbox, not locally.
 4. Sandbox path: `node --env-file=<env> scripts/podcast/sandbox/studio.mjs run <project> s1` (`build` instead of
    `run` for steps 1-2; `references/podcast-sandbox.md`). Local path:
    `STOP_AT=HHMM zsh scripts/podcast/shorts/render.sh <project> s1:<slug>` (zsh: under bash its `${0:A:h}`

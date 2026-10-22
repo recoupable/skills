@@ -24,11 +24,13 @@ in the episode and shorts references.
 |---|---|
 | Editing `chapters.json`, `specs.py`, `shorts.json`, `episode.json`, `ANALYSIS.md` | Re-cut camera and audio media (`cut.py` via `build.py --recut` / `build_hy.py --recut`) |
 | `rough_audio.py` (audio only, about a minute) | Chapter build, `edit/screen_share.py` when a chapter overlaps the share window, render |
-| `hyperframes snapshot` / `inspect` on a comp pulled back by `build` | Shorts build, render and loudness pass (`shorts/render.sh`) |
+| `readcheck.js` in an open browser tab on a comp pulled back by `build`; ffmpeg frame grabs from a rendered MP4 | Shorts build, render and loudness pass (`shorts/render.sh`); `hyperframes snapshot` (a full headless render) |
 | Playing exports in Finder | |
 
 Not covered yet (they run locally until the runner gains a job for them): `transcribe.py`,
-`fix_host_video.py`, `make_intro.py` renders, `enhance_pack.py` and `assemble.py`. With the sandbox default,
+`fix_host_video.py`, `make_intro.py` renders. `studio.mjs enhanced` (Adobe output -> `enhance_pack.py` unpack +
+host gate) and `studio.mjs assemble` (opening join + `assemble.py`) run those two on the sandbox. `run` does not
+always refresh the pulled-back comp: run `build` before a readcheck. With the sandbox default,
 tell the owner which of these is next and how long it takes locally before running it.
 
 ## One-time setup
