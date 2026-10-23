@@ -1,0 +1,52 @@
+{
+  "schema_version": "metadata-comparison/1",
+  "case_id": null,
+  "scope": {
+    "entity_ids": [],
+    "release_edition_ids": [],
+    "destinations": [],
+    "territories": []
+  },
+  "comparisons": [],
+  "comparison_record": {
+    "finding_id": null,
+    "recording_id": null,
+    "composition_id": null,
+    "release_edition_id": null,
+    "membership": {
+      "disc": null,
+      "track": null
+    },
+    "party_id": null,
+    "field_or_role": null,
+    "intended": {
+      "value": null,
+      "authority": null,
+      "source_id": null,
+      "source_version": null,
+      "locator": null
+    },
+    "receipt": {
+      "operation_id": null,
+      "provider": null,
+      "payload_version": null,
+      "raw_status": null,
+      "normalized_status": null,
+      "source_version": null,
+      "locator": null
+    },
+    "observed": {
+      "destination": null,
+      "territory": null,
+      "value": null,
+      "coverage": "not_checked",
+      "observed_at": null,
+      "source_version": null,
+      "locator": null
+    },
+    "comparison_status": "not_checked",
+    "depends_on_versions": [],
+    "proposed_correction": null,
+    "external_action": "not_requested"
+  }
+}

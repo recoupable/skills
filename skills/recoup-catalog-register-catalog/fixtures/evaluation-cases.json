@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "execution": "Independent agent walkthrough in a private temporary workspace; no external sends or submissions. Evaluate generated artifacts against expected criteria. Passing fixtures does not prove live provider capability.",
+  "cases": [
+    {
+      "id": "register-existing-interest",
+      "request": "Claim my documented share of this existing MLC work.",
+      "inputs": {
+        "provider": "The MLC",
+        "existing_work_id": "SYN-WORK-100",
+        "party": "Example Publishing",
+        "documented_share": "25",
+        "mandate": "US mechanical collection",
+        "account_role": "eligible member",
+        "competing_adverse_state": false,
+        "instruction": "prepare only"
+      },
+      "expected": {
+        "must": [
+          "Choose ordinary existing-interest claim",
+          "Prepare exact share and authority packet",
+          "Stop prepared"
+        ],
+        "must_not": [
+          "Register duplicate work",
+          "Enter substantive dispute workflow",
+          "Submit"
+        ]
+      }
+    },
+    {
+      "id": "register-new-no-recording",
+      "request": "Prepare this composition registration.",
+      "inputs": {
+        "title": "Unreleased Glass",
+        "writers": [
+          "Mira Example"
+        ],
+        "split_document": "executed-v1",
+        "recording": null,
+        "iswc": null,
+        "provider_rules": "not yet checked"
+      },
+      "expected": {
+        "must": [
+          "Prepare composition evidence and unresolved provider requirements",
+          "Search existing records before new filing"
+        ],
+        "must_not": [
+          "Require invented recording/ISRC",
+          "Call unresearched packet validated"
+        ]
+      }
+    },
+    {
+      "id": "register-field-error",
+      "request": "Fix the invalid date in this returned registration.",
+      "inputs": {
+        "attempt_id": "ATTEMPT-1",
+        "raw_error": "date must be YYYY-MM-DD",
+        "source_effective_date": "2024-07-01",
+        "sent_date": "07/01/2024",
+        "authority": "same operation and source-backed date correction"
+      },
+      "expected": {
+        "must": [
+          "Retain rejection and repair date in registration",
+          "Recheck payload authority and avoid duplicate accepted items"
+        ],
+        "must_not": [
+          "Open a rights dispute",
+          "Alter ownership to make validation pass"
+        ]
+      }
+    },
+    {
+      "id": "register-partial",
+      "request": "Resume this registration batch.",
+      "inputs": {
+        "items": [
+          {
+            "id": "A",
+            "provider_decision": "accepted",
+            "readback": "correct"
+          },
+          {
+            "id": "B",
+            "provider_decision": "pending"
+          },
+          {
+            "id": "C",
+            "provider_decision": "rejected",
+            "reason": "competing title claim"
+          }
+        ]
+      },
+      "expected": {
+        "must": [
+          "Keep A verified and B pending",
+          "Prepare substantive resolution handoff for C",
+          "Retain per-item provider state"
+        ],
+        "must_not": [
+          "Resubmit A",
+          "Call whole batch registered"
+        ]
+      }
+    },
+    {
+      "id": "register-source-changed",
+      "request": "Submit the packet we prepared yesterday.",
+      "inputs": {
+        "prepared_authority_source": "mandate-v1",
+        "current_mandate": "mandate-v2 withdrawn",
+        "objects": [
+          "W-1"
+        ],
+        "prepared_payload_hash": "old-synthetic-hash"
+      },
+      "expected": {
+        "must": [
+          "Invalidate affected action readiness",
+          "Preserve prepared version/history and identify missing current authority"
+        ],
+        "must_not": [
+          "Submit using stale mandate",
+          "Erase prior evidence"
+        ]
+      }
+    },
+    {
+      "id": "register-unknown-outcome",
+      "request": "Try again; the filing page timed out.",
+      "inputs": {
+        "attempt": "ATTEMPT-X",
+        "status": "unknown_outcome",
+        "provider_receipt_lookup": "available",
+        "same_payload": true
+      },
+      "expected": {
+        "must": [
+          "Inspect prior receipt or provider record before any retry",
+          "Resume existing attempt if observed"
+        ],
+        "must_not": [
+          "Blindly duplicate filing"
+        ]
+      }
+    },
+    {
+      "id": "register-transfer",
+      "request": "Prepare this administration transfer.",
+      "inputs": {
+        "ownership": "50",
+        "new_admin_collection": "50",
+        "effective": "2024-07-01",
+        "source_release": "not supplied",
+        "target_acceptance": "accepted",
+        "historic_tail": "2024-Q2 uses payable by old admin"
+      },
+      "expected": {
+        "must": [
+          "Preserve underlying ownership",
+          "Track missing source release separately from target acceptance",
+          "Keep tail in accounting handoff"
+        ],
+        "must_not": [
+          "Call transfer complete from target acceptance",
+          "Treat admin change as new recording identity"
+        ]
+      }
+    }
+  ]
+}

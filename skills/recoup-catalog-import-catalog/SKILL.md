@@ -52,3 +52,19 @@ paid OCR or model extraction is a separate authorized step.
 
 Example: 20 rows with one ISRC appearing on two releases preserve both memberships;
 that repeat is not automatically two recordings or a row to delete.
+
+
+## Repeatable intake packet
+
+For CSV/XLSX, read `references/intake.md` and adapt `templates/import-map.json`.
+Run the local helper `scripts/import_catalog.py` alongside this skill to produce
+source fingerprints, typed candidates, release memberships, many-to-many work links,
+parented interest observations and complete row dispositions. It makes no hosted writes.
+Retain its packet and the original input in the selected private case. Run
+`python3 -m unittest discover -s tests` from this skill to verify the helper.
+
+A local `proposed` row is ready for review; it is not `imported`. Numeric spreadsheet
+IDs, ambiguous identities and unsupported share semantics stay held. Separate ownership,
+writer interest, administration, collection, statement percentage and producer participation.
+Do not alter a percentage to make totals pass. Discover supported save schemas, record
+per-field omissions and read back actual writes before promoting any row to imported.

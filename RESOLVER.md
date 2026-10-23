@@ -66,8 +66,13 @@
 | import a distributor/repertoire catalog spreadsheet; organize releases/recordings with unresolved rows | `recoup-catalog-import-catalog` |
 | explain a supplied music contract/license/publishing agreement and its obligations | `recoup-catalog-explain-contract` |
 | organize publishing repertoire, writer/publisher interests, registration references and mandates | `recoup-catalog-organize-publishing` |
-| review/underwrite a catalog deal, clean a data room, value with files, dashboard, IC memo | `recoup-catalog-review-deal` |
+| review/underwrite a proposed catalog transaction; seller-data-room underwriting, deal dashboard or IC memo | `recoup-catalog-review-deal` |
 | value a catalog from public data only (no seller files) | `recoup-catalog-estimate-value` |
+| audit catalog rights, registrations, identifiers, documents and asset condition; produce findings without changing external records | `recoup-catalog-audit-catalog` |
+| reconcile music royalty statements, entitlements, recoupment, royalty remittances or related bank receipts | `recoup-catalog-reconcile-royalties` |
+| register a work/recording, claim an ordinary existing interest, amend repertoire, match recordings to works or transfer a registry/admin mandate | `recoup-catalog-register-catalog` |
+| pursue a documented music-rights conflict, denied correction, royalty hold, missing accounting or disputed royalty amount with a provider | `recoup-catalog-resolve-claims` |
+| correct an already delivered release, enroll eligible existing recordings in UGC monetization or migrate distributors | `recoup-release-manage-delivery` |
 | measure an artist's NFT/onchain earnings, value an artist who sold music NFTs | `recoup-nft-valuation` |
 
 ## Tier 2 — Platform (operate the system; not a label deliverable)
@@ -190,7 +195,7 @@ The internal namespace is a routing convention, not an access-control boundary.
 - **Playlists.** Catalog-wide playlist *strategy* (no audio) →
   `recoup-research-playlist-targets`. A single song's playlist *pitch* from its audio
   → `recoup-song-placement-pitch`.
-- **Valuation fork.** With seller files → `recoup-catalog-review-deal`. From public
+- **Valuation fork.** Underwriting a proposed transaction with seller evidence → `recoup-catalog-review-deal`. From public
   data only → `recoup-catalog-estimate-value`. If the artist sold music NFTs, add
   `recoup-nft-valuation` — a streaming-only number understates them, often by an order
   of magnitude.
@@ -203,3 +208,16 @@ The internal namespace is a routing convention, not an access-control boundary.
   First-run connect/scaffold → `recoup-platform-connect-account` /
   `recoup-platform-build-os`. A raw REST/connector call →
   `recoup-platform-api-access`.
+
+- **Catalog stages.** A structural review routes to audit; accounting routes to reconcile.
+  Statements alone do not imply a deal. An ordinary registration claim or technical
+  rejection repair routes to register; an adverse rights/royalty dispute routes to
+  resolve-claims. Existing-release metadata changes and UGC enrollment route to
+  manage-delivery; check-credits/check-metadata only compare evidence.
+- **Continuation is context.** “I sent the email” alone has no fresh skill route and
+  never sends again. Record it as user-reported on the known case. “Did these payments
+  reach my bank?” needs domain context; with identified royalty remittances it routes
+  to reconcile. Provider, subject and intended change resolve ambiguous “claim” tasks.
+- **Review stops at review.** Import, explanation, organization, public estimation,
+  audit, reconciliation and deal review do not authorize downstream messages,
+  registration, transfers or payments. Preserve an already authorized exact action.

@@ -26,6 +26,13 @@ jobs:
         run: python3 scripts/check_resolvable.py
       - name: Resolver eval (routing fixtures + coverage)
         run: python3 scripts/run_resolver_eval.py
+      - name: Catalog case, routing, intake and financial regressions
+        run: |
+          pip install openpyxl
+          python3 -m unittest discover -s tests -p 'test_catalog_*.py'
+          python3 -m unittest discover -s skills/recoup-catalog-review-deal/tests
+          python3 -m unittest discover -s skills/recoup-catalog-import-catalog/tests
+          python3 -m unittest discover -s skills/recoup-catalog-estimate-value/tests
       - name: Reconciliation example regressions
         run: python3 -m unittest discover -s tests -p 'test_*examples.py'
       - uses: actions/setup-node@v4

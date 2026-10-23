@@ -111,6 +111,12 @@ def main() -> int:
         real_findings += 1
         finding_id = str(finding.get("finding_id", "?"))
         severity = str(finding.get("severity", "")).lower()
+        disposition = finding.get("disposition_evidence_ids") or []
+        if not isinstance(disposition, list):
+            disposition = []
+        for ev_id in disposition:
+            if ev_id not in ledger_ids:
+                broken_refs.append({"finding_id": finding_id, "evidence_id": str(ev_id)})
         evidence_ids = finding.get("evidence_ids") or []
         if not isinstance(evidence_ids, list):
             evidence_ids = []

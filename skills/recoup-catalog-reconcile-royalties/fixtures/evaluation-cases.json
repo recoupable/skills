@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "execution": "Independent agent walkthrough in a private temporary workspace; no external sends or submissions. Evaluate generated artifacts against expected criteria. Passing fixtures does not prove live provider capability.",
+  "cases": [
+    {
+      "id": "reconcile-precision",
+      "request": "Normalize these royalty lines and reconcile their source total.",
+      "inputs": {
+        "currency": "USD",
+        "lines": [
+          {
+            "row": 2,
+            "owner_net": "0.0049"
+          },
+          {
+            "row": 3,
+            "owner_net": "0.0049"
+          }
+        ],
+        "source_total": "0.0098",
+        "statement_period": "2024-Q1"
+      },
+      "expected": {
+        "must": [
+          "Preserve 0.0098 aggregate before settlement rounding",
+          "Account for both detail rows and the source total"
+        ],
+        "must_not": [
+          "Round each line to zero",
+          "Require a deal or bank connection"
+        ]
+      }
+    },
+    {
+      "id": "reconcile-period-currency",
+      "request": "Why did royalties change across these exports?",
+      "inputs": {
+        "exports": [
+          {
+            "id": "E-1",
+            "period": "2024-Q1",
+            "currency": "USD",
+            "net": "100"
+          },
+          {
+            "id": "E-2",
+            "period": "2024-Q3",
+            "currency": "EUR",
+            "net": "100"
+          }
+        ],
+        "missing_period": "2024-Q2",
+        "fx_evidence": null
+      },
+      "expected": {
+        "must": [
+          "Report missing Q2 and separate USD/EUR totals",
+          "Keep growth comparison limited"
+        ],
+        "must_not": [
+          "Report aggregate 200 USD",
+          "Infer a 100 royalty debt"
+        ]
+      }
+    },
+    {
+      "id": "reconcile-paid-not-received",
+      "request": "Did this royalty payment arrive?",
+      "inputs": {
+        "remittance": {
+          "id": "PAY-SYN-1",
+          "provider_status": "Paid",
+          "amount": "100",
+          "currency": "USD"
+        },
+        "bank_evidence": null
+      },
+      "expected": {
+        "must": [
+          "Report provider Paid and cash unverified",
+          "Identify relevant receipt evidence needed"
+        ],
+        "must_not": [
+          "Claim 100 cash received",
+          "Connect unrelated banking accounts"
+        ]
+      }
+    },
+    {
+      "id": "reconcile-reversal",
+      "request": "Explain the unusually high share percentages in this royalty export.",
+      "inputs": {
+        "lines": [
+          {
+            "id": "L-1",
+            "amount": "50",
+            "raw_percentage": "150"
+          },
+          {
+            "id": "L-2",
+            "amount": "-50",
+            "raw_percentage": "-150"
+          }
+        ],
+        "provider_explanation": "prior-period correction and reversal"
+      },
+      "expected": {
+        "must": [
+          "Preserve raw percentages and signed amounts",
+          "Tie zero net effect to correction pair"
+        ],
+        "must_not": [
+          "Clamp percentages to 100",
+          "Interpret statement percentages as ownership"
+        ]
+      }
+    },
+    {
+      "id": "reconcile-transfer-tail",
+      "request": "Reconcile these old and new administrator statements.",
+      "inputs": {
+        "effective_transfer": "2024-07-01",
+        "contract_tail": "old admin collects pre-transfer uses for six months",
+        "lines": [
+          {
+            "source": "old",
+            "usage_period": "2024-Q2",
+            "reported_period": "2024-Q4",
+            "amount": "75",
+            "currency": "USD"
+          },
+          {
+            "source": "new",
+            "usage_period": "2024-Q3",
+            "reported_period": "2024-Q4",
+            "amount": "80",
+            "currency": "USD"
+          }
+        ]
+      },
+      "expected": {
+        "must": [
+          "Classify by usage and contract tail",
+          "Keep 75 historical-tail and 80 new-period earnings distinct"
+        ],
+        "must_not": [
+          "Assign all post-transfer cash to new owner by payment date"
+        ]
+      }
+    },
+    {
+      "id": "reconcile-pro-bonus",
+      "request": "Explain a drop in performance royalties.",
+      "inputs": {
+        "prior": {
+          "base": "100",
+          "bonus": "40",
+          "currency": "USD"
+        },
+        "current": {
+          "base": "100",
+          "bonus": "0",
+          "currency": "USD"
+        },
+        "bonus_terms": "one-time threshold award"
+      },
+      "expected": {
+        "must": [
+          "Explain stable base with nonrecurring 40 difference",
+          "Preserve bonus source evidence"
+        ],
+        "must_not": [
+          "Demand missing recurring 40 without supporting terms"
+        ]
+      }
+    },
+    {
+      "id": "reconcile-unrelated-invoice",
+      "request": "Did these payments reach my bank?",
+      "inputs": {
+        "music_context": false,
+        "payment_type": "website consulting invoice"
+      },
+      "expected": {
+        "must": [
+          "Do not discover royalty reconciliation from this request"
+        ],
+        "must_not": [
+          "Classify the invoice as catalog royalties"
+        ]
+      }
+    }
+  ]
+}

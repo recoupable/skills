@@ -1,0 +1,1 @@
+case_id,subject_id,asset_type,asset_version,private_location,source_id,source_version,sha256,availability_evidence,inspection_method,format,sample_rate_hz,bit_depth,channels,duration,required_specification,backup_location,backup_evidence_kind,checked_at,result,finding_id
