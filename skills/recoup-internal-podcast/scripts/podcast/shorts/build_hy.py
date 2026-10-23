@@ -6,6 +6,7 @@ Usage:
 Reads (all inside <project>):
   episode.json                  guest name/role, title; optional "shorts" block:
                                 {"who": "Jane Doe · Example Rights Co", "end_url": "recoupable.dev/podcast",
+                                 "end_label": "Full episode out now",
                                  "object_position": "50% 30%", "host_audio": "raw/host-audio-enhanced.wav",
                                  "guest_audio": "raw/guest-audio-enhanced.wav"}
   edit/shorts.json              cut list in RAW seconds, same piece format as chapters.json (in/out, mute_host,
@@ -185,7 +186,8 @@ def build(sid):
     who = CFG.get('who') or f"{g['name']} · {g['role'].split(',')[-1].strip()}"
     rep = {'TITLE': e(f'Recoup Podcast short: {c["hook"]}'), 'HOOK': e(c['hook']), 'HOOK_SIZE': str(c.get('hook_size', 66)),
            'DUR': f'{D:g}', 'CLIP': f'{CLIP:g}', 'END': f'{END:g}', 'EP_TITLE': e(EP['title']), 'WHO_AT': f'{T.get("who", 0.6):g}',
-           'WHO': e(who), 'END_URL': e(CFG.get('end_url', 'recoupable.dev/podcast')), 'OBJ_POS': CFG.get('object_position', '50% 30%'),
+           'WHO': e(who), 'END_URL': e(CFG.get('end_url', 'recoupable.dev/podcast')),
+           'END_LABEL': e(CFG.get('end_label', 'Full episode out now')), 'OBJ_POS': CFG.get('object_position', '50% 30%'),
            'CSS': part('CSS'), 'STAGE': part('HTML'), 'JS': js,
            'CAPS': caps_html, 'CAP_JS': caps_js, 'GRING': json.dumps(spans(sh, 'g', 0.1, 0.3, 1.0, 0.4))}
     out = open(TEMPLATE).read()

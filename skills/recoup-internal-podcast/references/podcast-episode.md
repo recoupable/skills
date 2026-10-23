@@ -138,6 +138,10 @@ Business keeps the plan, Granola notes and the episode README (link it, don't co
 10. **Opening + outro**: `python3 scripts/podcast/make_intro.py <project> --show-assets <show assets dir>`, render
    `comp/intro` and `comp/outro`, then the join command in its docstring -> `exports/opening.mp4`.
    `exports/outro.mp4` is required: assemble.py appends it and stops if it is missing.
+   **Non-English episode**: the intro and outro strings are English; replace them in `comp/intro` and
+   `comp/outro/index.html` before rendering (Spanish: "Desde la mesa de derechos", "En este episodio", "Gracias
+   por vernos"). Chapter labels come from `episode.json` `"labels"` (`{"Chapter": "Capítulo", "Sources":
+   "Fuentes"}`) and the shorts end card from `"shorts": {"end_label": "Episodio completo ya disponible"}`.
 11. **Host mic** (when it sounds muffled): measure first (band energy above 4 kHz vs the guest). Adobe
    Podcast Enhance (free tier: 30 min/file, 1 h/day, needs the owner's free account sign-in) cleaned noise
    and lifted presence but did NOT restore missing highs; synthetic highs (ffmpeg `aexciter`) measured

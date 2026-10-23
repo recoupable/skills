@@ -67,4 +67,7 @@ tell the owner which of these is next and how long it takes locally before runni
 - **Rebuilds drop episode-only overlays.** `render.sh` rebuilds the comp; a chapter that needs
   `edit/screen_share.py` is built, overlaid and rendered by the runner directly.
 - **macOS tar metadata**: archives made without `--no-xattrs` print a provenance warning per file on Linux.
+- **Start limit: 192 vCPUs per minute per team.** Launching 30 jobs at once hit a 429 mid-batch and left
+  sandboxes running with no runner attached. Launch at most ~6 8-vCPU jobs per 90 s, and after a 429 stop the
+  orphans by name (`Sandbox.get({ name })` then `stop()`) before relaunching.
 - **Pin HyperFrames** to the version used locally (`studio.mjs` `HF`) so sandbox and laptop renders match.

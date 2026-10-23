@@ -28,7 +28,8 @@ try {
 const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 const HF = "hyperframes@0.8.181";                    // same version as local renders, so frames match
 const CFG = path.join(os.homedir(), ".config/recoup/podcast-sandbox.json");
-const TMP = path.join(os.tmpdir(), "recoup-podcast-sandbox");
+// One temp dir per run: parallel runs for two episodes would otherwise overwrite each other's proj.tgz mid-upload.
+const TMP = fs.mkdtempSync(path.join(os.tmpdir(), "recoup-podcast-sandbox-"));
 const DRIVE = "podcast-media";
 const CHUNK = 48 * 1024 * 1024;                      // writeFiles takes a buffer; big files go up in pieces
 const auth = { token: process.env.VERCEL_TOKEN, teamId: process.env.VERCEL_TEAM_ID, projectId: process.env.VERCEL_PROJECT_ID };
@@ -36,7 +37,6 @@ if (!auth.token || !auth.teamId || !auth.projectId) { console.error("set VERCEL_
 const cfg = () => (fs.existsSync(CFG) ? JSON.parse(fs.readFileSync(CFG, "utf8")) : {});
 const t0 = Date.now();
 const log = (tag, m) => console.log(`[${((Date.now() - t0) / 1000).toFixed(0).padStart(4)}s ${tag}] ${m}`);
-fs.mkdirSync(TMP, { recursive: true });
 
 // A home connection drops mid-upload ("fetch failed", connect timeouts): retry the API call, not the job.
 async function retry(fn, tag = "net") {

@@ -310,6 +310,8 @@ def build():
                  '{{JS_LTS}}': '\n  '.join(js_lts), '{{GHOST}}': e(EP.get('ghost', 'RIGHTS × AI')),
                  '{{GUEST_NAME}}': e(EP['guest']['name']), '{{HOST_NAME}}': e(EP['host']['name'])}.items():
         out = out.replace(k, v)
+    for k, v in EP.get('labels', {}).items():     # non-English episode: {"Chapter": "Capítulo", "Sources": "Fuentes"}
+        out = out.replace(f'>{k}</div>', f'>{e(v)}</div>')
     if spec.get('no_chapter'):
         out = re.sub(r'<!--CHAPTER-->.*?<!--/CHAPTER-->', '', out, flags=re.S)
         out = re.sub(r'//CHAPTER-JS.*?//END-CHAPTER-JS', '', out, flags=re.S)
