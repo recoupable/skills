@@ -197,7 +197,7 @@ For a chat attachment, pass the actual host-supplied file object:
 The values above illustrate the shape only; never invent them. `download_url` and
 `file_id` are required; `mime_type` and `file_name` are optional. The tool uses the
 HTTPS download URL internally, checks that it serves audio before starting the
-model, and excludes it from usage-event resource links. It does not publish or
+model, and excludes MCP audio source URLs from usage-event resource links. It does not publish or
 copy the audio to permanent public storage. File IDs and names are not analysis
 instructions. Host support must be tested; declaring a file input does not prove
 that every host can supply one.
@@ -207,6 +207,16 @@ For an existing accessible audio link, call with
 Never include `account_id`, local filesystem paths, or both source fields. Refresh
 an expired host download URL through available host file APIs, or ask the user to
 reattach the song. Do not send the same expired URL repeatedly.
+
+For a selected local file, the existing `upload_release_pack_asset` tool supports
+private transfer without creating a release pack: request `mode: "signed_url"`
+with the audio MIME type, transfer the selected bytes using the host's local file
+capability, then call `mode: "finalize"` with the returned `storage_key`. Analyze
+only the URL returned after finalization verifies the bytes. Do not use public
+site assets as a workaround, invent a file ID, or ask the user to host their song.
+If that upload tool is absent, refresh the connected tool catalog; do not treat
+an already attached local file as missing audio. Retention of private storage is
+independent of download-link expiration.
 
 Native file-input contract: https://developers.openai.com/plugins/reference#define-file-inputs
 
