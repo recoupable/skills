@@ -204,3 +204,4 @@
 {"intent": "Give this catalog song another moment with a release pack.", "expected": "recoup-content-asset-pack"}
 {"intent": "I have no Recoup artist yet. Create a release pack from this audio.", "expected": "recoup-content-asset-pack", "not": ["recoup-roster-onboard"]}
 {"intent": "Plan a release rollout schedule, no media production yet.", "expected": "recoup-release-plan-rollout", "not": ["recoup-content-asset-pack"]}
+{"intent": "Analyze the song I attached to this chat and tell me its BPM, key, genre and mood", "expected": "recoup-song-analyze-audio"}
