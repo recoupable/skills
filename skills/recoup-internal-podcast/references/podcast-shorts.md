@@ -17,6 +17,14 @@ approved before building anything.
   share. Not for long."), never "new episode". Hooks over ~45 characters use `hook_size: 58` to stay on two lines.
 - **Length** 25-60 s. A short can open on the host's question if the answer needs it (the guest name tag
   then waits for the guest's first word: anchor named `who`).
+- **The 5-second hook window** (Sid, 2026-10-23): the hook bar, the first spoken sentence, the first on-screen text
+  and the first ~200 characters of the LinkedIn post carry ONE concrete idea, recognisable nouns first (Symphonic,
+  UMG, DistroKid, Claude). Open the window ON the hook line, never on setup ("I mentioned this in my article").
+  A cold-open style reorder is fine when nothing reads as a sentence she didn't say.
+- **Host-open A/B**: about half the shorts open on the host asking the question, so viewers see a face they know
+  first. A piece with `"shot": "host"` (plus `"mute_guest"` over it) shows the host camera with a HOST name tag;
+  keep it <= ~5.5 s and anchor `who` to the guest's first word. Record `"variant": "host-open"|"guest-only"` per
+  short and in posts-log, and compare the two at the re-pull.
 - Write the approved table to `edit/shorts.json` (`templates/podcast/shorts/shorts.example.json`).
 
 ## 2. Format: HYBRID (decided; don't re-litigate per episode)
@@ -65,6 +73,10 @@ has no contrast without it):
 - **2-4 beats, her face >= 25% of the runtime**, no beat over ~18 s; video gaps between beats >= 3 s, otherwise
   make the scenes contiguous (a 1 s face flash between beats reads as a flicker).
 - **At most 5 filler trims per short**, cut at word boundaries with ~0.04 s margin; read the joined sentence back.
+- **Fill the stage.** A print in the top 40% with empty paper below reads as unfinished (all seven Ali v1 shorts
+  failed this). Crop each print to the sentence that matters, ~900-940 px wide so rendered text is >= ~30 px,
+  centre the composition, tags/stamps 40-50 px in the lower band; no empty band taller than ~150 px. Never
+  repaint a capture's text; a crop that ends mid-sentence is fine.
 - **Measure, don't eyeball, annotation positions**: snapshot the frame, overlay a grid, and centre the circle
   on its target (the owner caught a circle that missed the price by ~30 px).
 - **A new look gets three directions first**: three stills of the same moments, different compositions, owner
@@ -111,6 +123,8 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
    `STOP_AT=HHMM zsh scripts/podcast/shorts/render.sh <project> s1:<slug>` (zsh: under bash its `${0:A:h}`
    breaks and every build fails) -> `exports/shorts/<slug>.mp4`
    (-14 LUFS). Open it in Finder for the owner.
+Name fixes from episode.json `caption_fixes` (Surreal -> Sureel, "RD Shield" -> ArtyShield) apply to the short's
+captions and to beat anchors; the first caption word and any word after . ? ! get a capital.
 5. **Prototype one short, get the look approved, then build the rest.** Local renders run ~3-5x realtime on the
    Intel laptop; one at a time (parallel load times out the headless-Chrome launch; render.sh retries).
    A background queue can be cut off: re-run the missing shorts.
