@@ -92,6 +92,9 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
   counter once used `#c3`/`#c4` and froze a caption on screen).
 - **Never reuse the template's names** (`.cap .kt .lab .hl .mono .scene #who #stage #pip ...`): a scene class
   `.cap` restyled every caption as uppercase mono.
+- **Glyphs as inline SVG with an inline style**: the brand fonts have no ✓/✗ (they render as empty boxes), and
+  the template's `.scene svg` rule makes any SVG absolute and 1000 px wide. Give each glyph
+  `style="display:inline-block;position:static;width:40px;height:40px"`.
 
 ## 4. Build, check, render (one prototype first)
 
