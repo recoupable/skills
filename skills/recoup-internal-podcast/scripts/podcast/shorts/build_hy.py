@@ -73,10 +73,11 @@ def find(who, phrase, after=0.0):
     for a_, b_ in EP.get('caption_fixes', []):   # anchors may quote the raw transcript; words carry the fixed names
         phrase = re.sub(a_, b_, phrase)
     p = [norm(t) for t in phrase.split()]
-    L = W[who]; tx = [norm(x['text']) for x in L]
-    for i in range(len(tx)):
-        if L[i]['start'] >= after and tx[i:i + len(p)] == p:
-            return L[i]['start'], L[i + len(p) - 1]['end']
+    L = W[who]; tk = [(norm(t), i) for i, x in enumerate(L) for t in x['text'].split()]   # a merged fix like "Arty Shield" stays two tokens
+    tx = [t for t, _ in tk]
+    for j in range(len(tx)):
+        if L[tk[j][1]]['start'] >= after and tx[j:j + len(p)] == p:
+            return L[tk[j][1]]['start'], L[tk[j + len(p) - 1][1]]['end']
     raise SystemExit(f'phrase not found: {who} "{phrase}" after {after}')
 
 

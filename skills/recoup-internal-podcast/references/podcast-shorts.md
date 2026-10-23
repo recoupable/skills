@@ -23,7 +23,8 @@ approved before building anything.
   A cold-open style reorder is fine when nothing reads as a sentence she didn't say.
 - **Host-open A/B**: about half the shorts open on the host asking the question, so viewers see a face they know
   first. A piece with `"shot": "host"` (plus `"mute_guest"` over it) shows the host camera with a HOST name tag;
-  keep it <= ~5.5 s and anchor `who` to the guest's first word. Record `"variant": "host-open"|"guest-only"` per
+  keep it <= ~5.5 s and anchor `who` to the guest's first word. The first beat then counts from her first word, not from 0: her
+  tag still needs >= 3 s before it. Record `"variant": "host-open"|"guest-only"` per
   short and in posts-log, and compare the two at the re-pull.
 - Write the approved table to `edit/shorts.json` (`templates/podcast/shorts/shorts.example.json`).
 
