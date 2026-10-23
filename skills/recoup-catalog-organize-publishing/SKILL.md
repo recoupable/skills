@@ -1,6 +1,6 @@
 ---
 name: recoup-catalog-organize-publishing
-description: "Organize supplied composition lists, split sheets, publisher agreements and registration exports into a writer/publisher repertoire with linked recordings, recorded shares, registration status and administration details. Use for \"organize my publishing\", \"list my compositions and registrations\", or \"which works are missing publishing details\". Flags specific gaps and conflicting claims; does not register works, claim royalties or estimate recoverable money."
+description: "Organize supplied composition lists, split sheets, publisher agreements and registration exports into a writer/publisher repertoire with linked recordings, recorded shares, registration status and administration details. Use for \"organize my publishing\", \"list my compositions and registrations\", or \"build my publishing repertoire inventory\". Flags gaps while building that inventory; a condition assessment of existing catalog evidence belongs to catalog audit; does not register works, claim royalties or estimate recoverable money."
 ---
 
 # Organize my publishing
@@ -51,3 +51,12 @@ authority, distribute royalties, calculate a recovery total or value an acquisit
 
 Example: a 40-work export with six missing ISWCs returns all 40 works and six missing-ID
 items; it does not claim those six works are unregistered or owed money.
+
+
+## Typed repertoire and readiness
+
+Use `templates/publishing-readiness.json` and `references/publishing-records.md` for
+repeatable outputs. Keep interests and mandate edges separate from compositions and
+party identities. Each provider/work readiness item names the intended operation,
+role, right, territory, missing evidence and observed registration state. Readiness
+means inputs can be reviewed for a particular operation; it never means filed or paid.

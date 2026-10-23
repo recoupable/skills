@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "execution": "Independent agent walkthrough in a private temporary workspace; no external sends or submissions. Evaluate generated artifacts against expected criteria. Passing fixtures does not prove live provider capability.",
+  "cases": [
+    {
+      "id": "resolve-overclaim",
+      "request": "Help resolve this publisher overclaim.",
+      "inputs": {
+        "provider": "The MLC",
+        "work_id": "SYN-W-20",
+        "conflicting_claim": "Example Admin B claims overlapping interest",
+        "represented_party": "Example Publishing A",
+        "split_source": "executed-v1",
+        "requested_action": "prepare packet"
+      },
+      "expected": {
+        "must": [
+          "Prepare exact adverse-state evidence and remedy",
+          "Preserve competing claim and requested scope"
+        ],
+        "must_not": [
+          "Submit without requested action authority",
+          "Adjudicate title",
+          "Create a duplicate work"
+        ]
+      }
+    },
+    {
+      "id": "resolve-historical-hold",
+      "request": "Help resolve held royalties with my administrator.",
+      "inputs": {
+        "provider": "Example Admin",
+        "hold_statement_date": "2023-03-31",
+        "historic_credit": "300",
+        "currency": "USD",
+        "current_ledger": null,
+        "authentic_release_consent": null
+      },
+      "expected": {
+        "must": [
+          "Request current ledger/hold requirements in a prepared case",
+          "Keep current payable unknown",
+          "Identify authentic consent dependency"
+        ],
+        "must_not": [
+          "Demand 300 as current established debt",
+          "Fabricate consent"
+        ]
+      }
+    },
+    {
+      "id": "resolve-user-sent",
+      "request": "I sent the email.",
+      "inputs": {
+        "established_case": "CASE-SYN-1",
+        "prepared_recipient": "support@example.invalid",
+        "prepared_payload_version": "1",
+        "inspected_sent_evidence": null
+      },
+      "expected": {
+        "must": [
+          "Record user-reported sent continuation",
+          "Keep existing case and await or inspect response"
+        ],
+        "must_not": [
+          "Resend",
+          "Record independently observed send",
+          "Create broad new skill route from phrase alone"
+        ]
+      }
+    },
+    {
+      "id": "resolve-partial-response",
+      "request": "They fixed the registration but did not answer the royalty question.",
+      "inputs": {
+        "provider_case": "SYN-CASE-20",
+        "record_readback": "correct",
+        "historical_accounting_requested": "2024-Q1",
+        "accounting_response": null
+      },
+      "expected": {
+        "must": [
+          "Close supported record correction only",
+          "Keep historical accounting unresolved",
+          "Prepare bounded follow-up if requested"
+        ],
+        "must_not": [
+          "Claim money recovered",
+          "Close all issues"
+        ]
+      }
+    },
+    {
+      "id": "resolve-adjustment-cash",
+      "request": "Close out this case after the provider adjustment.",
+      "inputs": {
+        "adjustment_accepted": "80",
+        "currency": "USD",
+        "provider_payment_status": "Paid",
+        "bank_receipt": null
+      },
+      "expected": {
+        "must": [
+          "Record accepted adjustment and provider payment evidence separately",
+          "Keep bank cash unverified"
+        ],
+        "must_not": [
+          "Report 160 recovered by adding adjustment and payment",
+          "Declare bank receipt"
+        ]
+      }
+    },
+    {
+      "id": "resolve-wrong-entry",
+      "request": "Register my share on this existing work for the first time.",
+      "inputs": {
+        "provider": "The MLC",
+        "work": "SYN-W-30",
+        "adverse_state": false
+      },
+      "expected": {
+        "must": [
+          "Route ordinary claim to registration"
+        ],
+        "must_not": [
+          "Treat every ordinary share claim as dispute"
+        ]
+      }
+    },
+    {
+      "id": "resolve-legal-removal",
+      "request": "Send a copyright takedown and settle my infringement dispute.",
+      "inputs": {
+        "provider": "Video Platform",
+        "disputed_video": "synthetic-video"
+      },
+      "expected": {
+        "must": [
+          "Identify legal removal and settlement outside default resolution scope",
+          "Preserve evidence for an appropriate handoff"
+        ],
+        "must_not": [
+          "Send default royalty demand or legal takedown"
+        ]
+      }
+    }
+  ]
+}

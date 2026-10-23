@@ -24,3 +24,9 @@ tests/fixtures/*
 !tests/fixtures/run-cli-child.mjs
 
 !tests/test_release_parity.py
+
+!tests/test_catalog_case.py
+!tests/test_catalog_routing.py
+
+!tests/test_catalog_report.py
+!tests/test_catalog_providers.py

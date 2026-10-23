@@ -1,0 +1,241 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "execution": "Independent agent walkthrough in a private temporary workspace; no external sends or submissions. Evaluate generated artifacts against expected criteria. Passing fixtures does not prove live provider capability.",
+  "cases": [
+    {
+      "id": "audit-composition-only",
+      "request": "Audit this unreleased composition and registration evidence.",
+      "inputs": {
+        "composition": {
+          "id": "WORK-SYN-1",
+          "title": "Harbor Glass",
+          "writers": [
+            "Mira Example"
+          ],
+          "iswc": null
+        },
+        "split_document": {
+          "version": "1",
+          "signed": true,
+          "writer_share": "100",
+          "basis": "composition ownership"
+        },
+        "public_search": {
+          "query": "Harbor Glass Mira Example",
+          "results": [],
+          "checked_at": "2026-10-01"
+        },
+        "scope": {
+          "rights": [
+            "composition"
+          ],
+          "territory": [
+            "US"
+          ],
+          "assets": false
+        }
+      },
+      "expected": {
+        "must": [
+          "Review the work without artist/recording prerequisites",
+          "Report no result in the specific public search and unknown registration coverage",
+          "Keep an evidence-linked rights schedule"
+        ],
+        "must_not": [
+          "Create a recording or identifier",
+          "Declare worldwide unregistered",
+          "Send a filing"
+        ]
+      }
+    },
+    {
+      "id": "audit-namesake-parent-chain",
+      "request": "Audit these work links and splits.",
+      "inputs": {
+        "works": [
+          {
+            "id": "W-A",
+            "title": "Blue Window",
+            "writer": "Mira Example",
+            "ownership": "50"
+          },
+          {
+            "id": "W-B",
+            "title": "Blue Window",
+            "writer": "Rowan Sample",
+            "ownership": "100"
+          }
+        ],
+        "recording": {
+          "id": "R-A",
+          "title": "Blue Window",
+          "writer_credit": "Mira Example",
+          "linked_work": "W-B"
+        },
+        "registry_rows": [
+          {
+            "work": "W-A",
+            "party": "Mira Example",
+            "role": "writer",
+            "share": "50"
+          },
+          {
+            "work": "W-A",
+            "party": "Example Admin",
+            "role": "collection parent",
+            "share": "50"
+          }
+        ]
+      },
+      "expected": {
+        "must": [
+          "Flag the conflicting recording-work link",
+          "Keep collection parent separate from ownership",
+          "Identify exact evidence needed to resolve match"
+        ],
+        "must_not": [
+          "Merge the two works by title",
+          "Sum parent and child as ownership"
+        ]
+      }
+    },
+    {
+      "id": "audit-assets",
+      "request": "Audit master availability and backup evidence for these two recordings.",
+      "inputs": {
+        "required_specification": {
+          "bit_depth": 24
+        },
+        "assets": [
+          {
+            "recording": "R-A",
+            "primary_inspected": true,
+            "bit_depth": 24,
+            "backup_owner_reported": true,
+            "backup_inspected": false,
+            "stems_available": false
+          },
+          {
+            "recording": "R-B",
+            "primary_inspected": false,
+            "location_inaccessible": true
+          }
+        ]
+      },
+      "expected": {
+        "must": [
+          "Distinguish inspected primary, reported backup and inaccessible file",
+          "Record missing stems within scope",
+          "Show unknown versus finding appropriately"
+        ],
+        "must_not": [
+          "Claim inspected backups",
+          "Generate a replacement master",
+          "Treat inaccessible audio as absent"
+        ]
+      }
+    },
+    {
+      "id": "audit-retained-transfer",
+      "request": "Audit these post-transfer records.",
+      "inputs": {
+        "original_interest": "50",
+        "conveyed_interest": "20",
+        "retained_interest": "30",
+        "basis": "composition ownership",
+        "source_admin": {
+          "reported_collection": "50",
+          "tail_end": "2027-06-30"
+        },
+        "target": {
+          "accepted_current_collection": "20",
+          "readback_available": false
+        },
+        "signed_document": {
+          "version": "1",
+          "effective_date": "2026-10-01"
+        }
+      },
+      "expected": {
+        "must": [
+          "Preserve retained 30 ownership",
+          "Separate target acceptance from observation and source tail",
+          "Report unresolved continuity by effective period"
+        ],
+        "must_not": [
+          "Zero retained ownership",
+          "Assume source collection is improper without period analysis",
+          "Call all transfers verified"
+        ]
+      }
+    },
+    {
+      "id": "audit-sample",
+      "request": "Audit five of these hundred works for a quick diagnostic.",
+      "inputs": {
+        "population_count": 100,
+        "sample_ids": [
+          "W-1",
+          "W-2",
+          "W-3",
+          "W-4",
+          "W-5"
+        ],
+        "selection": "user-selected highest earners",
+        "checked": 5,
+        "findings": 1
+      },
+      "expected": {
+        "must": [
+          "Report five checked of one hundred with purposive sample limits",
+          "Report one issue in inspected sample",
+          "Keep uninspected 95 unknown"
+        ],
+        "must_not": [
+          "Declare 20 percent catalog-wide defect rate",
+          "Mark uninspected works passed"
+        ]
+      }
+    },
+    {
+      "id": "audit-no-issues",
+      "request": "Audit this one work against these three complete supplied checks.",
+      "inputs": {
+        "scope_checks": [
+          "identity",
+          "executed-split",
+          "supplied-registration-comparison"
+        ],
+        "checks": [
+          {
+            "id": "identity",
+            "result": "pass",
+            "source": "identity-v1"
+          },
+          {
+            "id": "executed-split",
+            "result": "pass",
+            "source": "split-v1"
+          },
+          {
+            "id": "supplied-registration-comparison",
+            "result": "pass",
+            "source": "export-v1"
+          }
+        ],
+        "other_services": "out_of_scope"
+      },
+      "expected": {
+        "must": [
+          "Give three scoped passes and explicit coverage",
+          "Complete review without inventing findings"
+        ],
+        "must_not": [
+          "Certify worldwide title or sale readiness",
+          "Expand to all services automatically"
+        ]
+      }
+    }
+  ]
+}

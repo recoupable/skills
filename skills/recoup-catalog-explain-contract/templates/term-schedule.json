@@ -1,0 +1,60 @@
+{
+  "schema_version": "catalog-terms/1",
+  "case_id": null,
+  "documents": [],
+  "document_record": {
+    "source_id": null,
+    "source_version": null,
+    "title": null,
+    "status": "unknown",
+    "available_pages": [],
+    "missing_dependencies": [],
+    "amends_source_id": null
+  },
+  "terms": [],
+  "term_record": {
+    "term_id": null,
+    "source_id": null,
+    "source_version": null,
+    "locator": {
+      "page": null,
+      "clause": null
+    },
+    "kind": null,
+    "party_ids": [],
+    "asset_ids": [],
+    "asset_scope_text": null,
+    "right": null,
+    "territories": [],
+    "effective_from": null,
+    "effective_to": null,
+    "trigger": {
+      "event": null,
+      "evidence_source_id": null,
+      "date": null
+    },
+    "value": null,
+    "basis": null,
+    "scale": null,
+    "currency": null,
+    "conditions": [],
+    "exclusions": [],
+    "interpretation": null,
+    "interpretation_status": "unresolved",
+    "supersedes_term_id": null
+  },
+  "obligations": [],
+  "obligation_record": {
+    "obligation_id": null,
+    "term_id": null,
+    "responsible_party_id": null,
+    "beneficiary_party_id": null,
+    "action": null,
+    "trigger": null,
+    "deadline_rule": null,
+    "trigger_evidence": null,
+    "computed_deadline": null,
+    "status": "unknown"
+  },
+  "unresolved_questions": []
+}

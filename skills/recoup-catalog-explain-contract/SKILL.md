@@ -50,3 +50,14 @@ not a full catalog underwriting or royalty audit.
 
 Example: “exclusive for three years after first commercial release” produces a
 conditional term explanation; without the release date, it does not produce an expiry date.
+
+
+## Reusable term schedule
+
+Keep the standalone answer concise. When another stage needs the terms, populate
+`templates/term-schedule.json` using `references/term-extraction.md`; each term has a
+source version, clause, exact scope, conditions and separate interpretation status.
+A contract term records evidence; it does not authorize a software operation.
+Record missing signatures, exhibits, amendments, signed releases and termination proof
+as individual dependencies. Another session can review the same clause and reproduce
+what was known without relying on this chat.

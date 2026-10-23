@@ -1,0 +1,1 @@
+case_id,exception_id,cause_id,provider,payee_id,subject_ids,right,territory,period,currency,reported_amount,calculated_entitlement,unresolved_difference,accepted_adjustment,matched_bank_cash,basis_status,evidence_refs,control_status,explanation_or_hypothesis,required_evidence,proposed_next_stage,status

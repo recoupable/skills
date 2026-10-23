@@ -1,0 +1,10 @@
+{
+  "period_start": "period_start",
+  "period_end": "period_end",
+  "rights_type": "rights_type",
+  "income_type": "income_type",
+  "territory": "territory",
+  "currency": "currency",
+  "gross": "gross_amount",
+  "owner_net": "owner_net_amount"
+}

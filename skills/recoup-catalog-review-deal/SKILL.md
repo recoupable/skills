@@ -1,6 +1,6 @@
 ---
 name: recoup-catalog-review-deal
-description: 'Review and underwrite a music catalog deal end to end — ingest a messy royalty data room, value it (NPS/NLS, concentration, scenarios), build the executive dashboard, and write the IC memo. Use for "review/underwrite this catalog", "clean these royalty statements", "catalog valuation", "build the deal dashboard", or "write the IC memo". Modes: review (default), ingest, value, dashboard, report. Needs seller files; source/ is immutable and completion is gated. For a quick value from public data only, use recoup-catalog-estimate-value.'
+description: Review and underwrite a proposed music catalog transaction using seller evidence. Build earnings eligibility, NPS/NLS scenarios, concentration, a deal dashboard or an investment memo. Use for acquisition, sale or financing review; royalty statements alone do not imply a deal. Review does not contact the seller, negotiate, accept terms or execute transfers. Public-data estimates and standalone royalty reconciliation have separate entry points.
 ---
 
 # Recoup Catalog — Review Deal
@@ -61,6 +61,30 @@ Author with creative freedom, then **gate it**:
 Assemble from the dashboard + workpapers using `references/output-templates.md`,
 export one shareable PDF. **Every claim must trace** to `evidence-ledger.json` or
 `assumptions.yaml`.
+
+## Evidence and bounded completion
+
+Read `references/catalog-contracts.md` for the shared case and typed evidence
+contract. Keep factual ownership separate from the interest offered in this deal:
+excluded, retained, encumbered or unverified income never silently sets ownership
+to zero. Build an eligibility schedule by asset, right, territory, date, income
+stream and evidence. An expiring administrator can affect future collection without
+ending underlying ownership. Missing termination evidence is a gap, not a termination.
+
+Use `calculate-entitlements.py` for explicitly evidenced formula components and
+`reconcile-remittances.py` for remittance-to-receipt allocations when required.
+The NPS/NLS bridge remains a reported-to-adjusted bridge; it is not an independent
+proof of entitlement. Keep unsupported contract interpretation as a scenario or
+open dependency. Aggregate concentration only within comparable currency, period
+and income basis. Do not annualize a partial period without an explicit assumption.
+
+A requested value, dashboard or report update can finish at that stage. State its
+input versions, completed controls and residual gaps; do not label the whole deal
+ready unless the full review gate passes. A generated PDF is a private review
+artifact until the user authorizes a destination. Seller outreach, negotiation,
+acceptance and post-close operations require their own requested action scope.
+`references/post-close-admin.md` supplies review considerations and handoff fields,
+not authority to execute those actions from this review.
 
 ## Guardrails
 

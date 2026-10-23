@@ -15,7 +15,7 @@ relatively); methodology + API contract in `references/`.
 - `python3 scripts/estimate.py` — estimate streams→revenue→value per
   `references/methodology.md` (uses `references/recoup-api.md`).
 - `python3 scripts/build_report.py` — assemble the estimate report (needs
-  `pip3 install matplotlib reportlab`).
+  `pip3 install reportlab`).
 
 Be explicit that this is a **public-data estimate** (wider error bars than a
 seller-file valuation), and state the assumptions. For a real data room with seller
@@ -31,3 +31,37 @@ files, use recoup-catalog-review-deal instead.
 - `references/methodology.md` · `references/recoup-api.md`
 - `scripts/estimate.py` · `scripts/fetch_album_tracks.py` · `scripts/build_report.py`
   — ship alongside this skill; invoke relatively.
+
+
+## Coverage and reproducible output
+
+Freeze the input population, identities, measurement period, currency and rights scope.
+Read `references/methodology.md` before using any numerical default. They are illustrative,
+unverified scenarios, not a refreshed market rate card. Preserve dated sources and rationale
+in the config. Public metadata never proves the user's controlled interest.
+
+The helper supports master-side scenarios only. Missing annual measurements produce null
+money, not zero; partial coverage produces a covered-subset scenario, never an unqualified
+catalog-wide value. A complete input subset still does not prove all platforms or rights.
+The modeled net factor already includes deductions: do not subtract fees a second time.
+Do not convert all-time YouTube views to annual owner income using a Spotify ratio.
+
+For supplied observations, no API/account is needed:
+
+```bash
+python3 scripts/estimate.py --observations /private/work/observations.json --config /private/work/assumptions.json --out /private/work/estimate
+python3 scripts/build_report.py --estimate /private/work/estimate/estimate.json --out /private/work/estimate
+```
+
+The observation JSON has `tracks` (unique `id`, `title`, `sp_ttm`, `ttm_source`, optional
+`sp`, `captured_at`, `data_source`) and explicit `population_complete`. Accepted annual
+sources are `measured_365d` or `runrate_Nd` from inspected underlying windows; never invent
+these labels for missing data. Keep the original evidence with the case. Network mode
+uses existing credentials; missing portfolio snapshots are only created with explicit
+`--snapshot` authorization. Reads may themselves have a billing gate; honor it.
+
+Return the JSON workpaper and bounded summary/PDF. Preserve prior public scenarios when
+new contracts/statements support a deal review or accounting stage. Calibrate only
+comparable rights, services, currency, period and measurement coverage; one statement
+does not eliminate residual uncertainty. Run `python3 -m unittest discover -s tests`
+from this skill to check calculation and missing-coverage behavior.
