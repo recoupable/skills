@@ -121,8 +121,10 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-release-plan-rollout/scripts/build_campaign_timeline.py
 - skills/recoup-release-plan-rollout/scripts/validate_release.py
 - skills/recoup-roster-add-artist/scripts/onboarding_examples.sh
+- skills/recoup-song-analyze-audio/scripts/test_upload_chat_audio.py
+- skills/recoup-song-analyze-audio/scripts/upload_chat_audio.py
 
 ## Release provenance
 
-Source commit: 664b610393f54f6a8c3a4afb24a927e4aec04199
-Version: 2026.1022.45
+Source commit: 4845f716ad482bdc0d2808e8adf41921ca1d87f7
+Version: 2026.1023.46
