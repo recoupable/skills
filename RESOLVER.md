@@ -203,3 +203,5 @@ The internal namespace is a routing convention, not an access-control boundary.
   First-run connect/scaffold → `recoup-platform-connect-account` /
   `recoup-platform-build-os`. A raw REST/connector call →
   `recoup-platform-api-access`.
+
+| recoup-internal consulting: Mine X/Twitter bookmarks into sourced signals and content drafts | `recoup-internal-consulting-bookmark-miner` |
