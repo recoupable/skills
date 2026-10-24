@@ -21,6 +21,14 @@ http = module('http_template', 'skills/recoup-internal-consulting-integration-sc
 
 
 class TemplateTests(unittest.TestCase):
+    def test_bookmark_capture_and_oauth(self):
+        scripts = ROOT / "skills/recoup-internal-consulting-bookmark-miner/scripts"
+        result = subprocess.run(
+            [sys.executable, "-m", "unittest", "discover", "-s", str(scripts), "-p", "test_*.py"],
+            capture_output=True, text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_public_copy_policy_regressions(self):
         script = ROOT / "skills/recoup-internal-consulting-copy-writer/scripts/test_public_copy.py"
         result = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)

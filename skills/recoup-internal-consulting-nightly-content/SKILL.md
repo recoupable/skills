@@ -51,7 +51,7 @@ Children are **role-named** (`article.md`, `linkedin.md`, `email.md`; `x.md` as 
 folder carries the title, so every bundle is structurally identical and the approval queue is uniform.
 **Every run produces the full set** (article + linkedin + email + images), each text format gated
 (reviewer then editor). Same shape Engine B (`recoup-internal-consulting-product-engine`) produces.
-(A pillar is the *folder* shape of a draft; a one-off post/graphic is a single file in `content/03-drafts/`.
+(A pillar is the *folder* shape of a draft; a one-off post/graphic also has a dated folder with brief, draft and manifest in `content/03-drafts/`.
 See `content/AGENTS.md`.)
 
 ## Rails

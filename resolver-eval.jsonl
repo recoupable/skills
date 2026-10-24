@@ -206,3 +206,4 @@
 {"intent": "Plan a release rollout schedule, no media production yet.", "expected": "recoup-release-plan-rollout", "not": ["recoup-content-asset-pack"]}
 {"intent": "Analyze the song I attached to this chat and tell me its BPM, key, genre and mood", "expected": "recoup-song-analyze-audio"}
 {"intent": "I attached a local MP3 in Codex. Analyze this file without asking me to create a public URL", "expected": "recoup-song-analyze-audio"}
+{"intent": "recoup-internal: turn my X bookmarks into signals for LinkedIn posts and blogs", "expected": "recoup-internal-consulting-bookmark-miner", "not": ["recoup-internal-consulting-research-miner"]}
