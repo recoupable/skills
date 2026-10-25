@@ -40,6 +40,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SKILL = os.path.join(HERE, '..', '..', '..')
 TEMPLATE = lambda name: os.path.join(SKILL, 'templates', 'podcast', 'shorts', f'{name}.html')
 BRAND = os.path.join(SKILL, 'brand')
+EXTRA_FONTS = os.path.join(SKILL, 'templates', 'podcast', 'shorts', 'fonts')
 END = 2.6                                   # "Full episode out now" end card, minimum seconds
 e = H.escape
 acc = lambda t: re.sub(r'\*(.+?)\*', r'<span class="ser">\1</span>', e(t))   # *word* -> serif accent
@@ -193,6 +194,8 @@ def build(sid):
     for sub in ('fonts', 'logos'):
         if not os.path.exists(f'{d}/assets/{sub}'):
             shutil.copytree(os.path.join(BRAND, sub), f'{d}/assets/{sub}')
+    for f in os.listdir(EXTRA_FONTS):     # template-only fonts kept outside the vendored brand/ tree
+        shutil.copy2(os.path.join(EXTRA_FONTS, f), f'{d}/assets/fonts/{f}')
     hf = f'{d}/hyperframes.json'
     if not os.path.exists(hf):
         json.dump({"$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
