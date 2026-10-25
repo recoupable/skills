@@ -13,7 +13,8 @@ the customer to general onboarding when they already asked you to make it.
 
 ## Procedure
 
-1. **Keep the request, find the gaps.** Read the conversation and reuse relevant
+1. **Keep the request, find the gaps.** Before asking for context, follow
+   `references/pack-reference-discovery.md`. Read the conversation and reuse relevant
    authorized Recoup artist/release context before asking for facts again. Then
    gather supplied audio, artwork, screenshots and selected files or links. Use
    accessible, correctly matched public references only to fill useful gaps;
@@ -107,7 +108,7 @@ decline the farm, deliver the pack.
 
 Use `fixtures/first-use-scenarios.json` when checking first-use behavior in a host.
 
-- `references/release-pack-brief.md` · `templates/pack-brief.json` ·
+- `references/pack-reference-discovery.md` · `references/release-pack-brief.md` · `templates/pack-brief.json` ·
   `references/workspace-context.md` · `references/account-resolver.md` ·
   `references/research-context.md` · `references/content-api.md` ·
   `references/song-sourcing.md` · `references/analyze-gate.md`
