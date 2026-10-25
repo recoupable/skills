@@ -70,6 +70,11 @@ def is_open(finding: dict[str, object]) -> bool:
     allowed = {"", "open", "in_progress", "in-progress", "pending", "resolved", "closed", "accepted", "deferred"}
     if status not in allowed:
         raise ValueError(f"Unknown finding status {status!r}: {finding.get('finding_id')}")
+    if status in {"accepted", "deferred"}:
+        for field in ("disposition_actor", "disposition_scope", "disposition_reason"):
+            value = finding.get(field)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"Finding {finding.get('finding_id')} exception requires nonblank {field}")
     if status in {"resolved", "closed", "accepted", "deferred"}:
         evidence = finding.get("disposition_evidence_ids")
         if not isinstance(evidence, list) or not evidence or not all(isinstance(v, str) and v.strip() for v in evidence) or not finding.get("disposition_reason"):

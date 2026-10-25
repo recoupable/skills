@@ -117,3 +117,15 @@ Use confidence labels instead of fake certainty.
 - `conflicting`: Two or more credible sources disagree.
 
 When in doubt, preserve both source values and explain the conflict.
+
+## Readiness finding exceptions
+
+In `findings/findings.json`, an `accepted` or `deferred` finding requires
+nonblank string fields `disposition_actor`, `disposition_scope` and
+`disposition_reason`, plus a nonempty `disposition_evidence_ids` list of nonblank
+strings. Record the actual reviewer/decision reference and the assets, rights,
+territories or periods covered by the exception; do not invent an actor or infer
+scope from the status. Incomplete exceptions fail readiness validation.
+These fields record a supported disposition, not authentication, legal adjudication
+or authority to share, transact or execute a provider operation. Existing open,
+pending, resolved and closed status rules remain separate.

@@ -409,7 +409,7 @@ class ReadinessTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             readiness.is_open({"status": "accepted", "finding_id": "F1"})
         self.assertTrue(readiness.is_open({"status": "pending"}))
-        self.assertFalse(readiness.is_open({"status": "accepted", "disposition_reason": "disclosed", "disposition_evidence_ids": ["E1"]}))
+        self.assertFalse(readiness.is_open({"status": "accepted", "disposition_actor": "synthetic-reviewer", "disposition_scope": "work-one", "disposition_reason": "disclosed", "disposition_evidence_ids": ["E1"]}))
 
     def test_transaction_exclusion_does_not_erase_owned_interest(self):
         catalog = [{"catalog_asset_id": "WORK-1", "title": "Example Work", "controlled_share": "50", "deal_eligibility": "excluded"}]

@@ -151,6 +151,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-review-deal/tests/test_concentration_outputs.py
 - skills/recoup-catalog-review-deal/tests/test_finance.py
 - skills/recoup-catalog-review-deal/tests/test_normalizer_controls.py
+- skills/recoup-catalog-review-deal/tests/test_readiness_dispositions.py
 - skills/recoup-content-build-sites/scripts/find_references.py
 - skills/recoup-platform-build-os/evals/validate.py
 - skills/recoup-platform-email-helper/scripts/send-email.mjs
@@ -168,5 +169,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: f551f7a8d690ab109a4865421582ad8fa4c643be
-Version: 2026.1025.55
+Source commit: c3059ef3718abe1568fe3ae7c6e1e4c9d2589e48
+Version: 2026.1025.56
