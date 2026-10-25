@@ -142,7 +142,7 @@ def classify_parse_status(suffix: str, size_bytes: int) -> str:
     if size_bytes == 0:
         return "unparsed"
     if suffix in PARSEABLE_SUFFIXES:
-        return "parsed"
+        return "unparsed"
     if suffix in MANUAL_REVIEW_SUFFIXES:
         return "manual_review"
     if suffix in TEXTUAL_SUFFIXES:
@@ -156,7 +156,7 @@ def classify_currency(provider: str | None) -> str | None:
     return CURRENCY_BY_PROVIDER.get(provider) if provider else None
 
 
-def build_manifest(source_dir: Path) -> list[dict[str, object]]:
+def build_manifest(source_dir: Path, receipts: list[dict] | None = None) -> list[dict[str, object]]:
     entries: list[dict[str, object]] = []
     for path in sorted(source_dir.rglob("*")):
         if not path.is_file():
@@ -168,7 +168,13 @@ def build_manifest(source_dir: Path) -> list[dict[str, object]]:
         provider = classify_provider("/" + rel_str)
         period = classify_period(rel_str)
         rights_type, doc_type = classify_rights_hint("/" + rel_str, provider)
-        parse_status = classify_parse_status(suffix, size)
+        source_version = sha256_file(path)
+        matching = [receipt for receipt in receipts or []
+                    if receipt.get("source_version_id") == source_version
+                    and receipt.get("input") == str(path.resolve())
+                    and receipt.get("parser_version") and receipt.get("transform_id")]
+        successful = [receipt for receipt in matching if receipt.get("status") == "ok" and receipt.get("rows", 0) > 0]
+        parse_status = "parsed" if successful else "manual_review" if matching else classify_parse_status(suffix, size)
         currency = classify_currency(provider)
         entries.append(
             {
@@ -176,7 +182,9 @@ def build_manifest(source_dir: Path) -> list[dict[str, object]]:
                 "filename": path.name,
                 "suffix": suffix,
                 "size_bytes": size,
-                "sha256": sha256_file(path),
+                "sha256": source_version,
+                "source_version_id": source_version,
+                "parser_receipts": [receipt.get("receipt") for receipt in matching],
                 "parse_status": parse_status,
                 "likely_provider": provider,
                 "likely_period": period,
@@ -196,6 +204,7 @@ def main() -> int:
         default=None,
         help="Output JSON path. Defaults to workpapers/file-manifest.json.",
     )
+    parser.add_argument("--receipts", help="Directory containing normalizer .json receipts (searched recursively)")
     args = parser.parse_args()
 
     workspace = Path(args.deal_workspace)
@@ -205,7 +214,16 @@ def main() -> int:
 
     output = Path(args.output) if args.output else workspace / "workpapers" / "file-manifest.json"
     output.parent.mkdir(parents=True, exist_ok=True)
-    files = build_manifest(source_dir)
+    receipt_dir = Path(args.receipts) if args.receipts else workspace / "normalized"
+    receipts = []
+    for path in receipt_dir.rglob("*.json"):
+        try:
+            data = json.loads(path.read_text())
+        except (ValueError, OSError):
+            continue
+        if isinstance(data, dict) and data.get("parser_version"):
+            receipts.append(data)
+    files = build_manifest(source_dir, receipts)
     payload = {"deal_workspace": str(workspace), "files": files}
     output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 

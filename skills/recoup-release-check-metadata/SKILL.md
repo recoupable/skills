@@ -46,3 +46,14 @@ request only if requested; do not submit edits or contact the distributor in thi
 
 Example: an export says writer “A. Example”, a split sheet says “Alex Example”, and
 Spotify exposes neither: flag the name match for review, not a missing Spotify writer.
+
+
+## Evidence and correction readback packet
+
+Use `templates/metadata-comparison.json` and `references/field-evidence.md` to preserve
+intended values, provider receipts and destination observations independently. Include
+edition, ordered track membership, exact field/role and territory in each comparison.
+A later receipt may be accepted while the destination still shows the old value.
+Attach changed-source dependencies to affected comparisons; a prior approval does not
+apply to a changed payload. Return the packet for an explicitly requested action stage;
+this check does not submit corrections, enroll a roster or register a right.

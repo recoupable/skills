@@ -1,0 +1,76 @@
+{
+  "schema_version": "1",
+  "rules": [
+    {
+      "rule_id": "RULE-A",
+      "rule_version": "signed-1",
+      "evidence_refs": [
+        "synthetic-contract:section-4"
+      ],
+      "basis": "gross_amount",
+      "rights_type": "publishing",
+      "territories": [
+        "US"
+      ],
+      "effective_start": "2024-01-01",
+      "effective_end": "2024-12-31",
+      "participation_rate": "0.5",
+      "commission_rate": "0.1",
+      "commission_basis": "participation",
+      "already_net_of": [],
+      "adjustments_complete": true
+    }
+  ],
+  "lines": [
+    {
+      "line_id": "EARNING-A",
+      "rule_id": "RULE-A",
+      "evidence_refs": [
+        "synthetic-statement:row-2"
+      ],
+      "period_start": "2024-01-01",
+      "period_end": "2024-03-31",
+      "rights_type": "publishing",
+      "territory": "US",
+      "currency": "USD",
+      "gross_amount": "100.0049",
+      "reported_amount": "40",
+      "adjustments": [
+        {
+          "kind": "reserve_withheld",
+          "amount": "-5",
+          "evidence_refs": [
+            "synthetic-contract:section-5",
+            "synthetic-reserve:row-1"
+          ],
+          "adjustment_id": "ADJ-1"
+        }
+      ]
+    }
+  ],
+  "recoupment_accounts": [
+    {
+      "account_id": "RECOUP-A",
+      "currency": "USD",
+      "evidence_refs": [
+        "synthetic-recoupment:page-1"
+      ],
+      "cross_collateralization": false,
+      "opening_balance": "30",
+      "reported_closing_balance": "0",
+      "movements": [
+        {
+          "kind": "cost",
+          "amount": "5",
+          "evidence_refs": [
+            "synthetic-approved-cost:row-1"
+          ],
+          "movement_id": "MOVE-1"
+        }
+      ],
+      "earnings_line_ids": [
+        "EARNING-A"
+      ]
+    }
+  ]
+}

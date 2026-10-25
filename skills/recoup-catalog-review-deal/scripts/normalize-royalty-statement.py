@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Normalize first-pass provider CSV/TSV exports into royalty-ledger.csv.
 
-Returns status="ok" only when financial fields (gross_amount, owner_net_amount,
-period_start) are populated above 50% across rows. Lower coverage returns
-status="partial" with a warnings array enumerating which expected source columns
-were not found, so callers do not silently proceed with a useless ledger.
+Preserves exact decimal values, streams source rows, and retains held/control rows
+in source receipts. status=ok means accepted detail rows; source controls remain
+explicitly unavailable until supplied. No provider label establishes cash receipt.
 """
 
 from __future__ import annotations
@@ -12,10 +11,20 @@ from __future__ import annotations
 import argparse
 import calendar
 import csv
-import io
 import json
 import re
 import sys
+import hashlib
+import sqlite3
+import tempfile
+import os
+import uuid
+from collections import Counter, defaultdict
+from decimal import Decimal, InvalidOperation, getcontext
+getcontext().prec = 128
+from _finance import amount as exact_amount
+from datetime import date
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -45,6 +54,9 @@ CANONICAL_COLUMNS = [
     "cue_sheet_ref",
     "match_confidence",
     "notes",
+    "source_version_id", "source_sheet", "source_row", "source_record_id",
+    "parser_version", "transform_id", "row_status", "held_reasons",
+    "reported_period", "report_date", "statement_id", "raw_values",
 ]
 
 
@@ -58,15 +70,15 @@ NUMERIC_FIELDS = {"gross_amount", "deductions", "owner_net_amount"}
 # is partial. Compared case-insensitively against input headers.
 FINANCIAL_ALIASES: dict[str, dict[str, list[str]]] = {
     "ascap": {
-        "gross_amount": ["Gross Amount", "Gross", "Royalty Amount"],
-        "owner_net_amount": ["Publisher Share", "Net", "Royalty Amount"],
+        "gross_amount": ["Gross Amount", "Gross"],
+        "owner_net_amount": ["Publisher Share", "Net"],
         "period_start": ["Performance Start", "Period Start"],
         "period_end": ["Performance End", "Period End"],
         "platform_or_licensee": ["Licensee", "Station", "Network", "Series / Film Title"],
     },
     "bmi": {
-        "gross_amount": ["Amount", "Gross Amount", "Amount Paid"],
-        "owner_net_amount": ["Publisher Net", "Net", "Amount Paid"],
+        "gross_amount": ["Gross Amount"],
+        "owner_net_amount": ["Publisher Net", "Net"],
         "period_start": ["Period Start", "Statement Qtr"],
         "period_end": ["Period End", "Statement Qtr"],
         "platform_or_licensee": ["Station", "Licensee", "Network"],
@@ -124,20 +136,20 @@ FINANCIAL_ALIASES: dict[str, dict[str, list[str]]] = {
 
 
 def clean_amount(value: str | None) -> str:
-    if not value:
+    """Preserve supplied precision. Currency symbols do not establish currency."""
+    if value is None or not str(value).strip():
         return ""
-    cleaned = value.strip().replace("$", "").replace(",", "")
-    is_negative = cleaned.startswith("(") and cleaned.endswith(")")
-    cleaned = cleaned.strip("()")
-    if not cleaned:
+    raw = str(value).strip()
+    negative = raw.startswith("(") and raw.endswith(")")
+    raw = raw.strip("()").strip()
+    raw = raw.lstrip("$€£¥").strip()
+    if not re.fullmatch(r"[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|[+-]?\.\d+", raw):
         return ""
     try:
-        amount = float(cleaned)
-    except ValueError:
+        amount = exact_amount(raw.replace(",", ""))
+    except (InvalidOperation, ValueError):
         return ""
-    if is_negative:
-        amount *= -1
-    return f"{amount:.2f}"
+    return format(-amount if negative else amount, "f")
 
 
 def parse_month(value: str | None) -> tuple[str, str]:
@@ -149,6 +161,8 @@ def parse_month(value: str | None) -> tuple[str, str]:
         return text, text
     year = int(match.group(1))
     month = int(match.group(2))
+    if not 1 <= month <= 12:
+        return "", ""
     last_day = calendar.monthrange(year, month)[1]
     return f"{year:04d}-{month:02d}-01", f"{year:04d}-{month:02d}-{last_day:02d}"
 
@@ -191,13 +205,8 @@ def first(row: dict[str, str], *names: str) -> str:
 
 
 def has_meaningful_value(row: dict[str, str]) -> bool:
-    values = [value.strip() for key, value in row.items() if isinstance(key, str) and value]
-    if not values:
-        return False
-    first_value = values[0].lower()
-    if first_value.startswith("totals") or first_value.startswith("note:"):
-        return False
-    return True
+    # A song title can start with "Totals" or "Note:". Classification is explicit.
+    return any(str(value).strip() for key, value in row.items() if isinstance(key, str) and value)
 
 
 def asset_id(prefix: str, value: str, fallback: str) -> str:
@@ -225,8 +234,8 @@ class ProviderProfile:
 def normalize_ascap(row: dict[str, str], index: int, source_file: str) -> dict[str, str]:
     output = blank_row(index, source_file)
     title = first(row, "Work Title", "Title")
-    gross = clean_amount(first(row, "Gross Amount", "Gross", "Royalty Amount"))
-    net = clean_amount(first(row, "Publisher Share", "Net", "Royalty Amount"))
+    gross = clean_amount(first(row, "Gross Amount", "Gross"))
+    net = clean_amount(first(row, "Publisher Share", "Net"))
     output.update(
         {
             "provider": "ASCAP",
@@ -242,7 +251,7 @@ def normalize_ascap(row: dict[str, str], index: int, source_file: str) -> dict[s
             "deductions": clean_amount(first(row, "Deductions", "Fees")),
             "participant_share": first(row, "Share %"),
             "owner_net_amount": net,
-            "currency": first(row, "Currency") or "USD",
+            "currency": first(row, "Currency"),
             "pro_use_type": first(row, "Use Type", "Perf. Type"),
             "pro_credits": first(row, "Credits", "Total Credits", "Premium Credits"),
             "pro_bonus_type": first(row, "Bonus Type", "Premium Type"),
@@ -259,7 +268,7 @@ def normalize_bmi(row: dict[str, str], index: int, source_file: str) -> dict[str
     quarter_start, quarter_end = parse_quarter(first(row, "Statement Qtr"))
     hit_song_bonus = clean_amount(first(row, "Hit Song Bonus"))
     bonus_type = first(row, "Bonus Category", "Bonus Type") or ("Hit Song Bonus" if hit_song_bonus not in ("", "0.00") else "")
-    net = clean_amount(first(row, "Publisher Net", "Net", "Amount Paid"))
+    net = clean_amount(first(row, "Publisher Net", "Net"))
     output.update(
         {
             "provider": "BMI",
@@ -271,10 +280,10 @@ def normalize_bmi(row: dict[str, str], index: int, source_file: str) -> dict[str
             "payment_date": first(row, "Payment Date"),
             "territory": first(row, "Territory"),
             "platform_or_licensee": first(row, "Station", "Licensee", "Network"),
-            "gross_amount": clean_amount(first(row, "Amount", "Gross Amount", "Amount Paid")),
+            "gross_amount": clean_amount(first(row, "Gross Amount")),
             "deductions": clean_amount(first(row, "Admin Fee", "Deductions")),
             "owner_net_amount": net,
-            "currency": first(row, "Currency") or "USD",
+            "currency": first(row, "Currency"),
             "pro_use_type": first(row, "Performance Type", "Use Type"),
             "pro_bonus_type": bonus_type,
             "notes": f"bmi_work_id={first(row, 'BMI Work #')}" if first(row, "BMI Work #") else "",
@@ -297,13 +306,13 @@ def normalize_distributor(row: dict[str, str], index: int, source_file: str) -> 
             "catalog_asset_id": asset_id("isrc", first(row, "ISRC"), title),
             "period_start": first(row, "Period Start") or period_start,
             "period_end": first(row, "Period End") or period_end,
-            "payment_date": first(row, "Report Date", "Payment Date"),
+            "payment_date": first(row, "Payment Date"),
             "territory": first(row, "Territory", "Country"),
             "platform_or_licensee": first(row, "Store", "DSP", "Platform", "Source"),
             "gross_amount": clean_amount(first(row, "Gross", "Gross Amount")),
             "deductions": clean_amount(first(row, "Fee", "Deductions")),
             "owner_net_amount": clean_amount(first(row, "Net", "Net Amount", "Net Payable")),
-            "currency": first(row, "Currency") or "USD",
+            "currency": first(row, "Currency"),
             "fx_rate": first(row, "FX", "FX Rate"),
             "notes": first(row, "Notes"),
         }
@@ -359,7 +368,7 @@ def normalize_youtube(row: dict[str, str], index: int, source_file: str) -> dict
             "platform_or_licensee": "YouTube",
             "gross_amount": clean_amount(first(row, "Gross Revenue", "Gross", "youtube_revenue_split")),
             "owner_net_amount": clean_amount(first(row, "Net Revenue", "Net", "partner_revenue_usd")),
-            "currency": first(row, "Currency", "currency_code") or "USD",
+            "currency": first(row, "Currency", "currency_code"),
             "notes": f"content_type={first(row, 'Content Type')}" if first(row, "Content Type") else f"asset_id={first(row, 'asset_id')}" if first(row, "asset_id") else "",
         }
     )
@@ -378,13 +387,13 @@ def normalize_mlc(row: dict[str, str], index: int, source_file: str) -> dict[str
             "catalog_asset_id": asset_id("iswc", first(row, "ISWC"), title),
             "period_start": first(row, "Period Start") or period_start,
             "period_end": first(row, "Period End") or period_end,
-            "payment_date": first(row, "Report Date", "Payment Date"),
+            "payment_date": first(row, "Payment Date"),
             "territory": first(row, "Territory") or "US",
             "platform_or_licensee": first(row, "DSP", "Platform", "Source"),
             "gross_amount": clean_amount(first(row, "Mechanical Gross", "Gross")),
             "deductions": clean_amount(first(row, "Admin Fee", "Deductions")),
             "owner_net_amount": clean_amount(first(row, "Publisher Net", "Net", "Net Payable")),
-            "currency": first(row, "Currency") or "USD",
+            "currency": first(row, "Currency"),
             "fx_rate": first(row, "FX", "FX Rate"),
             "notes": first(row, "Notes"),
         }
@@ -409,7 +418,7 @@ def normalize_curve(row: dict[str, str], index: int, source_file: str) -> dict[s
             "gross_amount": clean_amount(first(row, "Gross")),
             "deductions": clean_amount(first(row, "Deductions")),
             "owner_net_amount": clean_amount(first(row, "Net Payable", "Net")),
-            "currency": first(row, "Currency") or "USD",
+            "currency": first(row, "Currency"),
         }
     )
     return output
@@ -439,9 +448,9 @@ def normalize_bmi_annual(row: dict[str, str], index: int, source_file: str) -> d
     }
     total_value = _to_float(first(row, "Total"))
     if total_value is None:
-        total_value = sum(v for v in components.values() if v is not None)
+        total_value = sum(v for v in components.values() if v is not None) if any(v is not None for v in components.values()) else None
     components_note = ", ".join(
-        f"{key}={value:.2f}" for key, value in components.items() if value is not None
+        f"{key}={value}" for key, value in components.items() if value is not None
     )
     period_start, period_end = _filename_year_period(source_file)
     output.update(
@@ -453,7 +462,7 @@ def normalize_bmi_annual(row: dict[str, str], index: int, source_file: str) -> d
             "period_start": period_start,
             "period_end": period_end,
             "platform_or_licensee": "BMI consolidated",
-            "owner_net_amount": f"{total_value:.2f}" if total_value is not None else "",
+            "owner_net_amount": format(total_value, "f") if total_value is not None else "",
             "currency": "USD",
             "notes": components_note + (f"; bmi_work_id={work_id}" if work_id else ""),
         }
@@ -495,16 +504,10 @@ def normalize_gema(row: dict[str, str], index: int, source_file: str) -> dict[st
     return output
 
 
-def _to_float(value: str | None) -> float | None:
-    if value in (None, ""):
-        return None
-    cleaned = str(value).replace("$", "").replace(",", "").strip()
-    if not cleaned:
-        return None
-    try:
-        return float(cleaned)
-    except ValueError:
-        return None
+def _to_float(value: str | None) -> Decimal | None:
+    # Historical function name kept for profile compatibility; never binary float.
+    text = clean_amount(value)
+    return Decimal(text) if text else None
 
 
 PROFILES: dict[str, ProviderProfile] = {
@@ -546,52 +549,43 @@ def detect_delimiter(text_sample: str, requested: str) -> str:
         return ","
 
 
-def read_rows(input_path: Path, delimiter: str, sheet: str | None = None) -> tuple[list[str], list[dict[str, str]]]:
-    suffix = input_path.suffix.lower()
-    if suffix in {".xlsx", ".xls", ".xlsm"}:
-        return _read_xlsx_rows(input_path, sheet)
-    raw = input_path.read_text(encoding="utf-8-sig")
-    sample = raw[:8192] if raw else ""
-    actual_delim = detect_delimiter(sample, delimiter)
-    reader = csv.DictReader(io.StringIO(raw), delimiter=actual_delim)
-    rows = [row for row in reader if has_meaningful_value(row)]
-    headers = list(reader.fieldnames or [])
-    return headers, rows
-
-
-def _read_xlsx_rows(input_path: Path, sheet: str | None) -> tuple[list[str], list[dict[str, str]]]:
-    try:
-        import openpyxl  # type: ignore[import-not-found]
-    except ImportError as exc:  # pragma: no cover - import-time guard
-        raise SystemExit(
-            "openpyxl is required for XLSX inputs. Install: pip3 install openpyxl"
-        ) from exc
-    workbook = openpyxl.load_workbook(input_path, data_only=True, read_only=True)
-    if sheet and sheet in workbook.sheetnames:
-        worksheet = workbook[sheet]
+@contextmanager
+def read_rows(input_path: Path, delimiter: str, sheet: str | None = None):
+    """Yield headers, row iterator and selected sheet; memory independent of CSV size."""
+    if input_path.suffix.lower() in {".xlsx", ".xlsm", ".xls"}:
+        if input_path.suffix.lower() == ".xls":
+            raise ValueError("Legacy XLS must be exported to XLSX/CSV before parsing")
+        try:
+            import openpyxl
+        except ImportError as exc:
+            raise SystemExit("XLSX needs openpyxl — pip3 install openpyxl") from exc
+        workbook = openpyxl.load_workbook(input_path, data_only=True, read_only=True)
+        try:
+            if sheet and sheet not in workbook.sheetnames:
+                raise ValueError(f"Requested worksheet {sheet!r} not found; available: {workbook.sheetnames}")
+            worksheet = workbook[sheet] if sheet else workbook.active
+            iterator = worksheet.iter_rows(values_only=True)
+            headers = [_to_str_cell(c) for c in next(iterator, ())]
+            if not headers or any(not h for h in headers):
+                raise ValueError("Worksheet row 1 must contain explicit nonblank headers; export the table first")
+            def body():
+                for number, cells in enumerate(iterator, 2):
+                    yield number, {key: _to_str_cell(cells[i]) if i < len(cells) else "" for i, key in enumerate(headers)}
+            yield headers, body(), worksheet.title
+        finally:
+            workbook.close()
     else:
-        worksheet = workbook.active
-    raw_rows = [row for row in worksheet.iter_rows(values_only=True)]
-    header_idx = _detect_header_row(raw_rows)
-    if header_idx is None:
-        return [], []
-    headers = [_to_str_cell(c) for c in raw_rows[header_idx]]
-    headers = [h for h in headers if h]
-    body: list[dict[str, str]] = []
-    for raw in raw_rows[header_idx + 1:]:
-        if not raw or not any(c is not None for c in raw):
-            continue
-        row_dict: dict[str, str] = {}
-        for idx, header in enumerate(raw_rows[header_idx]):
-            cell = raw[idx] if idx < len(raw) else None
-            key = _to_str_cell(header)
-            if not key:
-                continue
-            row_dict[key] = _to_str_cell(cell)
-        if not has_meaningful_value(row_dict):
-            continue
-        body.append(row_dict)
-    return headers, body
+        if sheet:
+            raise ValueError("--sheet applies only to XLSX inputs")
+        with input_path.open(newline="", encoding="utf-8-sig") as handle:
+            sample = handle.read(8192)
+            handle.seek(0)
+            reader = csv.DictReader(handle, delimiter=detect_delimiter(sample, delimiter))
+            headers = list(reader.fieldnames or [])
+            def body():
+                for row in reader:
+                    yield reader.line_num, row
+            yield headers, body(), ""
 
 
 def _to_str_cell(value: object) -> str:
@@ -643,13 +637,9 @@ def load_column_map(path: Path | None) -> dict[str, str]:
 
 
 def apply_column_map(input_row: dict[str, str], output_row: dict[str, str], column_map: dict[str, str]) -> None:
-    """Fill any canonical fields that the profile left empty using the mapping."""
+    """Explicit mapping is authoritative, including an explicitly empty value."""
     for source_col, canonical_field in column_map.items():
-        if output_row.get(canonical_field):
-            continue
         source_value = first(input_row, source_col)
-        if not source_value:
-            continue
         if canonical_field in NUMERIC_FIELDS:
             output_row[canonical_field] = clean_amount(source_value)
         else:
@@ -682,78 +672,252 @@ def expected_columns_not_found(provider: str, headers: list[str]) -> list[str]:
     return missing
 
 
-def normalize(
-    provider: str,
-    input_path: Path,
-    output_path: Path,
-    delimiter: str = "auto",
-    column_map_path: Path | None = None,
-    sheet: str | None = None,
-    append: bool = False,
-) -> dict[str, object]:
+PARSER_VERSION = "royalty-normalizer/2"
+REQUIRED_VALUES = ("owner_net_amount", "currency", "period_start", "period_end", "rights_type", "income_type")
+ROW_CLASSES = {"detail", "control", "footer", "ignored", "held"}
+
+
+def sha256_file(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def validate_detail(output):
+    reasons = [f"missing:{field}" for field in REQUIRED_VALUES if not output.get(field) or output[field] == "unknown"]
+    if output.get("currency") and not re.fullmatch(r"[A-Z]{3}", output["currency"]):
+        reasons.append("invalid:currency")
+    for field in ("period_start", "period_end", "payment_date", "report_date"):
+        if output.get(field):
+            try:
+                date.fromisoformat(output[field])
+            except ValueError:
+                reasons.append(f"invalid:{field}")
+    if output.get("period_start") and output.get("period_end") and output["period_start"] > output["period_end"]:
+        reasons.append("invalid:period_order")
+    return reasons
+
+
+def validate_source_controls(controls, totals):
+    """Compare explicit supported controls without manufacturing unobserved zeros."""
+    errors = []
+    if not isinstance(controls, dict):
+        return ["Source controls must be an object"]
+    evidence_refs = controls.get("evidence_refs")
+    if not isinstance(evidence_refs, list) or not evidence_refs or not all(
+        isinstance(ref, str) and ref.strip() for ref in evidence_refs
+    ):
+        errors.append("Source controls require nonempty string evidence_refs")
+    control_totals = controls.get("totals")
+    if not isinstance(control_totals, list) or not control_totals:
+        errors.append("Source controls need at least one explicit total in a list")
+        return errors
+    for index, control in enumerate(control_totals, 1):
+        label = f"Source control {index}"
+        if not isinstance(control, dict):
+            errors.append(f"{label} must be an object")
+            continue
+        currency, field = control.get("currency"), control.get("field")
+        if not isinstance(currency, str) or not re.fullmatch(r"[A-Z]{3}", currency):
+            errors.append(f"{label} requires an explicit uppercase three-letter currency")
+            continue
+        if not isinstance(field, str) or field not in NUMERIC_FIELDS:
+            errors.append(f"{label} field must be one of {', '.join(sorted(NUMERIC_FIELDS))}")
+            continue
+        try:
+            expected = exact_amount(control.get("amount"), f"{label} amount")
+        except ValueError as error:
+            errors.append(str(error))
+            continue
+        # A present key can legitimately total zero; an absent key is missing evidence.
+        if (currency, field) not in totals:
+            errors.append(f"{label} has no observed source amount for {currency}/{field}")
+            continue
+        observed = totals[(currency, field)]
+        if observed != expected:
+            errors.append(f"Source control mismatch {currency}/{field}: observed={observed}, expected={expected}")
+    return errors
+
+
+def normalize(provider, input_path, output_path, delimiter="auto", column_map_path=None,
+              sheet=None, append=False, controls_path=None, statement_id=None):
     profile = PROFILES.get(provider)
     if profile is None:
-        supported = ", ".join(sorted(PROFILES))
-        raise SystemExit(f"Unsupported provider '{provider}'. Supported providers: {supported}")
-
+        raise ValueError(f"Unsupported provider {provider!r}")
+    if input_path.resolve() == output_path.resolve():
+        raise ValueError("Source is immutable: output must differ from input")
     column_map = load_column_map(column_map_path)
-    headers, rows = read_rows(input_path, delimiter, sheet=sheet)
-
-    # In append mode, continue ledger_line_id numbering after the rows already
-    # in the file so multiple providers can accumulate into one ledger without
-    # ID collisions. A missing file falls back to a fresh write.
-    appending = append and output_path.exists()
-    id_offset = count_existing_ledger_rows(output_path) if appending else 0
-
-    normalized_rows: list[dict[str, str]] = []
-    for index, row in enumerate(rows):
-        output = profile.normalize(row, id_offset + index + 1, str(input_path))
-        if column_map:
-            apply_column_map(row, output, column_map)
-        normalized_rows.append(output)
-
+    forbidden = {"ledger_line_id", "source_file", "source_version_id", "source_row", "source_sheet", "source_record_id", "transform_id", "parser_version", "raw_values", "row_status", "held_reasons"}
+    if forbidden.intersection(column_map.values()):
+        raise ValueError("Column maps cannot overwrite parser provenance or status")
+    source_hash = sha256_file(input_path)
+    transform_id = hashlib.sha256(json.dumps([PARSER_VERSION, provider, column_map, delimiter, sheet, statement_id], sort_keys=True).encode()).hexdigest()
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    write_mode = "a" if appending else "w"
-    with output_path.open(write_mode, newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=CANONICAL_COLUMNS)
-        if not appending:
+    receipts_dir = Path(str(output_path) + ".receipts")
+    receipts_dir.mkdir(exist_ok=True)
+    receipt_base = receipts_dir / f"{source_hash}-{transform_id[:12]}-{uuid.uuid4().hex[:12]}"
+    receipt_path = Path(str(receipt_base) + ".json")
+    rows_path = Path(str(receipt_base) + ".rows.jsonl")
+    counts = Counter()
+    totals = defaultdict(Decimal)
+    written_totals = defaultdict(Decimal)
+    existing_count = 0
+    required_count = 0
+    appending = append and output_path.exists()
+    controls = json.loads(controls_path.read_text(), parse_float=str) if controls_path else None
+    control_errors = []
+    # SQLite indexes import IDs on disk. We never load a multi-million-row ledger into RAM.
+    with tempfile.TemporaryDirectory(prefix="royalty-import-", dir=output_path.parent) as temporary:
+        temporary = Path(temporary)
+        db = sqlite3.connect(temporary / "identities.sqlite")
+        db.execute("CREATE TABLE identities (id TEXT PRIMARY KEY, transform TEXT, status TEXT)")
+        db.execute("CREATE TABLE transactions (id TEXT PRIMARY KEY, economic TEXT)")
+        staged = temporary / "ledger.csv"
+        rowlog = temporary / "rows.jsonl"
+        with staged.open("w", newline="", encoding="utf-8") as handle, rowlog.open("w", encoding="utf-8") as log:
+            writer = csv.DictWriter(handle, fieldnames=CANONICAL_COLUMNS)
             writer.writeheader()
-        writer.writerows(normalized_rows)
-
-    rate = compute_population_rate(normalized_rows)
-    warnings: list[dict[str, object]] = []
-    status = "ok"
-    if normalized_rows and rate < PARTIAL_THRESHOLD:
-        status = "partial"
-        missing = expected_columns_not_found(provider, headers)
-        warnings.append(
-            {
-                "profile": provider,
-                "field_population_rate": round(rate, 4),
-                "headers_seen": headers,
-                "expected_columns_not_found": missing,
-                "critical_fields_checked": list(CRITICAL_FIELDS),
-                "hint": (
-                    "Coverage of gross_amount/owner_net_amount/period_start fell below "
-                    f"{int(PARTIAL_THRESHOLD * 100)}%. Pass --column-map mapping.json with "
-                    "{source_column: canonical_field} or extend the provider profile."
-                ),
-            }
-        )
-
-    payload: dict[str, object] = {
-        "status": status,
-        "provider": profile.provider_name,
-        "input": str(input_path),
-        "output": str(output_path),
-        "rows": len(normalized_rows),
-        "appended": appending,
-        "ledger_total_rows": id_offset + len(normalized_rows),
-        "field_population_rate": round(rate, 4),
-        "headers_seen": headers,
-        "warnings": warnings,
-    }
+            if appending:
+                with output_path.open(newline="", encoding="utf-8") as old:
+                    reader = csv.DictReader(old)
+                    if reader.fieldnames != CANONICAL_COLUMNS:
+                        raise ValueError("Existing ledger schema differs; rebuild from immutable sources before append")
+                    for row in reader:
+                        writer.writerow(row)
+                        db.execute("INSERT OR IGNORE INTO identities VALUES (?, ?, ?)", (row["ledger_line_id"], row["transform_id"], row["row_status"]))
+                        if row.get("source_record_id"):
+                            db.execute("INSERT OR IGNORE INTO transactions VALUES (?, ?)", (row["source_record_id"], economic_key(row)))
+                        existing_count += 1
+            with read_rows(input_path, delimiter, sheet) as (headers, rows, selected_sheet):
+                if not headers or any(not h for h in headers) or len(set(h.lower() for h in headers)) != len(headers):
+                    raise ValueError("Missing, blank or duplicate source headers")
+                absent = set(column_map) - set(headers)
+                if absent:
+                    raise ValueError(f"Mapped source columns absent: {sorted(absent)}")
+                for source_row, raw in rows:
+                    counts["source_rows"] += 1
+                    row_class = first(raw, "Row Type", "row_class").lower() or ("detail" if has_meaningful_value(raw) else "ignored")
+                    malformed = None in raw or any(isinstance(v, list) for v in raw.values())
+                    safe_raw = {str(k): str(v) if v is not None else "" for k, v in raw.items()}
+                    output = profile.normalize(safe_raw, source_row, str(input_path.resolve()))
+                    # Only observed fields or explicit maps establish classification, currency and dates.
+                    output.update({"rights_type": first(safe_raw, "Rights Type", "rights_type").lower(),
+                                   "income_type": first(safe_raw, "Income Type", "income_type").lower(),
+                                   "currency": first(safe_raw, "Currency", "currency_code").upper(),
+                                   "payment_date": first(safe_raw, "Payment Date"),
+                                   "report_date": first(safe_raw, "Report Date", "Distribution Date"),
+                                   "reported_period": first(safe_raw, "Reporting Period", "Statement Qtr", "Reporting Month"),
+                                   "statement_id": statement_id or first(safe_raw, "Statement ID")})
+                    if provider in {"bmi-annual", "gema"}:
+                        output["period_start"] = first(safe_raw, "Period Start")
+                        output["period_end"] = first(safe_raw, "Period End")
+                    if provider == "bmi" and not first(safe_raw, "Period Start"):
+                        output["period_start"] = output["period_end"] = ""
+                    if provider == "youtube-content-id":
+                        earned_start, earned_end = parse_month(first(safe_raw, "Usage Month", "Sales Month"))
+                        output["period_start"] = first(safe_raw, "Period Start") or earned_start
+                        output["period_end"] = first(safe_raw, "Period End") or earned_end
+                    apply_column_map(safe_raw, output, column_map)
+                    output["currency"] = output["currency"].upper()
+                    line_id = hashlib.sha256(f"{source_hash}:{selected_sheet}:{source_row}".encode()).hexdigest()
+                    transaction = first(safe_raw, "Transaction ID", "Source Record ID")
+                    account = first(safe_raw, "Account ID", "Payee ID")
+                    transaction_key = f"{provider}:{account}:{output['statement_id']}:{transaction}" if transaction and account and output["statement_id"] else ""
+                    output.update({"ledger_line_id": "RL-" + line_id, "source_version_id": source_hash,
+                                   "source_row": str(source_row), "source_sheet": selected_sheet,
+                                   "source_record_id": transaction_key, "parser_version": PARSER_VERSION,
+                                   "transform_id": transform_id, "raw_values": json.dumps(raw, ensure_ascii=False)})
+                    reasons = []
+                    if row_class not in ROW_CLASSES:
+                        reasons.append("unknown:row_class")
+                        row_class = "held"
+                    if malformed:
+                        reasons.append("malformed:columns")
+                    if row_class in {"detail", "held"}:
+                        reasons += validate_detail(output)
+                        for field in NUMERIC_FIELDS:
+                            aliases = [source for source, target in column_map.items() if target == field]
+                            if not aliases:
+                                aliases = FINANCIAL_ALIASES.get(provider, {}).get(field, [])
+                                if field == "deductions":
+                                    aliases = ["Deductions", "Fees", "Fee", "Admin Fee"]
+                            observed = first(safe_raw, *aliases)
+                            if observed and not clean_amount(observed):
+                                reasons.append(f"invalid:{field}")
+                    if row_class == "held":
+                        reasons.append("source:held")
+                    if reasons:
+                        row_class = "held"
+                    # Totals cover every retained detail/held row, never control/footer rows.
+                    if row_class in {"detail", "held"}:
+                        for field in ("gross_amount", "owner_net_amount", "deductions"):
+                            if output.get(field):
+                                totals[(output["currency"] or "UNKNOWN", field)] += Decimal(output[field])
+                    imported = db.execute("SELECT transform, status FROM identities WHERE id=?", (output["ledger_line_id"],)).fetchone()
+                    if imported:
+                        if imported[0] != transform_id:
+                            raise ValueError("Source already imported with a different mapping; rebuild the affected ledger from sources, do not append a second interpretation")
+                        counts["duplicate_rows"] += 1
+                        if imported[1] == "held":
+                            counts["duplicate_held_rows"] += 1
+                        disposition = "duplicate"
+                    else:
+                        existing = db.execute("SELECT economic FROM transactions WHERE id=?", (transaction_key,)).fetchone() if transaction_key else None
+                        if existing and existing[0] == economic_key(output):
+                            counts["economic_duplicate_rows"] += 1
+                            counts["duplicate_rows"] += 1
+                            disposition = "duplicate"
+                        else:
+                            if existing:
+                                row_class = "held"
+                                reasons.append("overlap:revised_transaction_requires_resolution")
+                            output["row_status"] = "ready" if row_class == "detail" else row_class
+                            output["held_reasons"] = ";".join(reasons)
+                            counts[row_class] += 1
+                            disposition = row_class
+                            if row_class in {"detail", "held"}:
+                                writer.writerow(output)
+                                for field in ("gross_amount", "owner_net_amount", "deductions"):
+                                    if output.get(field):
+                                        written_totals[(output["currency"] or "UNKNOWN", field)] += Decimal(output[field])
+                                counts["written_rows"] += 1
+                                required_count += sum(bool(output.get(f)) for f in CRITICAL_FIELDS)
+                            db.execute("INSERT OR IGNORE INTO identities VALUES (?, ?, ?)", (output["ledger_line_id"], transform_id, output["row_status"]))
+                            if transaction_key:
+                                db.execute("INSERT OR IGNORE INTO transactions VALUES (?, ?)", (transaction_key, economic_key(output)))
+                    log.write(json.dumps({"source_version_id": source_hash, "source_sheet": selected_sheet,
+                                          "source_row": source_row, "disposition": disposition, "reasons": reasons,
+                                          "ledger_line_id": output["ledger_line_id"], "raw_values": raw}, ensure_ascii=False) + "\n")
+            if not counts["source_rows"]:
+                control_errors.append("No data rows: header-only source")
+            if controls_path is not None:
+                control_errors.extend(validate_source_controls(controls, totals))
+        db.close()
+        os.replace(staged, output_path)
+        os.replace(rowlog, rows_path)
+    status = "partial" if counts["held"] or counts["economic_duplicate_rows"] or counts["duplicate_held_rows"] or control_errors or not (counts["detail"] or counts["duplicate_rows"]) else "ok"
+    payload = {"status": status, "provider": profile.provider_name, "input": str(input_path.resolve()),
+               "source_version_id": source_hash, "source_sheet": selected_sheet, "parser_version": PARSER_VERSION,
+               "transform_id": transform_id, "output": str(output_path), "rows": counts["written_rows"],
+               "appended": appending, "ledger_total_rows": existing_count + counts["written_rows"],
+               "overlap_detection": "Exact source versions and explicitly scoped account/statement/transaction IDs only; unkeyed revised exports require manual overlap review.",
+               "row_conservation": dict(counts), "source_totals": [{"currency": c, "field": f, "amount": format(v, "f")} for (c, f), v in sorted(totals.items())],
+               "written_totals": [{"currency": c, "field": f, "amount": format(v, "f")} for (c, f), v in sorted(written_totals.items())],
+               "controls_scope": "Source detail before duplicate disposition; written_totals cover only this import's newly written rows, excluding any existing appended ledger.",
+               "ledger_control_status": "requires_duplicate_review" if counts["economic_duplicate_rows"] else "not_independently_controlled",
+               "controls_status": "unavailable" if controls_path is None else "matched" if not control_errors else "mismatch",
+               "rounding_policy": "Inputs <=24 coefficient/integer digits and <=18 fractional places; Decimal precision 128. No per-row rounding. Reporting rounding is a separate evidenced step.",
+               "field_population_rate": round(required_count / (counts["written_rows"] * len(CRITICAL_FIELDS)), 4) if counts["written_rows"] else 0,
+               "headers_seen": headers, "warnings": control_errors,
+               "receipt": str(receipt_path), "row_receipt": str(rows_path)}
+    receipt_path.write_text(json.dumps(payload, indent=2) + "\n")
     return payload
+
+
+def economic_key(row):
+    return json.dumps([row.get(key, "") for key in ("catalog_asset_id", "currency", "period_start", "period_end", "rights_type", "income_type", "gross_amount", "owner_net_amount", "deductions")])
 
 
 def main() -> int:
@@ -785,6 +949,8 @@ def main() -> int:
             "providers into one royalty-ledger.csv. Delete the ledger first to start fresh."
         ),
     )
+    parser.add_argument("--controls", help="JSON source totals with evidence_refs and totals[{currency,field,amount}]")
+    parser.add_argument("--statement-id", help="Observed statement identity, for source transaction overlap detection")
     args = parser.parse_args()
 
     delimiter = args.delimiter
@@ -800,6 +966,8 @@ def main() -> int:
         column_map_path=column_map_path,
         sheet=args.sheet,
         append=args.append,
+        controls_path=Path(args.controls) if args.controls else None,
+        statement_id=args.statement_id,
     )
     print(json.dumps(payload, indent=2))
     if payload["status"] != "ok":

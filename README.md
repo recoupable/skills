@@ -52,10 +52,14 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Included skills
 
+- recoup-catalog-audit-catalog
 - recoup-catalog-estimate-value
 - recoup-catalog-explain-contract
 - recoup-catalog-import-catalog
 - recoup-catalog-organize-publishing
+- recoup-catalog-reconcile-royalties
+- recoup-catalog-register-catalog
+- recoup-catalog-resolve-claims
 - recoup-catalog-review-deal
 - recoup-content-asset-pack
 - recoup-content-build-sites
@@ -75,6 +79,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - recoup-platform-track-onboarding
 - recoup-release-add-release
 - recoup-release-check-metadata
+- recoup-release-manage-delivery
 - recoup-release-plan-rollout
 - recoup-release-track-drop
 - recoup-research-artist-overview
@@ -95,19 +100,46 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Bundled helpers
 
+- skills/recoup-catalog-audit-catalog/scripts/build-catalog-report.py
+- skills/recoup-catalog-audit-catalog/scripts/catalog-case.py
 - skills/recoup-catalog-estimate-value/scripts/build_report.py
 - skills/recoup-catalog-estimate-value/scripts/estimate.py
 - skills/recoup-catalog-estimate-value/scripts/fetch_album_tracks.py
+- skills/recoup-catalog-estimate-value/tests/test_estimate.py
+- skills/recoup-catalog-explain-contract/scripts/build-catalog-report.py
+- skills/recoup-catalog-explain-contract/scripts/catalog-case.py
+- skills/recoup-catalog-import-catalog/scripts/build-catalog-report.py
+- skills/recoup-catalog-import-catalog/scripts/catalog-case.py
+- skills/recoup-catalog-import-catalog/scripts/import_catalog.py
+- skills/recoup-catalog-import-catalog/tests/test_intake.py
+- skills/recoup-catalog-organize-publishing/scripts/build-catalog-report.py
+- skills/recoup-catalog-organize-publishing/scripts/catalog-case.py
+- skills/recoup-catalog-reconcile-royalties/scripts/_finance.py
+- skills/recoup-catalog-reconcile-royalties/scripts/build-catalog-report.py
+- skills/recoup-catalog-reconcile-royalties/scripts/calculate-entitlements.py
+- skills/recoup-catalog-reconcile-royalties/scripts/catalog-case.py
+- skills/recoup-catalog-reconcile-royalties/scripts/normalize-royalty-statement.py
+- skills/recoup-catalog-reconcile-royalties/scripts/reconcile-remittances.py
+- skills/recoup-catalog-reconcile-royalties/scripts/validate-normalized-ledger.py
+- skills/recoup-catalog-register-catalog/scripts/build-catalog-report.py
+- skills/recoup-catalog-register-catalog/scripts/catalog-case.py
+- skills/recoup-catalog-resolve-claims/scripts/build-catalog-report.py
+- skills/recoup-catalog-resolve-claims/scripts/catalog-case.py
+- skills/recoup-catalog-review-deal/scripts/_finance.py
 - skills/recoup-catalog-review-deal/scripts/_helpers.py
 - skills/recoup-catalog-review-deal/scripts/auto-column-map.py
+- skills/recoup-catalog-review-deal/scripts/build-catalog-report.py
 - skills/recoup-catalog-review-deal/scripts/build-deal-readiness.py
 - skills/recoup-catalog-review-deal/scripts/build-file-manifest.py
 - skills/recoup-catalog-review-deal/scripts/build-manual-review-queue.py
 - skills/recoup-catalog-review-deal/scripts/calculate-concentration.py
+- skills/recoup-catalog-review-deal/scripts/calculate-entitlements.py
 - skills/recoup-catalog-review-deal/scripts/calculate-nps-nls-bridge.py
+- skills/recoup-catalog-review-deal/scripts/catalog-case.py
 - skills/recoup-catalog-review-deal/scripts/dataroom-hygiene-scan.py
 - skills/recoup-catalog-review-deal/scripts/extract-pdf-statement.py
 - skills/recoup-catalog-review-deal/scripts/normalize-royalty-statement.py
+- skills/recoup-catalog-review-deal/scripts/reconcile-remittances.py
 - skills/recoup-catalog-review-deal/scripts/run-deal-checks.py
 - skills/recoup-catalog-review-deal/scripts/validate-dashboard.py
 - skills/recoup-catalog-review-deal/scripts/validate-deal-workspace.py
@@ -115,16 +147,25 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-review-deal/scripts/validate-findings-evidence.py
 - skills/recoup-catalog-review-deal/scripts/validate-normalized-ledger.py
 - skills/recoup-catalog-review-deal/scripts/validate-workspace-consistency.py
+- skills/recoup-catalog-review-deal/tests/benchmark_finance.py
+- skills/recoup-catalog-review-deal/tests/test_finance.py
+- skills/recoup-catalog-review-deal/tests/test_normalizer_controls.py
 - skills/recoup-content-build-sites/scripts/find_references.py
 - skills/recoup-platform-build-os/evals/validate.py
 - skills/recoup-platform-email-helper/scripts/send-email.mjs
+- skills/recoup-release-check-metadata/scripts/build-catalog-report.py
+- skills/recoup-release-check-metadata/scripts/catalog-case.py
+- skills/recoup-release-manage-delivery/scripts/build-catalog-report.py
+- skills/recoup-release-manage-delivery/scripts/catalog-case.py
 - skills/recoup-release-plan-rollout/scripts/build_campaign_timeline.py
 - skills/recoup-release-plan-rollout/scripts/validate_release.py
 - skills/recoup-roster-add-artist/scripts/onboarding_examples.sh
 - skills/recoup-song-analyze-audio/scripts/test_upload_chat_audio.py
 - skills/recoup-song-analyze-audio/scripts/upload_chat_audio.py
+- skills/recoup-song-check-credits/scripts/build-catalog-report.py
+- skills/recoup-song-check-credits/scripts/catalog-case.py
 
 ## Release provenance
 
-Source commit: e985f422ed1a2a1071dedb130359ef370bd36f52
-Version: 2026.1023.47
+Source commit: 64b4afacde9fa53b59a192d1461e431f19a7ffd4
+Version: 2026.1024.48

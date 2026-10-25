@@ -1,0 +1,26 @@
+{
+  "synthetic": true,
+  "rows": 2000000,
+  "status": "ok",
+  "seconds": 220.156,
+  "peak_rss_bytes": 50888704,
+  "source_bytes": 142000068,
+  "ledger_bytes": 1324889364,
+  "source_totals": [
+    {
+      "currency": "USD",
+      "field": "owner_net_amount",
+      "amount": "9800.0000"
+    }
+  ],
+  "row_conservation": {
+    "source_rows": 2000000,
+    "detail": 2000000,
+    "written_rows": 2000000
+  },
+  "controls_status": "matched",
+  "expected_owner_net": "9800.0000",
+  "normalizer_sha256": "ba94f04d83be003f15359d702cfbebb6309b1b307e19611ed6bd28fdba070c17",
+  "python": "3.12.4",
+  "platform": "darwin"
+}

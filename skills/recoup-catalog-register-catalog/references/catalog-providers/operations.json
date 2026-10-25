@@ -1,0 +1,2316 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-22",
+  "coverage_note": "Versioned preparation profiles and current first-party procedural references. No automatic provider adapter, current account eligibility or live operation is established by this registry.",
+  "operations": [
+    {
+      "profile_id": "mlc-public-observation",
+      "profile_version": "2026-10-22.1",
+      "provider": "The MLC",
+      "operation": "public_work_observation",
+      "stage": "audit",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "public_reader"
+      ],
+      "rights": [
+        "composition mechanical"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "public_search",
+      "source_ids": [
+        "mlc-tools"
+      ],
+      "reference": "mlc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "query",
+        "candidate work IDs",
+        "observation date"
+      ],
+      "preflight": [
+        "Corroborate title with writers and identifiers."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Exact observed work/party/claim fields with search scope; no result is not universal non-registration.",
+      "constraints": []
+    },
+    {
+      "profile_id": "mlc-new-work",
+      "profile_version": "2026-10-22.1",
+      "provider": "The MLC",
+      "operation": "new_work_registration",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "member_rightsholder",
+        "authorized_member_representative"
+      ],
+      "rights": [
+        "composition mechanical"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "member_portal_or_eligible_cwr",
+      "source_ids": [
+        "mlc-tools",
+        "mlc-registration-status"
+      ],
+      "reference": "mlc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "work identity",
+        "writers/publishers",
+        "supported shares",
+        "mandate",
+        "current provider form"
+      ],
+      "preflight": [
+        "Search existing works first.",
+        "Verify Member Hub role and current required fields."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Registration History item decision plus accepted work record/effective scope.",
+      "constraints": []
+    },
+    {
+      "profile_id": "mlc-existing-share",
+      "profile_version": "2026-10-22.1",
+      "provider": "The MLC",
+      "operation": "existing_interest_claim",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "member_rightsholder",
+        "authorized_member_representative"
+      ],
+      "rights": [
+        "composition mechanical"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "member_claiming_tool",
+      "source_ids": [
+        "mlc-claim",
+        "mlc-registration-status"
+      ],
+      "reference": "mlc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing work ID",
+        "claimed interest",
+        "authority",
+        "before/after values"
+      ],
+      "preflight": [
+        "Use existing work rather than duplicate registration.",
+        "Distinguish ordinary claim from substantive conflict."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Item history and accepted collection claim on exact work.",
+      "constraints": []
+    },
+    {
+      "profile_id": "mlc-amend-work",
+      "profile_version": "2026-10-22.1",
+      "provider": "The MLC",
+      "operation": "amend_existing_work",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "member_rightsholder",
+        "authorized_member_representative"
+      ],
+      "rights": [
+        "composition mechanical"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "member_portal",
+      "source_ids": [
+        "mlc-claim",
+        "mlc-registration-status"
+      ],
+      "reference": "mlc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing work ID",
+        "current record",
+        "evidenced correction"
+      ],
+      "preflight": [
+        "Retain superseded submission history.",
+        "Check affected interests and authority."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Corrected fields on accepted work; prior submission preserved.",
+      "constraints": []
+    },
+    {
+      "profile_id": "mlc-member-match",
+      "profile_version": "2026-10-22.1",
+      "provider": "The MLC",
+      "operation": "recording_work_match",
+      "stage": "register",
+      "subject_type": "recording_work_link",
+      "eligible_roles": [
+        "member_rightsholder"
+      ],
+      "rights": [
+        "composition mechanical"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "eligible_hub_matching_tool",
+      "source_ids": [
+        "mlc-tools",
+        "mlc-songwriter",
+        "mlc-match-status"
+      ],
+      "reference": "mlc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "work in eligible catalog",
+        "recording group/ISRC",
+        "identity evidence"
+      ],
+      "preflight": [
+        "Confirm specific Hub capability.",
+        "Compare writers/version, not title alone."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Per-recording-group status including partial acceptance or rematching.",
+      "constraints": []
+    },
+    {
+      "profile_id": "mlc-songwriter-match",
+      "profile_version": "2026-10-22.1",
+      "provider": "The MLC",
+      "operation": "recording_work_match",
+      "stage": "register",
+      "subject_type": "recording_work_link",
+      "eligible_roles": [
+        "songwriter_hub_user"
+      ],
+      "rights": [
+        "composition mechanical"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "eligible_hub_matching_tool",
+      "source_ids": [
+        "mlc-tools",
+        "mlc-songwriter",
+        "mlc-match-status"
+      ],
+      "reference": "mlc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "work in eligible catalog",
+        "recording group/ISRC",
+        "identity evidence"
+      ],
+      "preflight": [
+        "Confirm specific Hub capability.",
+        "Compare writers/version, not title alone."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Per-recording-group status including partial acceptance or rematching.",
+      "constraints": []
+    },
+    {
+      "profile_id": "mlc-songwriter-details",
+      "profile_version": "2026-10-22.1",
+      "provider": "The MLC",
+      "operation": "writer_name_ipi_correction_request",
+      "stage": "register",
+      "subject_type": "party_work_link",
+      "eligible_roles": [
+        "songwriter_hub_user"
+      ],
+      "rights": [
+        "composition metadata"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "songwriter_hub_request",
+      "source_ids": [
+        "mlc-songwriter"
+      ],
+      "reference": "mlc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "catalog work",
+        "current writer name/IPI",
+        "supported corrected value"
+      ],
+      "preflight": [
+        "Do not promote writer-detail request to authority over collection shares."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Requested and observed writer details; request receipt is not correction.",
+      "constraints": []
+    },
+    {
+      "profile_id": "mlc-transfer",
+      "profile_version": "2026-10-22.1",
+      "provider": "The MLC",
+      "operation": "collection_catalog_transfer",
+      "stage": "register",
+      "subject_type": "collection_mandate",
+      "eligible_roles": [
+        "member_rightsholder",
+        "authorized_member_representative"
+      ],
+      "rights": [
+        "composition mechanical"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "member_catalog_transfer_tool",
+      "source_ids": [
+        "mlc-transfer"
+      ],
+      "reference": "mlc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "registered work list",
+        "source member",
+        "effective date",
+        "authentic authority/termination evidence"
+      ],
+      "preflight": [
+        "Distinguish unregistered works from transfer.",
+        "Disclose onward forwarding of documents to existing claimants."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Source release and target acceptance/effective scope separately; preserve collection tails.",
+      "constraints": []
+    },
+    {
+      "profile_id": "mlc-overclaim",
+      "profile_version": "2026-10-22.1",
+      "provider": "The MLC",
+      "operation": "overclaim_resolution",
+      "stage": "resolve_claims",
+      "subject_type": "composition_claim",
+      "eligible_roles": [
+        "member_rightsholder",
+        "authorized_member_representative"
+      ],
+      "rights": [
+        "composition mechanical"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "member_overclaims_tool",
+      "source_ids": [
+        "mlc-overclaim"
+      ],
+      "reference": "mlc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "overclaim/work ID",
+        "competing claims",
+        "supporting documents",
+        "exact selected remedy"
+      ],
+      "preflight": [
+        "Authorize contact, amendment, relinquishment and document upload separately according to requested scope."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Case disposition and exact share readback; financial effect remains separate.",
+      "constraints": []
+    },
+    {
+      "profile_id": "bmi-new-work",
+      "profile_version": "2026-10-22.1",
+      "provider": "BMI",
+      "operation": "new_work_registration",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "affiliated_writer",
+        "affiliated_publisher",
+        "authorized_representative"
+      ],
+      "rights": [
+        "composition performance"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "Preserve the declared 100% or 200% writer/publisher basis; do not divide values blindly.",
+      "documented_route": "online_services",
+      "source_ids": [
+        "bmi-terms"
+      ],
+      "reference": "us-pros.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "complete work",
+        "writers/publishers",
+        "documented shares",
+        "permissions",
+        "current form"
+      ],
+      "preflight": [
+        "Search existing work.",
+        "Check current eligibility and share basis."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Accepted work details and relevant account view.",
+      "constraints": []
+    },
+    {
+      "profile_id": "bmi-update",
+      "profile_version": "2026-10-22.1",
+      "provider": "BMI",
+      "operation": "existing_work_update",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "affiliated_writer",
+        "affiliated_publisher",
+        "authorized_representative"
+      ],
+      "rights": [
+        "composition performance"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "documented_support_route",
+      "source_ids": [
+        "bmi-update"
+      ],
+      "reference": "us-pros.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "title/work number",
+        "account number when available",
+        "before/after",
+        "required signed support"
+      ],
+      "preflight": [
+        "Do not correct by registering a new duplicate.",
+        "Check authentic support for reduced/removed interests."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Updated work and parties/shares after provider response.",
+      "constraints": []
+    },
+    {
+      "profile_id": "bmi-admin-transition",
+      "profile_version": "2026-10-22.1",
+      "provider": "BMI",
+      "operation": "administration_update",
+      "stage": "register",
+      "subject_type": "mandate",
+      "eligible_roles": [
+        "affiliated_publisher",
+        "authorized_representative"
+      ],
+      "rights": [
+        "composition performance"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "documented_support_route",
+      "source_ids": [
+        "bmi-update"
+      ],
+      "reference": "us-pros.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "signed mandate",
+        "work scope",
+        "effective dates",
+        "retained works",
+        "post-term collection"
+      ],
+      "preflight": [
+        "Preserve termination and source/target scope."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Provider agreement/work changes and separate tail reconciliation.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ascap-work-packet",
+      "profile_version": "2026-10-22.1",
+      "provider": "ASCAP",
+      "operation": "work_registration_or_correction_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "affiliated_writer",
+        "affiliated_publisher",
+        "authorized_representative"
+      ],
+      "rights": [
+        "composition performance"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "account_holder_instructions_required",
+      "source_ids": [
+        "ascap-help"
+      ],
+      "reference": "us-pros.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "work/party evidence",
+        "current account export",
+        "current official/account instructions"
+      ],
+      "preflight": [
+        "Detailed public help was inaccessible; verify fields and update route in authorized account."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "No filing validation or acceptance until actual route/schema and outcome are observed.",
+      "constraints": []
+    },
+    {
+      "profile_id": "sesac-work-packet",
+      "profile_version": "2026-10-22.1",
+      "provider": "SESAC",
+      "operation": "affiliate_work_request_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "existing_affiliate",
+        "authorized_representative"
+      ],
+      "rights": [
+        "composition performance"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "affiliate_support",
+      "source_ids": [
+        "sesac-help",
+        "sesac-faq"
+      ],
+      "reference": "us-pros.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "affiliate identity",
+        "work/party evidence",
+        "exact requested new/update operation"
+      ],
+      "preflight": [
+        "Verify affiliate access and requested support process; licensee access is different."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Actual affiliate case or work record; account-specific requirements remain pending.",
+      "constraints": []
+    },
+    {
+      "profile_id": "gmr-work-packet",
+      "profile_version": "2026-10-22.1",
+      "provider": "Global Music Rights",
+      "operation": "client_work_request_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "represented_client",
+        "authorized_representative"
+      ],
+      "rights": [
+        "composition performance"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "client_portal_or_support",
+      "source_ids": [
+        "gmr"
+      ],
+      "reference": "us-pros.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "client identity",
+        "work/party evidence",
+        "current client instructions"
+      ],
+      "preflight": [
+        "Public catalog/client portal link does not establish field-level write support."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Client-confirmed work response/record; prepare only until route verified.",
+      "constraints": []
+    },
+    {
+      "profile_id": "sx-owner",
+      "profile_version": "2026-10-22.1",
+      "provider": "SoundExchange",
+      "operation": "recording_owner_claim",
+      "stage": "register",
+      "subject_type": "recording",
+      "eligible_roles": [
+        "recording_owner",
+        "authorized_owner_representative"
+      ],
+      "rights": [
+        "recording performance"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "sxdirect",
+      "source_ids": [
+        "sx-register"
+      ],
+      "reference": "recording-societies.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "recording identity",
+        "owner/right/territory/date evidence",
+        "eligible account"
+      ],
+      "preflight": [
+        "Keep owner entitlement distinct from performer and producer roles."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Exact owner claim/account record and provider decision.",
+      "constraints": []
+    },
+    {
+      "profile_id": "sx-featured",
+      "profile_version": "2026-10-22.1",
+      "provider": "SoundExchange",
+      "operation": "featured_artist_claim",
+      "stage": "register",
+      "subject_type": "recording_performance",
+      "eligible_roles": [
+        "featured_artist",
+        "authorized_artist_representative"
+      ],
+      "rights": [
+        "featured performer remuneration"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "sxdirect",
+      "source_ids": [
+        "sx-register",
+        "sx-lod"
+      ],
+      "reference": "recording-societies.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "recording identity",
+        "featured artist role evidence",
+        "eligible account"
+      ],
+      "preflight": [
+        "Do not turn a producer or non-featured role into featured-artist authority."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Exact performer claim/account record and decision.",
+      "constraints": []
+    },
+    {
+      "profile_id": "sx-producer-lod",
+      "profile_version": "2026-10-22.1",
+      "provider": "SoundExchange",
+      "operation": "featured_artist_letter_of_direction",
+      "stage": "register",
+      "subject_type": "payment_direction",
+      "eligible_roles": [
+        "featured_artist_director",
+        "creative_participant_payee",
+        "authorized_signatory"
+      ],
+      "rights": [
+        "featured artist allocated remuneration"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "current_lod_packet",
+      "source_ids": [
+        "sx-lod"
+      ],
+      "reference": "recording-societies.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "authentic current signed LOD",
+        "covered recordings",
+        "effective date",
+        "payee",
+        "each directing artist allocation"
+      ],
+      "preflight": [
+        "Validate eligible creative-participant role and actual directing signatories.",
+        "Do not apply direction off the top of all recording revenue."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Accepted direction and covered allocation; later accounting/cash independently verified.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ppl-owner-register",
+      "profile_version": "2026-10-22.1",
+      "provider": "PPL",
+      "operation": "new_recording_registration",
+      "stage": "register",
+      "subject_type": "recording",
+      "eligible_roles": [
+        "recording_rightsholder_member"
+      ],
+      "rights": [
+        "recording rights"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "myppl",
+      "source_ids": [
+        "ppl"
+      ],
+      "reference": "recording-societies.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "recording metadata",
+        "ISRC",
+        "performer lineup",
+        "rightsholder",
+        "ownership/date/territory"
+      ],
+      "preflight": [
+        "Search repertoire first.",
+        "Verify complete current Repertoire Data Policy fields."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Valid repertoire item and applicable rights record.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ppl-performer-claim",
+      "profile_version": "2026-10-22.1",
+      "provider": "PPL",
+      "operation": "existing_performance_claim",
+      "stage": "register",
+      "subject_type": "recording_performance",
+      "eligible_roles": [
+        "performer_member"
+      ],
+      "rights": [
+        "performer remuneration"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "myppl",
+      "source_ids": [
+        "ppl"
+      ],
+      "reference": "recording-societies.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing recording",
+        "performance role evidence",
+        "member account"
+      ],
+      "preflight": [
+        "Absent recording needs rightsholder registration; performer authority alone cannot add owner repertoire."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Accepted performance claim on exact recording.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ppl-amend",
+      "profile_version": "2026-10-22.1",
+      "provider": "PPL",
+      "operation": "recording_amendment",
+      "stage": "register",
+      "subject_type": "recording",
+      "eligible_roles": [
+        "original_submitting_rightsholder_member"
+      ],
+      "rights": [
+        "recording rights"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "myppl",
+      "source_ids": [
+        "ppl"
+      ],
+      "reference": "recording-societies.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "submitted recording",
+        "supported corrected fields"
+      ],
+      "preflight": [
+        "Verify this account submitted the recording directly."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Corrected fields and validation state.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ppl-transfer",
+      "profile_version": "2026-10-22.1",
+      "provider": "PPL",
+      "operation": "recording_rights_transfer",
+      "stage": "register",
+      "subject_type": "recording_interest",
+      "eligible_roles": [
+        "acquiring_rightsholder",
+        "authorized_representative"
+      ],
+      "rights": [
+        "recording rights"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "member_services",
+      "source_ids": [
+        "ppl"
+      ],
+      "reference": "recording-societies.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "repertoire",
+        "transfer context",
+        "date",
+        "scope",
+        "documentary acquisition evidence"
+      ],
+      "preflight": [
+        "Separate rights transfer from distributor migration."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Source/target rights records and effective period.",
+      "constraints": []
+    },
+    {
+      "profile_id": "sena-musician",
+      "profile_version": "2026-10-22.1",
+      "provider": "SENA",
+      "operation": "performance_repertoire_claim",
+      "stage": "register",
+      "subject_type": "recording",
+      "eligible_roles": [
+        "musician"
+      ],
+      "rights": [
+        "neighboring rights"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "mysena",
+      "source_ids": [
+        "sena"
+      ],
+      "reference": "recording-societies.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "correct role account",
+        "recording",
+        "supported participation or ownership",
+        "scope/dates"
+      ],
+      "preflight": [
+        "Treat musician and producer accounts/rights separately.",
+        "Verify actual mandate and per-recording scope."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Role-specific repertoire and status; reserved amounts are not received cash.",
+      "constraints": []
+    },
+    {
+      "profile_id": "sena-producer_master_owner",
+      "profile_version": "2026-10-22.1",
+      "provider": "SENA",
+      "operation": "owner_repertoire_claim",
+      "stage": "register",
+      "subject_type": "recording",
+      "eligible_roles": [
+        "producer_master_owner"
+      ],
+      "rights": [
+        "neighboring rights"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "mysena",
+      "source_ids": [
+        "sena"
+      ],
+      "reference": "recording-societies.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "correct role account",
+        "recording",
+        "supported participation or ownership",
+        "scope/dates"
+      ],
+      "preflight": [
+        "Treat musician and producer accounts/rights separately.",
+        "Verify actual mandate and per-recording scope."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Role-specific repertoire and status; reserved amounts are not received cash.",
+      "constraints": []
+    },
+    {
+      "profile_id": "prs-work-readiness",
+      "profile_version": "2026-10-22.1",
+      "provider": "PRS for Music",
+      "operation": "work_registration_or_update_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "writer_member",
+        "publisher_member"
+      ],
+      "rights": [
+        "composition performance"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "member_account_case_route",
+      "source_ids": [
+        "prs-works",
+        "prs-list"
+      ],
+      "reference": "international.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "member/mandate",
+        "work/party evidence",
+        "tunecode when existing",
+        "current form"
+      ],
+      "preflight": [
+        "Refresh dynamic account instructions; preserve existing-work identity."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Exact work in member repertoire and applicable share basis.",
+      "constraints": []
+    },
+    {
+      "profile_id": "mcps-mandate-readiness",
+      "profile_version": "2026-10-22.1",
+      "provider": "MCPS",
+      "operation": "mechanical_collection_readiness",
+      "stage": "register",
+      "subject_type": "mandate",
+      "eligible_roles": [
+        "eligible_writer",
+        "publisher",
+        "administrator"
+      ],
+      "rights": [
+        "composition mechanical"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "membership_or_administrator_route_requires_verification",
+      "source_ids": [
+        "prs-works"
+      ],
+      "reference": "international.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing admin/reciprocal mandate",
+        "rights/territories",
+        "current MCPS-specific requirements"
+      ],
+      "preflight": [
+        "Do not infer mechanical coverage or direct membership need from PRS account alone."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Verified collection mandate and applicable repertoire; detailed schema pending.",
+      "constraints": []
+    },
+    {
+      "profile_id": "socan-work",
+      "profile_version": "2026-10-22.1",
+      "provider": "SOCAN",
+      "operation": "work_registration_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "writer_member",
+        "publisher",
+        "administrator"
+      ],
+      "rights": [
+        "composition performance",
+        "composition reproduction"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "member_portal",
+      "source_ids": [
+        "socan-portal",
+        "socan-mech"
+      ],
+      "reference": "international.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "contributors",
+        "writer-publisher links",
+        "separate performance/mechanical interests",
+        "mandate"
+      ],
+      "preflight": [
+        "Preserve distinct rights and basis; inspect actual publishing agreement."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Work record and separate performance/reproduction fields.",
+      "constraints": []
+    },
+    {
+      "profile_id": "cmrra-work",
+      "profile_version": "2026-10-22.1",
+      "provider": "CMRRA",
+      "operation": "mechanical_work_registration_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "publisher",
+        "self_published_writer",
+        "authorized_administrator"
+      ],
+      "rights": [
+        "composition reproduction"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "current_song_form_or_eligible_cwr",
+      "source_ids": [
+        "cmrra"
+      ],
+      "reference": "international.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "ownership/administration scope",
+        "work/contributors",
+        "current form or receiver specification"
+      ],
+      "preflight": [
+        "Verify overlap with existing Canadian and international mandates."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Recipient acknowledgment and current work/interest record.",
+      "constraints": []
+    },
+    {
+      "profile_id": "sacem-work",
+      "profile_version": "2026-10-22.1",
+      "provider": "SACEM",
+      "operation": "member_work_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "author_composer_member",
+        "publisher_member"
+      ],
+      "rights": [
+        "composition rights per mandate"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "member_instructions_required",
+      "source_ids": [
+        "sacem",
+        "sacem-guide"
+      ],
+      "reference": "international.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "party/work evidence",
+        "current member procedure",
+        "applicable mandates"
+      ],
+      "preflight": [
+        "Legacy detailed guide unavailable; do not declare a guessed French filing schema validated."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Current member record only after verified submission process.",
+      "constraints": []
+    },
+    {
+      "profile_id": "gema-work",
+      "profile_version": "2026-10-22.1",
+      "provider": "GEMA",
+      "operation": "original_work_declaration",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "creator_member",
+        "publisher_member"
+      ],
+      "rights": [
+        "AR performing rights",
+        "VR mechanical rights"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "AR/VR fields use role-specific pools; preserve role and provider basis.",
+      "documented_route": "online_portal",
+      "source_ids": [
+        "gema"
+      ],
+      "reference": "international.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "contract account",
+        "contributors",
+        "work data",
+        "AR/VR share basis"
+      ],
+      "preflight": [
+        "Review provider defaults rather than accept undocumented even splits."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Provisional confirmation then observed repertoire record.",
+      "constraints": []
+    },
+    {
+      "profile_id": "apra-new-work",
+      "profile_version": "2026-10-22.1",
+      "provider": "APRA AMCOS",
+      "operation": "new_work_registration",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "writer_member",
+        "publisher_under_mandate"
+      ],
+      "rights": [
+        "composition performance",
+        "composition mechanical per mandate"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "writer_portal_app_or_publisher_route",
+      "source_ids": [
+        "apra"
+      ],
+      "reference": "international.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "work details",
+        "writers",
+        "agreed shares",
+        "mandate",
+        "ISRC if available"
+      ],
+      "preflight": [
+        "A missing ISRC can be added later; do not invent one.",
+        "Use actual mandated publisher route where applicable."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "WorkID and observed repertoire details.",
+      "constraints": []
+    },
+    {
+      "profile_id": "apra-update",
+      "profile_version": "2026-10-22.1",
+      "provider": "APRA AMCOS",
+      "operation": "existing_work_update",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "writer_member",
+        "authorized_publisher"
+      ],
+      "rights": [
+        "composition rights per mandate"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "field_specific_portal_or_works_team",
+      "source_ids": [
+        "apra"
+      ],
+      "reference": "international.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "work ID",
+        "before/after fields",
+        "co-owner support where required"
+      ],
+      "preflight": [
+        "Separate portal-editable fields from title/split changes requiring works team."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Observed updated fields; preserve unresolved co-owner approvals.",
+      "constraints": []
+    },
+    {
+      "profile_id": "kobalt-intake",
+      "profile_version": "2026-10-22.1",
+      "provider": "Kobalt",
+      "operation": "administrator_repertoire_intake_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "contracted_client",
+        "authorized_representative"
+      ],
+      "rights": [
+        "contracted administration"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "roster_portal_or_client_support",
+      "source_ids": [
+        "kobalt"
+      ],
+      "reference": "administrators.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "contracted entity",
+        "mandate",
+        "work IDs/parties",
+        "client intake instructions"
+      ],
+      "preflight": [
+        "Public portal description does not establish a write API or field schema."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Intake receipt, administered catalog and downstream society records separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "kobalt-accounting",
+      "profile_version": "2026-10-22.1",
+      "provider": "Kobalt",
+      "operation": "statement_evidence_intake",
+      "stage": "reconcile",
+      "subject_type": "royalty_statement",
+      "eligible_roles": [
+        "authorized_client"
+      ],
+      "rights": [
+        "reported rights per line"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "supplied_exports_or_authorized_portal",
+      "source_ids": [
+        "kobalt"
+      ],
+      "reference": "administrators.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "original export/archive members",
+        "payee",
+        "periods",
+        "currency/basis",
+        "statement revision"
+      ],
+      "preflight": [
+        "Use only an actually supported parser; preserve controls and raw classifications."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Normalized source controls; provider status does not verify bank cash.",
+      "constraints": []
+    },
+    {
+      "profile_id": "songtrust-intake",
+      "profile_version": "2026-10-22.1",
+      "provider": "Songtrust",
+      "operation": "song_and_recording_intake",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "authorized_client"
+      ],
+      "rights": [
+        "contracted administration"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "client_dashboard",
+      "source_ids": [
+        "songtrust-add",
+        "songtrust-recordings"
+      ],
+      "reference": "administrators.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "song/contributors/splits",
+        "linked recording versions",
+        "mandate"
+      ],
+      "preflight": [
+        "Link multiple recordings to one unchanged composition instead of duplicate song registrations."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Client song state separately from downstream society acceptance.",
+      "constraints": []
+    },
+    {
+      "profile_id": "songtrust-update",
+      "profile_version": "2026-10-22.1",
+      "provider": "Songtrust",
+      "operation": "existing_song_update",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "authorized_client"
+      ],
+      "rights": [
+        "contracted administration"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "status_specific_dashboard_or_support",
+      "source_ids": [
+        "songtrust-edit"
+      ],
+      "reference": "administrators.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "current song status",
+        "before/after",
+        "supported splits",
+        "source versions"
+      ],
+      "preflight": [
+        "Check draft/monitoring state and actual editable route; later states require verified support."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Updated song state and downstream correction evidence independently.",
+      "constraints": []
+    },
+    {
+      "profile_id": "usco-register",
+      "profile_version": "2026-10-22.1",
+      "provider": "U.S. Copyright Office",
+      "operation": "copyright_registration",
+      "stage": "register",
+      "subject_type": "copyright_record",
+      "eligible_roles": [
+        "eligible_claimant",
+        "authorized_applicant"
+      ],
+      "rights": [
+        "specified composition or recording copyright"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "current_official_application_or_recordation_route",
+      "source_ids": [
+        "usco-register",
+        "usco-types"
+      ],
+      "reference": "copyright.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "jurisdiction/work type",
+        "authorship/claimant facts",
+        "publication facts",
+        "current application/deposit/documents",
+        "fee and attestation scope"
+      ],
+      "preflight": [
+        "Check exact procedure, eligibility, public disclosure and authentic human certification.",
+        "Do not substitute society registration or legal title adjudication."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Application receipt, office decision and observed linked record separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "usco-supplement",
+      "profile_version": "2026-10-22.1",
+      "provider": "U.S. Copyright Office",
+      "operation": "supplementary_registration",
+      "stage": "register",
+      "subject_type": "copyright_record",
+      "eligible_roles": [
+        "eligible_claimant",
+        "authorized_applicant"
+      ],
+      "rights": [
+        "specified composition or recording copyright"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "current_official_application_or_recordation_route",
+      "source_ids": [
+        "usco-supplement"
+      ],
+      "reference": "copyright.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "jurisdiction/work type",
+        "authorship/claimant facts",
+        "publication facts",
+        "current application/deposit/documents",
+        "fee and attestation scope"
+      ],
+      "preflight": [
+        "Check exact procedure, eligibility, public disclosure and authentic human certification.",
+        "Do not substitute society registration or legal title adjudication."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Application receipt, office decision and observed linked record separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "usco-recordation",
+      "profile_version": "2026-10-22.1",
+      "provider": "U.S. Copyright Office",
+      "operation": "transfer_document_recordation",
+      "stage": "register",
+      "subject_type": "copyright_record",
+      "eligible_roles": [
+        "eligible_claimant",
+        "authorized_applicant"
+      ],
+      "rights": [
+        "specified composition or recording copyright"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "current_official_application_or_recordation_route",
+      "source_ids": [
+        "usco-record"
+      ],
+      "reference": "copyright.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "jurisdiction/work type",
+        "authorship/claimant facts",
+        "publication facts",
+        "current application/deposit/documents",
+        "fee and attestation scope"
+      ],
+      "preflight": [
+        "Check exact procedure, eligibility, public disclosure and authentic human certification.",
+        "Do not substitute society registration or legal title adjudication."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Application receipt, office decision and observed linked record separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "spotify-observe",
+      "profile_version": "2026-10-22.1",
+      "provider": "Spotify",
+      "operation": "metadata_observation_and_delivery_handoff",
+      "stage": "audit",
+      "subject_type": "release",
+      "eligible_roles": [
+        "public_reader",
+        "authorized_artist_team"
+      ],
+      "rights": [
+        "delivered metadata"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "public_or_authorized_observation_then_distributor_handoff",
+      "source_ids": [
+        "spotify"
+      ],
+      "reference": "delivery-and-ugc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "exact artist/release/track URLs",
+        "expected fields",
+        "distributor evidence"
+      ],
+      "preflight": [
+        "Metadata edits go through delivering label/distributor; public API read access is not edit authority."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Dated destination fields; subsequent distributor acceptance is separate.",
+      "constraints": []
+    },
+    {
+      "profile_id": "distrokid-migrate",
+      "profile_version": "2026-10-22.1",
+      "provider": "DistroKid",
+      "operation": "existing_release_migration",
+      "stage": "manage_delivery",
+      "subject_type": "release",
+      "eligible_roles": [
+        "authorized_distributor_account_holder"
+      ],
+      "rights": [
+        "recording distribution"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "documented_account_delivery_route",
+      "source_ids": [
+        "distrokid-migrate"
+      ],
+      "reference": "delivery-and-ugc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "source audio/metadata/identifiers",
+        "source/target accounts",
+        "target requirements",
+        "authorized removal scope"
+      ],
+      "preflight": [
+        "Preserve supported identity and source evidence.",
+        "Do not guarantee play-count/playlist continuity or blindly reuse a universal cutover date."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Target destination availability and source removal independently.",
+      "constraints": []
+    },
+    {
+      "profile_id": "distrokid-ugc",
+      "profile_version": "2026-10-22.1",
+      "provider": "DistroKid",
+      "operation": "existing_release_social_media_pack",
+      "stage": "manage_delivery",
+      "subject_type": "release",
+      "eligible_roles": [
+        "authorized_distributor_account_holder"
+      ],
+      "rights": [
+        "eligible recording UGC monetization"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "release_extras_portal",
+      "source_ids": [
+        "distrokid-ugc",
+        "youtube-eligibility"
+      ],
+      "reference": "delivery-and-ugc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing delivered release",
+        "eligible rights/reference",
+        "specific destinations",
+        "current fee/revenue terms"
+      ],
+      "preflight": [
+        "Distinguish paid UGC identification from ordinary audio-library delivery.",
+        "Verify current eligibility and authorized fees."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Enrollment/reference state, destination policy/claim and later revenue separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "youtube-content-id",
+      "profile_version": "2026-10-22.1",
+      "provider": "YouTube",
+      "operation": "eligible_reference_enrollment",
+      "stage": "manage_delivery",
+      "subject_type": "recording_reference",
+      "eligible_roles": [
+        "eligible_content_partner",
+        "authorized_administrator"
+      ],
+      "rights": [
+        "exclusive rights by territory"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "partner_content_manager_or_verified_administrator",
+      "source_ids": [
+        "youtube-eligibility",
+        "youtube-partner"
+      ],
+      "reference": "delivery-and-ugc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "exclusive-rights evidence",
+        "partner access",
+        "reference identity",
+        "ownership territory",
+        "policy"
+      ],
+      "preflight": [
+        "Ordinary channel OAuth is insufficient.",
+        "Assess nonexclusive material and conflicting claims."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Asset/reference/policy activation, actual claim and revenue separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ugc-tiktok",
+      "profile_version": "2026-10-22.1",
+      "provider": "TikTok",
+      "operation": "provider_mediated_ugc_enrollment",
+      "stage": "manage_delivery",
+      "subject_type": "recording_reference",
+      "eligible_roles": [
+        "eligible_distributor_client"
+      ],
+      "rights": [
+        "recording UGC monetization"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "verified_distributor_administrator_route",
+      "source_ids": [
+        "distrokid-ugc"
+      ],
+      "reference": "delivery-and-ugc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing recording",
+        "destination",
+        "eligible rights",
+        "actual distributor terms"
+      ],
+      "preflight": [
+        "Do not infer direct platform write API or exclusive rights from a public profile."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Provider enrollment and each accessible destination outcome separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ugc-meta",
+      "profile_version": "2026-10-22.1",
+      "provider": "Instagram / Facebook",
+      "operation": "provider_mediated_ugc_enrollment",
+      "stage": "manage_delivery",
+      "subject_type": "recording_reference",
+      "eligible_roles": [
+        "eligible_distributor_client"
+      ],
+      "rights": [
+        "recording UGC monetization"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "verified_distributor_administrator_route",
+      "source_ids": [
+        "distrokid-ugc"
+      ],
+      "reference": "delivery-and-ugc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing recording",
+        "destination",
+        "eligible rights",
+        "actual distributor terms"
+      ],
+      "preflight": [
+        "Do not infer direct platform write API or exclusive rights from a public profile."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Provider enrollment and each accessible destination outcome separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "space-heater-readiness",
+      "profile_version": "2026-10-22.1",
+      "provider": "Space Heater",
+      "operation": "existing_delivery_action_readiness",
+      "stage": "manage_delivery",
+      "subject_type": "release",
+      "eligible_roles": [
+        "authorized_client"
+      ],
+      "rights": [
+        "contracted distribution"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "unresearched_account_specific_route",
+      "source_ids": [],
+      "reference": "delivery-and-ugc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "actual provider documentation",
+        "authorized account capability",
+        "existing delivery",
+        "requested diff/migration"
+      ],
+      "preflight": [
+        "No verified public operation contract supplied; prepare evidence and unresolved schema questions only."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "No provider validation, submission or readback claim until independently evidenced.",
+      "constraints": []
+    },
+    {
+      "profile_id": "cwr-registration",
+      "profile_version": "2026-10-22.1",
+      "provider": "CISAC CWR",
+      "operation": "work_registration_exchange_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "eligible_publisher_sender"
+      ],
+      "rights": [
+        "composition rights per receiver"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "receiver_onboarding_and_transport_required",
+      "source_ids": [
+        "cwr"
+      ],
+      "reference": "standards-and-identifiers.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "receiver",
+        "supported CWR version/profile",
+        "sender eligibility",
+        "typed work/party/interests",
+        "acknowledgment specification"
+      ],
+      "preflight": [
+        "No serializer/schema validator/transport adapter is implemented by this profile."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "File generation, transport, syntax acknowledgment and rights decision separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ddex-rdr",
+      "profile_version": "2026-10-22.1",
+      "provider": "DDEX RDR",
+      "operation": "recording_rights_exchange_readiness",
+      "stage": "register",
+      "subject_type": "recording",
+      "eligible_roles": [
+        "eligible_label",
+        "performer_representative",
+        "music_licensing_company"
+      ],
+      "rights": [
+        "recording and performer rights"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "receiver_onboarding_and_transport_required",
+      "source_ids": [
+        "ddex-rdr"
+      ],
+      "reference": "standards-and-identifiers.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "receiver/version/profile",
+        "recording/contributor/rights scope",
+        "RDR message purpose"
+      ],
+      "preflight": [
+        "Differentiate notification, revenue reporting and choreography."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Receiver acknowledgment and accepted record; revenue uses separate controls.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ddex-ct",
+      "profile_version": "2026-10-22.1",
+      "provider": "DDEX CT",
+      "operation": "rights_controller_transfer_readiness",
+      "stage": "register",
+      "subject_type": "recording_release_rights",
+      "eligible_roles": [
+        "relinquishing_record_company",
+        "acquiring_record_company",
+        "participating_dsp"
+      ],
+      "rights": [
+        "recording release rights control"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "eligible_three_party_receiver_process",
+      "source_ids": [
+        "ddex-ct"
+      ],
+      "reference": "standards-and-identifiers.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "all participants",
+        "catalog scope",
+        "effective change",
+        "supported version/profile"
+      ],
+      "preflight": [
+        "Current published CT scope excludes distributor transfers."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Rights-controller reassignment and destination state; no universal migration proof.",
+      "constraints": []
+    },
+    {
+      "profile_id": "isrc-assignment",
+      "profile_version": "2026-10-22.1",
+      "provider": "IFPI ISRC system",
+      "operation": "recording_identifier_assignment_readiness",
+      "stage": "register",
+      "subject_type": "recording",
+      "eligible_roles": [
+        "eligible_registrant",
+        "authorized_isrc_manager"
+      ],
+      "rights": [
+        "recording identity"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "territory_agency_or_eligible_registrant_route",
+      "source_ids": [
+        "isrc"
+      ],
+      "reference": "standards-and-identifiers.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "recording identity",
+        "existing-ID search",
+        "authorized issuer/prefix",
+        "assignment evidence"
+      ],
+      "preflight": [
+        "An unchanged recording retains its ISRC when ownership changes.",
+        "Do not fabricate an assignment or reuse an ID for another recording."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Actual assignment and use of the identifier on the exact recording.",
+      "constraints": []
+    },
+    {
+      "profile_id": "iswc-readiness",
+      "profile_version": "2026-10-22.1",
+      "provider": "ISWC",
+      "operation": "identifier_assignment_or_repair_readiness",
+      "stage": "register",
+      "subject_type": "composition",
+      "eligible_roles": [
+        "eligible_applicant_or_issuer"
+      ],
+      "rights": [
+        "typed identity"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "issuer_route_requires_verification",
+      "source_ids": [],
+      "reference": "standards-and-identifiers.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing identifier evidence",
+        "correct object/party",
+        "current eligible issuing route"
+      ],
+      "preflight": [
+        "This profile has not verified an issuer schema or assignment API.",
+        "Never invent IDs or assume administration change creates a new identity."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Evidence packet only until official issuer procedure and actual assignment are checked.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ipi-readiness",
+      "profile_version": "2026-10-22.1",
+      "provider": "IPI",
+      "operation": "identifier_assignment_or_repair_readiness",
+      "stage": "register",
+      "subject_type": "party",
+      "eligible_roles": [
+        "eligible_applicant_or_issuer"
+      ],
+      "rights": [
+        "typed identity"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "issuer_route_requires_verification",
+      "source_ids": [],
+      "reference": "standards-and-identifiers.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing identifier evidence",
+        "correct object/party",
+        "current eligible issuing route"
+      ],
+      "preflight": [
+        "This profile has not verified an issuer schema or assignment API.",
+        "Never invent IDs or assume administration change creates a new identity."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Evidence packet only until official issuer procedure and actual assignment are checked.",
+      "constraints": []
+    },
+    {
+      "profile_id": "isni-readiness",
+      "profile_version": "2026-10-22.1",
+      "provider": "ISNI",
+      "operation": "identifier_assignment_or_repair_readiness",
+      "stage": "register",
+      "subject_type": "party",
+      "eligible_roles": [
+        "eligible_applicant_or_issuer"
+      ],
+      "rights": [
+        "typed identity"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "issuer_route_requires_verification",
+      "source_ids": [],
+      "reference": "standards-and-identifiers.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing identifier evidence",
+        "correct object/party",
+        "current eligible issuing route"
+      ],
+      "preflight": [
+        "This profile has not verified an issuer schema or assignment API.",
+        "Never invent IDs or assume administration change creates a new identity."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Evidence packet only until official issuer procedure and actual assignment are checked.",
+      "constraints": []
+    },
+    {
+      "profile_id": "upc-readiness",
+      "profile_version": "2026-10-22.1",
+      "provider": "UPC / EAN",
+      "operation": "identifier_assignment_or_repair_readiness",
+      "stage": "register",
+      "subject_type": "release_product",
+      "eligible_roles": [
+        "eligible_applicant_or_issuer"
+      ],
+      "rights": [
+        "typed identity"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "issuer_route_requires_verification",
+      "source_ids": [],
+      "reference": "standards-and-identifiers.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing identifier evidence",
+        "correct object/party",
+        "current eligible issuing route"
+      ],
+      "preflight": [
+        "This profile has not verified an issuer schema or assignment API.",
+        "Never invent IDs or assume administration change creates a new identity."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Evidence packet only until official issuer procedure and actual assignment are checked.",
+      "constraints": []
+    },
+    {
+      "profile_id": "distrokid-correction",
+      "profile_version": "2026-10-22.1",
+      "provider": "DistroKid",
+      "operation": "existing_release_correction",
+      "stage": "manage_delivery",
+      "subject_type": "release",
+      "eligible_roles": [
+        "authorized_distributor_account_holder"
+      ],
+      "rights": [
+        "recording distribution"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "release_edit_or_field_specific_support",
+      "source_ids": [
+        "distrokid-edit"
+      ],
+      "reference": "delivery-and-ugc.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "existing release",
+        "exact current/proposed fields",
+        "account plan/current allowed edits",
+        "pending edit receipt",
+        "supporting authority"
+      ],
+      "preflight": [
+        "Check the actual editable field and current account constraints.",
+        "Inspect pending requests before retrying.",
+        "A field requiring removal/redelivery needs its own concrete authorized sequence; do not silently delete."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Accepted edit and each destination field observation separately.",
+      "constraints": []
+    },
+    {
+      "profile_id": "ddex-ern",
+      "profile_version": "2026-10-22.1",
+      "provider": "DDEX RDR",
+      "operation": "release_delivery_exchange_readiness",
+      "stage": "manage_delivery",
+      "subject_type": "release",
+      "eligible_roles": [
+        "eligible_record_company_sender",
+        "eligible_distributor_sender"
+      ],
+      "rights": [
+        "release availability under delivery terms"
+      ],
+      "territory_rule": "Only documented territory and effective period covered by the represented interest and mandate.",
+      "share_basis": "provider-specific; preserve source convention",
+      "documented_route": "receiver_onboarding_and_transport_required",
+      "source_ids": [
+        "ddex-ern"
+      ],
+      "reference": "standards-and-identifiers.md",
+      "capability": {
+        "preparation": "evidence_packet",
+        "provider_schema_validation": "requires_current_schema_and_account_review",
+        "automated_submission": "not_implemented",
+        "authenticated_readback": "not_verified",
+        "live_operation": "not_verified"
+      },
+      "required_inputs": [
+        "receiver and version/profile",
+        "release/resources",
+        "delivery terms/territories",
+        "supported transport",
+        "sender onboarding"
+      ],
+      "preflight": [
+        "No serializer/schema validator/transport adapter is implemented by this profile.",
+        "A release message requires the actual receiver profile and authorized delivery scope."
+      ],
+      "receipt": "Preserve actual attempt/submission or case identifier, timestamp, item results and raw response. A prepared packet has no receipt.",
+      "readback": "Receiver file/transport acknowledgment, item decision and actual destination availability separately.",
+      "constraints": []
+    }
+  ]
+}
