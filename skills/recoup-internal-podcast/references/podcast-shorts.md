@@ -15,6 +15,9 @@ approved before building anything.
   A filler trim inside a window is an extra piece; read the joined sentence back for grammar.
 - **Hook**: <= ~60 characters, the guest's idea as a claim or question ("AI music licenses pay by market
   share. Not for long."), never "new episode". Hooks over ~45 characters use `hook_size: 58` to stay on two lines.
+- **Title truth** (review, 2026-10-25): keep the speaker's hedges ("close to", "as <guest> tells it"); check time
+  words against `post_date` ("just got" is stale by post day); keep qualifiers inside quotes ("for us, at least
+  ... it failed", not "it failed"). Each short gets its own `end_title`, true to that clip.
 - **Length** 25-60 s. A short can open on the host's question if the answer needs it (the guest name tag
   then waits for the guest's first word: anchor named `who`).
 - **The 5-second hook window** (Sid, 2026-10-23): the hook bar, the first spoken sentence, the first on-screen text
@@ -23,8 +26,8 @@ approved before building anything.
   A cold-open style reorder is fine when nothing reads as a sentence she didn't say.
 - **Triple hook** (Kallaway, adopted 2026-10-25): every row names three lines with their raw times. **Context**:
   the topic, said and shown at once. **Lean**: the number, proof or surprise, spoken by ~5.5 s (the 5 s window needs the first concrete idea, which the title already states; the spoken lean may land just after; splice the guest's
-  setup out to get there; Tom s1 cut "those two in particular... those two" to land "$1.5M" at 5.5 s, not 9 s).
-  **Snapback**: the line that reverses the lean ("that wasn't in record sales... 100% sync"). The title carries
+  setup out to get there; a 2026-10-25 prototype dropped a 4 s aside to land its figure at 5.5 s, not 9 s).
+  **Snapback**: the line that reverses the lean ("that wasn't streaming... that was all sync"). The title carries
   context + lean and never gives away the snapback. A row with no snapback in its window is a weaker clip.
 - **Check what is actually said, not what the hook claims**: add a "spoken 0-5 s" column built from the word
   timestamps through the cut list. Ali's v1 hooks were self-graded "5 s rule applied" while two opened on setup.
@@ -37,16 +40,34 @@ approved before building anything.
   keep it <= ~5.5 s and anchor `who` to the guest's first word. The first beat then counts from her first word, not from 0: her
   tag still needs >= 3 s before it. Record `"variant": "host-open"|"guest-only"` per
   short and in posts-log, and compare the two at the re-pull.
-- Write the approved table to `edit/shorts.json` (`templates/podcast/shorts/shorts.example.json`).
+- Write the approved table to `edit/shorts.json` (`templates/podcast/shorts/shorts.example.json`): per short
+  `post_date`, `variant`, `context`/`lean`/`snapback` (`raw` times + `text`), `rehook`, `end_title`, `approved`.
+
+### Re-running an episode whose shorts already exist (Ali Lieberman case)
+
+1. Rebuild the clips table from the existing `edit/shorts.json` with context/lean/snapback columns. Keep the
+   windows that still pass this section, re-title them, set `"template": "kinetic", "caption_words": 1`.
+2. Build and render all of them in parallel on the Sandbox, then the QC ladder (section 4).
+3. Owner approval first, then replace only posts still `scheduled`: cancel each, recreate it with
+   `POST /api/posts` and the same `publish_at`, re-read it by id, and log the old -> new id map in `publish/`.
+   Never touch a post that already went live. The posts-log rows get the new ids plus a format/variant note, so
+   the re-pull compares hybrid against kinetic.
 
 ## 2. Format: KINETIC (default since 2026-10-25), HYBRID as fallback
 
-Tom Sarig s1 compared three directions as full renders: kinetic split, a faster hybrid, a carousel video. The owner
-approved **kinetic** (`exports/shorts/directions/proto-A-kinetic-v2.mp4` in that project is the reference cut).
-Set `"template": "kinetic", "caption_words": 1` per short.
+A 2026-10-25 prototype compared three directions as full renders: kinetic split, a faster hybrid, a carousel
+video; the owner approved **kinetic**. Set `"template": "kinetic", "caption_words": 1` per short. Worked beats:
+`templates/podcast/shorts/kinetic-beats.example.html` with its `shorts.example.json` entry. **What good looks
+like**, five moments of the approved cut:
+- 0 s: the title (hook) with its serif accent, the real cover centred, the host live in the band below.
+- Lean: one huge figure ("$640K") with a two-word headline and the song chips, held >= 3 s.
+- Snapback: "Streaming" struck through, then a forest "All sync" lane slides in on the words.
+- Rehook: the title swaps to "So who was *paying?*" and the answer scene builds (Film, TV, Games -> Sync).
+- End card: forest panel, "Full episode out now", that short's `end_title`, the URL.
 
 - Split screen: motion graphic on the top ~60%, the speaker's camera live in the bottom third, one bold word as
   caption. No show bar or separate hook bar; the brand is on the end card.
+- Pill and name-tag text >= 30 px, held >= letters/15 + 1.5 s (the template does this for the name tags).
 - **Frame 0 is the thumbnail** (modelled on Kallaway's): no fade-ins; ONE centred title at the top, which is the
   hook (`*word*` = Instrument Serif italic accent, underline); the first scene and the speaker already live; first
   spoken word within 0.1 s (trim lead-in silence). Nothing else on screen states a second idea in the first 5 s.
@@ -76,8 +97,11 @@ The hybrid format (below) stays for episodes where the guest's video carries the
 **Every beat shows a real reference, captured that day** (owner rule, 2026-10-17): the guest company's live
 product page, its logo, a real price or filing, the artwork of a song they name. Each carries a small source
 line ("songvest.com · Oct 2026"). Abstract stand-ins are rejected: a grid of tiles standing for "a catalog" was
-replaced by the real offering page showing the fans' price. Capture with `agent-browser set viewport 430 932 3`
-(or `1280 900 2`) and crop single cards so the text stays readable at stage size; embed as data URIs.
+replaced by the real offering page showing the fans' price. **Capture prints at phone width on the Sandbox**
+(`node --env-file=<env> scripts/podcast/sandbox/capture.mjs <out> <jobs.json>`: 460 css px @2x, so lines wrap
+inside ~920 px; a crop of a desktop capture bleeds words off both edges), crop whole lines down to the one
+sentence that matters, embed as data URIs. A print that shrinks to the top after the hook stays >= ~30 px text,
+or the figure replaces it.
 
 Two beat types from the installed huashu-art-motion skill's Vox and finance-chart grammars (see
 `references/podcast-episode.md`, Motion grammar), in the show palette (pale
@@ -112,16 +136,17 @@ has no contrast without it):
   `studio.mjs build`. A new look ships as its own template (`"template": "<name>"`), never as edits to an old one.
 - **End card holds letters/15 + 1.5 s** of the end title (min 2.6 s); `build_hy.py` sets it.
 
-Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/beats.example.html`):
+Write each short's beats in `edit/shorts/<id>.html` (kinetic: `kinetic-beats.example.html`; hybrid:
+`beats.example.html`, both in `templates/podcast/shorts/`):
 `<!--ANCHORS {...}-->`, then `<!--CSS-->`, `<!--HTML-->`, `<!--JS-->`. JS defines
 `SC = [[selector, start, end], ...]`; contiguous scenes form one beat.
 
 - **Anchor every reveal to a transcript phrase**, never a timecode (`"name": ["g", "phrase", raw_after]`,
   `@name` in JS; `_end` names anchor to the phrase's last word). Trims then never desync a beat.
 - **One idea per scene.** A scene changes when her sentence does.
-- **Let viewers read it**: every text stays on screen >= letters/15 + 1.5 s. `scripts/podcast/shorts/readcheck.js`
-  seeks the built comp and lists every failure; run it in an open browser tab on `comp/shorts/<id>/index.html`
-  (chrome-devtools `evaluate_script` with `sourcePath`) and extend holds until `fails` is empty.
+- **Let viewers read it**: every text stays on screen >= letters/15 + 1.5 s. Where a browser is allowed,
+  `scripts/podcast/shorts/readcheck.js` (chrome-devtools `evaluate_script` with `sourcePath` on
+  `comp/shorts/<id>/index.html`) lists every failure; extend holds until `fails` is empty.
 - **Labels show state.** A toggle with static OUT/IN labels read "OUT" while switched on; put the state
   text on the knob.
 - **Keep low text clear of the circle**: kinetic text below `top:600` gets right padding automatically
@@ -132,33 +157,38 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
   for visible content (seeking skips it); GSAP `onUpdate` counters are fine.
 - **Never use ids `c0..cN` in a scene**: they are the caption chunks. The builder refuses them (a scene
   counter once used `#c3`/`#c4` and froze a caption on screen).
-- **Never reuse the template's names** (`.cap .kt .lab .hl .mono .scene #who #stage #pip ...`): a scene class
-  `.cap` restyled every caption as uppercase mono.
+- **Never reuse the template's names** (`.cap .kt .lab .hl .mono .scene .rule #who #stage #pip ...`): a scene
+  class `.cap` restyled every caption as uppercase mono; `.rule` restyled the kinetic end-card divider.
 - **Glyphs as inline SVG with an inline style**: the brand fonts have no ✓/✗ (they render as empty boxes), and
   the template's `.scene svg` rule makes any SVG absolute and 1000 px wide. Give each glyph
   `style="display:inline-block;position:static;width:40px;height:40px"`.
 
-## 4. Build, check, render (one prototype first)
+## 4. Build, render, QC ladder (one prototype first)
 
 1. Media: `build_hy.py` cuts it on first build (`cut.py --cutlist edit/shorts.json`); pass the cleaned
    host track via episode.json `shorts.host_audio` if the episode used one.
-2. `python3 scripts/podcast/shorts/build_hy.py <project> s1`
-3. Run readcheck.js (section 3). After the render, pull frames with ffmpeg from the MP4 (a 0.1 s strip at every
-   morph in and out, a 0.5 s contact sheet) and read them: overlaps with the circle, clipped text, a stuck
-   caption, an empty stage. Then an independent agent that did not build the short scores it (hook,
-   truthfulness, readability, captions, fidelity, motion, pacing) as SHIP or FIX with timecodes. Launch it from
-   the lead session: a forked builder cannot spawn subagents and will skip it. `hyperframes
-   snapshot` is a full headless render: on a shared machine run it on the sandbox, not locally.
-4. Sandbox path: `node --env-file=<env> scripts/podcast/sandbox/studio.mjs run <project> s1` (`build` instead of
-   `run` for steps 1-2; `references/podcast-sandbox.md`). Local path:
-   `STOP_AT=HHMM zsh scripts/podcast/shorts/render.sh <project> s1:<slug>` (zsh: under bash its `${0:A:h}`
-   breaks and every build fails) -> `exports/shorts/<slug>.mp4`
-   (-14 LUFS). Open it in Finder for the owner.
-Name fixes from episode.json `caption_fixes` (Surreal -> Sureel, "RD Shield" -> ArtyShield) apply to the short's
-captions and to beat anchors; the first caption word and any word after . ? ! get a capital.
-5. **Prototype one short, get the look approved, then build the rest.** Local renders run ~3-5x realtime on the
-   Intel laptop; one at a time (parallel load times out the headless-Chrome launch; render.sh retries).
-   A background queue can be cut off: re-run the missing shorts.
+2. Sandbox: `node --env-file=<env> scripts/podcast/sandbox/studio.mjs run <project> <id> [<id> ...]` (`build`
+   to build only; `references/podcast-sandbox.md`). Every short renders in parallel, one sandbox each (six in
+   ~3 min); `render.sh` fades the last word over 0.3 s and loudnorms to -14 LUFS -> `exports/shorts/<slug>.mp4`.
+   Local path: `STOP_AT=HHMM zsh scripts/podcast/shorts/render.sh <project> s1:<slug>` (zsh; under bash
+   `${0:A:h}` breaks every build), one at a time (~3-5x realtime on the Intel laptop; it retries).
+   Name fixes from episode.json `caption_fixes` (Surreal -> Sureel) apply to captions and beat anchors.
+3. **QC ladder, a gate**: every rung passes before the owner sees a short. Fix, re-render only what changed
+   (previous files to `exports/shorts/.prev/`), re-run from rung a.
+   - a. **Frame-0 strip**: every short's frame 0 side by side (`ffmpeg -frames:v 1` each, then `hstack`). The
+     print or cover is centred and fills the stage, no text bleeds off an edge, the frame shows the title's
+     idea, no fade. Reviewers have missed an edge bleed and an off-centre cover that only the strip caught.
+   - b. **Scribe** on the first ~12 s of the MP4 (`ELEVENLABS_API_KEY`, `model_id=scribe_v1`): when the lean is
+     spoken, no splice fragments, first word within 0.1 s.
+   - c. **0.5 s contact sheet** (`fps=2,scale=180:-1,tile=11x8`) plus strips at the snapback and at each splice:
+     read times, overlaps, empty stage, a stuck caption, picture and audio at the cut.
+   - d. **The end**: a hard stop at speech level in the clip's last 0.3 s means the fade is missing.
+   - e. **Independent reviewers** launched from the lead session (a forked builder cannot spawn subagents),
+     ~3 shorts each, rubric written into the prompt: hook window, triple hook, frame 0, read time, overlaps and
+     empty stage, verbatim quotes, no dashes, rehook truth, claims vs `<id>.facts.md`, fairness to any named
+     company. FIX only for what a viewer would notice or what is untrue; nits listed separately.
+   - f. readcheck.js (section 3) is optional when no browser is allowed.
+4. **Prototype one short, get the look approved, then build the rest.**
 
 ## 5. Distribution kit (drafts; the owner approves before anything posts)
 

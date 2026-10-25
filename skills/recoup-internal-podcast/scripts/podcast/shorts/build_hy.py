@@ -14,7 +14,8 @@ Reads (all inside <project>):
                                 {"id": "s1", "day": "Mon", "hook": "...", "hook_size": 66, "pieces": [...]}
                                 optional per short: "template": "kinetic" (templates/podcast/shorts/<name>.html, default
                                 "hybrid"), "caption_words": 1 (words per caption line, default 3) and (kinetic only)
-                                "rehook": {"text": "So who *paid?*", "at": "<anchor name>"} (swaps the title there).
+                                "rehook": {"text": "So who *paid?*", "at": "<anchor name>"} (swaps the title there),
+                                "end_title" (this short's end-card line; default episode.json shorts.end_title).
                                 In "hook"/"rehook" text, *word* is the italic serif accent.
   edit/transcripts/{host,guest}.json   ElevenLabs Scribe word timestamps (same files the episode uses)
   edit/shorts/<id>.html         the beats: <!--ANCHORS {json}--> then <!--CSS-->, <!--HTML-->, <!--JS--> sections.
@@ -201,7 +202,7 @@ def build(sid):
         json.dump({"$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
                    "registry": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry",
                    "paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}}, open(hf, 'w'), indent=2)
-    ep_title = CFG.get('end_title', EP['title'])
+    ep_title = c.get('end_title') or CFG.get('end_title', EP['title'])
     end = max(END, math.ceil((len(ep_title) / 15 + 1.5) * 10) / 10)   # the end card holds long enough to read its title
     CLIP = sh.total; D = round(CLIP + end, 2)
     T = {k: sh.anchor(tuple(a) if isinstance(a, list) else a, end=k.endswith('_end')) for k, a in anchors.items()}
@@ -223,6 +224,7 @@ def build(sid):
     rep = {'TITLE': e(f'Recoup Podcast short: {c["hook"].replace("*", "")}'), 'HOOK': acc(c['hook']), 'HOOK_SIZE': str(c.get('hook_size', 66)),
            'REHOOK': acc(rh.get('text', '')), 'REHOOK_AT': f'{T[rh["at"]]:g}' if rh else '-1',
            'DUR': f'{D:g}', 'CLIP': f'{CLIP:g}', 'END': f'{end:g}', 'EP_TITLE': e(ep_title), 'WHO_AT': f'{T.get("who", 0.6):g}',
+           'WHO_HOLD': f'{max(3.6, math.ceil((len(who) / 15 + 1.5) * 10) / 10):g}',
            'WHO': e(who), 'END_URL': e(CFG.get('end_url', 'recoupable.dev/podcast')),
            'END_LABEL': e(CFG.get('end_label', 'Full episode out now')), 'OBJ_POS': CFG.get('object_position', '50% 30%'),
            'CSS': part('CSS'), 'STAGE': part('HTML'), 'JS': js,

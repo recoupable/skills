@@ -138,7 +138,10 @@ async function media(proj) {
 }
 
 async function job(proj, id, snapshotId, drive, skillTar, projTar, render) {
-  const slug = path.basename(proj), P = "/work/proj", S = "/work/skill", isShort = /^s\d+$/.test(id);
+  // a short is any id in edit/shorts.json (s1, t2, ...); everything else is a chapter
+  const shortsFile = path.join(proj, "edit/shorts.json");
+  const slug = path.basename(proj), P = "/work/proj", S = "/work/skill",
+    isShort = fs.existsSync(shortsFile) && JSON.parse(fs.readFileSync(shortsFile, "utf8")).shorts.some((x) => x.id === id);
   // Read-only drive snapshot: only one sandbox can mount a drive read-write, and parallel jobs only read raw media.
   const sbx = await Sandbox.create({ ...auth, source: { type: "snapshot", snapshotId }, resources: { vcpus: 8 },
     timeout: 90 * 60e3, persistent: false, mounts: { "/media": drive.snapshot() } });
@@ -369,4 +372,4 @@ else if (cmd === "assemble") await assemble(path.resolve(proj));
 else if (cmd === "tracks") await tracks(path.resolve(proj));
 else if (cmd === "comp" && ids.length) await comps(path.resolve(proj), ids);
 else if (cmd === "cutout" && ids.length) await cutout(path.resolve(proj), path.resolve(ids[0]));
-else console.log("usage: studio.mjs setup | media <project> | build|run <project> <chNN|sN> ... | enhanced <project> <host.wav> <guest.wav>... | assemble <project> | tracks <project> | comp <project> intro outro | cutout <photo> <cutout.png>");
+else console.log("usage: studio.mjs setup | media <project> | build|run <project> <chNN|short id> ... | enhanced <project> <host.wav> <guest.wav>... | assemble <project> | tracks <project> | comp <project> intro outro | cutout <photo> <cutout.png>");
