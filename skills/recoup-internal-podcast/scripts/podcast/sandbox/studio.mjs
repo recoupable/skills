@@ -28,7 +28,8 @@ try {
 const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 const HF = "hyperframes@0.8.181";                    // same version as local renders, so frames match
 const CFG = path.join(os.homedir(), ".config/recoup/podcast-sandbox.json");
-const TMP = path.join(os.tmpdir(), "recoup-podcast-sandbox");
+// One temp dir per run: parallel runs for two episodes would otherwise overwrite each other's proj.tgz mid-upload.
+const TMP = fs.mkdtempSync(path.join(os.tmpdir(), "recoup-podcast-sandbox-"));
 const DRIVE = "podcast-media";
 const CHUNK = 48 * 1024 * 1024;                      // writeFiles takes a buffer; big files go up in pieces
 const auth = { token: process.env.VERCEL_TOKEN, teamId: process.env.VERCEL_TEAM_ID, projectId: process.env.VERCEL_PROJECT_ID };
@@ -36,7 +37,6 @@ if (!auth.token || !auth.teamId || !auth.projectId) { console.error("set VERCEL_
 const cfg = () => (fs.existsSync(CFG) ? JSON.parse(fs.readFileSync(CFG, "utf8")) : {});
 const t0 = Date.now();
 const log = (tag, m) => console.log(`[${((Date.now() - t0) / 1000).toFixed(0).padStart(4)}s ${tag}] ${m}`);
-fs.mkdirSync(TMP, { recursive: true });
 
 // A home connection drops mid-upload ("fetch failed", connect timeouts): retry the API call, not the job.
 async function retry(fn, tag = "net") {
@@ -108,7 +108,7 @@ function rawSet(proj) {
   if (!fs.existsSync(path.join(raw, "host-video-fixed.mp4"))) add("host-video.mkv");
   const scr = JSON.parse(fs.readFileSync(path.join(proj, "edit/chapters.json"), "utf8")).screen;
   if (scr) add(path.relative(raw, path.join(proj, scr.src)));
-  fs.readdirSync(raw).filter((f) => /-enhanced\.(wav|m4a)$/.test(f)).forEach(add);
+  fs.readdirSync(raw).filter((f) => /-enhanced(-gated)?\.(wav|m4a)$/.test(f)).forEach(add);
   return { files, links };
 }
 
@@ -149,7 +149,9 @@ async function job(proj, id, snapshotId, drive, skillTar, projTar, render) {
       const sj = JSON.parse(fs.readFileSync(path.join(proj, "edit/shorts.json"), "utf8"));
       const s = (sj.shorts || sj).find((x) => x.id === id);
       outRel = `exports/shorts/${s.slug}.mp4`; compRel = `comp/shorts/${id}`;
-      await sh(sbx, id, render ? `cd ${S} && RECUT=1 zsh scripts/podcast/shorts/render.sh ${P} ${id}:${s.slug}`
+      // render.sh logs a failed build and still exits 0: the output file is the only proof the short rendered
+      await sh(sbx, id, render ? `cd ${S} && RECUT=1 zsh scripts/podcast/shorts/render.sh ${P} ${id}:${s.slug}; ` +
+        `test -s ${P}/${outRel} || { cat ${P}/exports/shorts/build-${id}.log 2>/dev/null | tail -5; exit 1; }`
         : `cd ${S} && python3 scripts/podcast/shorts/build_hy.py ${P} ${id} --recut 2>&1 | tail -4`);
     } else {
       // Chapters build and render here rather than through render.sh, which rebuilds the comp and would drop an

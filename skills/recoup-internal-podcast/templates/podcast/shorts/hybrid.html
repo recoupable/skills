@@ -42,6 +42,8 @@
   #pip video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{OBJ_POS}}; }
   #pipring { position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 6px var(--sky); z-index: 2; opacity: 0; }
   #who { position: absolute; left: 70px; top: 1190px; z-index: 24; background: var(--forest); color: #fff; border-radius: 14px; padding: 12px 20px; font-size: 26px; font-weight: 700; display: flex; flex-direction: column; gap: 2px; opacity: 0; }
+  #whoh { position: absolute; left: 70px; top: 1190px; z-index: 24; background: var(--forest); color: #fff; border-radius: 14px; padding: 12px 20px; font-size: 26px; font-weight: 700; display: flex; flex-direction: column; gap: 2px; opacity: 0; }
+  #whoh span { font: 400 17px 'IBM Plex Mono', monospace; letter-spacing: .1em; color: var(--lime); text-transform: uppercase; }
   #who span { font: 400 17px 'IBM Plex Mono', monospace; letter-spacing: .1em; color: var(--lime); text-transform: uppercase; }
 
   #caps { position: absolute; left: 60px; right: 60px; top: 1420px; z-index: 26; height: 200px; }
@@ -67,8 +69,9 @@
 {{STAGE}}
   </div>
 
-  <div id="pip"><video id="vid-g" src="assets/guest.mp4" data-start="0" data-duration="{{CLIP}}" data-track-index="0" muted playsinline></video><div id="pipring"></div></div>
+  <div id="pip"><video id="vid-g" src="assets/guest.mp4" data-start="0" data-duration="{{CLIP}}" data-track-index="0" muted playsinline></video>{{HVIDS}}<div id="pipring"></div></div>
   <div id="who"><span>Guest</span>{{WHO}}</div>
+  <div id="whoh" class="whotag"><span>Host</span>{{HWHO}}</div>
   <audio id="mix" src="assets/mix.m4a" data-start="0" data-duration="{{CLIP}}" data-track-index="10" data-volume="1"></audio>
 
   <div id="caps">{{CAPS}}</div>
@@ -77,7 +80,7 @@
     <div class="panel"></div>
     <div class="inner">
       <img src="assets/logos/symbol-white.svg" alt="" />
-      <div class="k mono">Full episode out now</div>
+      <div class="k mono">{{END_LABEL}}</div>
       <h2>{{EP_TITLE}}</h2>
       <div class="rule"></div>
       <div class="url">{{END_URL}}</div>
@@ -119,6 +122,13 @@
   for (const [a, b] of BEATS) {
     if (a < .5) tl.set("#pip", SMALL, 0); else tl.to("#pip", { ...SMALL, duration: .45, ease: "power3.inOut" }, a - .3);
     if (b < CLIP - .2) tl.to("#pip", { ...BIG, duration: .5, ease: "power3.inOut" }, b - .25);
+  }
+
+  // host-first open: the host camera covers the guest video for each "shot": "host" piece, with the host's name tag
+  // (the host clips' own data-start/data-duration show and hide them: the renderer ignores opacity on a <video>)
+  for (const [a, b] of {{HSHOT}}) {
+    tl.fromTo("#whoh", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: .4, ease: "expo.out" }, a + .15);
+    tl.to("#whoh", { opacity: 0, x: 20, duration: .25 }, Math.max(a + .6, b - .3));
   }
 
   // guest ring while the guest speaks

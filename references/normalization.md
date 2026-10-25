@@ -91,3 +91,5 @@ The public fixtures are synthetic. Tests cover precision, missing fields, repeat
 and revised imports, wrong worksheets, source controls, typed dates/classifications,
 financial eligibility and separate receiving-account evidence. They do not prove a
 live provider integration. Keep private customer statements out of public fixtures.
+
+Source controls compare all source detail before duplicate disposition. `written_totals` separately reports only rows newly written by this import; existing appended rows are excluded. An economic duplicate requires review and keeps overall status partial even if source controls match.

@@ -2,8 +2,8 @@
   "synthetic": true,
   "rows": 2000000,
   "status": "ok",
-  "seconds": 245.481,
-  "peak_rss_bytes": 45891584,
+  "seconds": 220.156,
+  "peak_rss_bytes": 50888704,
   "source_bytes": 142000068,
   "ledger_bytes": 1324889364,
   "source_totals": [
@@ -20,7 +20,7 @@
   },
   "controls_status": "matched",
   "expected_owner_net": "9800.0000",
-  "normalizer_sha256": "3465f22d2aa2677c65785936abe9dc2e1da2aace5c6eff0e1f4f98c515d92807",
+  "normalizer_sha256": "ba94f04d83be003f15359d702cfbebb6309b1b307e19611ed6bd28fdba070c17",
   "python": "3.12.4",
   "platform": "darwin"
 }

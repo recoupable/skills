@@ -222,3 +222,5 @@
 {"intent": "Review this catalog acquisition offer; don\u2019t email the seller", "expected": "recoup-catalog-review-deal"}
 {"intent": "Did these payments reach my bank?", "context": [{"role": "user", "content": "We are reconciling my publisher royalty remittances against these supplied account receipts."}], "expected": "recoup-catalog-reconcile-royalties"}
 {"intent": "I sent the email.", "context": [{"role": "assistant", "content": "The existing royalty case has a prepared inquiry; if you send it, we can record your report on that case."}], "expected": "none", "not": ["recoup-catalog-resolve-claims", "recoup-platform-email-helper"]}
+{"intent": "Analyze the song I attached to this chat and tell me its BPM, key, genre and mood", "expected": "recoup-song-analyze-audio"}
+{"intent": "I attached a local MP3 in Codex. Analyze this file without asking me to create a public URL", "expected": "recoup-song-analyze-audio"}

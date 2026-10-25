@@ -762,6 +762,7 @@ def normalize(provider, input_path, output_path, delimiter="auto", column_map_pa
     rows_path = Path(str(receipt_base) + ".rows.jsonl")
     counts = Counter()
     totals = defaultdict(Decimal)
+    written_totals = defaultdict(Decimal)
     existing_count = 0
     required_count = 0
     appending = append and output_path.exists()
@@ -865,6 +866,7 @@ def normalize(provider, input_path, output_path, delimiter="auto", column_map_pa
                     else:
                         existing = db.execute("SELECT economic FROM transactions WHERE id=?", (transaction_key,)).fetchone() if transaction_key else None
                         if existing and existing[0] == economic_key(output):
+                            counts["economic_duplicate_rows"] += 1
                             counts["duplicate_rows"] += 1
                             disposition = "duplicate"
                         else:
@@ -877,6 +879,9 @@ def normalize(provider, input_path, output_path, delimiter="auto", column_map_pa
                             disposition = row_class
                             if row_class in {"detail", "held"}:
                                 writer.writerow(output)
+                                for field in ("gross_amount", "owner_net_amount", "deductions"):
+                                    if output.get(field):
+                                        written_totals[(output["currency"] or "UNKNOWN", field)] += Decimal(output[field])
                                 counts["written_rows"] += 1
                                 required_count += sum(bool(output.get(f)) for f in CRITICAL_FIELDS)
                             db.execute("INSERT OR IGNORE INTO identities VALUES (?, ?, ?)", (output["ledger_line_id"], transform_id, output["row_status"]))
@@ -892,13 +897,16 @@ def normalize(provider, input_path, output_path, delimiter="auto", column_map_pa
         db.close()
         os.replace(staged, output_path)
         os.replace(rowlog, rows_path)
-    status = "partial" if counts["held"] or counts["duplicate_held_rows"] or control_errors or not (counts["detail"] or counts["duplicate_rows"]) else "ok"
+    status = "partial" if counts["held"] or counts["economic_duplicate_rows"] or counts["duplicate_held_rows"] or control_errors or not (counts["detail"] or counts["duplicate_rows"]) else "ok"
     payload = {"status": status, "provider": profile.provider_name, "input": str(input_path.resolve()),
                "source_version_id": source_hash, "source_sheet": selected_sheet, "parser_version": PARSER_VERSION,
                "transform_id": transform_id, "output": str(output_path), "rows": counts["written_rows"],
                "appended": appending, "ledger_total_rows": existing_count + counts["written_rows"],
                "overlap_detection": "Exact source versions and explicitly scoped account/statement/transaction IDs only; unkeyed revised exports require manual overlap review.",
                "row_conservation": dict(counts), "source_totals": [{"currency": c, "field": f, "amount": format(v, "f")} for (c, f), v in sorted(totals.items())],
+               "written_totals": [{"currency": c, "field": f, "amount": format(v, "f")} for (c, f), v in sorted(written_totals.items())],
+               "controls_scope": "Source detail before duplicate disposition; written_totals cover only this import's newly written rows, excluding any existing appended ledger.",
+               "ledger_control_status": "requires_duplicate_review" if counts["economic_duplicate_rows"] else "not_independently_controlled",
                "controls_status": "unavailable" if controls_path is None else "matched" if not control_errors else "mismatch",
                "rounding_policy": "Inputs <=24 coefficient/integer digits and <=18 fractional places; Decimal precision 128. No per-row rounding. Reporting rounding is a separate evidenced step.",
                "field_population_rate": round(required_count / (counts["written_rows"] * len(CRITICAL_FIELDS)), 4) if counts["written_rows"] else 0,

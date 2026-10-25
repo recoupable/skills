@@ -95,6 +95,20 @@ class NormalizationTests(unittest.TestCase):
         self.assertEqual(result["row_conservation"]["duplicate_rows"], 1)
         self.assertEqual(len(self.read_ledger()), 1)
 
+    def test_economic_duplicates_cannot_greenlight_an_undercounted_ledger(self):
+        row = {**self.row, "Gross": "50", "Net": "50", "Transaction ID": "TX-1", "Account ID": "A-1", "Statement ID": "ST-1"}
+        self.source_rows([row, row])
+        controls = self.root / "controls.json"
+        controls.write_text(json.dumps({"evidence_refs": ["synthetic:control"], "totals": [{"currency": "USD", "field": "owner_net_amount", "amount": "100"}]}))
+        result = self.normalize(controls_path=controls)
+        self.assertEqual(result["status"], "partial")
+        self.assertEqual(result["controls_status"], "matched")
+        self.assertEqual(result["ledger_control_status"], "requires_duplicate_review")
+        self.assertEqual(next(t["amount"] for t in result["source_totals"] if t["field"] == "owner_net_amount"), "100")
+        self.assertEqual(next(t["amount"] for t in result["written_totals"] if t["field"] == "owner_net_amount"), "50")
+        self.assertEqual(sum(Decimal(row["owner_net_amount"]) for row in self.read_ledger()), Decimal("50"))
+        self.assertEqual(result["row_conservation"]["economic_duplicate_rows"], 1)
+
     def test_source_controls_and_footer_conservation(self):
         self.source_rows([{**self.row, "Row Type": "detail"}, {**self.row, "Row Type": "control", "Net": ".0049"},
                           {**self.row, "Row Type": "footer", "Net": ""}, {**self.row, "Row Type": "ignored", "Net": ""}])

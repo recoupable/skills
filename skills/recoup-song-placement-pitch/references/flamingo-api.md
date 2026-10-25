@@ -5,8 +5,8 @@ these skills depend on: Recoup's audio language model ("Music Flamingo").
 
 ## Entry points
 
-The same analysis is reachable four ways. They all share one request/response
-contract.
+The same analysis is reachable four ways. REST and CLI accept `audio_url`; MCP
+also accepts a host-provided chat attachment and normalizes it to that contract.
 
 | Interface | How to call | Auth |
 |---|---|---|
@@ -15,7 +15,8 @@ contract.
 | CLI | `recoup songs analyze`, `recoup songs presets` | **`x-api-key` only** |
 | MCP | tool `analyze_music` | Bearer |
 
-**Pick REST for skills.** It accepts both auth methods, so it works in a Recoup
+**Prefer MCP when the host exposes Recoup tools**, especially for chat attachments.
+Use REST otherwise. It accepts both auth methods, so it works in a Recoup
 sandbox (which exposes `RECOUP_ACCESS_TOKEN`, a bearer token) and with a raw API
 key. The CLI is a convenience but authenticates with `x-api-key` **only** — it
 will not work from a sandbox that has only `RECOUP_ACCESS_TOKEN` set. Use MCP
@@ -67,13 +68,11 @@ Rules (enforced server-side):
   neither is a 400.
 - **Every preset requires `audio_url`**, including `full_report`. There is no
   metadata-only preset today.
-- A custom `prompt` can technically omit `audio_url`, but the useful behavior is
-  audio analysis — resolve a public audio URL unless the user is asking a general
-  music question.
-- The endpoint is **URL-only**: it cannot accept a local file. You must pass a
-  publicly reachable `audio_url`. If the user only has a local MP3, say so and ask
-  for a hosted URL (or a Recoup/chat attachment URL) — do not pretend the file
-  can be uploaded.
+- Custom prompts also require audio. There is no text-only analysis path.
+- The REST endpoint accepts **URLs**, not local paths or raw file bytes. For chat
+  uploads, prefer the MCP file input below or an accessible attachment URL exposed
+  by the host. Do not ask users to host files themselves. If no attachment transfer
+  capability exists, explain the specific host/tool limitation honestly.
 
 ## Response contract
 
@@ -177,12 +176,54 @@ recoup songs analyze --prompt "Summarize the lyrical themes." --audio "$AUDIO_UR
 
 ### MCP (when the host exposes Recoup MCP tools)
 
-Call tool `analyze_music` with `{ "preset": "catalog_metadata", "audio_url": "https://…/song.mp3" }`.
-Do not include `account_id`.
+Inspect the installed tool schema first; older connections may still expose only
+`audio_url`. Updated `analyze_music` declares `_meta["openai/fileParams"]: ["file"]`
+and accepts **exactly one** of `file` or `audio_url`, plus a preset or custom prompt.
+
+For a chat attachment, pass the actual host-supplied file object:
+
+```json
+{
+  "preset": "catalog_metadata",
+  "file": {
+    "download_url": "https://host.example/temporary-audio-download",
+    "file_id": "host-provided-file-id",
+    "mime_type": "audio/mpeg",
+    "file_name": "My song.mp3"
+  }
+}
+```
+
+The values above illustrate the shape only; never invent them. `download_url` and
+`file_id` are required; `mime_type` and `file_name` are optional. The tool uses the
+HTTPS download URL internally, checks that it serves audio before starting the
+model, and excludes MCP audio source URLs from usage-event resource links. It does not publish or
+copy the audio to permanent public storage. File IDs and names are not analysis
+instructions. Host support must be tested; declaring a file input does not prove
+that every host can supply one.
+
+For an existing accessible audio link, call with
+`{ "preset": "catalog_metadata", "audio_url": "https://…/song.mp3" }`.
+Never include `account_id`, local filesystem paths, or both source fields. Refresh
+an expired host download URL through available host file APIs, or ask the user to
+reattach the song. Do not send the same expired URL repeatedly.
+
+For a selected local file, the existing `upload_release_pack_asset` tool supports
+private transfer without creating a release pack: request `mode: "signed_url"`
+with the audio MIME type, transfer the selected bytes using the host's local file
+capability, then call `mode: "finalize"` with the returned `storage_key`. Analyze
+only the URL returned after finalization verifies the bytes. Do not use public
+site assets as a workaround, invent a file ID, or ask the user to host their song.
+If that upload tool is absent, refresh the connected tool catalog; do not treat
+an already attached local file as missing audio. Retention of private storage is
+independent of download-link expiration.
+
+Native file-input contract: https://developers.openai.com/plugins/reference#define-file-inputs
 
 ## Gotchas
 
-- **URL-only.** No local file upload. Need a public `audio_url`.
+- **Attachments first in MCP.** Use the host file object when available. REST
+  still needs a downloadable URL; local paths are not remote file access.
 - **`full_report` fans out to 13 model calls.** Don't default to it; use it only
   when the user asks for a complete analysis, and never blindly across a catalog.
 - **Smallest useful preset wins.** Pick the one preset that answers the question,
