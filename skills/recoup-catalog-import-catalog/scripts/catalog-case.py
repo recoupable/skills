@@ -58,6 +58,8 @@ def read_case(path):
     require(isinstance(case.get("revision"), int), "Missing case revision")
     for collection in COLLECTIONS:
         require(isinstance(case.get(collection), dict), f"Missing collection {collection}")
+    # Hosted snapshots omit local history; retain only edits made after this read.
+    require(isinstance(case.setdefault("history", []), list), "Invalid local case history")
     return case
 
 
@@ -292,6 +294,7 @@ def main(argv=None):
             with lock(path):
                 case = read_case(path)
                 require(case["revision"] == args.expected_revision, "Revision conflict; reread and reconcile current case")
+                require(not any(record.get("withheld") for group in COLLECTIONS for record in case[group].values()), "Redacted snapshot must be reassembled from permitted evidence before editing")
                 before = copy.deepcopy(case)
                 if args.command == "put":
                     changed = put(case, args.collection, read_json(args.record))

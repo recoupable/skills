@@ -119,6 +119,14 @@ dependent records stale, including transitive `depends_on` and action relationsh
 Reassess from current sources before clearing stale state; don't merely relabel an
 old result. `status` reports pending work without starting external actions.
 
+A complete hosted `snapshot` can resume locally without a `history` field. Save
+only the returned snapshot as the local case (not its response envelope), preserving
+its case/workspace IDs and revision. The first local change starts history at that
+revision; it does not reconstruct earlier hosted revisions. Redacted snapshots
+containing `withheld` records remain readable for status but cannot be edited;
+reassemble them explicitly from permitted evidence first. Hosted saves still use
+the last hosted revision and omit local history, as specified by the Context API.
+
 The safe export is an **allowlisted status projection**: IDs, stages, statuses,
 staleness and counts only. It excludes summaries, payloads, source locators, account
 details and raw documents. IDs themselves can be sensitive, so select an authorized
