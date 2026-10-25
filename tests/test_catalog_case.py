@@ -33,6 +33,31 @@ class CatalogCaseTests(unittest.TestCase):
     def action(self):
         return {"id": "action-1", "stage": "register", "status": "prepared", "rule_version": "test-v1", "source_refs": [{"source_id": "s1", "version": "v1"}], "payload": {"provider": "example", "operation": "amend", "account": "account-private", "party": "party-1", "subjects": ["work-1"], "scope": {"territory": "US"}, "disclosure": ["split evidence"], "costs": []}}
 
+    def test_resume_hosted_snapshot_without_local_history(self):
+        self.put("sources", self.source())
+        self.put("findings", self.derived())
+        snapshot = case_module.read_case(self.path)
+        del snapshot["history"]
+        snapshot["revision"] = 7
+        self.path.write_text(json.dumps(snapshot))
+        self.assertEqual(self.put("sources", self.source(version="v2"), revision=7), 0)
+        resumed = case_module.read_case(self.path)
+        self.assertEqual(resumed["revision"], 8)
+        self.assertEqual(len(resumed["history"]), 1)
+        self.assertEqual(resumed["history"][0]["revision"], 7)
+        self.assertEqual(resumed["history"][0]["records"]["sources"], snapshot["sources"])
+        self.assertTrue(resumed["findings"]["f1"]["stale"])
+        self.assertEqual(self.put("sources", self.source("s2"), revision=7), 2)
+
+    def test_redacted_snapshot_cannot_be_resumed_for_writes(self):
+        snapshot = case_module.read_case(self.path)
+        del snapshot["history"]
+        snapshot["sources"]["s1"] = {"id": "s1", "version": "v1", "status": "withdrawn", "withheld": True}
+        self.path.write_text(json.dumps(snapshot))
+        before = self.path.read_bytes()
+        self.assertEqual(self.put("sources", self.source("s2"), revision=0), 2)
+        self.assertEqual(self.path.read_bytes(), before)
+
     def test_idempotent_source_and_stale_writer(self):
         source = self.source()
         self.assertEqual(self.put("sources", source), 0)
