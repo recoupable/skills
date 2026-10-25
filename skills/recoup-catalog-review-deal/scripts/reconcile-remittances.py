@@ -10,7 +10,7 @@ import json
 from decimal import Decimal
 from collections import defaultdict
 from pathlib import Path
-from _finance import amount, refs, currency, unique, dumps, iso_date
+from _finance import amount, refs, currency, unique, dumps, iso_date, same_file
 
 
 def reconcile(data):
@@ -122,7 +122,7 @@ def main():
     parser.add_argument("--input", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
-    same_path = Path(args.input).resolve() == Path(args.output).resolve()
+    same_path = same_file(args.input, args.output)
     try:
         if same_path:
             raise ValueError("Output cannot overwrite source input")
