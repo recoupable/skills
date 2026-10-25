@@ -7,6 +7,11 @@
 //   node --env-file=<env> scripts/podcast/sandbox/studio.mjs enhanced <project> <host.wav> <guest.wav> [<guest-part2.wav>]
 //        Adobe output -> enhance_pack.py unpack + gate_host_audio.py, results written to the drive (guest halves rejoined)
 //   node --env-file=<env> scripts/podcast/sandbox/studio.mjs assemble <project>       opening join + assemble.py -> exports/final/
+//   node --env-file=<env> scripts/podcast/sandbox/studio.mjs tracks <project>         episode's edit/enhance_assemble.py build (Adobe files in
+//        raw/enhance/*-enhanced.wav + any *.map.json) + gate_host_audio.py per enhanced track, results written to the drive
+//   node --env-file=<env> scripts/podcast/sandbox/studio.mjs comp <project> intro outro  render comp/<name> -> exports/<name>.mp4 (make_intro.py output)
+//   node --env-file=<env> scripts/podcast/sandbox/studio.mjs cutout <photo.jpg> <cutout.png>   rembg (bria-rmbg) background removal
+//        for the cover headshot, plus <cutout>-check.png (mask on flat lime) to look at before make_cover.py
 // <env> holds VERCEL_TOKEN, VERCEL_TEAM_ID and VERCEL_PROJECT_ID. Chapters land in <project>/exports/<ch>.mp4 (the previous file
 // moves to exports/.prev/), shorts in exports/shorts/<slug>.mp4, and each built comp is pulled back into <project>/comp/.
 import { execFileSync } from "node:child_process";
@@ -248,7 +253,7 @@ async function assemble(proj) {
       `"[0:v]fps=30,format=yuv420p,setsar=1[v0];[1:v]fps=30,format=yuv420p,setsar=1[v1];[0:a]aresample=48000,aformat=channel_layouts=stereo[a0];[1:a]aresample=48000,aformat=channel_layouts=stereo[a1];[v0][a0][v1][a1]concat=n=2:v=1:a=1[v][a]" ` +
       `-map "[v]" -map "[a]" -c:v libx264 -crf 18 -c:a aac -b:a 256k exports/opening.mp4 && echo opening joined`);
     const sw = await sh(sbx, "assemble", `cd ${P}/raw && a=""; [ -e host-audio-enhanced-gated.wav ] && a="--host-audio raw/host-audio-enhanced-gated.wav"; ` +
-      `[ -e guest-audio-enhanced.wav ] && a="$a --guest-audio raw/guest-audio-enhanced.wav"; echo "$a"`, { quiet: true });
+      `if [ -e guest-audio-enhanced-gated.wav ]; then a="$a --guest-audio raw/guest-audio-enhanced-gated.wav"; elif [ -e guest-audio-enhanced.wav ]; then a="$a --guest-audio raw/guest-audio-enhanced.wav"; fi; echo "$a"`, { quiet: true });
     log("assemble", `audio: ${sw.trim() || "original tracks"}`);
     await sh(sbx, "assemble", `cd /work/skill && python3 scripts/podcast/assemble.py ${P} ${sw.trim()} 2>&1 | tail -20`);
     for (const f of ["exports/opening.mp4", "exports/final/episode.mp4", "exports/final/episode-audio.m4a", "exports/final/youtube-chapters.txt"]) {
@@ -258,6 +263,89 @@ async function assemble(proj) {
     }
     log("assemble", "done -> exports/final/episode.mp4");
   } finally { await stop(sbx, "assemble"); }
+}
+
+// Full-length enhanced tracks from per-episode Adobe files (raw/enhance/), via the episode's own edit/enhance_assemble.py,
+// then the ghost gate on every enhanced track that exists. Writes to the drive, so never alongside media or enhanced.
+async function tracks(proj) {
+  const slug = path.basename(proj), sbx = await workspace(proj, "tracks", { vcpus: 4, writable: true });
+  try {
+    const E = path.join(proj, "raw/enhance");
+    await sh(sbx, "tracks", "rm -f /work/proj/raw/*-audio-enhanced.wav /work/proj/raw/*-audio-enhanced-gated.wav && mkdir -p /work/proj/raw/enhance", { quiet: true });
+    await sh(sbx, "tracks", "pip install -q numpy 2>&1 | tail -1", { quiet: true });
+    const names = fs.readdirSync(E).filter((f) => f.endsWith(".wav") || f.endsWith(".json"));
+    for (const f of names) {
+      if (/-enhanced\.wav$/.test(f) || f.endsWith(".json")) { const s = Date.now(); await upload(sbx, path.join(E, f), `/work/proj/raw/enhance/${f}`); log("tracks", `${f} up in ${((Date.now() - s) / 1000).toFixed(0)}s`); }
+      else await sh(sbx, "tracks", `cd /work/proj/raw/enhance && ffmpeg -v error -y -f lavfi -i anullsrc=r=48000:cl=mono -t ${execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path.join(E, f)]).toString().trim()} '${f}'`, { quiet: true });
+    }
+    await sh(sbx, "tracks", "cd /work/proj && python3 edit/enhance_assemble.py build 2>&1");
+    let rep = "";
+    for (const t of ["host", "guest"]) {
+      const has = (await sh(sbx, "tracks", `test -e /work/proj/raw/${t}-audio-enhanced.wav && echo yes || echo no`, { quiet: true })).trim();
+      // a track this build did not produce must not stay on the drive, or assemble would pick up the stale file
+      if (has !== "yes") { await sh(sbx, "tracks", `rm -f /media/${slug}/raw/${t}-audio-enhanced.wav /media/${slug}/raw/${t}-audio-enhanced-gated.wav`, { quiet: true }); continue; }
+      rep += `== ${t}\n` + await sh(sbx, "tracks", `cd /work/skill && python3 scripts/podcast/gate_host_audio.py /work/proj --track ${t} 2>&1`);
+      await sh(sbx, "tracks", `cd /work/proj/raw && cp ${t}-audio-enhanced.wav ${t}-audio-enhanced-gated.wav /media/${slug}/raw/`, { quiet: true });
+    }
+    fs.writeFileSync(path.join(proj, "edit/gate-report.txt"), rep + "\n");
+    await sh(sbx, "tracks", `ls -la /media/${slug}/raw | grep enhanced`);
+    log("tracks", "gate report -> edit/gate-report.txt");
+  } finally { await stop(sbx, "tracks"); }
+}
+
+// Render a standalone HyperFrames project (comp/intro, comp/outro from make_intro.py) in its own sandbox.
+async function comps(proj, names) {
+  const { snapshotId } = cfg();
+  if (!snapshotId) throw new Error(`no base snapshot in ${CFG}; run setup first`);
+  const res = await Promise.all(names.map(async (name) => {
+    const sbx = await Sandbox.create({ ...auth, source: { type: "snapshot", snapshotId }, resources: { vcpus: 8 }, timeout: 30 * 60e3, persistent: false });
+    log(name, `sandbox ${sbx.name}`);
+    try {
+      const tar = tarOf(`${name}.tgz`, path.join(proj, "comp", name), ["."], [".hyperframes", "snapshots"]);
+      await retry(() => sbx.writeFiles([{ path: `/work/${name}.tgz`, content: fs.readFileSync(tar) }]), name);
+      await sh(sbx, name, `mkdir -p /work/c && tar -xzf /work/${name}.tgz -C /work/c`, { quiet: true });
+      await sh(sbx, name, `cd /work/c && npx --yes ${HF} render -o /work/${name}.mp4 > /work/render.log 2>&1; grep -q "Render complete" /work/render.log && grep -E "MB ·" /work/render.log | tr -s ' '`);
+      const local = path.join(proj, "exports", `${name}.mp4`);
+      if (fs.existsSync(local)) { fs.mkdirSync(path.join(proj, "exports/.prev"), { recursive: true }); fs.renameSync(local, path.join(proj, "exports/.prev", `${name}.mp4`)); }
+      await retry(() => sbx.downloadFile({ path: `/work/${name}.mp4` }, { path: local }, { mkdirRecursive: true }), name);
+      log(name, `done -> exports/${name}.mp4`);
+      return true;
+    } catch (e) { log(name, `FAILED: ${e.message}`); return false; } finally { await stop(sbx, name); }
+  }));
+  if (res.some((r) => !r)) process.exitCode = 1;
+}
+
+// Guest headshot cutout for the covers (podcast-packaging.md). rembg needs ~1 GB of model and onnxruntime: too heavy
+// for the laptop, so it runs in a sandbox. Installed without deps (numba/llvmlite fail on new Pythons) and with
+// pymatting stubbed, since only alpha matting uses it.
+async function cutout(photo, out) {
+  // 8 vCPUs for the 16 GB of memory: bria-rmbg is OOM-killed in the 8 GB of a 4-vCPU sandbox
+  const sbx = await Sandbox.create({ ...auth, resources: { vcpus: 8 }, timeout: 30 * 60e3, persistent: false });
+  log("cutout", `sandbox ${sbx.name}`);
+  try {
+    await sh(sbx, "cutout", "mkdir -p /work && python3 --version");
+    await retry(() => sbx.writeFiles([{ path: "/work/in.img", content: fs.readFileSync(photo) }]), "cutout");
+    await sh(sbx, "cutout", "python3 -m venv /work/v && /work/v/bin/pip install -q --no-deps rembg && /work/v/bin/pip install -q " +
+      "onnxruntime numpy pillow opencv-python-headless scipy pooch jsonschema tqdm scikit-image 2>&1 | tail -2", { quiet: true });
+    await sh(sbx, "cutout", `SP=$(/work/v/bin/python -c "import site;print(site.getsitepackages()[0])") && mkdir -p $SP/pymatting/alpha $SP/pymatting/foreground $SP/pymatting/util && ` +
+      `touch $SP/pymatting/__init__.py $SP/pymatting/alpha/__init__.py $SP/pymatting/foreground/__init__.py $SP/pymatting/util/__init__.py && ` +
+      `echo "def estimate_alpha_cf(*a, **k): raise NotImplementedError" > $SP/pymatting/alpha/estimate_alpha_cf.py && ` +
+      `echo "def estimate_foreground_ml(*a, **k): raise NotImplementedError" > $SP/pymatting/foreground/estimate_foreground_ml.py && ` +
+      `echo "def stack_images(*a, **k): raise NotImplementedError" > $SP/pymatting/util/util.py`, { quiet: true });
+    await sh(sbx, "cutout", `cd /work && /work/v/bin/python -c "
+from rembg import remove, new_session
+from PIL import Image
+im = remove(Image.open('in.img').convert('RGB'), session=new_session('bria-rmbg'))
+im.save('cutout.png')
+bg = Image.new('RGBA', im.size, (160, 255, 60, 255)); bg.alpha_composite(im); bg.convert('RGB').save('check.png')
+print('cutout', im.size, im.getbbox())
+" > /work/cutout.log 2>&1; test -s /work/cutout.png && grep "^cutout" /work/cutout.log || { grep -v "%|" /work/cutout.log | tail -12; exit 1; }`);
+    // downloadFile returns null instead of throwing on a missing file: check the result
+    if (!(await retry(() => sbx.downloadFile({ path: "/work/cutout.png" }, { path: out }, { mkdirRecursive: true }), "cutout"))) throw new Error("cutout: no cutout.png");
+    const chk = out.replace(/\.png$/, "") + "-check.png";
+    await retry(() => sbx.downloadFile({ path: "/work/check.png" }, { path: chk }, { mkdirRecursive: true }), "cutout");
+    log("cutout", `done -> ${out} (check the mask: ${chk})`);
+  } finally { await stop(sbx, "cutout"); }
 }
 
 async function run(proj, ids, render) {
@@ -278,4 +366,7 @@ else if (cmd === "media") await media(path.resolve(proj));
 else if ((cmd === "run" || cmd === "build") && ids.length) await run(path.resolve(proj), ids, cmd === "run");
 else if (cmd === "enhanced" && ids.length >= 2) await enhanced(path.resolve(proj), ids[0], ids.slice(1));
 else if (cmd === "assemble") await assemble(path.resolve(proj));
-else console.log("usage: studio.mjs setup | media <project> | build|run <project> <chNN|sN> ... | enhanced <project> <host.wav> <guest.wav>... | assemble <project>");
+else if (cmd === "tracks") await tracks(path.resolve(proj));
+else if (cmd === "comp" && ids.length) await comps(path.resolve(proj), ids);
+else if (cmd === "cutout" && ids.length) await cutout(path.resolve(proj), path.resolve(ids[0]));
+else console.log("usage: studio.mjs setup | media <project> | build|run <project> <chNN|sN> ... | enhanced <project> <host.wav> <guest.wav>... | assemble <project> | tracks <project> | comp <project> intro outro | cutout <photo> <cutout.png>");
