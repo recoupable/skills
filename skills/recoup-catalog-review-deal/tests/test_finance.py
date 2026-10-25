@@ -325,6 +325,25 @@ class RemittanceTests(unittest.TestCase):
                 self.assertEqual(run.returncode, 1)
                 self.assertEqual(source.read_text(), "[]")
 
+    def test_cli_output_aliases_preserve_original_evidence(self):
+        for filename, fixture in (("calculate-entitlements.py", "entitlement-input.json"), ("reconcile-remittances.py", "remittance-input.json")):
+            for link_kind in ("hardlink", "symlink"):
+                for valid in (True, False):
+                    with self.subTest(script=filename, link=link_kind, valid=valid), tempfile.TemporaryDirectory() as directory:
+                        source, output = Path(directory) / "source.json", Path(directory) / "output.json"
+                        original = (ROOT / "fixtures/finance" / fixture).read_bytes() if valid else b"[]"
+                        source.write_bytes(original)
+                        if link_kind == "hardlink":
+                            output.hardlink_to(source)
+                        else:
+                            output.symlink_to(source)
+                        run = subprocess.run([sys.executable, str(SCRIPTS / filename), "--input", str(source), "--output", str(output)], capture_output=True, text=True)
+                        self.assertEqual(source.read_bytes(), original)
+                        self.assertEqual(output.read_bytes(), original)
+                        self.assertEqual(run.returncode, 1)
+                        self.assertIn("overwrite source", json.loads(run.stdout)["errors"][0])
+                        self.assertNotIn("Traceback", run.stderr)
+
     def test_grouped_and_split_receipts(self):
         self.data["receipts"][0]["amount"] = "40"
         self.data["receipts"].append({**self.data["receipts"][0], "id": "BANK-B", "source_record_id": "synthetic:BANK-B", "amount": "60"})

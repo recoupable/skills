@@ -11,7 +11,7 @@ import argparse
 import json
 from decimal import Decimal
 from pathlib import Path
-from _finance import amount, refs, currency, iso_date, unique, dumps
+from _finance import amount, refs, currency, iso_date, unique, dumps, same_file
 
 ADJUSTMENTS = {"deduction", "reserve_withheld", "reserve_released", "withholding", "reversal", "recognized_adjustment"}
 
@@ -142,7 +142,7 @@ def main():
     parser.add_argument("--input", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
-    same_path = Path(args.input).resolve() == Path(args.output).resolve()
+    same_path = same_file(args.input, args.output)
     try:
         if same_path:
             raise ValueError("Output cannot overwrite source input")
