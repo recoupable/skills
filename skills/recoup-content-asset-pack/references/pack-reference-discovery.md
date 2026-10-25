@@ -36,15 +36,6 @@ Keep the release's visual world separate from historical artist branding. Curren
 explicit customer choices govern this campaign; conflicting older material is
 background, not an instruction to replace the chosen world.
 
-If context is still thin, ask one useful question:
-
-> Got artwork, photos or a look to build on? Send them over or point me to them —
-> or I can come up with a direction.
-
-Skip that question if the material is already supplied or creative decisions are
-already delegated. Keep any remaining identity/audio/budget gaps together in a
-short reply; do not turn this into a profile interview.
-
 ## 3. Fill actual gaps from accessible sources
 
 Use an official artist page, linked press kit or correctly matched profile first.
@@ -63,6 +54,15 @@ For a blocked Instagram page, record the gap and use another accessible official
 source or a supplied screenshot. Do not bypass access restrictions or claim the
 page was reviewed. Do not spend beyond the existing research/concept allowance;
 when none is approved, use available reads and explicitly proposed creative choices.
+
+After the bounded public pass, ask only if a useful visual-evidence gap remains:
+
+> Got artwork, photos or a look to build on? Send them over or point me to them —
+> or I can come up with a direction.
+
+Skip that question if supplied material or inspected public references already
+provide enough context, or creative decisions are already delegated. Keep any remaining identity/audio/budget gaps together in a
+short reply; do not turn this into a profile interview.
 
 ## 4. Keep a private source collection
 

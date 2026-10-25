@@ -147,6 +147,16 @@
         "Use a supported refresh/read operation and preserve original attribution.",
         "Update and requote the same pack when required; do not invent a fresh URL or submit an expired input."
       ]
+    },
+    {
+      "id": "official-references-before-question",
+      "request": "Make a release pack using my official artist page.",
+      "context": "No photos attached; the correctly matched official page links an accessible press kit with sufficient visual references. No paid research is authorized.",
+      "must": [
+        "Inspect the accessible official references during the bounded public pass before asking for artwork.",
+        "Skip the artwork question when the inspected references provide enough visual context.",
+        "Keep public inspiration separate from permission to use photographs as production inputs."
+      ]
     }
   ]
 }
