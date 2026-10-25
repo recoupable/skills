@@ -208,6 +208,32 @@ class EntitlementTests(unittest.TestCase):
         self.assertEqual(result["recoupment_accounts"][0]["potential_payable"], Decimal("5.002205"))
         self.assertIsNone(result["lines"][0]["recovered_cash"])
 
+    def test_explicit_adjustment_currency_must_match_line(self):
+        for value in ("EUR", "", None, "usd"):
+            with self.subTest(currency=value):
+                data = copy.deepcopy(self.data)
+                data["lines"][0]["adjustments"][0]["currency"] = value
+                result = entitlement.calculate(data)
+                self.assertEqual(result["status"], "partial")
+                self.assertFalse(result["lines"])
+                self.assertFalse(result["recoupment_accounts"])
+        data = copy.deepcopy(self.data)
+        data["lines"][0]["adjustments"][0]["currency"] = "USD"
+        self.assertEqual(entitlement.calculate(data), entitlement.calculate(self.data))
+
+    def test_explicit_movement_currency_must_match_recoupment_account(self):
+        for value in ("EUR", "", None, "usd"):
+            with self.subTest(currency=value):
+                data = copy.deepcopy(self.data)
+                data["recoupment_accounts"][0]["movements"][0]["currency"] = value
+                result = entitlement.calculate(data)
+                self.assertEqual(result["status"], "partial")
+                self.assertTrue(result["lines"])
+                self.assertFalse(result["recoupment_accounts"])
+        data = copy.deepcopy(self.data)
+        data["recoupment_accounts"][0]["movements"][0]["currency"] = "USD"
+        self.assertEqual(entitlement.calculate(data), entitlement.calculate(self.data))
+
     def test_missing_base_schedule_and_master_scope_block(self):
         for key, value in (("basis", None), ("adjustments_complete", False), ("rights_type", "master")):
             with self.subTest(key=key):
