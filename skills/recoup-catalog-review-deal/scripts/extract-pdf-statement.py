@@ -19,6 +19,8 @@ import csv
 import json
 import re
 import sys
+import hashlib
+from decimal import Decimal, InvalidOperation
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -62,11 +64,14 @@ CANONICAL_COLUMNS = [
     "cue_sheet_ref",
     "match_confidence",
     "notes",
+    "source_version_id", "source_sheet", "source_row", "source_record_id",
+    "parser_version", "transform_id", "row_status", "held_reasons",
+    "reported_period", "report_date", "statement_id", "raw_values",
 ]
 
 
 CURRENCY_PATTERNS = [
-    (re.compile(r"^\s*\$\s*"), "USD"),
+
     (re.compile(r"^\s*USD\s*\$?\s*"), "USD"),
     (re.compile(r"^\s*EUR\s*€?\s*|^\s*€\s*"), "EUR"),
     (re.compile(r"^\s*GBP\s*£?\s*|^\s*£\s*"), "GBP"),
@@ -317,8 +322,8 @@ def parse_amount(raw: str | None) -> tuple[float | None, str | None]:
     if not text:
         return None, detected_currency
     try:
-        return float(text), detected_currency
-    except ValueError:
+        return Decimal(text), detected_currency
+    except InvalidOperation:
         return None, detected_currency
 
 
@@ -447,12 +452,13 @@ def extract_rows(
 
         ledger_index = 1
         filename = pdf_path.name
-        for page in pdf.pages:
-            for table in page.extract_tables() or []:
+        source_version = hashlib.sha256(pdf_path.read_bytes()).hexdigest()
+        for page_number, page in enumerate(pdf.pages, 1):
+            for table_number, table in enumerate(page.extract_tables() or [], 1):
                 if not table or len(table) < 2:
                     continue
                 # Skip header row(s) — assume first row is header.
-                for raw in table[1:]:
+                for row_number, raw in enumerate(table[1:], 2):
                     row = [(cell or "").strip() for cell in raw]
                     if not is_data_row(row, template):
                         continue
@@ -471,20 +477,24 @@ def extract_rows(
                     output_row["catalog_asset_id"] = asset_id_from_row(template, row)
                     output_row["source_file"] = rel_path
                     output_row["provider"] = template.provider
-                    output_row["rights_type"] = template.rights_type
-                    output_row["income_type"] = template.income_type
+                    output_row["rights_type"] = ""
+                    output_row["income_type"] = ""
                     output_row["territory"] = template.territory
-                    output_row["period_start"] = period_start
-                    output_row["period_end"] = period_end
-                    output_row["currency"] = detected_currency or template.default_currency
+                    output_row["period_start"] = ""
+                    output_row["period_end"] = ""
+                    output_row["currency"] = detected_currency or ""
                     output_row["owner_net_amount"] = (
-                        f"{amount_value:.2f}" if amount_value is not None else ""
+                        format(amount_value, "f") if amount_value is not None else ""
                     )
                     if gross_value is not None:
-                        output_row["gross_amount"] = f"{gross_value:.2f}"
+                        output_row["gross_amount"] = format(gross_value, "f")
                     output_row["participant_share"] = share_value
                     output_row["match_confidence"] = "low"
-                    output_row["notes"] = "extracted from PDF, verify against source"
+                    output_row["notes"] = "PDF candidates only; independently reconcile against source. Filename/template period and rights hints are not evidence."
+                    output_row.update({"source_version_id": source_version, "source_sheet": f"page:{page_number}/table:{table_number}",
+                                       "source_row": str(row_number), "parser_version": "pdf-candidates/2", "transform_id": template.name,
+                                       "row_status": "held", "held_reasons": "pdf_extraction_requires_independent_source_controls",
+                                       "raw_values": json.dumps(raw)})
                     rows.append(output_row)
                     ledger_index += 1
     info = {
@@ -574,7 +584,7 @@ def main() -> int:
     write_ledger(all_rows, output_path)
 
     summary = {
-        "status": "ok",
+        "status": "manual_review_required",
         "input": str(input_path),
         "output": str(output_path),
         "pdfs_scanned": len(pdfs),
@@ -583,7 +593,7 @@ def main() -> int:
         "per_file": per_file,
     }
     print(json.dumps(summary, indent=2))
-    return 0
+    return 1  # Extraction candidates are never an accepted/reconciled ledger.
 
 
 if __name__ == "__main__":

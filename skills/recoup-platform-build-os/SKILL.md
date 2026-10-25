@@ -1,9 +1,9 @@
 ---
 name: recoup-platform-build-os
-description: Scaffold and run a label's self-managing "music-company OS" inside its own git repo — the full label-intelligence workspace (folders, a self-managing CLAUDE.md mirrored to AGENTS.md, a read-only doctor + never-stale janitor, compound-learning and self-improvement loops, an in-place plugin) seeded with Recoup's conventions (top-level artists/{slug}/RECOUP.md identity files, releases/{slug}/RELEASE.md) and backed by the Recoup API as system of record. Use for "set up our label OS", "build the org workspace", "turn this repo into our label brain", or onboarding a new org/label repo. Pulls the real roster from the live account (auth via recoup-platform-connect-account), onboards artists API-first via recoup-roster-add-artist, and calls the other recoup-* skills (research/content/release/song/catalog) instead of reinventing them. The single workspace/OS builder — also covers the lightweight "just mirror my roster into folders" case.
+description: Scaffold a music company's working OS in its own repository, with a self-managing workspace, read-only health checks, reusable knowledge and portable skills. Use for "set up our label OS", "build our publishing workspace", "organize our catalog operations repo", or "mirror my roster into folders". Select the actual core objects (artists/releases, compositions/parties or catalog cases); use supported Recoup records when available and private file workflows otherwise. No artist roster, valuation or account claim is required for every music business.
 ---
 
-# Recoup — Build Label OS
+# Recoup — Build Music Workspace
 
 **The point is not the folders — it's to scaffold a system that both manages itself and improves
 itself.** It keeps its own state current (never-stale) *and* gets better at its own job over time:
@@ -19,65 +19,46 @@ manifests/adapters for Claude, Cursor, and Codex.
 This builder skill is for the agent running it. Follow the phases in order. Don't stop halfway — drive to a working OS,
 then report. Read the references as you reach each phase.
 
-## Recoup specialization — this is a music-company OS  [read before Phase 0]
+## Recoup specialization — select the actual music workflow
 
-This skill is `workspace-os` (by Sidney Swift) locked to one domain — **a music company /
-independent label** — and wired into Recoup. The phases below are unchanged; apply them with
-these Recoup rules layered on top.
+The domain is a music business, including labels, writers, publishers, administrators,
+recording owners, estates and authorized advisers. Identify its core records in Phase 0;
+never manufacture an artist account to fit composition or royalty work.
 
-- **The domain is fixed — don't re-infer it.** Core unit: the **artist** (and their
-  **releases**). Entities folder: top-level `artists/`. The release lifecycle
-  (`demo -> A&R -> signed -> production -> release -> promo -> catalog`) is tracked **per release**
-  under `artists/{slug}/releases/` (stage in `RELEASE.md`) — there is no separate top-level
-  `pipeline/`; unsigned candidates live in `prospects/`. Spend Phase 0's effort understanding *this
-  specific label* (roster, genres, deal posture, content motion, team), not which archetype it is.
-- **The repo is one org/label.** This runs inside a single org's git repo, so artists live at
-  **top-level `artists/{artist-slug}/`** — no `orgs/` nesting (the repo already *is* the org).
-- **Seed Recoup's conventions exactly — other recoup skills depend on them:**
-  - `artists/{artist-slug}/RECOUP.md` — identity file, frontmatter `artistName` / `artistSlug`
-    / `artistId` (artistId = the Recoup `account_id`). Same shape `recoup-roster-list-artists`,
-    `recoup-roster-add-artist` read/write.
-  - `releases/{release-slug}/RELEASE.md` and `releases/top-tracks.md` per artist.
-  - `slugify` = lowercase-kebab; never append IDs to folder names.
-- **Secrets stay out of the shared repo.** Always seed `.env.example` (documenting `RECOUP_API_KEY`
-  or `RECOUP_ACCESS_TOKEN`, `RECOUP_ORG_ID`, optional `RECOUP_API_URL`) and a `.gitignore` that
-  ignores `.env`. Real credentials live outside the repo (env vars / `~/.claude/recoup.env`); never
-  commit them — the repo is shared across the label's team.
-- **The Recoup API is the system of record; the repo is the brain.** Get the *real* roster from
-  the live account — never invent one:
-  1. Connect the machine first by chaining **`recoup-platform-connect-account`** (mints/loads the
-     credential: `RECOUP_API_KEY` or `RECOUP_ACCESS_TOKEN`, optional `RECOUP_ORG_ID`).
-  2. **If the roster is empty (0 artists), hand off to `recoup-roster-onboard`** to bootstrap it (it
-     fans `recoup-roster-add-artist` out across parallel subagents); otherwise materialize the
-     existing roster into `artists/` yourself: `GET /api/organizations` (or use `RECOUP_ORG_ID`) ->
-     `GET /api/artists?org_id=…` -> `mkdir -p artists/{slugify(name)}` and write `RECOUP.md` per
-     artist (`artistName`/`artistSlug`/`artistId` from `account_id`); skip existing. Use
-     **`recoup-roster-list-artists`** to inventory first and **`recoup-platform-api-access`** for the
-     call shapes.
-  3. Write `operations/sync.md` with the contract: **DB owns structured entities** (roster,
-     socials, metrics, releases-as-records, billing); **the repo owns the unstructured brain**
-     (knowledge, research, plans, drafts). Entity creation is **API-first** — onboard a new artist
-     with **`recoup-roster-add-artist`** (the 8-call create -> enrich chain), *then* its folder
-     appears; never create an artist by `mkdir` alone. Use **`recoup-platform-api-access`** for raw
-     REST / connector calls. An empty organization or artist list can be legitimate. Verify the
-     account identity and selected workspace before creating or attaching artists; never fabricate a roster.
-- **Reuse the platform; don't reinvent it.** In Phase 4, do **not** author `plugin/skills/` that
-  duplicate Recoup capabilities — wire to the installed `recoup-*` skills: roster
-  (`recoup-roster-*`), research (`recoup-research-*`), content (`recoup-content-*`), release
-  (`recoup-release-*`), song (`recoup-song-*`), catalog (`recoup-catalog-*`). The OS's own
-  `plugin/skills/` should be **label-specific glue** (this label's routines/orchestration) plus the
-  standard maintenance organs (doctor/janitor/learn/reflect/skillify/intake). Default the plugin
-  name to `{label-slug}-os`.
-- **Still scaffold everything else a music company needs.** Beyond the core (`artists/`,
-  `knowledge/`, `library/`, `work/`, `artifacts/`, `plugin/`, `operations/`), add optional folders
-  only with real material: `content/` (the flywheel), `deals/` (catalog acquisitions), `contacts/`
-  (industry network), `proof/` (press/milestones), `business/` (splits/royalties/contracts),
-  `prospects/` (A&R funnel), `reference/` (label bible). Mark inferred items "draft — confirm". See
-  `references/blueprint.md` for the full tree.
-- **Filling the generic templates (doctor/dashboard/janitor).** When you generate them from
-  `assets/`, the **entity** is `artists/` and there is **no pipeline folder** — leave `{PIPELINE}`
-  empty, or set it to `prospects/` only if the label does A&R. The doctor reads release status from
-  each `artists/{slug}/releases/` (stage in `RELEASE.md`), not a top-level funnel.
+- **Choose a spine from actual work.** Artist/release operations use `artists/` and
+  per-artist releases. Publishing uses `compositions/` and `parties/`. Audit, royalty
+  reconciliation and acquisitions use `cases/` with scope/evidence/stage records.
+  Use only the folders backed by real work; an empty roster is legitimate.
+- **One authorized workspace per repository.** Keep private agreements, statements,
+  identifiers and receipts in the selected private workspace. Public plugin examples
+  remain synthetic. A local case is not a hosted catalog until a supported save reads back.
+- **Preserve the existing artist convention where applicable.** Mirror verified artists
+  into `artists/{artist-slug}/RECOUP.md` with `artistName`, `artistSlug` and the actual
+  `artistId`. Release records live under each artist's releases. Never invent IDs.
+  A composition-only case can use local case IDs and retain missing ISRC/ISWC values.
+- **Use available access.** An authenticated MCP connection can already provide account
+  scope. REST can use supplied environment credentials; no harness-specific env file is
+  mandatory. Connect an account only when the requested hosted operation needs it.
+  Never copy MCP OAuth credentials into files. File review/intake works without login.
+- **Write `operations/sync.md` per object.** Hosted structured records are authoritative
+  only for fields the discovered API actually supports. The private workspace preserves
+  evidence, unresolved candidates, plans and source versions. Record unsupported fields
+  instead of asserting every local record is in the database. For an actual roster use
+  supported roster reads and API-first artist creation when requested; zero artists is
+  not permission to onboard unrelated people or publishers.
+- **Reuse focused Recoup skills.** Catalog import, organization, contract explanation,
+  audit, reconciliation, registration, resolution and deal review retain their stage
+  boundaries. Song credits and release metadata remain checks. Local glue coordinates
+  explicitly requested stages; it never turns a review into external correspondence.
+- **Keep secrets outside versioned material.** If REST access is needed, seed an
+  `.env.example` documenting names and a `.gitignore` excluding actual credentials.
+  Provider membership, a music mandate and software permissions are separate facts.
+- **Configure maintenance to the selected spine.** Fill the doctor/dashboard templates
+  with the actual entity folder and workflow. A publishing or accounting workspace must
+  not fail health checks because it has no artists, valuation or recurring task.
+
+Read `references/blueprint.md` for the lean structures. Label-specific release mechanics
+remain available; do not impose them on every publisher or catalog adviser.
 
 ## Operating beliefs (apply to every OS you build)
 

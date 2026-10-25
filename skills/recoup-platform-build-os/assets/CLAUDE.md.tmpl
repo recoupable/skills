@@ -1,38 +1,36 @@
 # Working conventions for this workspace — {DOMAIN} (music-company OS)
 
-You operate **{DOMAIN}**'s music-company operating system — an independent label's shared brain. Your
+You operate **{DOMAIN}**'s music-company operating system — a music business's shared brain. Your
 job is not just to file things: keep the system **current and compounding**, and decide "done" and
 "consistent" by evidence (a `{DOMAIN}-doctor` run), not by feeling. Act autonomously on the rules below.
 (AGENTS.md is a symlink to this file.)
 
-## Recoup integration (the non-negotiables)
-- **Recoup is the system of record; this repo is the brain.** The Recoup API owns structured entities
-  (the artist roster, socials, metrics, releases-as-records, billing). This repo owns the unstructured
-  brain (knowledge, research, plans, drafts, content). The mapping lives in `operations/sync.md`.
-- **Artists are API-first.** To add/onboard an artist, call the `recoup-roster-add-artist` skill (it
-  runs the create → Spotify → research → catalog → socials → knowledge-base chain); the
-  `artists/{slug}/` folder follows. Never create an artist by `mkdir` alone, and never invent a roster —
-  an empty `artists/` is not an empty label; confirm against the live account.
-- **`artists/{slug}/RECOUP.md` is the identity file** — frontmatter `artistName` / `artistSlug` /
-  `artistId` (= the Recoup `account_id`). Keep it current; it's how every `recoup-*` skill finds the artist.
-- **Reuse Recoup's skills; don't reinvent them.** research → `recoup-research-*`; content →
-  `recoup-content-*`; releases → `recoup-release-*`; single-song audio → `recoup-song-*`; catalog deals
-  → `recoup-catalog-*`; raw API / connectors → `recoup-platform-api-access`.
+## Recoup integration
+- **Use the selected spine: {ENTITY}.** Artists/releases, compositions/parties and catalog
+  cases are different records. Do not create an artist to fit publishing or accounting.
+- **Keep the object-specific record contract in `operations/sync.md`.** Recoup owns fields
+  supported and saved through its actual API; this private repo retains source evidence,
+  unresolved candidates and unstructured plans. Local preparation is not hosted completion.
+- **Roster operations are API-first when requested.** Verified artists use
+  `artists/{slug}/RECOUP.md` with actual artistName/artistSlug/artistId. Zero artists is
+  legitimate. Composition-only records need no artist, ISRC, valuation or catalog claim.
+- **Authenticated MCP is sufficient where supported.** No Claude-specific credential
+  file is mandatory. Local file work needs no account login. Keep credentials out of git.
+- **Reuse focused Recoup skills.** Reviews produce evidence; registration, royalty
+  resolution and delivery changes have separate requested scope and outcome verification.
 
 ## Auto-manage loop (run on new input, without being asked)
 1. Place the raw file in its correct home, dated YYYY-MM-DD (artist material → `artists/{slug}/`).
 2. Read it.
 3. Extract reusable value into `knowledge/` (insights / faqs / decisions).
-4. Scan the affected artist + release folder; read its `RECOUP.md`/README; reconcile.
-5. Update everything affected in the SAME turn: the artist's `RECOUP.md`, `releases/.../RELEASE.md`,
-   `artifacts/dashboard.html`, metrics. (never-stale rule)
-6. Move releases to match reality (stage changes). If the change is **structured** (new social, new
-   release, profile edit), push it to Recoup via the API (`recoup-platform-api-access` or the relevant
-   `recoup-*` skill) — the DB is the system of record.
+4. Scan the affected entity/case folder; read its identity/README; reconcile source versions.
+5. Update affected entity/case records, `artifacts/dashboard.html` and applicable metrics in the same turn.
+6. Update observed stage states from evidence. Save supported structured changes only within
+   the requested authority and read them back; otherwise retain a labeled local proposal.
 7. Mine for compounding assets (release checklists, splits/pitch templates, proof).
 8. Report what changed.
 
-Confirm before inventing label/artist facts; otherwise do the routine filing and summarize.
+Never invent music-business facts. Mark unknown evidence and carry out the authorized filing.
 
 ## Never stale (checked, not felt)
 If you touched the project, leave it consistent — and "consistent" is what `{DOMAIN}-doctor` reports,
@@ -74,6 +72,8 @@ user explicitly wants a Cursor-only mirror.
 12. Splits / royalties / contracts / finance / metrics? → `business/`
 13. Catalog deal / acquisition under review? → `deals/`
 14. Brand guidelines / genre canon / label bible? → `reference/`
+15. Composition/party repertoire? → the selected `compositions/` / `parties/` spine
+16. Audit, reconciliation or registration evidence/results? → `cases/{case-id}/`
 
 ## Don't
 - Don't create or mutate the roster locally — artists are API-first via `recoup-roster-add-artist`.

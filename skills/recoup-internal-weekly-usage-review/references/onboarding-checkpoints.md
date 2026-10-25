@@ -1,27 +1,31 @@
-# Recoup onboarding checkpoints
+# Workflow-specific onboarding checkpoints
 
-The activation funnel for a Recoup account, in order. Derived from how retained
-accounts actually behave: every long-lived, revenue-relevant account converges
-on claimed artists with connected socials running scheduled tasks; every ghost
-account stalls before step 7.
+Evaluate the selected task, not a universal numbered funnel. Record applicability and
+observed evidence separately. Ready means the particular step can proceed; it does not
+mean catalog ownership, a society registration or a bank receipt has been proven.
 
-**Activation bar: claim a catalog AND schedule a first recurring task within
-week one.** Steps 1–6 are setup; step 7 is the habit loop that predicts
-retention; step 8 is the outcome, not a step to push.
+| Checkpoint | Applies when | Evidence and next step |
+|---|---|---|
+| Selected identity/workspace | A hosted operation is requested | Existing authenticated MCP or REST account read; unavailable access is unknown; file-only work does not need it |
+| Source and scope | Every review/import | Requested work/release/period and authorized source files or supported reads; missing sources block only dependent conclusions |
+| Artist roster | Artist/release operations require an artist | Supported roster read; create/enroll only when requested and needed; publishers/composers need no invented artist |
+| Social connections | Social research/content needs them | Supported social read for the actual artist; not applicable to composition or royalty files |
+| Catalog/repertoire intake | The user wants reusable catalog records | Source-row controls and local or supported hosted records; local prepared is distinct from hosted saved |
+| Rights/mandate evidence | Registration, collection or transaction conclusion depends on it | Clause-linked agreement and exact role/right/territory; software access is separate from a mandate |
+| Measurement/estimate | Public estimate is requested | Observed coverage and stated assumptions; no valuation prerequisite for other tasks |
+| Requested stage result | The user's current job | Audit findings, reconciled workpaper, registration outcome or review report with its own completion evidence |
+| Recurring task | User asks to monitor/repeat | Actual automation receipt and enabled state; optional, never armed merely to improve a score |
+| Billing capacity | Requested paid operation requires it | Current supported billing/limit response; never force a subscription or purchase from onboarding |
 
-| # | Checkpoint | Owner-token API check | Internal check (staff) |
-|---|---|---|---|
-| 1 | Account created | `GET /api/accounts/id` succeeds | Privy user + `accounts` row |
-| 2 | Artist added to roster | `GET /api/artists` non-empty | `account_artist_ids` rows |
-| 3 | Socials connected | `GET /api/artists/{id}/socials` non-empty | `account_socials` rows for the artist accounts |
-| 4 | First interactive chat | `GET /api/chats` has a chat not titled "Scheduled generation" | `chats` via `sessions`, same title filter |
-| 5 | Valuation run | catalog endpoints show measured songs | `playcount_snapshots` rows |
-| 6 | Catalog claimed | `GET /api/catalogs` (owned) non-empty | `account_catalogs` rows |
-| 7 | Scheduled task enabled | `GET /api/tasks` has an enabled task | `scheduled_actions` where `enabled` |
-| 8 | Paying | `GET /api/accounts/{id}/subscription` → `isPro` | Stripe (the DB `subscriptions` mirror can be empty — trust Stripe) |
+Use ready, missing, unknown/access_unavailable and not_applicable, with evidence dates.
+No furthest-contiguous-step scoring: users may start at any stage. Existing adoption
+reporting can separately count artists, socials, chats, estimates, catalog associations,
+schedules and subscriptions, but these are behavior indicators, not a proven causal
+retention model or prerequisites. A catalog association does not establish ownership.
+A payment badge does not establish a customer completed an unrelated workflow.
 
-Scoring: report the furthest **contiguous** step reached plus any skipped steps
-(e.g. "chatted but never added an artist" is a routing failure worth flagging,
-not credit for step 4). Also record credits used vs remaining and whether the
-account returned on any day after signup — day-2 return is the earliest
-retention signal.
+Synthetic paths: a composer with one split sheet and no ISRC can organize publishing;
+a publisher with no artists can review a mandate; a label can check existing delivery;
+an accountant can reconcile supplied statements offline; an MCP-authenticated adviser
+needs no local environment file; a user who sent an email has a continuation event,
+not a new onboarding action.
