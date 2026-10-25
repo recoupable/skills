@@ -11,6 +11,7 @@ import datetime
 import hashlib
 import json
 from collections import Counter, defaultdict
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 KINDS = {"composition", "recording", "release", "party"}
@@ -134,6 +135,15 @@ def intake(source, mapping, sheet=None, previous=None):
                     result["reasons"].append("interest kind missing or unsupported")
                 if interest.get("value") and (not interest.get("basis") or not interest.get("scale")):
                     result["reasons"].append("interest percentage lacks basis or scale")
+                if interest.get("value") and interest.get("scale"):
+                    try:
+                        value, scale = Decimal(interest["value"]), Decimal(interest["scale"])
+                        if not value.is_finite() or not scale.is_finite() or scale <= 0:
+                            raise ValueError("nonfinite value or nonpositive scale")
+                        if value < 0 or value > scale:
+                            result["reasons"].append("interest value outside supplied scale; provider semantics require review")
+                    except (InvalidOperation, ValueError):
+                        result["reasons"].append("interest value/scale requires finite numeric values and a positive scale; source review required")
         if not ids:
             result["reasons"].append("no mapped entity values")
         if result["reasons"]:

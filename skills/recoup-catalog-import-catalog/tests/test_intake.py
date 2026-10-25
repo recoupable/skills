@@ -95,6 +95,27 @@ class IntakeTests(unittest.TestCase):
         self.assertEqual(len(result["interest_observations"]), 2)
         self.assertNotIn("total_share", result)
 
+    def test_interest_outliers_are_held_without_rewriting_source_values(self):
+        self.mapping = {"entities": {"composition": {"title": "Title", "iswc": "ISWC"}}, "interest": {"kind": "Kind", "value": "Share", "basis": "Basis", "scale": "Scale"}}
+        for value, scale in (("181", "100"), ("-1", "100"), ("unknown", "100"), ("NaN", "100"), ("Infinity", "100"), ("50", "0"), ("50", "unknown"), ("50", "NaN")):
+            with self.subTest(value=value, scale=scale):
+                content = f"Title,ISWC,Kind,Share,Basis,Scale\nWork,T0000000001,statement_percentage,{value},provider_claim,{scale}\n"
+                result = self.run_csv(content)
+                self.assertEqual(result["controls"]["dispositions"], {"held": 1})
+                self.assertEqual(result["interest_observations"][0]["fields"]["value"], value)
+                self.assertEqual(result["interest_observations"][0]["fields"]["scale"], scale)
+                self.assertEqual(result["rows"][0]["raw"]["Share"], value)
+                self.assertEqual(self.run_csv(content, result)["controls"]["dispositions"], {"held": 1})
+
+    def test_interest_bounds_use_supplied_scale_without_rescaling(self):
+        self.mapping = {"entities": {"composition": {"title": "Title", "iswc": "ISWC"}}, "interest": {"kind": "Kind", "value": "Share", "basis": "Basis", "scale": "Scale"}}
+        for value, scale in (("0", "100"), ("100", "100"), ("150", "200"), ("0.5", "1")):
+            with self.subTest(value=value, scale=scale):
+                result = self.run_csv(f"Title,ISWC,Kind,Share,Basis,Scale\nWork,T0000000001,collection,{value},provider_claim,{scale}\n")
+                self.assertEqual(result["controls"]["dispositions"], {"proposed": 1})
+                self.assertEqual(result["interest_observations"][0]["fields"]["value"], value)
+                self.assertNotIn("total_share", result)
+
     def test_xlsx_sheet_and_numeric_identifier_guard(self):
         try:
             import openpyxl
