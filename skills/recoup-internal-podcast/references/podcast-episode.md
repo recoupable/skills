@@ -90,7 +90,7 @@ Business keeps the plan, Granola notes and the episode README (link it, don't co
    minutes) and prints the early-start host fragments and any dead air. **The host track reads digital zero
    whenever the host is quiet** (mic gate or mute); that alone is not a dropout. Dead air inside the
    interview usually means a line said while muted: on 2026-10-13 the host's sign-off was lost this way and
-   replaced with the host's own later repeat ("I wrapped up by saying thank you for joining us today, Tom").
+   replaced with the host's own later repeat ("I wrapped up by saying thank you for joining us today, <guest>").
    Use Scribe to settle the recorder's mishearings and correct the Business recording notes.
 3. **Camera check**: `python3 scripts/podcast/camera_check.py <project>` prints each camera's offset against
    its audio track (put them in `chapters.json` offsets) and the stretches where a camera dropped frames.
@@ -193,7 +193,7 @@ Business keeps the plan, Granola notes and the episode README (link it, don't co
    cover in `public/podcast/<slug>-wide.jpg`, transcript `content/podcast/transcripts/<slug>.json` built from the
    corrected captions (speaker turns alternate at `>>`; untangle overlapping speech by hand). Merge after the
    release minute: the embed reads "private" until then.
-17. **Shorts**: `references/podcast-shorts.md` (clips table, kinetic format, one prototype, then the rest).
+17. **Shorts**: `references/podcast-shorts.md` (clips table, kinetic by default, one prototype, then the rest; the section 4 QC ladder gates each short).
 18. **Hand back to sales**: live links to the guest the day it publishes (with the shorts folder and the one-page clips sheet; `recoup-internal-sales` `references/podcast-guest-pipeline.md`, The live-links email), the wrap-up email the day the last short posts (closes the run, asks for guest recommendations), day-7 follow-up. Templates in the `recoup-internal-sales` skill's `references/podcast-guest-pipeline.md`.
 
 ## Gotchas that cost real time on the first run

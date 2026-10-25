@@ -22,7 +22,7 @@ charges for builds (`references/podcast-packaging.md`).
 | 2. Post-production | `references/podcast-episode.md` steps 0-12 | Owner approves the analysis, the audio rough cut, the prototype, each chapter and the assembled episode |
 | 3. Packaging | `references/podcast-packaging.md`, episode steps 13 and 15 | Owner approves title, description and both covers; the guest approves their cover photo |
 | 4. Publish | `references/podcast-episode.md` steps 14 and 16 (episode page) | Owner makes the Publish or Schedule click; every field re-read from the platform; the episode page merges after the release minute |
-| 5. Shorts | `references/podcast-shorts.md` | Clips table approved, then one prototype short (real references on screen; three directions when the look changes), then the rest |
+| 5. Shorts | `references/podcast-shorts.md` | Clips table approved, then one prototype short (kinetic by default; three directions when the look changes), then the rest; each passes the QC ladder (section 4) |
 | 6. Hand back | `references/podcast-episode.md` step 18 | Sales sends the live links |
 
 **Where it runs:** read `~/.config/recoup/podcast-sandbox.json` before post-production. `"default": "sandbox"`
@@ -58,4 +58,4 @@ lockup PNG, the intro sting, the blue-sweep background) live in the operator's w
 - `references/podcast-episode.md` — raw Restream files to scheduled episode: the news-desk format, project layout, the ordered run with approval gates, enhancing only what the cut plays, assembly, publish traps
 - `references/podcast-packaging.md` — premium episode copy (title shape, description, cold open, back catalog), the cover spec, guest photo sourcing, Spotify for Creators edits
 - `references/podcast-sandbox.md` — the optional Vercel Sandbox path: which operators use it, what stays local, one-time setup, media upload, build/run jobs, gotchas
-- `references/podcast-shorts.md` — vertical shorts: the clips table gate (triple hook), the kinetic format (hybrid fallback), beat design, build/snapshot/render, per-platform captions and UTMs
+- `references/podcast-shorts.md` — vertical shorts: the clips table gate (triple hook, title truth, re-running old shorts), the kinetic format with a worked example (hybrid fallback), beat design and phone-width captures, Sandbox render and the QC ladder, per-platform captions and UTMs

@@ -1,0 +1,77 @@
+<!--ANCHORS {
+ "who": ["g", "Saltwater Radio", 512], "first": ["g", "Saltwater Radio", 512], "second": ["g", "Night Ferry,", 512], "over": ["g", "over half a million", 515],
+ "most": ["g", "about 640 thousand", 516], "year_end": ["g", "thousand a year", 516], "thatwas": ["g", "That was all", 441], "sync_end": ["g", "That was all sync.", 441],
+ "seller_end": ["g", "never big on streaming.", 452], "alot": ["g", "so a lot of", 498], "film": ["g", "film editors,", 501], "tv": ["g", "TV music supervisors", 502],
+ "games": ["g", "game studios", 504], "syncs_end": ["g", "for syncs,", 505], "proj_end": ["g", "and trailers.", 507]
+}-->
+<!-- Synthetic kinetic example (made-up guest, band, songs and figure). Copy to <project>/edit/shorts/<id>.html,
+     re-anchor to the real transcript, swap the cover for a data URI of a capture made that day. The hook title,
+     rehook, captions, name tags and end card come from the template and shorts.json; this file only draws the
+     stage (1080x960 above the speaker band). Its shorts.json entry is the kinetic one in shorts.example.json.
+     Triple hook: k1 context (the real cover + both song titles on the words) -> k2 lean (one big figure on "over
+     half a million", held >= 3 s) -> k3 snapback (strike "Streaming", reveal "All sync" on "That was", held
+     >= 2 s) -> rehook "So who was *paying?*" at @alot, then k4 answers it (Film / TV / Games -> Sync). -->
+<!--CSS-->
+  .ttl { position: absolute; left: 60px; right: 60px; text-align: center; font-size: 76px; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+  .ttl .ser { font-size: 96px; }
+  .cov { position: absolute; left: 300px; top: 130px; width: 480px; height: 480px; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 70px rgba(21,46,55,.35); }
+  .cov img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .chip { position: absolute; background: var(--forest); color: #fff; font-size: 50px; font-weight: 800; padding: 12px 26px; border-radius: 999px; box-shadow: 0 0 0 5px var(--lime); white-space: nowrap; }
+  .chip b { color: var(--lime); font-weight: 800; }
+  .srcl { position: absolute; left: 0; right: 0; bottom: 120px; text-align: center; font: 400 22px 'IBM Plex Mono', monospace; letter-spacing: .08em; color: var(--muted); }
+  .num { position: absolute; left: 0; right: 0; top: 250px; text-align: center; font-size: 300px; font-weight: 800; letter-spacing: -.06em; line-height: .9; color: var(--ink); }
+  .num .u { color: var(--sky); }
+  .dots { position: absolute; left: 0; right: 0; top: 590px; display: flex; justify-content: center; gap: 26px; }
+  .dot { width: 230px; height: 64px; border-radius: 32px; background: var(--forest); color: var(--lime); font: 400 22px 'IBM Plex Mono', monospace; letter-spacing: .06em; display: flex; align-items: center; justify-content: center; }
+  .sw { position: absolute; left: 90px; right: 90px; top: 320px; height: 480px; }
+  .lane { position: absolute; left: 0; right: 0; height: 200px; border-radius: 30px; display: flex; align-items: center; padding-left: 50px; font-size: 92px; font-weight: 800; letter-spacing: -.03em; }
+  .xline { position: absolute; left: 40px; right: 40px; top: 96px; height: 12px; border-radius: 6px; background: var(--ink); transform-origin: left; }
+  .tick { position: absolute; right: 50px; top: 50%; margin-top: -55px; width: 110px; height: 110px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 6px var(--forest); }
+  .flow { position: absolute; left: 80px; right: 80px; top: 150px; height: 560px; }
+  .fi { position: absolute; left: 0; width: 470px; height: 140px; border-radius: 22px; background: #fff; box-shadow: 0 0 0 4px var(--ink); display: flex; align-items: center; padding-left: 40px; font-size: 66px; font-weight: 800; letter-spacing: -.02em; }
+  .fo { position: absolute; right: 0; top: 160px; width: 330px; height: 240px; border-radius: 28px; background: var(--lime); box-shadow: 0 0 0 6px var(--forest); display: flex; align-items: center; justify-content: center; font-size: 84px; font-weight: 800; color: var(--forest); }
+<!--HTML-->
+    <div id="k1" class="scene">
+      <div id="kc" class="cov"><img src="data:image/jpeg;base64,COVER" alt="" /></div>
+      <div id="kw" class="chip" style="left:60px;top:570px"><b>01</b> Saltwater Radio</div>
+      <div id="kp" class="chip" style="left:560px;top:670px"><b>02</b> Night Ferry</div>
+      <div class="srcl">The Marlowes · Paper Coast · 2009</div>
+    </div>
+    <div id="k2" class="scene">
+      <div class="ttl" style="top:80px">Two songs. <span class="ser">A year.</span></div>
+      <div id="kn" class="num"><span class="u">$</span><span id="kv">640</span><span class="u">K</span></div>
+      <div class="dots"><div id="d1" class="dot">SALTWATER RADIO</div><div id="d2" class="dot">NIGHT FERRY</div></div>
+      <div class="srcl">About $640K a year, as the guest tells it · this episode</div>
+    </div>
+    <div id="k3" class="scene">
+      <div class="ttl" style="top:80px">Where the money <span class="ser">actually</span> came from</div>
+      <div class="sw">
+        <div id="la" class="lane" style="top:0;background:#E2E9EB;color:var(--muted)">Streaming<div id="kx" class="xline"></div></div>
+        <div id="lb" class="lane" style="top:250px;background:var(--forest);color:var(--lime)">All sync<div class="tick"></div></div>
+      </div>
+      <div class="srcl">The guest · this episode</div>
+    </div>
+    <div id="k4" class="scene">
+      <div class="flow">
+        <div id="f1" class="fi" style="top:0">Film</div>
+        <div id="f2" class="fi" style="top:200px">TV</div>
+        <div id="f3" class="fi" style="top:400px">Games</div>
+        <div id="fo" class="fo">Sync</div>
+      </div>
+    </div>
+<!--JS-->
+  const SC = [["#k1", 0, @over - .3], ["#k2", @over - .3, @thatwas], ["#k3", @thatwas, @seller_end + .15], ["#k4", @film - .3, @proj_end + .4]];
+  tl.fromTo("#kw", { x: -700, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .32, ease: "power4.out" }, @first);
+  tl.fromTo("#kp", { x: 700, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .32, ease: "power4.out" }, @second);
+  tl.to("#kc", { scale: .92, duration: .3 }, @first);
+  tl.fromTo("#kn", { scale: .85 }, { scale: 1, duration: .25, ease: "back.out(2)" }, @over - .3);
+  tl.fromTo("#kn", { scale: 1 }, { scale: 1.1, duration: .15, yoyo: true, repeat: 1, ease: "power2.out" }, @most);
+  tl.fromTo("#kn", { scale: 1 }, { scale: 1.08, duration: .15, yoyo: true, repeat: 1 }, @year_end - .15);
+  tl.from(["#d1", "#d2"], { y: 40, opacity: 0, duration: .3, stagger: .1, ease: "power3.out" }, @over - .2);
+  tl.from("#kx", { scaleX: 0, duration: .25, ease: "power2.out" }, @thatwas + .05);
+  tl.from("#lb", { y: 260, opacity: 0, duration: .3, ease: "power4.out" }, @thatwas);
+  tl.fromTo("#lb", { scale: 1 }, { scale: 1.06, duration: .12, yoyo: true, repeat: 1 }, @sync_end - .2);
+  tl.from("#f1", { x: -300, opacity: 0, duration: .28, ease: "power3.out" }, @film - .4);
+  tl.from("#f2", { x: -300, opacity: 0, duration: .28, ease: "power3.out" }, @tv);
+  tl.from("#f3", { x: -300, opacity: 0, duration: .28, ease: "power3.out" }, @games);
+  tl.from("#fo", { scale: 0, duration: .35, ease: "back.out(1.8)" }, @syncs_end - .3);

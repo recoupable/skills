@@ -1,13 +1,25 @@
 {
-  "note": "Shorts cut list, RAW recording seconds, same piece format as edit/chapters.json (mute_host, mute_guest, host_only, video_from). Every window lies inside the approved episode edit and repeats its cuts and mutes. Filler trims are extra pieces. Copy each approved decision here with who approved it and when.",
-  "offsets": { "guest": 0.12, "host": 0.133 },
+  "note": "Synthetic example (made-up guest, band and figures). Shorts cut list, RAW recording seconds, same piece format as edit/chapters.json (mute_host, mute_guest, host_only, video_from, shot). Every window lies inside the approved episode edit and repeats its cuts and mutes. Filler trims are extra pieces. Copy each approved decision here with who approved it and when. Beats for this entry: kinetic-beats.example.html.",
+  "offsets": { "guest": 0.114, "host": 0.088 },
   "host_video_fixed_start": 6.0,
   "shorts": [
-    { "id": "s1", "day": "Mon", "hook": "Opt-in or opt-out: who decides if your songs train AI?", "hook_size": 58,
-      "pieces": [ { "in": 1039.50, "out": 1081.82, "mute_host": [[1058.40, 1059.30]], "note": "host backchannel muted, as in the episode" } ] },
-    { "id": "s2", "day": "Tue", "hook": "The one clause every AI license needs",
+    { "id": "s1", "day": "Mon", "post_date": "2026-11-02", "slug": "two-songs-640k-a-year", "variant": "host-open",
+      "template": "kinetic", "caption_words": 1,
+      "hook": "Two Marlowes songs earn *$640K* a year.", "hook_size": 80,
+      "rehook": { "text": "So who was *paying?*", "at": "alot" },
+      "end_title": "Dana Whitlock on two songs and sync",
+      "context": { "raw": [[430.1, 433.9]], "text": "(host) Which songs carried the Marlowes catalog?" },
+      "lean": { "raw": [[512.02, 513.4], [515.1, 515.4], [515.7, 517.9]], "text": "Saltwater Radio and Night Ferry, did over half a million, about 640 thousand a year" },
+      "snapback": { "raw": [[440.6, 443.2]], "text": "that wasn't streaming, by the way. That was all sync." },
+      "approved": "clips table approved by <owner> <date>",
       "pieces": [
-        { "in": 1881.57, "out": 1884.95, "note": "host asks the question" },
-        { "in": 1894.75, "out": 1919.16, "note": "filler trim: the hesitation before the answer is dropped (approved)" } ] }
+        { "in": 430.1, "out": 433.9, "shot": "host", "mute_guest": [[430.1, 433.9]], "note": "host question; in on the first word so it starts at frame 1" },
+        { "in": 512.02, "out": 513.4, "mute_host": [[512.02, 513.4]], "note": "'Saltwater Radio and Night Ferry,'" },
+        { "in": 515.1, "out": 515.4, "mute_host": [[515.1, 515.4]], "note": "splice: drops the aside so the number lands by ~5.5 s; read back with Scribe" },
+        { "in": 515.7, "out": 517.9, "mute_host": [[515.7, 517.9]], "note": "filler trim (pause); stops before 'mostly from sync' because sync is the snapback" },
+        { "in": 440.6, "out": 443.2, "mute_host": [[440.6, 443.2]], "note": "reorder: the snapback, said earlier about the same songs" },
+        { "in": 452.1, "out": 453.6, "mute_host": [[452.1, 453.6]], "note": "'they were never big on streaming.'" },
+        { "in": 497.9, "out": 500.6, "mute_host": [[497.9, 500.6]], "note": "explanation; the rehook lands on 'so a lot of'" },
+        { "in": 501.0, "out": 507.6, "mute_host": [[501.0, 507.6]], "note": "filler trim (pause); film, TV and game syncs" } ] }
   ]
 }
