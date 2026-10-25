@@ -167,5 +167,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: e7710f348684d2f921d1f8e530bf110a7c96ea42
-Version: 2026.1025.52
+Source commit: 94bd8241af1703fe86238876d1004dfa30eb67e2
+Version: 2026.1025.53

@@ -5,6 +5,8 @@ Usage: python3 scripts/calculate-entitlements.py --input terms.json --output res
 Supported: explicit fixed rates/effective periods, participation-based commission,
 signed supported adjustments, and separately scoped recoupment accounts. Tiered or
 cross-collateralized terms require an explicit manual workpaper; no guessed terms.
+Adjustment/movement currency defaults to its parent line/account only when omitted.
+An explicit currency must match that parent; this helper does not convert FX.
 See fixtures/finance/entitlement-input.json for the complete input shape.
 """
 import argparse
@@ -68,6 +70,8 @@ def calculate(data):
                 kind = adjustment.get("kind")
                 if kind not in ADJUSTMENTS or kind in already_net:
                     raise ValueError("Unknown or already deducted adjustment: " + str(kind))
+                if "currency" in adjustment and currency(adjustment) != ccy:
+                    raise ValueError("Adjustment currency differs from line; use an evidenced manual FX workpaper")
                 evidence += refs(adjustment, "adjustment")
                 delta = amount(adjustment.get("amount"), "adjustment.amount")
                 if kind in {"deduction", "reserve_withheld", "withholding"} and delta > 0:
@@ -101,6 +105,8 @@ def calculate(data):
             for move in unique(account.get("movements", []), "movement_id").values():
                 if move.get("kind") not in {"advance", "cost", "supported_adjustment"}:
                     raise ValueError("Unsupported recoupment movement")
+                if "currency" in move and currency(move) != ccy:
+                    raise ValueError("Movement currency differs from recoupment account; use an evidenced manual FX workpaper")
                 evidence += refs(move, "movement")
                 delta = amount(move.get("amount"))
                 if move["kind"] in {"advance", "cost"} and delta < 0:
