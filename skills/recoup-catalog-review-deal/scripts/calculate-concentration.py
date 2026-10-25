@@ -20,7 +20,7 @@ import os
 import sys
 from collections import defaultdict
 from decimal import Decimal
-from _finance import amount, currency, iso_date, refs, dumps
+from _finance import amount, currency, iso_date, refs, dumps, same_file
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -161,6 +161,15 @@ def main() -> int:
     )
     parser.add_argument("--comparison-policy", help="JSON with currency, period_start, period_end and evidence_refs for an explicit comparison window")
     args = parser.parse_args()
+
+    inputs = [path for path in (args.ledger_csv, args.assumptions, args.comparison_policy) if path]
+    outputs = [path for path in (args.output, args.emit_finding_output) if path]
+    # Validate the whole output plan before writing either artifact.
+    for output in outputs:
+        if any(same_file(source, output) for source in inputs):
+            parser.error("Outputs cannot overwrite the ledger, assumptions, or comparison policy")
+    if len(outputs) == 2 and same_file(*outputs):
+        parser.error("Analysis and finding outputs must be distinct files")
 
     ledger_path = Path(args.ledger_csv)
     rows = load_rows(ledger_path)

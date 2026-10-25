@@ -148,6 +148,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-review-deal/scripts/validate-normalized-ledger.py
 - skills/recoup-catalog-review-deal/scripts/validate-workspace-consistency.py
 - skills/recoup-catalog-review-deal/tests/benchmark_finance.py
+- skills/recoup-catalog-review-deal/tests/test_concentration_outputs.py
 - skills/recoup-catalog-review-deal/tests/test_finance.py
 - skills/recoup-catalog-review-deal/tests/test_normalizer_controls.py
 - skills/recoup-content-build-sites/scripts/find_references.py
@@ -167,5 +168,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: 119a7755421d74040d24aac9339ca07e899f67e2
-Version: 2026.1025.54
+Source commit: f551f7a8d690ab109a4865421582ad8fa4c643be
+Version: 2026.1025.55
