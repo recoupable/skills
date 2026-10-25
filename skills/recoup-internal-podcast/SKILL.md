@@ -58,4 +58,4 @@ lockup PNG, the intro sting, the blue-sweep background) live in the operator's w
 - `references/podcast-episode.md` — raw Restream files to scheduled episode: the news-desk format, project layout, the ordered run with approval gates, enhancing only what the cut plays, assembly, publish traps
 - `references/podcast-packaging.md` — premium episode copy (title shape, description, cold open, back catalog), the cover spec, guest photo sourcing, Spotify for Creators edits
 - `references/podcast-sandbox.md` — the optional Vercel Sandbox path: which operators use it, what stays local, one-time setup, media upload, build/run jobs, gotchas
-- `references/podcast-shorts.md` — vertical shorts: the clips table gate, the hybrid format, beat design, build/snapshot/render, per-platform captions and UTMs
+- `references/podcast-shorts.md` — vertical shorts: the clips table gate (triple hook), the kinetic format (hybrid fallback), beat design, build/snapshot/render, per-platform captions and UTMs

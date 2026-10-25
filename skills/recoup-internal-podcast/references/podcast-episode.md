@@ -193,7 +193,7 @@ Business keeps the plan, Granola notes and the episode README (link it, don't co
    cover in `public/podcast/<slug>-wide.jpg`, transcript `content/podcast/transcripts/<slug>.json` built from the
    corrected captions (speaker turns alternate at `>>`; untangle overlapping speech by hand). Merge after the
    release minute: the embed reads "private" until then.
-17. **Shorts**: `references/podcast-shorts.md` (clips table, hybrid format, one prototype, then the rest).
+17. **Shorts**: `references/podcast-shorts.md` (clips table, kinetic format, one prototype, then the rest).
 18. **Hand back to sales**: live links to the guest the day it publishes (with the shorts folder and the one-page clips sheet; `recoup-internal-sales` `references/podcast-guest-pipeline.md`, The live-links email), the wrap-up email the day the last short posts (closes the run, asks for guest recommendations), day-7 follow-up. Templates in the `recoup-internal-sales` skill's `references/podcast-guest-pipeline.md`.
 
 ## Gotchas that cost real time on the first run

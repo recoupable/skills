@@ -1,7 +1,7 @@
 # Podcast shorts: one vertical short a day from a published episode
 
 Run after the episode is approved and scheduled (`references/podcast-episode.md`). Output: ~7 vertical shorts
-(1080x1920, 25-60 s) in the HYBRID format, one per day from release day, plus their captions per platform.
+(1080x1920, 25-60 s) in the KINETIC format (section 2), one per day from release day, plus their captions per platform.
 Scripts ship alongside this skill: `scripts/podcast/shorts/` (build_hy.py, render.sh), `scripts/podcast/cut.py`
 (`--cutlist`/`--out`), `scripts/podcast/make_srt.py`; templates in `templates/podcast/shorts/`.
 
@@ -21,6 +21,17 @@ approved before building anything.
   and the first ~200 characters of the LinkedIn post carry ONE concrete idea, recognisable nouns first (Symphonic,
   UMG, DistroKid, Claude). Open the window ON the hook line, never on setup ("I mentioned this in my article").
   A cold-open style reorder is fine when nothing reads as a sentence she didn't say.
+- **Triple hook** (Kallaway, adopted 2026-10-25): every row names three lines with their raw times. **Context**:
+  the topic, said and shown at once. **Lean**: the number, proof or surprise, spoken by ~5.5 s (splice the guest's
+  setup out to get there; Tom s1 cut "those two in particular... those two" to land "$1.5M" at 5.5 s, not 9 s).
+  **Snapback**: the line that reverses the lean ("that wasn't in record sales... 100% sync"). The title carries
+  context + lean and never gives away the snapback. A row with no snapback in its window is a weaker clip.
+- **Check what is actually said, not what the hook claims**: add a "spoken 0-5 s" column built from the word
+  timestamps through the cut list. Ali's v1 hooks were self-graded "5 s rule applied" while two opened on setup.
+- **Optional hook research** (Virlo, pay as you go, key in `~/.config/recoup/virlo.key`): a one-time niche agent
+  (`POST /v1/agents`, $0.50) then `GET /v1/agents/:id/hooks` ($0.25) ranks this week's outlier hooks in the
+  guest's niche. Music-business winners (2026-10-25): a question the viewer has, answered at once; a named company
+  plus money at stake; an exact dollar figure. Listicles and "the exact steps" lose.
 - **Host-open A/B**: about half the shorts open on the host asking the question, so viewers see a face they know
   first. A piece with `"shot": "host"` (plus `"mute_guest"` over it) shows the host camera with a HOST name tag;
   keep it <= ~5.5 s and anchor `who` to the guest's first word. The first beat then counts from her first word, not from 0: her
@@ -28,10 +39,26 @@ approved before building anything.
   short and in posts-log, and compare the two at the re-pull.
 - Write the approved table to `edit/shorts.json` (`templates/podcast/shorts/shorts.example.json`).
 
-## 2. Format: HYBRID (decided; don't re-litigate per episode)
+## 2. Format: KINETIC (default since 2026-10-25), HYBRID as fallback
 
-Three formats were prototyped on the same clip and compared by the owner: episode-style cards over the guest
-video, all motion graphics with the guest in a small circle, and hybrid. **Hybrid won** and is the default:
+Tom Sarig s1 compared three directions as full renders: kinetic split, a faster hybrid, a carousel video. The owner
+approved **kinetic** (`exports/shorts/directions/proto-A-kinetic-v2.mp4` in that project is the reference cut).
+Set `"template": "kinetic", "caption_words": 1` per short.
+
+- Split screen: motion graphic on the top ~60%, the speaker's camera live in the bottom third, one bold word as
+  caption. No show bar or separate hook bar; the brand is on the end card.
+- **Frame 0 is the thumbnail** (modelled on Kallaway's): no fade-ins; ONE centred title at the top, which is the
+  hook (`*word*` = Instrument Serif italic accent, underline); the first scene and the speaker already live; first
+  spoken word within 0.1 s (trim lead-in silence). Nothing else on screen states a second idea in the first 5 s.
+- Beats follow the triple hook: context scene (real reference, e.g. the album cover) -> the lean as one big figure
+  (hold >= 3 s) -> the snapback as a visible reversal (strike the expected answer, reveal the real one; enter on
+  the line that says it, hold >= 2 s).
+- **Re-hook** in the back half: `"rehook": {"text": "...", "at": "<anchor>"}` swaps the title for an open question
+  as the explanation starts ("So who was paying?"). It must not state anything the guest did not say.
+- The face stays on screen the whole clip; a splice that jumps the picture is accepted when the audio reads clean
+  (re-transcribe the joined audio with Scribe), or covered by a punch-in.
+
+The hybrid format (below) stays for episodes where the guest's video carries the clip (screen shares, demos):
 
 - 1080x1920 canvas: show bar, **hook bar** on top (forest, lime edge), a 1000x880 **stage**.
 - The **guest video fills the stage** most of the time; the guest's face carries the trust a rights-holder
@@ -82,12 +109,7 @@ has no contrast without it):
   on its target (the owner caught a circle that missed the price by ~30 px).
 - **A new look gets three directions first**: three stills of the same moments, different compositions, owner
   picks, then render. Stills on the sandbox: `scripts/podcast/sandbox/stills.mjs <out> <comp-dir>@<t1,t2,...>` after
-  `studio.mjs build`. A second look ships as a template: `"template": "kinetic"` (split screen, graphic on top,
-  speaker band below, one-word captions with `"caption_words": 1`; first used on Tom Sarig 2026-10-25).
-  Its frame 0 is the thumbnail (Kallaway): no fade-ins, ONE centred title at the top (the hook; `*word*` = serif
-  accent), the first scene and the speaker band already live, first spoken word within 0.1 s. `"rehook":
-  {"text": "...", "at": "<anchor>"}` swaps the title for an open question mid-clip; it must not state a fact the guest
-  did not say. The number in the hook should be spoken by ~5.5 s.
+  `studio.mjs build`. A new look ships as its own template (`"template": "<name>"`), never as edits to an old one.
 - **End card holds letters/15 + 1.5 s** of the end title (min 2.6 s); `build_hy.py` sets it.
 
 Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/beats.example.html`):
@@ -124,7 +146,8 @@ Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/b
 3. Run readcheck.js (section 3). After the render, pull frames with ffmpeg from the MP4 (a 0.1 s strip at every
    morph in and out, a 0.5 s contact sheet) and read them: overlaps with the circle, clipped text, a stuck
    caption, an empty stage. Then an independent agent that did not build the short scores it (hook,
-   truthfulness, readability, captions, fidelity, motion, pacing) as SHIP or FIX with timecodes. `hyperframes
+   truthfulness, readability, captions, fidelity, motion, pacing) as SHIP or FIX with timecodes. Launch it from
+   the lead session: a forked builder cannot spawn subagents and will skip it. `hyperframes
    snapshot` is a full headless render: on a shared machine run it on the sandbox, not locally.
 4. Sandbox path: `node --env-file=<env> scripts/podcast/sandbox/studio.mjs run <project> s1` (`build` instead of
    `run` for steps 1-2; `references/podcast-sandbox.md`). Local path:
