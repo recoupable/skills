@@ -282,7 +282,8 @@ async function tracks(proj) {
     let rep = "";
     for (const t of ["host", "guest"]) {
       const has = (await sh(sbx, "tracks", `test -e /work/proj/raw/${t}-audio-enhanced.wav && echo yes || echo no`, { quiet: true })).trim();
-      if (has !== "yes") continue;
+      // a track this build did not produce must not stay on the drive, or assemble would pick up the stale file
+      if (has !== "yes") { await sh(sbx, "tracks", `rm -f /media/${slug}/raw/${t}-audio-enhanced.wav /media/${slug}/raw/${t}-audio-enhanced-gated.wav`, { quiet: true }); continue; }
       rep += `== ${t}\n` + await sh(sbx, "tracks", `cd /work/skill && python3 scripts/podcast/gate_host_audio.py /work/proj --track ${t} 2>&1`);
       await sh(sbx, "tracks", `cd /work/proj/raw && cp ${t}-audio-enhanced.wav ${t}-audio-enhanced-gated.wav /media/${slug}/raw/`, { quiet: true });
     }

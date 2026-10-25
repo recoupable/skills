@@ -28,6 +28,8 @@ if not args:
 PROJ = os.path.abspath(args[0])
 opt = lambda k, d: args[args.index(k) + 1] if k in args else d
 TRACK = opt('--track', 'host')
+if TRACK not in ('host', 'guest'):
+    sys.exit('--track must be host or guest')
 ENH = os.path.join(PROJ, opt('--enhanced', f'raw/{TRACK}-audio-enhanced.wav'))
 FLOOR = float(opt('--floor', '-45'))
 OUT = os.path.join(PROJ, opt('--out', f'raw/{TRACK}-audio-enhanced-gated.wav'))
