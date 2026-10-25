@@ -3,6 +3,7 @@ from decimal import Decimal, InvalidOperation, getcontext
 getcontext().prec = 128
 from datetime import date
 import json
+from pathlib import Path
 
 
 def amount(value, label="amount"):
@@ -59,3 +60,11 @@ def unique(items, key):
 
 def dumps(value):
     return json.dumps(value, indent=2, default=lambda v: format(v, "f") if isinstance(v, Decimal) else str(v)) + "\n"
+
+
+def same_file(source, output):
+    """Recognize both path aliases and existing hard links before writing results."""
+    source, output = Path(source), Path(output)
+    return source.resolve() == output.resolve() or (
+        source.exists() and output.exists() and source.samefile(output)
+    )
