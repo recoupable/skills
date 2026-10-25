@@ -1,58 +1,50 @@
 ---
 name: recoup-platform-track-onboarding
 description: >-
-  Check how far a Recoup account has gotten in onboarding and drive it to the
-  next step. Measures the account against the eight activation checkpoints
-  (artist added, socials connected, first chat, valuation run, catalog claimed,
-  first scheduled task, paying) using the caller's own API key, then routes to
-  the skill that completes the next step. Use for "where am I in my Recoup
-  setup", "what should I do next", "did I finish onboarding", "onboarding
-  status", "activation checklist", "how set up is my account", or after
-  recoup-platform-connect-account finishes first-run setup. Read-only; never
-  performs the steps itself — it routes.
+  Check a Recoup user's setup for their intended workflow and identify the next
+  applicable step. Use for "where am I in my Recoup setup", "did I finish
+  onboarding", "onboarding status", or "activation checklist". Supports artists,
+  writers, publishers, labels and file-based catalog work. Reads available account
+  evidence and routes the next requested setup task; never requires an artist,
+  valuation, claimed catalog, payment or scheduled task for every user.
 ---
 
-# Recoup — Track Onboarding
+# Recoup — Track onboarding
 
-Score an account against the Recoup activation funnel and say exactly what to
-do next. The checkpoint definitions, API calls, and scoring rules live in
-`references/onboarding-checkpoints.md` — read that first.
+Read `references/onboarding-checkpoints.md`. Establish the user's actual goal and
+workspace before checking readiness. A songwriter organizing files, a label planning
+releases and an adviser reviewing an acquisition have different completion conditions.
 
-## Prerequisites
+## Access and scope
 
-- A connected account: `RECOUP_API_KEY` from `~/.claude/recoup.env` (if absent,
-  run recoup-platform-connect-account first — that IS step 1).
-- Base URL `https://api.recoupable.dev/api`, auth header `x-api-key`. Load
-  recoup-platform-api-access for endpoint plumbing.
-- Recoup staff with an admin token may score **any** account by appending
-  `?account_id=<uuid>` to the list endpoints (reads only).
+Use an already authenticated MCP connection when available. REST helpers may instead
+use a supplied `RECOUP_API_KEY` or `RECOUP_ACCESS_TOKEN`; no Claude-specific environment
+file is required, and MCP OAuth credentials remain inside the host. Verify the selected
+account/workspace through discovered read operations. Never create another identity to
+recover access. File-only catalog work can proceed without platform login.
+
+Do not assume staff access or append arbitrary account IDs to endpoints. An authorized
+staff operation must explicitly support the selected account and permission scope.
+No read or setup request authorizes paid captures, rights filing, scheduling or purchases.
 
 ## Procedure
 
-1. Run the owner-token check for each checkpoint in
-   `references/onboarding-checkpoints.md`, in order. Every call is a GET.
-2. Present the scorecard: one row per checkpoint, ✓/—, with the evidence
-   (counts, names, dates). State the furthest contiguous step and any skipped
-   steps explicitly.
-3. Name the single next action and hand off to the skill that does it:
+1. State the intended outcome and relevant object: composition, recording/release,
+   royalty period, transaction or artist roster. Reuse known context instead of asking
+   the user to complete an unrelated funnel.
+2. Inspect applicable checkpoints with discovered supported read operations or supplied
+   files. Mark each ready, missing, unknown/access_unavailable or not_applicable. Cite
+   counts/record IDs/dates privately. An unavailable endpoint is unknown, not a failed user.
+3. Report the applicable readiness and exactly one useful next action. Examples:
+   import a repertoire file; explain the supplied administration agreement; reconcile
+   a royalty statement; add an artist only when a roster is actually needed; connect an
+   account only when the requested hosted operation needs it. A public estimate is optional.
+4. Keep any commercial adoption indicators separate from task readiness. A recurring
+   report is optional and requires a scheduling request; paying is not a prerequisite
+   unless the requested operation reaches a real billing gate. Surface the actual gate.
+5. Stop after the scorecard and bounded handoff. This skill never creates artists,
+   attaches catalogs, schedules jobs, submits registrations or executes the next stage.
 
-   | Missing step | Route to |
-   |---|---|
-   | 2 — no artist | recoup-roster-add-artist (bulk roster: recoup-roster-onboard) |
-   | 3 — no socials | recoup-roster-manage-artist |
-   | 4 — never chatted | suggest one concrete first prompt using their artist's name |
-   | 5–6 — no valuation / unclaimed catalog | recoup-catalog-estimate-value |
-   | 7 — no scheduled task | propose one recurring report tied to what they did in steps 4–6 (e.g. weekly streams + socials digest for their claimed catalog) |
-   | 8 — not paying | mention Pro only if they hit a limit; never lead with it |
-
-4. One goal per session: recommend exactly one next step, not the whole list.
-   If the account is fully activated (through step 7), say so and stop.
-
-## Guardrails
-
-- Read-only: this skill never creates artists, tasks, or catalogs — it routes
-  to the skill that does, and that skill asks its own confirmations.
-- Don't shame gaps ("you haven't done X") — frame as the next win.
-- An empty roster can be legitimate. Verify the account identity and selected
-  workspace before restarting onboarding; stop if the credential identifies a
-  disposable `agent+` account instead of the user's intended account.
+An empty roster or organization can be legitimate. Verify identity and workspace before
+suggesting setup changes. A complete file review remains complete even if no artist,
+valuation, platform catalog claim or subscription exists.

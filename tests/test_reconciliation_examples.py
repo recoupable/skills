@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
+from urllib.parse import parse_qs, urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -295,6 +296,53 @@ sys.exit(int(os.environ['MOCK_EXIT']))
                 self.assertIn(result.returncode, [0, 2], result.stderr)
                 self.assertEqual(len(calls), 1)
                 self.assertNotIn('fixture-only', ' '.join(calls[0]))
+
+
+class MarketingSalesReferences(unittest.TestCase):
+    def setUp(self):
+        self.sales = ROOT / 'skills/recoup-internal-sales'
+        self.recipe = (self.sales / 'references/cold-outreach.md').read_text()
+        self.fixture = json.loads((self.sales / 'fixtures/catalog-songs-read.json').read_text())
+
+    def check_request(self, method, request):
+        parsed = urlsplit(request.replace('<catalog_id>', 'synthetic-catalog'))
+        self.assertEqual(method, self.fixture['method'])
+        self.assertEqual(parsed.path, self.fixture['path'])
+        self.assertEqual(parse_qs(parsed.query), {
+            key: [value] for key, value in self.fixture['query'].items()
+        })
+
+    def test_youtube_recipe_matches_saved_api_read_shape(self):
+        row = next(line for line in self.recipe.splitlines() if line.startswith('| Deep catalog,'))
+        requests = re.findall(r'`(GET) ([^`]+)`', row)
+        catalog = next((method, url) for method, url in requests if '/catalogs/' in url)
+        self.check_request(*catalog)
+
+    def test_retired_path_wrong_query_and_write_method_are_rejected(self):
+        for method, request in [
+            ('GET', '/api/catalogs/synthetic-catalog/songs'),
+            ('GET', '/api/catalogs/songs?id=synthetic-catalog'),
+            ('POST', '/api/catalogs/songs?catalog_id=synthetic-catalog'),
+        ]:
+            with self.subTest(method=method, request=request), self.assertRaises(AssertionError):
+                self.check_request(method, request)
+
+    def test_recipe_keeps_owner_and_complete_page_boundaries(self):
+        self.assertIn('catalog-songs-read.json', self.recipe)
+        self.assertIn('existing authorized result', self.recipe)
+        self.assertIn('403', self.recipe)
+        self.assertIn('pagination.total_pages', self.recipe)
+        self.assertIn('read failure is not evidence', self.recipe)
+
+    def test_marketing_separates_historical_source_host_and_task_evidence(self):
+        text = (ROOT / 'skills/recoup-internal-marketing/references/video-formats.md').read_text()
+        note = text.split('**curl every CTA before scripting it.**', 1)[1]
+        self.assertIn('Historical check, 2026-08-11', note)
+        self.assertIn('source registration', note)
+        self.assertIn('authenticated tool discovery', note)
+        self.assertIn('completed customer behavior', note)
+        self.assertIn('host, date, account/organization and grant', note)
+        self.assertNotIn('the MCP carries', note)
 
 
 class EstimatorExamples(unittest.TestCase):

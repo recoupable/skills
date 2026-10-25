@@ -1,0 +1,15 @@
+{
+  "header_row": 1,
+  "entities": {
+    "recording": {"title": "Recording Title", "version": "Version", "isrc": "ISRC"},
+    "composition": {"title": "Work Title", "iswc": "ISWC"},
+    "release": {"title": "Release Title", "upc": "UPC", "release_date": "Release Date", "date_precision": "Date Precision"},
+    "party": {"name": "Party Name", "ipi": "IPI", "alias": "Alias"}
+  },
+  "membership": {"disc": "Disc", "track": "Track"},
+  "interest": {
+    "kind": "Interest Kind", "value": "Share", "basis": "Share Basis", "scale": "Share Scale",
+    "right": "Right", "territory": "Territory", "effective_from": "Effective From", "effective_to": "Effective To",
+    "parent_reference": "Parent Reference", "mandate_reference": "Mandate Reference", "evidence_reference": "Evidence Reference"
+  }
+}

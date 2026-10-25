@@ -1,7 +1,8 @@
 """Remove sounds an AI enhancer invented in the host's silences, then write the gated host track.
 
 Usage:
-  python3 scripts/podcast/gate_host_audio.py <project> [--enhanced raw/host-audio-enhanced.wav] [--floor -45] [--out raw/host-audio-enhanced-gated.wav]
+  python3 scripts/podcast/gate_host_audio.py <project> [--track host|guest] [--enhanced raw/<track>-audio-enhanced.wav] [--floor -45] [--out raw/<track>-audio-enhanced-gated.wav]
+--track guest gates an enhanced guest track the same way (its own mic and transcript as the reference).
 
 Adobe Podcast Enhance can turn the host mic's room noise into a short, low, voice-like sound while the
 guest is talking (second episode: 8 spots, -24 to -38 dB, where the original mic sat at -50 to -58 dB and
@@ -26,9 +27,12 @@ if not args:
     sys.exit(__doc__)
 PROJ = os.path.abspath(args[0])
 opt = lambda k, d: args[args.index(k) + 1] if k in args else d
-ENH = os.path.join(PROJ, opt('--enhanced', 'raw/host-audio-enhanced.wav'))
+TRACK = opt('--track', 'host')
+if TRACK not in ('host', 'guest'):
+    sys.exit('--track must be host or guest')
+ENH = os.path.join(PROJ, opt('--enhanced', f'raw/{TRACK}-audio-enhanced.wav'))
 FLOOR = float(opt('--floor', '-45'))
-OUT = os.path.join(PROJ, opt('--out', 'raw/host-audio-enhanced-gated.wav'))
+OUT = os.path.join(PROJ, opt('--out', f'raw/{TRACK}-audio-enhanced-gated.wav'))
 SR = 48000; B = SR // 10                        # 100 ms analysis bins
 
 
@@ -42,11 +46,11 @@ def db(x):
     return 20 * np.log10(np.sqrt((x[:m * B].reshape(m, B) ** 2).mean(1)) + 1e-9)
 
 
-E = pcm(ENH); H = pcm(os.path.join(PROJ, 'raw/host-audio.m4a'))
+E = pcm(ENH); H = pcm(os.path.join(PROJ, f'raw/{TRACK}-audio.m4a'))
 n = min(len(E), len(H)); nb = n // B + 1
 Edb, Hdb = db(E[:n]), db(H[:n])
 talk = np.zeros(nb, bool)
-for x in json.load(open(os.path.join(PROJ, 'edit/transcripts/host.json')))['words']:
+for x in json.load(open(os.path.join(PROJ, f'edit/transcripts/{TRACK}.json')))['words']:
     if x['type'] not in ('word', 'audio_event'):
         continue
     s, e = x['start'], x['end']
@@ -60,8 +64,9 @@ if os.path.exists(os.path.join(PROJ, 'edit/chapters.json')):
     for c in json.load(open(os.path.join(PROJ, 'edit/chapters.json')))['chapters']:
         for p in c['pieces']:
             pieces.append((c['id'], p))
-used = lambda t: next((cid for cid, p in pieces if p['in'] <= t <= p['out']
-                       and not any(a <= t <= b for a, b in p.get('mute_host', []))), None)
+MUTE = 'mute_host' if TRACK == 'host' else 'mute_guest'
+used = lambda t: next((cid for cid, p in pieces if p['in'] <= t <= p['out'] and not (TRACK == 'guest' and p.get('host_only'))
+                       and not any(a <= t <= b for a, b in p.get(MUTE, []))), None)
 flag = (Edb > -45) & ~talk[:len(Edb)]
 i = 0; found = 0
 while i < len(flag):
@@ -75,7 +80,7 @@ while i < len(flag):
     print(f'raw {a:7.1f}-{b:7.1f}  enhanced {Edb[i:j].max():5.1f} dB  original {Hdb[i:j].max():5.1f} dB  '
           f'{kind}  {"in " + used(a) if used(a) else "not in the edit"}')
     i = j
-print(found, 'spans where the enhanced host track sounds without a host word')
+print(found, f'spans where the enhanced {TRACK} track sounds without a {TRACK} word')
 
 # 2. gate
 loud = np.zeros(nb, bool); loud[:len(Hdb)] = Hdb > FLOOR

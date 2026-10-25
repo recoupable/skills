@@ -52,7 +52,7 @@
 
 # --- catalog (the valuation fork) ---
 {"intent": "review and underwrite this catalog deal end to end", "expected": "recoup-catalog-review-deal"}
-{"intent": "clean and normalize this messy royalty data room", "expected": "recoup-catalog-review-deal"}
+{"intent": "clean and normalize these royalty statements without evaluating a sale", "expected": "recoup-catalog-reconcile-royalties", "not": ["recoup-catalog-review-deal"]}
 {"intent": "write the IC memo and export a shareable pdf", "expected": "recoup-catalog-review-deal"}
 {"intent": "estimate this catalog's value from public streaming data, no seller files", "expected": "recoup-catalog-estimate-value", "not": ["recoup-research-the-web"]}
 {"intent": "how much did this artist earn from their NFT sales", "expected": "recoup-nft-valuation", "not": ["recoup-catalog-estimate-value"]}
@@ -204,3 +204,23 @@
 {"intent": "Give this catalog song another moment with a release pack.", "expected": "recoup-content-asset-pack"}
 {"intent": "I have no Recoup artist yet. Create a release pack from this audio.", "expected": "recoup-content-asset-pack", "not": ["recoup-roster-onboard"]}
 {"intent": "Plan a release rollout schedule, no media production yet.", "expected": "recoup-release-plan-rollout", "not": ["recoup-content-asset-pack"]}
+{"intent": "Audit our catalog registrations, rights and missing master files without contacting anyone", "expected": "recoup-catalog-audit-catalog"}
+{"intent": "Reconcile this publisher statement against the agreement and explain my unrecouped balance", "expected": "recoup-catalog-reconcile-royalties"}
+{"intent": "The work already exists at MLC; register my ordinary publisher share", "expected": "recoup-catalog-register-catalog"}
+{"intent": "Prepare the signed-document update for a typo in my BMI work registration", "expected": "recoup-catalog-register-catalog"}
+{"intent": "MLC rejected my filing because the date column has the wrong format; repair it", "expected": "recoup-catalog-register-catalog"}
+{"intent": "The administrator denied my royalty adjustment; assemble the evidence and pursue the case", "expected": "recoup-catalog-resolve-claims"}
+{"intent": "The recording owner contests my interest and the society has frozen royalties; help resolve it", "expected": "recoup-catalog-resolve-claims"}
+{"intent": "Correct the songwriter credit on the single that my distributor already delivered", "expected": "recoup-release-manage-delivery"}
+{"intent": "Move this existing release to my new distributor and verify the destinations", "expected": "recoup-release-manage-delivery"}
+{"intent": "Enroll my existing eligible master in YouTube monetization through my distributor", "expected": "recoup-release-manage-delivery"}
+{"intent": "Check whether the displayed credits are correct, but do not submit a change", "expected": "recoup-song-check-credits"}
+{"intent": "I sent the email.", "expected": "none"}
+{"intent": "Did these payments reach my bank?", "expected": "clarify"}
+{"intent": "Claim this.", "expected": "clarify"}
+{"intent": "I want to file an insurance claim for the studio flood", "expected": "none"}
+{"intent": "Review this catalog acquisition offer; don\u2019t email the seller", "expected": "recoup-catalog-review-deal"}
+{"intent": "Did these payments reach my bank?", "context": [{"role": "user", "content": "We are reconciling my publisher royalty remittances against these supplied account receipts."}], "expected": "recoup-catalog-reconcile-royalties"}
+{"intent": "I sent the email.", "context": [{"role": "assistant", "content": "The existing royalty case has a prepared inquiry; if you send it, we can record your report on that case."}], "expected": "none", "not": ["recoup-catalog-resolve-claims", "recoup-platform-email-helper"]}
+{"intent": "Analyze the song I attached to this chat and tell me its BPM, key, genre and mood", "expected": "recoup-song-analyze-audio"}
+{"intent": "I attached a local MP3 in Codex. Analyze this file without asking me to create a public URL", "expected": "recoup-song-analyze-audio"}

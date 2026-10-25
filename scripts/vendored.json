@@ -278,6 +278,106 @@
       "copies": [
         "skills/recoup-content-asset-pack/references/release-pack-brief.md"
       ]
+    },
+    {
+      "canonical": "references/catalog-contracts.md",
+      "copies": [
+        "skills/recoup-catalog-audit-catalog/references/catalog-contracts.md",
+        "skills/recoup-catalog-reconcile-royalties/references/catalog-contracts.md",
+        "skills/recoup-catalog-register-catalog/references/catalog-contracts.md",
+        "skills/recoup-catalog-resolve-claims/references/catalog-contracts.md",
+        "skills/recoup-release-manage-delivery/references/catalog-contracts.md",
+        "skills/recoup-catalog-review-deal/references/catalog-contracts.md",
+        "skills/recoup-catalog-import-catalog/references/catalog-contracts.md",
+        "skills/recoup-catalog-explain-contract/references/catalog-contracts.md",
+        "skills/recoup-catalog-organize-publishing/references/catalog-contracts.md",
+        "skills/recoup-song-check-credits/references/catalog-contracts.md",
+        "skills/recoup-release-check-metadata/references/catalog-contracts.md"
+      ]
+    },
+    {
+      "canonical": "scripts/catalog-case.py",
+      "copies": [
+        "skills/recoup-catalog-audit-catalog/scripts/catalog-case.py",
+        "skills/recoup-catalog-reconcile-royalties/scripts/catalog-case.py",
+        "skills/recoup-catalog-register-catalog/scripts/catalog-case.py",
+        "skills/recoup-catalog-resolve-claims/scripts/catalog-case.py",
+        "skills/recoup-release-manage-delivery/scripts/catalog-case.py",
+        "skills/recoup-catalog-review-deal/scripts/catalog-case.py",
+        "skills/recoup-catalog-import-catalog/scripts/catalog-case.py",
+        "skills/recoup-catalog-explain-contract/scripts/catalog-case.py",
+        "skills/recoup-catalog-organize-publishing/scripts/catalog-case.py",
+        "skills/recoup-song-check-credits/scripts/catalog-case.py",
+        "skills/recoup-release-check-metadata/scripts/catalog-case.py"
+      ]
+    },
+    {
+      "canonical": "scripts/build-catalog-report.py",
+      "copies": [
+        "skills/recoup-catalog-audit-catalog/scripts/build-catalog-report.py",
+        "skills/recoup-catalog-reconcile-royalties/scripts/build-catalog-report.py",
+        "skills/recoup-catalog-register-catalog/scripts/build-catalog-report.py",
+        "skills/recoup-catalog-resolve-claims/scripts/build-catalog-report.py",
+        "skills/recoup-release-manage-delivery/scripts/build-catalog-report.py",
+        "skills/recoup-catalog-review-deal/scripts/build-catalog-report.py",
+        "skills/recoup-catalog-import-catalog/scripts/build-catalog-report.py",
+        "skills/recoup-catalog-explain-contract/scripts/build-catalog-report.py",
+        "skills/recoup-catalog-organize-publishing/scripts/build-catalog-report.py",
+        "skills/recoup-song-check-credits/scripts/build-catalog-report.py",
+        "skills/recoup-release-check-metadata/scripts/build-catalog-report.py"
+      ]
+    },
+    {
+      "canonical_dir": "references/catalog-providers",
+      "copies_dirs": [
+        "skills/recoup-catalog-audit-catalog/references/catalog-providers",
+        "skills/recoup-catalog-reconcile-royalties/references/catalog-providers",
+        "skills/recoup-catalog-register-catalog/references/catalog-providers",
+        "skills/recoup-catalog-resolve-claims/references/catalog-providers",
+        "skills/recoup-release-manage-delivery/references/catalog-providers"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/_finance.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/_finance.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/normalize-royalty-statement.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/normalize-royalty-statement.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/validate-normalized-ledger.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/validate-normalized-ledger.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/calculate-entitlements.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/calculate-entitlements.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/reconcile-remittances.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/reconcile-remittances.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/fixtures/finance/entitlement-input.json",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/fixtures/finance/entitlement-input.json"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/fixtures/finance/remittance-input.json",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/fixtures/finance/remittance-input.json"
+      ]
     }
   ]
 }

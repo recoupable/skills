@@ -263,7 +263,12 @@ def build():
         f'<div id="{lt["_id"]}" class="lt clip {"lt-g" if lt["who"] == "g" else "lt-h"}" data-start="{lt["_s"]:g}" data-duration="{round(lt["_e"] - lt["_s"], 2):g}" data-track-index="{20 + i}">'
         f'<div class="bar"></div><div class="body"><div class="k mono">{e(lt["k"])}</div><div class="n">{e(lt["n"])}</div><div class="t">{e(lt["t"])}</div></div></div>'
         for i, lt in enumerate(lts))
-    ticker = ''.join(f'<span>{e(x)}</span>' for x in (spec['ticker'] * 4))
+    # The run scrolls min(9000, 42*D) px; repeat the list until it still fills the bar on the last frame
+    # (~13.2 px per character at 22 px plus the 56 px gap and dot per item).
+    width, reps = sum(len(x) * 13.2 + 84 for x in spec['ticker']) or 1, 4
+    while reps * width < min(9000, 42 * D) + 2100:
+        reps += 1
+    ticker = ''.join(f'<span>{e(x)}</span>' for x in (spec['ticker'] * reps))
     title = e(c['title'])
     js_cards = []
     for i, cd in enumerate(cards):
@@ -305,6 +310,8 @@ def build():
                  '{{JS_LTS}}': '\n  '.join(js_lts), '{{GHOST}}': e(EP.get('ghost', 'RIGHTS × AI')),
                  '{{GUEST_NAME}}': e(EP['guest']['name']), '{{HOST_NAME}}': e(EP['host']['name'])}.items():
         out = out.replace(k, v)
+    for k, v in EP.get('labels', {}).items():     # non-English episode: {"Chapter": "Capítulo", "Sources": "Fuentes"}
+        out = out.replace(f'>{k}</div>', f'>{e(v)}</div>')
     if spec.get('no_chapter'):
         out = re.sub(r'<!--CHAPTER-->.*?<!--/CHAPTER-->', '', out, flags=re.S)
         out = re.sub(r'//CHAPTER-JS.*?//END-CHAPTER-JS', '', out, flags=re.S)

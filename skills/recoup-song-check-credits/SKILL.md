@@ -1,6 +1,6 @@
 ---
 name: recoup-song-check-credits
-description: "Compare songwriter, producer and performer credits for a specific song across supplied split sheets, distributor records and available registry sources. Use for \"check my song credits\", \"who wrote this song\", or \"do these splits match the credits\". Separates recording roles from composition shares and returns cited conflicts or missing details; does not register rights or infer ownership from a credit."
+description: "Compare songwriter, producer and performer credits for a specific song across supplied split sheets, distributor records and available registry sources. Use for \"check my song credits\", \"who wrote this song\", or \"do these splits match the credits\". Separates recording roles from composition shares and returns cited conflicts or missing details; does not register rights or infer ownership from a credit. Verifying whether a requested correction now appears at a DSP belongs to release metadata checks."
 ---
 
 # Check my song credits
@@ -47,3 +47,14 @@ submission remains a separate authorized action.
 
 Example: a producer credit and a 20% distributor payout do not establish a 20%
 songwriting share; keep those relationships separate and request the actual split record.
+
+
+## Evidence and correction readback packet
+
+Use `templates/credits-comparison.json` and `references/field-evidence.md` to preserve
+intended values, provider receipts and destination observations independently. Include
+edition, ordered track membership, exact field/role and territory in each comparison.
+A later receipt may be accepted while the destination still shows the old value.
+Attach changed-source dependencies to affected comparisons; a prior approval does not
+apply to a changed payload. Return the packet for an explicitly requested action stage;
+this check does not submit corrections, enroll a roster or register a right.

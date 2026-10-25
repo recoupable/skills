@@ -1,54 +1,27 @@
-# Recoup Music-Company Anatomy (lead with this)
+# Music-company spines
 
-This OS is always a **music company / independent label**, one **org = one git repo**, backed by the
-Recoup API as system of record. Scaffold this concrete tree first; the universal anatomy below is the
-general pattern it instantiates.
+Choose the structure for the user's actual work. A company can use several spines,
+but create a folder only when it holds real material. No artist roster is required
+for composition organization, accounting, registration or deal review.
 
-```
-{label-repo}/                       # one org/label = one git repo
-├── CLAUDE.md / AGENTS.md           # the brain (filing rules, auto-manage loop, never-stale, DB-is-SoR)
-├── README.md                       # human entry point: the map + the compounding loop
-├── .env.example                    # documents RECOUP_API_KEY|RECOUP_ACCESS_TOKEN, RECOUP_ORG_ID, RECOUP_API_URL
-├── .gitignore                      # ignores .env + local secrets (shared repo — never commit creds)
-├── .agents/skills -> ../plugin/skills
-│
-│   # CORE — the loops actively maintain these:
-├── artists/                        # the roster (mirrors the live Recoup account; one folder per SIGNED artist)
-│   └── {artist-slug}/
-│       ├── RECOUP.md               #   identity + per-artist brain — frontmatter artistName/artistSlug/artistId(=account_id)
-│       └── releases/               #   the release lifecycle lives here, per artist (stage tracked in RELEASE.md)
-│           ├── {release-slug}/RELEASE.md
-│           └── top-tracks.md
-├── knowledge/                      # compounding: settled answers — faqs / insights / decisions / sops
-├── library/                        # compounding: instruments — release checklist, splits sheet, pitch/EPK templates, scripts
-├── work/                           # one-off / ad-hoc, dated, by project
-├── artifacts/dashboard.html        # regenerated outputs — live roster + release-calendar snapshot
-├── plugin/                         # the in-place {label-slug}-os plugin (label-specific glue + the organs)
-├── operations/                     # meta: health.md · improvements.md · routines.md · sync.md (the DB<->repo contract)
-│
-│   # OPTIONAL — add a folder only when the label has real material for it:
-├── content/                        #   the caption/graphic/video flywheel (recoup-content-*)
-├── deals/                          #   catalog acquisitions / underwriting (recoup-catalog-*) — not the roster's own songs
-├── contacts/                       #   industry network: managers, A&R, press, curators (recoup-research-find-contacts)
-├── proof/                          #   press, chart milestones, playlist adds, testimonials
-├── business/                       #   splits, royalties, contracts, finance, metrics
-├── prospects/                      #   A&R funnel — unsigned demos/candidates (no account_id yet)
-└── reference/                      #   the label bible: brand guidelines, genre canon
-```
+| Work | Core records | Lifecycle and persistence |
+|---|---|---|
+| Label/artist releases | `artists/{slug}/RECOUP.md` and per-artist releases | Verified hosted artist IDs; release stages in `RELEASE.md`; API-first artist creation only when requested |
+| Writer/publisher repertoire | `compositions/`, `parties/` | Source-backed works, aliases, typed interests and mandates; no fake artist or mandatory ISRC |
+| Audit/reconciliation/registration/deals | `cases/` | Scope, source versions, findings, workpapers, action payloads/receipts and independent stage outcomes |
 
-**No top-level `pipeline/` or `releases/`.** Release flow lives under each artist
-(`artists/{slug}/releases/`, stage tracked in `RELEASE.md`); a cross-roster release calendar is a
-*dashboard* (`artifacts/dashboard.html`), not a folder. Unsigned candidates go in `prospects/`.
+All use `knowledge/`, `library/`, dated `work/`, finalized `artifacts/`, portable
+`plugin/` and `operations/` as needed. Keep actual customer evidence private. Record
+local vs hosted fields explicitly in `operations/sync.md`; a supported save and readback
+are required before claiming a record is hosted. Existing MCP access is sufficient
+when it supports the operation; local files do not require an account connection.
 
-**Empty roster?** If the org has **0 artists**, don't scaffold an empty `artists/` — hand off to
-`recoup-roster-onboard` first (it gathers the label's roster and fans `recoup-roster-add-artist` out
-across parallel subagents), then build around the result.
-
-**System-of-record split (write it into `operations/sync.md`):** the Recoup API/DB owns structured
-entities (roster, socials, metrics, releases-as-records, billing); this repo owns the unstructured
-brain. Entity creation is **API-first** — onboard artists via `recoup-roster-add-artist`, then the
-folder follows; never `mkdir` a roster. For research/content/release/song/catalog work, call the
-`recoup-*` skills rather than authoring duplicates into `plugin/skills/`.
+An empty roster can be correct. Use the artist/release tree only for real roster work;
+never onboard a publisher as an artist. For labels, keep release flow under each artist
+and use a cross-roster dashboard instead of duplicating releases in another folder.
+For publishing/case work, configure the doctor and dashboard around those actual objects.
+Keep identifiers as strings and missing identifiers unknown. The maintenance loop must
+not transform absent fields into assertions, rights or payment conclusions.
 
 ---
 

@@ -7,8 +7,9 @@ Blocks, in order: <project>/exports/opening.mp4 (cold open + intro), then export
 chapter in edit/chapters.json except "ch00" (the cold open lives inside opening.mp4), then exports/outro.mp4
 (the 12s CTA outro from make_intro.py; required, no chapter marker, it closes the last chapter).
 --host-audio swaps in a cleaned host track (e.g. Adobe Podcast Enhance, joined back to full length):
-each chapter's mix is re-cut with the same pieces/mutes (cut.py --audio-only); the opening keeps its
-audio (the host is muted in the cold open). No video re-render is needed for an audio change.
+each chapter's mix is re-cut with the same pieces/mutes (cut.py --audio-only), the cold open (ch00) too:
+the opening's audio becomes the re-cut ch00 mix followed by its own intro audio. No video re-render is
+needed for an audio change.
 --guest-audio does the same for the guest track; it may be silent outside the pieces the cut plays
 (e.g. only the used spans were enhanced), since cut.py reads nothing else.
 
@@ -28,7 +29,9 @@ PROJ = os.path.abspath(args[0]); HERE = os.path.dirname(os.path.abspath(__file__
 HOST = args[args.index('--host-audio') + 1] if '--host-audio' in args else None
 GUEST = args[args.index('--guest-audio') + 1] if '--guest-audio' in args else None
 E = f'{PROJ}/exports'; F = f'{E}/final'; os.makedirs(F, exist_ok=True)
-CH = [c for c in json.load(open(f'{PROJ}/edit/chapters.json'))['chapters'] if c['id'] != 'ch00']
+ALL = json.load(open(f'{PROJ}/edit/chapters.json'))['chapters']
+CH = [c for c in ALL if c['id'] != 'ch00']
+COLD = any(c['id'] == 'ch00' for c in ALL)
 blocks = [(f'{E}/opening.mp4', 'Cold open + intro', None)] + [(f"{E}/{c['id']}.mp4", c['title'], c['id']) for c in CH] + [(f'{E}/outro.mp4', None, None)]
 for b, _, _ in blocks:
     if not os.path.exists(b):
@@ -44,17 +47,21 @@ for b, title, _ in blocks:
 open(f'{F}/youtube-chapters.txt', 'w').write('\n'.join(lines) + '\n'); print('\n'.join(lines))
 
 # audio sources per block
-auds = []
+SW = (['--host-audio', HOST] if HOST else []) + (['--guest-audio', GUEST] if GUEST else [])
+def recut(cid):
+    subprocess.run([sys.executable, f'{HERE}/cut.py', PROJ, cid, '--audio-only'] + SW + ['--mix-name', 'mix-final.m4a'], check=True)
+    return f'{PROJ}/comp/chapters/{cid}/assets/mix-final.m4a'
+auds = []                                   # (file, start seconds or None)
 for b, _, cid in blocks:
-    if (HOST or GUEST) and cid:
-        sw = (['--host-audio', HOST] if HOST else []) + (['--guest-audio', GUEST] if GUEST else [])
-        subprocess.run([sys.executable, f'{HERE}/cut.py', PROJ, cid, '--audio-only'] + sw + ['--mix-name', 'mix-final.m4a'], check=True)
-        auds.append(f'{PROJ}/comp/chapters/{cid}/assets/mix-final.m4a')
+    if SW and cid:
+        auds.append((recut(cid), None))
+    elif SW and b.endswith('/opening.mp4') and COLD:
+        auds += [(recut('ch00'), None), (b, dur(f'{E}/ch00.mp4'))]   # re-cut cold open, then the intro's own audio
     else:
-        auds.append(b)
-inp = sum((['-i', a] for a in auds), [])
-fc = ''.join(f'[{i}:a]aresample=48000,aformat=channel_layouts=stereo[a{i}];' for i in range(len(auds))) + \
-     ''.join(f'[a{i}]' for i in range(len(auds))) + f'concat=n={len(auds)}:v=0:a=1[a]'
+        auds.append((b, None))
+inp = sum((['-i', a] for a, _ in auds), [])
+fc = ''.join(f'[{i}:a]' + (f'atrim=start={st:.3f},asetpts=PTS-STARTPTS,' if st else '') + f'aresample=48000,aformat=channel_layouts=stereo[a{i}];'
+             for i, (_, st) in enumerate(auds)) + ''.join(f'[a{i}]' for i in range(len(auds))) + f'concat=n={len(auds)}:v=0:a=1[a]'
 run(inp + ['-filter_complex', fc, '-map', '[a]', '-c:a', 'pcm_s24le', f'{F}/audio.wav'])
 r = subprocess.run(['ffmpeg', '-hide_banner', '-i', f'{F}/audio.wav', '-af', 'loudnorm=I=-14:TP=-1:LRA=11:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
 m = json.loads(r[r.rindex('{'):r.rindex('}') + 1])

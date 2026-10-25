@@ -42,15 +42,17 @@ def load_ledger_source_files(workspace: Path) -> set[str]:
     sources: set[str] = set()
     with ledger_path.open(newline="", encoding="utf-8-sig") as handle:
         for row in csv.DictReader(handle):
+            if row.get("row_status") != "ready" or not row.get("source_version_id"):
+                continue
             value = (row.get("source_file") or "").strip()
             if not value:
                 continue
-            sources.add(value)
-            # Also add the path-relative form, since source_file in the ledger
-            # is sometimes absolute and sometimes relative.
+            candidates = {value}
             for prefix in (str(workspace) + "/", str(workspace.resolve()) + "/"):
                 if value.startswith(prefix):
-                    sources.add(value[len(prefix):])
+                    candidates.add(value[len(prefix):])
+            for candidate in candidates:
+                sources.add(candidate + "|sha256:" + row["source_version_id"])
     return sources
 
 
@@ -58,13 +60,10 @@ def file_contributed(manifest_entry: dict, ledger_sources: set[str]) -> bool:
     rel = str(manifest_entry.get("path") or "")
     if not rel:
         return False
-    if rel in ledger_sources:
-        return True
-    # Try common alternate forms — bare filename, source/-prefixed.
-    name = str(manifest_entry.get("filename") or "")
-    if name and any(src.endswith("/" + name) or src.endswith(name) for src in ledger_sources):
-        return True
-    return False
+    # Both path and immutable bytes must agree. Neither basename nor hash alone
+    # identifies a provider export in a workspace containing copied files.
+    version = manifest_entry.get("source_version_id") or manifest_entry.get("sha256")
+    return bool(version and rel + "|sha256:" + version in ledger_sources)
 
 
 def queue_action(entry: dict) -> str:

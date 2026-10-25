@@ -6,6 +6,7 @@ Usage:
 Reads (all inside <project>):
   episode.json                  guest name/role, title; optional "shorts" block:
                                 {"who": "Jane Doe · Example Rights Co", "end_url": "recoupable.dev/podcast",
+                                 "end_label": "Full episode out now",
                                  "object_position": "50% 30%", "host_audio": "raw/host-audio-enhanced.wav",
                                  "guest_audio": "raw/guest-audio-enhanced.wav"}
   edit/shorts.json              cut list in RAW seconds, same piece format as chapters.json (in/out, mute_host,
@@ -51,6 +52,16 @@ def words(who):
     for x in L:                       # Scribe stretches some words across silences; clamp them
         if x['end'] - x['start'] > 1.5:
             x['start'] = x['end'] - 0.6
+    for a_, b_ in EP.get('caption_fixes', []):   # same name fixes as make_srt.py; a two-word match merges the pair
+        i = 0
+        while i < len(L):
+            pair = i + 1 < len(L) and re.fullmatch(r'\W*' + a_ + r'\W*', L[i]['text'] + ' ' + L[i + 1]['text'])
+            if pair:
+                L[i] = dict(L[i], text=re.sub(a_, b_, L[i]['text'] + ' ' + L[i + 1]['text']), end=L[i + 1]['end'])
+                del L[i + 1]
+            else:
+                L[i]['text'] = re.sub(a_, b_, L[i]['text'])
+            i += 1
     return L
 
 
@@ -59,11 +70,14 @@ norm = lambda t: re.sub(r"[^\w'%]", '', t.lower())
 
 
 def find(who, phrase, after=0.0):
+    for a_, b_ in EP.get('caption_fixes', []):   # anchors may quote the raw transcript; words carry the fixed names
+        phrase = re.sub(a_, b_, phrase)
     p = [norm(t) for t in phrase.split()]
-    L = W[who]; tx = [norm(x['text']) for x in L]
-    for i in range(len(tx)):
-        if L[i]['start'] >= after and tx[i:i + len(p)] == p:
-            return L[i]['start'], L[i + len(p) - 1]['end']
+    L = W[who]; tk = [(norm(t), i) for i, x in enumerate(L) for t in x['text'].split()]   # a merged fix like "Arty Shield" stays two tokens
+    tx = [t for t, _ in tk]
+    for j in range(len(tx)):
+        if L[tk[j][1]]['start'] >= after and tx[j:j + len(p)] == p:
+            return L[tk[j][1]]['start'], L[tk[j + len(p) - 1][1]]['end']
     raise SystemExit(f'phrase not found: {who} "{phrase}" after {after}')
 
 
@@ -122,6 +136,9 @@ def captions(sh):
                 continue
             ws.append([a, b, t.rstrip('-')])
     ws.sort()
+    for k, w in enumerate(ws):            # a cut can land mid-sentence: the first word and any word after . ? ! get a capital
+        if k == 0 or re.search(r'[.?!]["\u201d]?$', ws[k - 1][2]):
+            w[2] = re.sub(r'^(["\u201c]?)(\w)', lambda m: m.group(1) + m.group(2).upper(), w[2])
     chunks, cur = [], []
     for w in ws:
         if cur and (len(cur) >= 3 or len(' '.join(c[2] for c in cur + [w])) > 18 or w[0] - cur[-1][1] > 0.45
@@ -181,13 +198,24 @@ def build(sid):
         js = js.replace('@' + k, f'{T[k]:g}')
     assert not re.search(r'@[a-z]', js), re.findall(r'@\w+', js)
     caps_html, caps_js = captions(sh)
+    hshot, c0 = [], 0.0                   # pieces with "shot": "host" show the host camera on the stage (host-first open)
+    for p in sh.P:
+        if p.get('shot') == 'host':
+            hshot.append([round(c0, 2), round(c0 + p['out'] - p['in'], 2)])
+        c0 += p['out'] - p['in']
+    h = EP.get('host', {})
+    hwho = CFG.get('host_who') or f"{h.get('name', 'Host')} · {h.get('role', '').split(',')[-1].strip()}"
     g = EP['guest']
     who = CFG.get('who') or f"{g['name']} · {g['role'].split(',')[-1].strip()}"
     rep = {'TITLE': e(f'Recoup Podcast short: {c["hook"]}'), 'HOOK': e(c['hook']), 'HOOK_SIZE': str(c.get('hook_size', 66)),
            'DUR': f'{D:g}', 'CLIP': f'{CLIP:g}', 'END': f'{END:g}', 'EP_TITLE': e(EP['title']), 'WHO_AT': f'{T.get("who", 0.6):g}',
-           'WHO': e(who), 'END_URL': e(CFG.get('end_url', 'recoupable.dev/podcast')), 'OBJ_POS': CFG.get('object_position', '50% 30%'),
+           'WHO': e(who), 'END_URL': e(CFG.get('end_url', 'recoupable.dev/podcast')),
+           'END_LABEL': e(CFG.get('end_label', 'Full episode out now')), 'OBJ_POS': CFG.get('object_position', '50% 30%'),
            'CSS': part('CSS'), 'STAGE': part('HTML'), 'JS': js,
-           'CAPS': caps_html, 'CAP_JS': caps_js, 'GRING': json.dumps(spans(sh, 'g', 0.1, 0.3, 1.0, 0.4))}
+           'CAPS': caps_html, 'CAP_JS': caps_js, 'GRING': json.dumps(spans(sh, 'g', 0.1, 0.3, 1.0, 0.4)),
+           'HSHOT': json.dumps(hshot), 'HWHO': e(hwho),
+           'HVIDS': ''.join(f'<video id="vid-h{i}" src="assets/host.mp4" data-start="{a:g}" data-duration="{b - a:g}" data-media-start="{a:g}" '
+                            f'data-track-index="{i + 1}" muted playsinline></video>' for i, (a, b) in enumerate(hshot))}
     out = open(TEMPLATE).read()
     for k, v in rep.items():
         out = out.replace('{{' + k + '}}', v)

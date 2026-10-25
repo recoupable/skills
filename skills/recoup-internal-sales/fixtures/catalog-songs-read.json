@@ -1,0 +1,13 @@
+{
+  "description": "Synthetic request shape, checked against the saved API source; no request is sent.",
+  "source": {
+    "repository": "recoupable/api",
+    "commit": "08083282b46a552511d82b71417338513fc90fb4",
+    "route": "app/api/catalogs/songs/route.ts",
+    "validator": "lib/songs/validateCatalogSongsQuery.ts",
+    "authorization": "lib/songs/authorizeCatalogAccess.ts"
+  },
+  "method": "GET",
+  "path": "/api/catalogs/songs",
+  "query": { "catalog_id": "synthetic-catalog" }
+}

@@ -157,13 +157,23 @@ Do not trigger a real or test email just to earn the deliverable before review.
 | Research said | Deliverable | How (all from our account, their account untouched) |
 | --- | --- | --- |
 | They own or just acquired a catalog | **Catalog valuation** with the concentration fact | `POST /api/valuation {spotify_artist_id}` → catalog id + band; `GET /api/catalogs/{id}/measurements` for `total_streams`, `catalog_age_years`, top songs; `GET /api/artists` for the artist id. Link `https://chat.recoupable.dev/artists/{artist_account_id}` (renders via app.recoupable.dev). Never link `/catalogs/{id}`; it 404s for non-owners. |
-| Deep catalog, thin YouTube presence | **YouTube gap audit**: which Spotify songs have no video, and the $10-per-video number | `GET /api/artists/{id}/socials` → the YouTube social id → `POST /api/socials/{yt_id}/scrape?posts=100` (read the videos off the scrape response; `/api/artists/{id}/posts` has no YouTube rows, chat#2017) → diff titles against `GET /api/catalogs/{id}/songs`. Offer the videos via the music-video workflow (`recoup-content-make-video`). |
+| Deep catalog, thin YouTube presence | **YouTube gap audit**: which Spotify songs have no video, and the $10-per-video number | `GET /api/artists/{id}/socials` → the YouTube social id → `POST /api/socials/{yt_id}/scrape?posts=100` (read the videos off the scrape response; `/api/artists/{id}/posts` has no YouTube rows, chat#2017) → diff titles against `GET /api/catalogs/songs?catalog_id=<catalog_id>`, using a catalog ID from an existing authorized result and all pages as described below. Offer the videos via the music-video workflow (`recoup-content-make-video`). |
 | Sync, licensing, discovery talk; messy back catalog | **Catalog metadata enhancement**: a sample of enriched mood / genre / sync tags for their songs | `GET /api/songs/analyze/presets` (catalog metadata enrichment preset) → `POST /api/songs/analyze` per song with `audio_url` → deliver 5-10 rows and the cost to run the whole catalog. |
 | D2C, superfans, "we build from the fans up" | **Superfan list**: the accounts commenting on their artist's posts | `POST /api/socials/{ig_id}/scrape?posts=30` → `GET /api/artists/{id}/fans`. Deliver the count and three named examples; the full list is the reply. |
 | Their website is missing something buyers or fans need | **Website proposal**: one concrete update we would build | `POST /api/research/extract {urls}` on their site → name the gap (no artist pages, no store link, no catalog list, no press kit) and the build. This is agency work; price per the written offer. |
 | Playlists, pitching, placements | **Placement targets** for one release | `recoup-research-playlist-targets` / `recoup-song-placement-pitch` from our account; deliver the top targets. |
 | They want to know what is happening weekly | **Tracking task**: a weekly stream / social / valuation report | `POST /api/tasks` on OUR account for their artist, deliver the first report; the subscription is the ask. |
 | Contacts, A&R, hiring | **People list** | `POST /api/research/people {query}` (Exa) from our account. |
+
+**Catalog song reads:** use a catalog ID from an existing authorized result, such as a catalog
+listing or an already completed valuation belonging to the authenticated account or one of its
+organizations. An artist ID is not a catalog ID. The API authenticates before checking the query
+and catalog ownership; stop on 401/403 rather than guessing another ID or changing credentials.
+Read every page through `pagination.total_pages` before claiming a complete catalog comparison
+(default 20 songs per page; optional `limit` is 1–100). A read failure is not evidence that songs
+or videos are absent. The synthetic request fixture ships with this skill at
+`fixtures/catalog-songs-read.json`; it records the saved API source used to check this request
+shape. It does not verify the other collection steps or authorize a new valuation, scrape or send.
 
 Rules that hold for every deliverable:
 

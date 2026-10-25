@@ -1,0 +1,361 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "execution": "Independent cold-agent decision/artifact cases. A static check may validate these records but is not a provider behavior or live operation test.",
+  "cases": [
+    {
+      "id": "mlc-writer-match",
+      "profile_id": "mlc-songwriter-match",
+      "inputs": {
+        "role": "songwriter_hub_user",
+        "operation": "recording_work_match",
+        "existing_catalog_work": true,
+        "authority": "prepare"
+      },
+      "expected": [
+        "Matching is eligible for the documented Songwriter Hub role, subject to account/current procedure checks.",
+        "Preparation does not claim collection-share authority."
+      ]
+    },
+    {
+      "id": "mlc-writer-share",
+      "profile_id": "mlc-existing-share",
+      "inputs": {
+        "role": "songwriter_hub_user",
+        "documented_share": "25"
+      },
+      "expected": [
+        "Role does not satisfy Member Hub filing capability.",
+        "Prepare supported interest packet; no submission."
+      ]
+    },
+    {
+      "id": "mlc-existing",
+      "profile_id": "mlc-existing-share",
+      "inputs": {
+        "existing_work": "SYN-W1",
+        "no_adverse_state": true
+      },
+      "expected": [
+        "Ordinary claim uses the existing work in registration, not dispute or duplicate creation."
+      ]
+    },
+    {
+      "id": "mlc-rematched",
+      "profile_id": "mlc-member-match",
+      "inputs": {
+        "raw_status": "Rematched",
+        "old_group": "SYN-G1",
+        "new_group": "SYN-G2"
+      },
+      "expected": [
+        "Preserve historical and superseding groups.",
+        "Do not label rematching an adjudicated title loss."
+      ]
+    },
+    {
+      "id": "mlc-transfer-disclosure",
+      "profile_id": "mlc-transfer",
+      "inputs": {
+        "source_member": "SYN-A",
+        "target_member": "SYN-B",
+        "documents": [
+          "synthetic-agreement"
+        ],
+        "authorization": "prepare only"
+      },
+      "expected": [
+        "Identify forwarding to existing claimants.",
+        "Keep source release and target acceptance separate; no filing."
+      ]
+    },
+    {
+      "id": "bmi-pools",
+      "profile_id": "bmi-new-work",
+      "inputs": {
+        "writer_pool": "100",
+        "publisher_pool": "100",
+        "basis": "200_percent"
+      },
+      "expected": [
+        "Preserve writer/publisher basis without calling 200 an ownership overclaim."
+      ]
+    },
+    {
+      "id": "bmi-reduced-share",
+      "profile_id": "bmi-update",
+      "inputs": {
+        "old_share": "50",
+        "new_share": "25",
+        "signed_support": null
+      },
+      "expected": [
+        "Authentic support gap blocks affected action.",
+        "Do not reregister a duplicate or fabricate a signature."
+      ]
+    },
+    {
+      "id": "ascap-unknown-schema",
+      "profile_id": "ascap-work-packet",
+      "inputs": {
+        "account_rules": null,
+        "public_help": "403"
+      },
+      "expected": [
+        "Prepare evidence and exact missing current requirements.",
+        "Do not label payload ASCAP-validated."
+      ]
+    },
+    {
+      "id": "sx-producer",
+      "profile_id": "sx-producer-lod",
+      "inputs": {
+        "creative_role": "producer",
+        "featured_artists": [
+          "SYN-A",
+          "SYN-B"
+        ],
+        "signed_lod_from": [
+          "SYN-A"
+        ],
+        "requested_scope": "both allocations"
+      },
+      "expected": [
+        "Only the supported directing allocation is prepared as authorized.",
+        "Missing second artist direction remains explicit.",
+        "Do not take percentage off all recording income."
+      ]
+    },
+    {
+      "id": "ppl-performer-missing",
+      "profile_id": "ppl-performer-claim",
+      "inputs": {
+        "role": "performer_member",
+        "recording_exists": false
+      },
+      "expected": [
+        "Identify rightsholder registration dependency.",
+        "Do not create owner repertoire under performer-only authority."
+      ]
+    },
+    {
+      "id": "sena-dual",
+      "profile_id": "sena-musician",
+      "inputs": {
+        "musician": true,
+        "master_owner": true,
+        "musician_account": true,
+        "producer_account": false
+      },
+      "expected": [
+        "Separate musician and producer role/account readiness.",
+        "Do not infer owner submission access from musician account."
+      ]
+    },
+    {
+      "id": "socan-rights",
+      "profile_id": "socan-work",
+      "inputs": {
+        "performance_share": "50",
+        "mechanical_ownership": "100",
+        "same_party": true,
+        "agreement_ref": "synthetic-contract"
+      },
+      "expected": [
+        "Keep performance and reproduction basis distinct.",
+        "Do not divide mechanical ownership to mimic performance distribution."
+      ]
+    },
+    {
+      "id": "gema-role-pools",
+      "profile_id": "gema-work",
+      "inputs": {
+        "AR_composer": "100",
+        "AR_lyricist": "100",
+        "AR_publisher": "100"
+      },
+      "expected": [
+        "Treat documented role pools as provider conventions.",
+        "Do not sum all fields as 300 percent ownership."
+      ]
+    },
+    {
+      "id": "apra-pending-isrc",
+      "profile_id": "apra-new-work",
+      "inputs": {
+        "isrc": null,
+        "documented_work": true
+      },
+      "expected": [
+        "Prepare work without invented ISRC; retain later assignment/update path."
+      ]
+    },
+    {
+      "id": "apra-split-edit",
+      "profile_id": "apra-update",
+      "inputs": {
+        "field": "split",
+        "current": "50",
+        "requested": "60",
+        "co_owner_support": null
+      },
+      "expected": [
+        "Use actual works-team route and keep missing support explicit.",
+        "Do not assume ordinary portal field edit."
+      ]
+    },
+    {
+      "id": "copyright-supplement",
+      "profile_id": "usco-supplement",
+      "inputs": {
+        "basic_registration": "SYN-REG1",
+        "correction": "missing contributor"
+      },
+      "expected": [
+        "Preserve original plus proposed supplementary record.",
+        "Do not erase original or claim filing constitutes acceptance."
+      ]
+    },
+    {
+      "id": "copyright-transfer",
+      "profile_id": "usco-recordation",
+      "inputs": {
+        "signed_transfer": "synthetic-v1",
+        "rights": "composition",
+        "statement": "also register new work"
+      },
+      "expected": [
+        "Separate recordation of instrument from any new registration eligibility.",
+        "Show public disclosure and human certification requirements."
+      ]
+    },
+    {
+      "id": "youtube-channel",
+      "profile_id": "youtube-content-id",
+      "inputs": {
+        "role": "ordinary_channel_user",
+        "exclusive_rights_evidence": true
+      },
+      "expected": [
+        "Ordinary channel access fails partner capability check.",
+        "Prepare verified administrator route if available; no fabricated API access."
+      ]
+    },
+    {
+      "id": "ugc-library",
+      "profile_id": "distrokid-ugc",
+      "inputs": {
+        "audio_library_delivered": true,
+        "social_media_pack_enrolled": false
+      },
+      "expected": [
+        "Distinguish ordinary library delivery from UGC identification enrollment.",
+        "Do not claim active UGC monetization from library presence."
+      ]
+    },
+    {
+      "id": "distrokid-target-only",
+      "profile_id": "distrokid-migrate",
+      "inputs": {
+        "target_accepted": true,
+        "source_removal_observed": false,
+        "destination_readback": false
+      },
+      "expected": [
+        "Target acceptance does not close source removal or destination continuity.",
+        "Keep migration partial."
+      ]
+    },
+    {
+      "id": "ddex-distributor",
+      "profile_id": "ddex-ct",
+      "inputs": {
+        "parties": [
+          "distributor_a",
+          "distributor_b",
+          "DSP"
+        ]
+      },
+      "expected": [
+        "Reject CT as a validated distributor-transfer route under current published scope.",
+        "Prepare provider-specific migration requirements."
+      ]
+    },
+    {
+      "id": "cwr-file-only",
+      "profile_id": "cwr-registration",
+      "inputs": {
+        "syntactic_file_valid": true,
+        "receiver_onboarding": false
+      },
+      "expected": [
+        "Do not call a valid file submitted or accepted.",
+        "Record receiver onboarding/transport dependency."
+      ]
+    },
+    {
+      "id": "isrc-owner-change",
+      "profile_id": "isrc-assignment",
+      "inputs": {
+        "same_recording": true,
+        "assigned_isrc": "SYNTHETIC-ID",
+        "new_owner": true
+      },
+      "expected": [
+        "Retain recording identity; no new assignment solely for owner change."
+      ]
+    },
+    {
+      "id": "space-heater-unknown",
+      "profile_id": "space-heater-readiness",
+      "inputs": {
+        "provider_rules": null,
+        "account_access": false
+      },
+      "expected": [
+        "Return evidence packet and unresolved official/schema requirements.",
+        "Do not claim provider-validated preparation or submission support."
+      ]
+    },
+    {
+      "id": "songtrust-recordings",
+      "profile_id": "songtrust-intake",
+      "inputs": {
+        "same_composition": true,
+        "same_splits": true,
+        "recordings": [
+          "SYN-R1",
+          "SYN-R2"
+        ]
+      },
+      "expected": [
+        "Prepare linked recording entries under existing composition rather than duplicate song registration."
+      ]
+    },
+    {
+      "id": "distrokid-pending-edit",
+      "profile_id": "distrokid-correction",
+      "inputs": {
+        "pending_edit": true,
+        "requested_field": "title"
+      },
+      "expected": [
+        "Inspect current request and supported account controls before another edit.",
+        "Do not duplicate or silently remove/redeliver."
+      ]
+    },
+    {
+      "id": "ern-valid-file",
+      "profile_id": "ddex-ern",
+      "inputs": {
+        "schema_valid": true,
+        "receiver_onboarding": false,
+        "transport_receipt": null
+      },
+      "expected": [
+        "Keep file preparation distinct from receiver eligibility and delivery.",
+        "Do not report submitted or destination available."
+      ]
+    }
+  ]
+}

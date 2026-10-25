@@ -127,16 +127,21 @@ Business keeps the plan, Granola notes and the episode README (link it, don't co
      2026-10-14). `build.py` warns on any overlap. With every host line under a card, the host usually gets no tag.
 7. **Prototype first**: build and render ~90s around the strongest chapter before anything else; get the
    look approved once, then every chapter inherits it.
-8. **Build + check**: `python3 scripts/podcast/build.py <project> <ch> --recut`, then
+8. **Build + check**: sandbox path `node --env-file=<env> scripts/podcast/sandbox/studio.mjs build <project> <ch>`
+   (`references/podcast-sandbox.md`); local path `python3 scripts/podcast/build.py <project> <ch> --recut`. Then
    `npx --yes hyperframes snapshot --at <card midpoints> --no-end` in `comp/chapters/<ch>` and read the
    contact sheet before rendering. Also run `npx --yes hyperframes inspect --at <card midpoints> --json` and
    fix every `text_box_overflow` on a card (a wide stat number once pushed its caption over the video tiles);
    the `#ghost` word and ticker `SOURCES` overlaps are by design.
-9. **Render per chapter**: `STOP_AT=HHMM scripts/podcast/render.sh <project> ch04 ch01 ...` (approved chapter
-   first). Open each in Finder as it lands; notes come back per chapter, the fix is one chapter re-render.
+9. **Render per chapter**: sandbox path `studio.mjs run <project> ch04 ch01 ...` (all in parallel); local path
+   `STOP_AT=HHMM scripts/podcast/render.sh <project> ch04 ch01 ...` (approved chapter first). Open each in Finder as it lands; notes come back per chapter, the fix is one chapter re-render.
 10. **Opening + outro**: `python3 scripts/podcast/make_intro.py <project> --show-assets <show assets dir>`, render
    `comp/intro` and `comp/outro`, then the join command in its docstring -> `exports/opening.mp4`.
    `exports/outro.mp4` is required: assemble.py appends it and stops if it is missing.
+   **Non-English episode**: the intro and outro strings are English; replace them in `comp/intro` and
+   `comp/outro/index.html` before rendering (Spanish: "Desde la mesa de derechos", "En este episodio", "Gracias
+   por vernos"). Chapter labels come from `episode.json` `"labels"` (`{"Chapter": "Capítulo", "Sources":
+   "Fuentes"}`) and the shorts end card from `"shorts": {"end_label": "Episodio completo ya disponible"}`.
 11. **Host mic** (when it sounds muffled): measure first (band energy above 4 kHz vs the guest). Adobe
    Podcast Enhance (free tier: 30 min/file, 1 h/day, needs the owner's free account sign-in) cleaned noise
    and lifted presence but did NOT restore missing highs; synthetic highs (ffmpeg `aexciter`) measured
@@ -193,8 +198,9 @@ Business keeps the plan, Granola notes and the episode README (link it, don't co
 
 ## Gotchas that cost real time on the first run
 
-- **Renders**: ~3-5x realtime on the Intel laptop; parallel renders time out the headless-Chrome launch
-  check. One at a time; a failed launch is a retry, not a bug.
+- **Local renders**: ~3-5x realtime on the Intel laptop and the machine is unusable meanwhile; parallel renders
+  time out the headless-Chrome launch check. One at a time; a failed launch is a retry, not a bug. The sandbox
+  path renders ~1x realtime per job, all jobs in parallel (`references/podcast-sandbox.md`).
 - **Never render during a live recording.** CPU load is the likely cause of Restream dropping the host
   camera to 14 fps. A background "kill at 8:30" timer was itself killed by the 2-hour background limit
   before firing; `render.sh` checks `STOP_AT` in its own loop instead.
