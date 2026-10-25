@@ -7,11 +7,13 @@ Reads (all inside <project>):
   episode.json                  guest name/role, title; optional "shorts" block:
                                 {"who": "Jane Doe · Example Rights Co", "end_url": "recoupable.dev/podcast",
                                  "end_label": "Full episode out now",
-                                 "object_position": "50% 30%", "host_audio": "raw/host-audio-enhanced.wav",
+                                 "object_position": "50% 30%", "end_title": "<the published episode title>", "host_audio": "raw/host-audio-enhanced.wav",
                                  "guest_audio": "raw/guest-audio-enhanced.wav"}
   edit/shorts.json              cut list in RAW seconds, same piece format as chapters.json (in/out, mute_host,
                                 mute_guest, host_only, video_from), top-level "offsets", and per short:
                                 {"id": "s1", "day": "Mon", "hook": "...", "hook_size": 66, "pieces": [...]}
+                                optional per short: "template": "kinetic" (templates/podcast/shorts/<name>.html, default
+                                "hybrid") and "caption_words": 1 (words per caption line, default 3)
   edit/transcripts/{host,guest}.json   ElevenLabs Scribe word timestamps (same files the episode uses)
   edit/shorts/<id>.html         the beats: <!--ANCHORS {json}--> then <!--CSS-->, <!--HTML-->, <!--JS--> sections.
                                 Anchors are {"name": ["g"|"h", "phrase", raw_search_after]}; names ending in
@@ -33,7 +35,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SKILL = os.path.join(HERE, '..', '..', '..')
-TEMPLATE = os.path.join(SKILL, 'templates', 'podcast', 'shorts', 'hybrid.html')
+TEMPLATE = lambda name: os.path.join(SKILL, 'templates', 'podcast', 'shorts', f'{name}.html')
 BRAND = os.path.join(SKILL, 'brand')
 END = 2.6                                   # "Full episode out now" end card, seconds
 e = H.escape
@@ -139,9 +141,10 @@ def captions(sh):
     for k, w in enumerate(ws):            # a cut can land mid-sentence: the first word and any word after . ? ! get a capital
         if k == 0 or re.search(r'[.?!]["\u201d]?$', ws[k - 1][2]):
             w[2] = re.sub(r'^(["\u201c]?)(\w)', lambda m: m.group(1) + m.group(2).upper(), w[2])
+    n = sh.c.get('caption_words', 3)
     chunks, cur = [], []
     for w in ws:
-        if cur and (len(cur) >= 3 or len(' '.join(c[2] for c in cur + [w])) > 18 or w[0] - cur[-1][1] > 0.45
+        if cur and (len(cur) >= n or len(' '.join(c[2] for c in cur + [w])) > 18 or w[0] - cur[-1][1] > 0.45
                     or re.search(r'[.,?!:]$', cur[-1][2])):
             chunks.append(cur); cur = []
         cur.append(w)
@@ -208,7 +211,7 @@ def build(sid):
     g = EP['guest']
     who = CFG.get('who') or f"{g['name']} · {g['role'].split(',')[-1].strip()}"
     rep = {'TITLE': e(f'Recoup Podcast short: {c["hook"]}'), 'HOOK': e(c['hook']), 'HOOK_SIZE': str(c.get('hook_size', 66)),
-           'DUR': f'{D:g}', 'CLIP': f'{CLIP:g}', 'END': f'{END:g}', 'EP_TITLE': e(EP['title']), 'WHO_AT': f'{T.get("who", 0.6):g}',
+           'DUR': f'{D:g}', 'CLIP': f'{CLIP:g}', 'END': f'{END:g}', 'EP_TITLE': e(CFG.get('end_title', EP['title'])), 'WHO_AT': f'{T.get("who", 0.6):g}',
            'WHO': e(who), 'END_URL': e(CFG.get('end_url', 'recoupable.dev/podcast')),
            'END_LABEL': e(CFG.get('end_label', 'Full episode out now')), 'OBJ_POS': CFG.get('object_position', '50% 30%'),
            'CSS': part('CSS'), 'STAGE': part('HTML'), 'JS': js,
@@ -216,7 +219,7 @@ def build(sid):
            'HSHOT': json.dumps(hshot), 'HWHO': e(hwho),
            'HVIDS': ''.join(f'<video id="vid-h{i}" src="assets/host.mp4" data-start="{a:g}" data-duration="{b - a:g}" data-media-start="{a:g}" '
                             f'data-track-index="{i + 1}" muted playsinline></video>' for i, (a, b) in enumerate(hshot))}
-    out = open(TEMPLATE).read()
+    out = open(TEMPLATE(c.get('template', 'hybrid'))).read()
     for k, v in rep.items():
         out = out.replace('{{' + k + '}}', v)
     assert '{{' not in out, re.findall(r'\{\{\w+\}\}', out)

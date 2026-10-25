@@ -81,7 +81,9 @@ has no contrast without it):
 - **Measure, don't eyeball, annotation positions**: snapshot the frame, overlay a grid, and centre the circle
   on its target (the owner caught a circle that missed the price by ~30 px).
 - **A new look gets three directions first**: three stills of the same moments, different compositions, owner
-  picks, then render.
+  picks, then render. Stills on the sandbox: `scripts/podcast/sandbox/stills.mjs <out> <comp-dir>@<t1,t2,...>` after
+  `studio.mjs build`. A second look ships as a template: `"template": "kinetic"` (split screen, graphic on top,
+  speaker band below, one-word captions with `"caption_words": 1`; first used on Tom Sarig 2026-10-25).
 
 Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/beats.example.html`):
 `<!--ANCHORS {...}-->`, then `<!--CSS-->`, `<!--HTML-->`, `<!--JS-->`. JS defines
