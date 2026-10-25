@@ -294,6 +294,7 @@ Recoup Podcast: https://recoupable.dev/podcast?utm_source=email&utm_medium=reply
   post that carries a clip is a clip post, not the episode (the first run listed the LinkedIn launch post
   as the episode, caught by the operator). `views` is the platform's own count pulled that day (YouTube
   views, Instagram plays, LinkedIn and X impressions), blank where none is readable (Spotify, Apple).
+  LinkedIn impressions: `GET /api/posts/{id}/stats` with each LinkedIn post's id from `POST /api/posts`.
 - **PDF (the executive summary, not the links):** the episode recap (title, published date, length, a
   two-sentence summary, five takeaways, three of the guest's lines word for word, the full-episode links)
   and a table of how every clip did by platform, with the top clip marked. Summary and takeaways come from
