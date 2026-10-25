@@ -122,7 +122,7 @@
   const BEATS = []; SC.forEach(([id, a, b]) => { const P = BEATS[BEATS.length - 1]; if (P && a - P[1] < .3) P[1] = b; else BEATS.push([a, b]); });
   // a beat's first scene shows as the video starts shrinking (a - .3), so the stage is never empty white
   // and its last scene stays up until the video has grown back over it (b + .3), or under the end card's wipe
-  SC.forEach(([id, a, b]) => scene(id, BEATS.some(([s]) => s === a) && a >= .5 ? a - .3 : a,
+  SC.forEach(([id, a, b]) => scene(id, a < .5 ? 0 : BEATS.some(([s]) => s === a) ? a - .3 : a,   // a scene starting under .5 s shows on frame 0 (the thumbnail)
                                    !BEATS.some(([, e]) => e === b) ? b : b < CLIP - .2 ? b + .3 : CLIP + .6));
   for (const [a, b] of BEATS) {
     if (a < .5) tl.set("#pip", SMALL, 0); else tl.to("#pip", { ...SMALL, duration: .45, ease: "power3.inOut" }, a - .3);

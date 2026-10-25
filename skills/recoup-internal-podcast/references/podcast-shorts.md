@@ -22,7 +22,7 @@ approved before building anything.
   UMG, DistroKid, Claude). Open the window ON the hook line, never on setup ("I mentioned this in my article").
   A cold-open style reorder is fine when nothing reads as a sentence she didn't say.
 - **Triple hook** (Kallaway, adopted 2026-10-25): every row names three lines with their raw times. **Context**:
-  the topic, said and shown at once. **Lean**: the number, proof or surprise, spoken by ~5.5 s (splice the guest's
+  the topic, said and shown at once. **Lean**: the number, proof or surprise, spoken by ~5.5 s (the 5 s window needs the first concrete idea, which the title already states; the spoken lean may land just after; splice the guest's
   setup out to get there; Tom s1 cut "those two in particular... those two" to land "$1.5M" at 5.5 s, not 9 s).
   **Snapback**: the line that reverses the lean ("that wasn't in record sales... 100% sync"). The title carries
   context + lean and never gives away the snapback. A row with no snapback in its window is a weaker clip.
@@ -108,7 +108,7 @@ has no contrast without it):
 - **Measure, don't eyeball, annotation positions**: snapshot the frame, overlay a grid, and centre the circle
   on its target (the owner caught a circle that missed the price by ~30 px).
 - **A new look gets three directions first**: three stills of the same moments, different compositions, owner
-  picks, then render. Stills on the sandbox: `scripts/podcast/sandbox/stills.mjs <out> <comp-dir>@<t1,t2,...>` after
+  picks, then render. Stills on the sandbox: `node --env-file=<env> scripts/podcast/sandbox/stills.mjs <out> <comp-dir>@<t1,t2,...>` after
   `studio.mjs build`. A new look ships as its own template (`"template": "<name>"`), never as edits to an old one.
 - **End card holds letters/15 + 1.5 s** of the end title (min 2.6 s); `build_hy.py` sets it.
 

@@ -19,6 +19,13 @@ const auth = { token: process.env.VERCEL_TOKEN, teamId: process.env.VERCEL_TEAM_
 if (!auth.token || !auth.teamId || !auth.projectId) { console.error("set VERCEL_TOKEN, VERCEL_TEAM_ID, VERCEL_PROJECT_ID (--env-file)"); process.exit(1); }
 const [outDir, ...specs] = process.argv.slice(2);
 if (!outDir || !specs.length) { console.error("usage: stills.mjs <out-dir> <comp-dir>@<t1,t2,...> ..."); process.exit(1); }
+const JOBS = specs.map((spec) => {
+  const at = spec.lastIndexOf("@"), dir = spec.slice(0, at), ts = spec.slice(at + 1).split(",").map(Number);
+  if (at < 1 || !ts.length || ts.some((t) => !Number.isFinite(t) || t < 0)) { console.error(`bad spec ${spec}: want <comp-dir>@<t1,t2,...>`); process.exit(1); }
+  return { dir, times: ts.join(","), name: path.basename(dir) };
+});
+const dup = JOBS.map((j) => j.name).find((n, i, a) => a.indexOf(n) !== i);
+if (dup) { console.error(`two comps named ${dup}: their stills would overwrite each other`); process.exit(1); }
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), "recoup-stills-"));
 const t0 = Date.now(), log = (tag, m) => console.log(`[${((Date.now() - t0) / 1000).toFixed(0).padStart(4)}s ${tag}] ${m}`);
 
@@ -29,12 +36,13 @@ async function sh(sbx, tag, script) {
   return out;
 }
 
-async function stills(spec) {
-  const [dir, times] = spec.split("@"), name = path.basename(dir), local = path.join(outDir, name);
-  const sbx = await Sandbox.create({ ...auth, source: { type: "snapshot", snapshotId: CFG.snapshotId }, resources: { vcpus: 8 },
-    timeout: 30 * 60e3, persistent: false });
-  log(name, `sandbox ${sbx.name}`);
+async function stills({ dir, times, name }) {
+  const local = path.join(outDir, name);
+  let sbx;
   try {
+    sbx = await Sandbox.create({ ...auth, source: { type: "snapshot", snapshotId: CFG.snapshotId }, resources: { vcpus: 8 },
+      timeout: 30 * 60e3, persistent: false });
+    log(name, `sandbox ${sbx.name}`);
     const tar = path.join(TMP, `${name}.tgz`);
     execFileSync("tar", ["--no-xattrs", "-czf", tar, "--exclude", ".hyperframes", "--exclude", "snapshots", "-C", dir, "."]);
     await sbx.writeFiles([{ path: `/work/${name}.tgz`, content: fs.readFileSync(tar) }]);
@@ -49,9 +57,10 @@ async function stills(spec) {
     execFileSync("tar", ["-xzf", st, "-C", local]);
     log(name, `done -> ${local} (${fs.readdirSync(local).filter((f) => f.endsWith(".png")).length} png)`);
     return true;
-  } catch (e) { log(name, `FAILED: ${e.message}`); return false; } finally { await sbx.stop().catch(() => log(name, `stop ${sbx.name} in the dashboard`)); }
+  } catch (e) { log(name, `FAILED: ${e.message}`); return false; } finally { if (sbx) await sbx.stop().catch(() => log(name, `stop ${sbx.name} in the dashboard`)); }
 }
 
-const ok = await Promise.all(specs.map(stills));
+let ok;
+try { ok = await Promise.all(JOBS.map(stills)); } finally { fs.rmSync(TMP, { recursive: true, force: true }); }
 log("summary", `wall ${((Date.now() - t0) / 60e3).toFixed(1)} min`);
 if (ok.some((r) => !r)) process.exitCode = 1;
