@@ -1,5 +1,10 @@
 # Artist-workspace context (read first, API second)
 
+**Release-pack branch:** check relevant authorized Recoup context first, then the customer's
+selected material, then accessible public gaps. The local-file-first ordering below
+describes other content workflows; it must not override the pack's source order or
+the customer's current release direction. No local artist folder is required.
+
 Every Recoup content skill is **artist-workspace-native**: when an artist workspace
 exists, the artist's own files are the source of truth for who they are and how they
 sound. Read them before calling any API. The API is the *fallback* for when no workspace

@@ -1,5 +1,10 @@
 # Research signals — ground the content in what's actually true
 
+**Release-pack branch:** collect useful references before extra research.
+A credential is not a spending approval. Reuse saved context,
+read only useful gaps and keep any charged enrichment inside the approved allowance;
+do not fan out these signal calls simply because an artist is named.
+
 Workspace context (`context/artist.md`, `context/audience.md`) tells you **who the artist
 is**. Research signals tell you **what's happening right now** — the song's actual tempo and
 mood, where it's charting, what just hit a milestone, what's trending around the artist.
