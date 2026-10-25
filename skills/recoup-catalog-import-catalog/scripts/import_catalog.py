@@ -135,13 +135,17 @@ def intake(source, mapping, sheet=None, previous=None):
                     result["reasons"].append("interest kind missing or unsupported")
                 if interest.get("value") and (not interest.get("basis") or not interest.get("scale")):
                     result["reasons"].append("interest percentage lacks basis or scale")
-                if interest.get("value") and interest.get("scale"):
+                if interest.get("scale"):
                     try:
-                        value, scale = Decimal(interest["value"]), Decimal(interest["scale"])
-                        if not value.is_finite() or not scale.is_finite() or scale <= 0:
-                            raise ValueError("nonfinite value or nonpositive scale")
-                        if value < 0 or value > scale:
-                            result["reasons"].append("interest value outside supplied scale; provider semantics require review")
+                        scale = Decimal(interest["scale"])
+                        if not scale.is_finite() or scale <= 0:
+                            raise ValueError("nonfinite or nonpositive scale")
+                        if interest.get("value"):
+                            value = Decimal(interest["value"])
+                            if not value.is_finite():
+                                raise ValueError("nonfinite value")
+                            if value < 0 or value > scale:
+                                result["reasons"].append("interest value outside supplied scale; provider semantics require review")
                     except (InvalidOperation, ValueError):
                         result["reasons"].append("interest value/scale requires finite numeric values and a positive scale; source review required")
         if not ids:

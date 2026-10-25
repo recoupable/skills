@@ -37,7 +37,9 @@ Unknown/negative/over-100 values need the applicable provider semantics and sour
 not clamping or balancing shares. The helper holds nonnumeric/nonfinite values,
 nonpositive scales and values outside zero through the supplied scale. It preserves
 raw values and does not assume every provider uses a 100-point scale. This range
-check does not establish ownership or sum/convert shares.
+check does not establish ownership or sum/convert shares. A supplied nonempty scale
+is validated even when the interest value is blank; missing values or scales are
+not filled in by this check.
 
 Every post-header row, including blanks and malformed widths, receives a disposition.
 Local output uses proposed/held/rejected; an exact rerun marks unchanged proposed rows.
