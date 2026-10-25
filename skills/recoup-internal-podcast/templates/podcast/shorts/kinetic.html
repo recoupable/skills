@@ -2,7 +2,9 @@
 <!-- Kinetic-split podcast short (1080x1920), "template": "kinetic" in shorts.json. Same builder and beats format as
      hybrid.html (build_hy.py). Differences: the stage is full-bleed 1080x960 under the hook strip; during a beat the
      speaker's video becomes a full-width band at the bottom (1080x650) instead of a corner circle, and between beats it
-     fills the frame; captions are one bold word on the seam ("caption_words": 1); .ser is the italic serif accent. -->
+     fills the frame; captions are one bold word on the seam ("caption_words": 1); .ser is the italic serif accent.
+     Frame 0 is the thumbnail (Kallaway): no fade-ins, ONE centred title at the top (the hook; *word* = serif accent,
+     underlined), the first scene and the speaker band already live. An optional "rehook" swaps the title mid-clip. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -24,11 +26,12 @@
   #glow-sky { width: 1100px; height: 1100px; left: -420px; top: -360px; background: radial-gradient(circle, rgba(0,126,189,.26) 0%, rgba(0,126,189,0) 65%); }
   #glow-lime { width: 1100px; height: 1100px; right: -420px; bottom: -380px; background: radial-gradient(circle, rgba(214,255,98,.55) 0%, rgba(214,255,98,0) 62%); }
 
-  #topbar { position: absolute; left: 40px; right: 40px; top: 70px; height: 48px; display: flex; align-items: center; gap: 22px; z-index: 30; }
-  #topbar img { height: 40px; } #topbar .sep { width: 2px; height: 32px; background: var(--ink); opacity: .25; } #topbar .show { font-size: 22px; }
-  #hook { position: absolute; left: 40px; right: 40px; top: 140px; z-index: 30; display: flex; border-radius: 24px; overflow: hidden; box-shadow: 0 24px 60px rgba(21,46,55,.22); }
-  #hook .bar { width: 18px; background: var(--lime); } #hook .body { background: var(--forest); color: #fff; padding: 22px 30px 24px 26px; flex: 1; }
-  #hook h1 { margin: 0; font-size: {{HOOK_SIZE}}px; line-height: 1.06; letter-spacing: -.02em; font-weight: 800; }
+  #hook { position: absolute; left: 50px; right: 50px; top: 0; height: 310px; z-index: 30; }
+  #hook h1 { position: absolute; left: 0; right: 0; bottom: 34px; margin: 0 auto; width: fit-content; max-width: 100%; text-align: center; font-size: {{HOOK_SIZE}}px;
+             line-height: 1.02; letter-spacing: -.035em; font-weight: 800; color: var(--ink); padding-bottom: 16px;
+             background: linear-gradient(var(--sky), var(--sky)) bottom / 100% 8px no-repeat; }
+  #hook h1 .ser { color: var(--sky); font-size: 1.18em; line-height: .8; }
+  #rehook { opacity: 0; }
 
   #stage { position: absolute; left: 0; top: 310px; width: 1080px; height: 960px; overflow: hidden; background: var(--paper); z-index: 10; }
   #stage::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(0,126,189,.16) 2px, transparent 2px); background-size: 40px 40px; }
@@ -64,8 +67,7 @@
 <body>
 <div id="root" data-composition-id="main" data-width="1080" data-height="1920" data-duration="{{DUR}}">
   <div id="bg"></div><div id="grid"></div><div id="glow-sky" class="glow"></div><div id="glow-lime" class="glow"></div>
-  <div id="topbar"><img src="assets/logos/lockup-ink.svg" alt="Recoup" /><div class="sep"></div><div class="show mono">Recoup Podcast</div></div>
-  <div id="hook"><div class="bar"></div><div class="body"><h1>{{HOOK}}</h1></div></div>
+  <div id="hook"><h1 id="hook1">{{HOOK}}</h1><h1 id="rehook">{{REHOOK}}</h1></div>
 
   <div id="stage">
 {{STAGE}}
@@ -99,16 +101,17 @@
 
   tl.fromTo("#glow-sky", { x: 0, y: 0, scale: 1 }, { x: 120, y: 160, scale: 1.12, duration: D, ease: "sine.inOut" }, 0);
   tl.fromTo("#glow-lime", { x: 0, y: 0, scale: 1.05 }, { x: -100, y: -120, scale: .95, duration: D, ease: "sine.inOut" }, 0);
-  tl.from("#topbar", { y: -30, opacity: 0, duration: .5, ease: "power3.out" }, 0);
-  tl.from("#hook", { y: -40, opacity: 0, duration: .55, ease: "power3.out" }, .05);
-  tl.from("#stage", { y: 60, opacity: 0, duration: .5, ease: "power3.out" }, .1);
-  tl.from("#pip", { y: 60, opacity: 0, duration: .5, ease: "power3.out" }, .1);
+  // frame 0 is the thumbnail: title, stage and speaker band are already at full opacity (no fade-ins)
+  if ({{REHOOK_AT}} >= 0) {
+    tl.to("#hook1", { opacity: 0, y: -20, duration: .2 }, {{REHOOK_AT}});
+    tl.fromTo("#rehook", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .3, ease: "back.out(2)" }, {{REHOOK_AT}} + .1);
+  }
   tl.fromTo("#who", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: .5, ease: "expo.out" }, {{WHO_AT}});
   tl.to("#who", { opacity: 0, x: 20, duration: .35 }, {{WHO_AT}} + 3.6);
 
   function scene(id, a, b) {
     tl.set(id, { autoAlpha: 1 }, a);
-    tl.fromTo(id, { scale: 1.08 }, { scale: 1, duration: .45, ease: "power3.out" }, a);
+    if (a > 0) tl.fromTo(id, { scale: 1.08 }, { scale: 1, duration: .45, ease: "power3.out" }, a);
     tl.set(id, { autoAlpha: 0 }, b);
   }
   const BIG = { left: 0, top: 310, width: 1080, height: 1610 }, SMALL = { left: 0, top: 1270, width: 1080, height: 650 };

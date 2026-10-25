@@ -84,6 +84,11 @@ has no contrast without it):
   picks, then render. Stills on the sandbox: `scripts/podcast/sandbox/stills.mjs <out> <comp-dir>@<t1,t2,...>` after
   `studio.mjs build`. A second look ships as a template: `"template": "kinetic"` (split screen, graphic on top,
   speaker band below, one-word captions with `"caption_words": 1`; first used on Tom Sarig 2026-10-25).
+  Its frame 0 is the thumbnail (Kallaway): no fade-ins, ONE centred title at the top (the hook; `*word*` = serif
+  accent), the first scene and the speaker band already live, first spoken word within 0.1 s. `"rehook":
+  {"text": "...", "at": "<anchor>"}` swaps the title for an open question mid-clip; it must not state a fact the guest
+  did not say. The number in the hook should be spoken by ~5.5 s.
+- **End card holds letters/15 + 1.5 s** of the end title (min 2.6 s); `build_hy.py` sets it.
 
 Write each short's beats in `edit/shorts/<id>.html` (`templates/podcast/shorts/beats.example.html`):
 `<!--ANCHORS {...}-->`, then `<!--CSS-->`, `<!--HTML-->`, `<!--JS-->`. JS defines
