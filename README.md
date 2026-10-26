@@ -211,7 +211,11 @@ Add a route for the new skill in [`RESOLVER.md`](RESOLVER.md) and a fixture in `
 
 ## Internal consulting workflows
 
-The 63 `recoup-internal-consulting-*` skills cover client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
+The 65 `recoup-internal-consulting-*` skills cover PMF discovery, client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
+
+### PMF finder
+
+Use `recoup-internal-consulting-pmf-finder` to turn an idea or customer evidence into a PULL hypothesis and the next buying-behavior experiment. It covers discovery, commercial commitment, delivery/retention, and the repeatable case-study pattern, with a memo template and timestamped Rob Snyder source guide. Example: “recoup-internal pmf-finder: use these customer calls to identify the weakest demand assumption and our next test.” Keep resulting buyer evidence in the selected private business workspace.
 
 ### Mono Business workspace
 

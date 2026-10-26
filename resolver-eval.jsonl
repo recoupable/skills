@@ -224,3 +224,12 @@
 {"intent": "I sent the email.", "context": [{"role": "assistant", "content": "The existing royalty case has a prepared inquiry; if you send it, we can record your report on that case."}], "expected": "none", "not": ["recoup-catalog-resolve-claims", "recoup-platform-email-helper"]}
 {"intent": "Analyze the song I attached to this chat and tell me its BPM, key, genre and mood", "expected": "recoup-song-analyze-audio"}
 {"intent": "I attached a local MP3 in Codex. Analyze this file without asking me to create a public URL", "expected": "recoup-song-analyze-audio"}
+
+# PMF loop and adjacent consulting boundaries
+{"intent": "recoup-internal pmf-finder: Test whether our AI operations idea has buyer pull and design the next five-call experiment.", "expected": "recoup-internal-consulting-pmf-finder", "not": ["recoup-internal-consulting-market-scanner", "recoup-internal-consulting-positioning-refiner"]}
+{"intent": "recoup-internal: Five buyers praised the demo but nobody took a purchase step. Diagnose product-market fit and choose the next experiment.", "expected": "recoup-internal-consulting-pmf-finder", "not": ["recoup-internal-consulting-discovery-analysis"]}
+{"intent": "recoup-internal: Customers buy but churn; find the retained subgroup, value event, and case-study factory bottleneck.", "expected": "recoup-internal-consulting-pmf-finder", "not": ["recoup-internal-consulting-case-study-builder"]}
+{"intent": "recoup-internal consulting: Analyze this one discovery call for buyer qualification, stakes, objections, and missing questions.", "expected": "recoup-internal-consulting-discovery-analysis", "not": ["recoup-internal-consulting-pmf-finder"]}
+{"intent": "recoup-internal consulting: Write a customer-facing case study from this completed engagement and verified outcome.", "expected": "recoup-internal-consulting-case-study-builder", "not": ["recoup-internal-consulting-pmf-finder"]}
+{"intent": "recoup-internal consulting: Research this niche and its market-rate references; no buyer experiments requested.", "expected": "recoup-internal-consulting-market-scanner", "not": ["recoup-internal-consulting-pmf-finder"]}
+{"intent": "recoup-internal consulting: Refine this positioning statement and pitch wording; keep our existing validated offer.", "expected": "recoup-internal-consulting-positioning-refiner", "not": ["recoup-internal-consulting-pmf-finder"]}
