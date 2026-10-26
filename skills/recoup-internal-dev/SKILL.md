@@ -7,7 +7,7 @@ description: INTERNAL — Recoup staff tooling. Never use for customer-facing or
 
 How we write, maintain, and ship GitHub issues at Recoup. Two halves, one loop: **Part 1** writes the issue; **Part 2** implements it. The bar for an issue: a teammate (or a cold agent) can read it and know exactly what's done, what's left, why each decision was made, and how to verify any claim. The bar for implementation: the docs, the API, and the live preview all tell the same story, and every claim on the PR is something you actually ran.
 
-The two reference issues this skill is built from are [chat#1747](https://github.com/recoupable/chat/issues/1747) (cutover plan) and [chat#1767](https://github.com/recoupable/chat/issues/1767) (post-cutover cleanup). The gold-standard implementation slice is [chat#1789](https://github.com/recoupable/chat/issues/1789) (tracking issue) -> [docs#236](https://github.com/recoupable/docs/pull/236) (contract) -> [api#653](https://github.com/recoupable/api/pull/653) (implementation).
+The two reference issues this skill is built from are [chat#1747](https://github.com/recoupable/chat/issues/1747) (cutover plan) and [chat#1767](https://github.com/recoupable/chat/issues/1767) (post-cutover cleanup). The gold-standard implementation slice is [chat#1789](https://github.com/recoupable/chat/issues/1789) (tracking issue) -> [docs-legacy#236](https://github.com/recoupable/docs-legacy/pull/236) (contract) -> [api#653](https://github.com/recoupable/api/pull/653) (implementation).
 
 ---
 
@@ -43,7 +43,7 @@ Heading is `## PRs (updated <ISO date>)` so staleness is visible. Columns:
 
 | PR | Item | State |
 |----|------|-------|
-| [docs#251](url) | `POST /api/emails` send-email contract (OpenAPI + types + nav) | merged 2026-06-25 -- see Done |
+| [docs-legacy#251](url) | `POST /api/emails` send-email contract (OpenAPI + types + nav) | merged 2026-06-25 -- see Done |
 | [api#708](url) | `POST /api/emails` endpoint + auth fix | open -- preview-verified end-to-end |
 | [api#TBD](#) | rate-limit the send path | not started |
 ```
