@@ -130,7 +130,8 @@ Business keeps the plan, Granola notes and the episode README (link it, don't co
 8. **Build + check**: sandbox path `node --env-file=<env> scripts/podcast/sandbox/studio.mjs build <project> <ch>`
    (`references/podcast-sandbox.md`); local path `python3 scripts/podcast/build.py <project> <ch> --recut`. Then
    `npx --yes hyperframes snapshot --at <card midpoints> --no-end` in `comp/chapters/<ch>` and read the
-   contact sheet before rendering. Also run `npx --yes hyperframes inspect --at <card midpoints> --json` and
+   contact sheet before rendering. On the sandbox path `build` and `run` do both checks in the sandbox (no local
+   browser) and pull back `comp/chapters/<ch>/snapshots/` and `inspect.json`, printing the card issues. Also run `npx --yes hyperframes inspect --at <card midpoints> --json` and
    fix every `text_box_overflow` on a card (a wide stat number once pushed its caption over the video tiles);
    the `#ghost` word and ticker `SOURCES` overlaps are by design.
 9. **Render per chapter**: sandbox path `studio.mjs run <project> ch04 ch01 ...` (all in parallel); local path
