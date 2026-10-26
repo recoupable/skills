@@ -97,6 +97,11 @@ def validate_distribution(problems: list[str]) -> None:
             problems.append(f"{folder}/plugin.json: missing or invalid manifest")
             continue
         versions.add(data.get("version"))
+        if data.get("name") != "recoup-plugin":
+            problems.append(f"{folder}: package identifier must be recoup-plugin")
+        author = data.get("author")
+        if author and (author.get("email") != "agent@recoupable.dev" or author.get("url") != "https://recoupable.dev"):
+            problems.append(f"{folder}: expected canonical Recoup author branding")
         if data.get("mcpServers") != f"./{config}":
             problems.append(f"{folder}: expected explicit MCP config reference")
         if "hooks" in data or "apps" in data:

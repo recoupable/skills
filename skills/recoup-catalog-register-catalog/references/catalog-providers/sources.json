@@ -1,0 +1,230 @@
+{
+  "checked_at": "2026-10-22",
+  "sources": [
+    {
+      "id": "mlc-tools",
+      "url": "https://www.themlc.com/tools",
+      "check_result": "verified"
+    },
+    {
+      "id": "mlc-claim",
+      "url": "https://help.themlc.com/en/support/what-is-the-claiming-tool",
+      "check_result": "verified"
+    },
+    {
+      "id": "mlc-songwriter",
+      "url": "https://help.themlc.com/en/support/what-is-the-songwriter-hub-",
+      "check_result": "verified"
+    },
+    {
+      "id": "mlc-registration-status",
+      "url": "https://help.themlc.com/en/support/what-do-the-statuses-mean-in-registration-history",
+      "check_result": "verified"
+    },
+    {
+      "id": "mlc-match-status",
+      "url": "https://help.themlc.com/en/support/what-do-the-statuses-mean-in-match-history",
+      "check_result": "verified"
+    },
+    {
+      "id": "mlc-transfer",
+      "url": "https://help.themlc.com/en/support/catalog-transfer-process-and-faqs",
+      "check_result": "verified"
+    },
+    {
+      "id": "mlc-overclaim",
+      "url": "https://help.themlc.com/en/support/what-is-an-overclaim-and-how-do-i-resolve-one-using-the-overclaims-tool",
+      "check_result": "verified"
+    },
+    {
+      "id": "bmi-update",
+      "url": "https://www.bmi.com/creators/instructions_for_updating_registered_works",
+      "check_result": "verified"
+    },
+    {
+      "id": "bmi-terms",
+      "url": "https://www.bmi.com/legal/work-registration-terms-and-conditions",
+      "check_result": "verified"
+    },
+    {
+      "id": "ascap-help",
+      "url": "https://www.ascap.com/help/registering-your-music",
+      "check_result": "inaccessible_403"
+    },
+    {
+      "id": "sesac-help",
+      "url": "https://www.sesac.com/help-center/",
+      "check_result": "verified"
+    },
+    {
+      "id": "sesac-faq",
+      "url": "https://www.sesac.com/frequently-asked-questions/",
+      "check_result": "verified"
+    },
+    {
+      "id": "gmr",
+      "url": "https://globalmusicrights.com/",
+      "check_result": "verified_route_only"
+    },
+    {
+      "id": "sx-register",
+      "url": "https://www.soundexchange.com/register/",
+      "check_result": "verified"
+    },
+    {
+      "id": "sx-lod",
+      "url": "https://www.soundexchange.com/what-we-do/for-artists-labels-and-producers/letters-of-direction/",
+      "check_result": "verified"
+    },
+    {
+      "id": "ppl",
+      "url": "https://www.ppluk.com/royalties/uk-royalties/register-your-repertoire/",
+      "check_result": "verified"
+    },
+    {
+      "id": "sena",
+      "url": "https://sena.nl/en/faq-music-creators",
+      "check_result": "verified"
+    },
+    {
+      "id": "prs-works",
+      "url": "https://www.prsformusic.com/music-and-royalties/register-and-manage-music/register-your-works",
+      "check_result": "dynamic_content_unavailable"
+    },
+    {
+      "id": "prs-list",
+      "url": "https://help.prsformusic.com/s/article/how-do-i-find-a-list-of-my-works",
+      "check_result": "search_excerpt_only"
+    },
+    {
+      "id": "socan-portal",
+      "url": "https://www.socan.com/new-member-portal-features-functionality/",
+      "check_result": "verified"
+    },
+    {
+      "id": "socan-mech",
+      "url": "https://www.socan.com/wp-content/uploads/2026/01/Managing-Your-Reproduction-Rights.pdf",
+      "check_result": "verified"
+    },
+    {
+      "id": "cmrra",
+      "url": "https://cmrra.ca/help-centre/how-to-register-your-songs-video-tutorial/",
+      "check_result": "verified_route_only"
+    },
+    {
+      "id": "sacem",
+      "url": "https://createurs-editeurs.sacem.fr/authentification",
+      "check_result": "verified_route_only"
+    },
+    {
+      "id": "sacem-guide",
+      "url": "https://createurs-editeurs.sacem.fr/brochures-documents/comment-declarer-une-oeuvre-en-ligne",
+      "check_result": "unavailable_404"
+    },
+    {
+      "id": "gema",
+      "url": "https://www.gema.de/en/w/help/creators/works-repertoire/submit-a-notification-for-your-works/how-register-works",
+      "check_result": "verified"
+    },
+    {
+      "id": "apra",
+      "url": "https://www.apraamcos.com.au/resources/get-paid/register-songs",
+      "check_result": "verified"
+    },
+    {
+      "id": "kobalt",
+      "url": "https://www.kobaltmusic.com/creator-portal/",
+      "check_result": "verified_route_only"
+    },
+    {
+      "id": "songtrust-add",
+      "url": "https://help.songtrust.com/knowledge/how-many-songs-can-i-register",
+      "check_result": "verified"
+    },
+    {
+      "id": "songtrust-edit",
+      "url": "https://help.songtrust.com/knowledge/how-can-i-edit-split-information",
+      "check_result": "verified"
+    },
+    {
+      "id": "songtrust-recordings",
+      "url": "https://help.songtrust.com/knowledge/do-i-need-to-make-separate-registrations-if-there-are-multiple-recordings-of-my-song",
+      "check_result": "verified"
+    },
+    {
+      "id": "usco-register",
+      "url": "https://www.copyright.gov/registration/",
+      "check_result": "verified"
+    },
+    {
+      "id": "usco-types",
+      "url": "https://www.copyright.gov/register/pa-sr.html",
+      "check_result": "verified"
+    },
+    {
+      "id": "usco-supplement",
+      "url": "https://www.copyright.gov/circs/circ08.pdf",
+      "check_result": "verified"
+    },
+    {
+      "id": "usco-record",
+      "url": "https://www.copyright.gov/recordation/",
+      "check_result": "verified"
+    },
+    {
+      "id": "spotify",
+      "url": "https://support.spotify.com/us/artists/article/fixing-problems-with-music/",
+      "check_result": "verified"
+    },
+    {
+      "id": "distrokid-migrate",
+      "url": "https://support.distrokid.com/hc/en-us/articles/360013648133-Switching-from-a-Different-Distribution-Company-to-DistroKid",
+      "check_result": "verified"
+    },
+    {
+      "id": "distrokid-ugc",
+      "url": "https://support.distrokid.com/hc/en-us/articles/30785369645843-What-is-Social-Media-Pack",
+      "check_result": "verified"
+    },
+    {
+      "id": "youtube-eligibility",
+      "url": "https://support.google.com/youtube/answer/1311402?hl=en",
+      "check_result": "verified"
+    },
+    {
+      "id": "youtube-partner",
+      "url": "https://developers.google.com/youtube/partner",
+      "check_result": "verified"
+    },
+    {
+      "id": "cwr",
+      "url": "https://www.cisac.org/formats",
+      "check_result": "verified"
+    },
+    {
+      "id": "ddex-rdr",
+      "url": "https://ddex.net/standards/recording-data-and-rights/",
+      "check_result": "verified"
+    },
+    {
+      "id": "ddex-ct",
+      "url": "https://ddex.net/standards/catalogue-transfers/",
+      "check_result": "verified"
+    },
+    {
+      "id": "isrc",
+      "url": "https://isrc.ifpi.org/faqs",
+      "check_result": "verified"
+    },
+    {
+      "id": "distrokid-edit",
+      "url": "https://support.distrokid.com/hc/en-us/articles/360013649333-Editing-a-Release-After-It-s-Uploaded",
+      "check_result": "verified"
+    },
+    {
+      "id": "ddex-ern",
+      "url": "https://kb.ddex.net/implementing-each-standard/electronic-release-notification-message-suite-%28ern%29/",
+      "check_result": "verified"
+    }
+  ]
+}

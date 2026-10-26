@@ -1,18 +1,9 @@
 #!/usr/bin/env python3
-"""Validate cross-artifact consistency in a catalog deal workspace.
+"""Validate deal eligibility without rewriting ownership or controlled interest.
 
-Rules:
-1. Every entry in `scope.excluded_assets` of assumptions.yaml is either
-   absent from canonical-catalog.csv OR present with `controlled_share=0`.
-2. Every rights-map.csv row whose `support_level == 'conflicting'` and whose
-   notes mention reversion/termination corresponds to a canonical-catalog
-   row with `controlled_share=0`.
-3. Every findings.json entry whose `valuation_treatment` says to exclude
-   has its affected_assets reduced to `controlled_share=0` in the catalog
-   (warning only — the agent may have a reason to keep the row).
-
-Returns status='errors_found' on any rule-1 or rule-2 violation; emits a
-'warnings' list for rule-3.
+Explicit deal_eligibility values are independent of controlled_share. An exclusion
+or unresolved termination document may limit the reviewed transaction while the
+owner's underlying interest remains intact. No keyword changes legal ownership.
 """
 
 from __future__ import annotations
@@ -127,55 +118,30 @@ def validate_excluded_assets(
             unmatched.append({"excluded_label": label, "raw": entry})
             continue
         for row in matches:
-            share = parse_share(row.get("controlled_share"))
-            if share is not None and share != 0:
+            if row.get("deal_eligibility") == "included":
                 errors.append(
                     {
-                        "rule": "excluded_asset_with_nonzero_controlled_share",
+                        "rule": "excluded_asset_marked_deal_included",
                         "excluded_label": label,
                         "catalog_asset_id": row.get("catalog_asset_id"),
                         "title": row.get("title"),
-                        "controlled_share": share,
+                        "deal_eligibility": row.get("deal_eligibility"),
                     }
                 )
     return errors, unmatched
 
 
-def validate_reverted_rights(
-    rights: list[dict],
-    catalog: list[dict],
-) -> list[dict]:
-    catalog_by_id = {(row.get("catalog_asset_id") or "").strip(): row for row in catalog}
-    seen_ids: set[str] = set()
-    errors: list[dict] = []
-    for row in rights:
-        asset_id = (row.get("catalog_asset_id") or "").strip()
-        support = (row.get("support_level") or "").strip().lower()
-        notes = row.get("notes") or ""
-        if not asset_id:
+def validate_reverted_rights(rights: list[dict], catalog: list[dict]) -> list[dict]:
+    # Free-text mentions such as "need termination exhibit" are not dispositions.
+    catalog_by_id = {row.get("catalog_asset_id"): row for row in catalog}
+    errors = []
+    for right in rights:
+        if right.get("deal_eligibility") not in {"excluded", "unresolved"}:
             continue
-        if support not in {"conflicting", "missing"}:
-            continue
-        if not REVERSION_PATTERN.search(notes):
-            continue
-        if asset_id in seen_ids:
-            continue
-        seen_ids.add(asset_id)
-        catalog_row = catalog_by_id.get(asset_id)
-        if catalog_row is None:
-            continue
-        share = parse_share(catalog_row.get("controlled_share"))
-        if share is not None and share != 0:
-            errors.append(
-                {
-                    "rule": "reverted_or_terminated_rights_with_nonzero_controlled_share",
-                    "catalog_asset_id": asset_id,
-                    "title": catalog_row.get("title"),
-                    "support_level": support,
-                    "rights_notes": notes,
-                    "controlled_share": share,
-                }
-            )
+        asset = catalog_by_id.get(right.get("catalog_asset_id"), {})
+        if asset.get("deal_eligibility") == "included":
+            errors.append({"rule": "inconsistent_deal_eligibility", "catalog_asset_id": right.get("catalog_asset_id"),
+                           "rights_eligibility": right["deal_eligibility"], "catalog_eligibility": "included"})
     return errors
 
 
@@ -199,15 +165,14 @@ def validate_excluded_findings(
             row = catalog_by_id.get(asset_id)
             if row is None:
                 continue
-            share = parse_share(row.get("controlled_share"))
-            if share is None or share == 0:
+            if row.get("deal_eligibility") in {"excluded", "unresolved"}:
                 continue
             warnings.append(
                 {
-                    "rule": "excluding_finding_targets_nonzero_share_asset",
+                    "rule": "excluding_finding_needs_explicit_deal_eligibility",
                     "finding_id": finding.get("finding_id"),
                     "catalog_asset_id": asset_id,
-                    "controlled_share": share,
+                    "deal_eligibility": row.get("deal_eligibility") or "unrecorded",
                     "valuation_treatment": treatment[:200],
                 }
             )

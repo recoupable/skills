@@ -122,6 +122,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | recoup-release-plan-rollout | Plan & run a release end to end |
 | recoup-release-track-drop | Confirm a drop & build a launch-day alert |
 | recoup-release-add-release | Add a supported release link/export and show available details and ordered tracks |
+| recoup-release-manage-delivery | Correct existing releases, prepare eligible UGC enrollment and manage distributor transitions with destination readback |
 | recoup-release-check-metadata | Compare release records and track exactly which metadata corrections are confirmed |
 
 ### catalog — repertoire, contracts, publishing and deals
@@ -131,22 +132,28 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 | recoup-catalog-import-catalog | Organize a supplied catalog export with row references, counts and unresolved matches |
 | recoup-catalog-explain-contract | Explain a supplied music agreement with clause references and concrete obligations |
 | recoup-catalog-organize-publishing | Organize compositions, parties, recorded shares, registrations and administration details |
+| recoup-catalog-audit-catalog | Audit rights, registrations, identifiers, documents and asset condition with explicit coverage |
+| recoup-catalog-reconcile-royalties | Reconcile reported royalties, evidenced entitlements, remittances and receiving-account evidence |
+| recoup-catalog-register-catalog | Prepare and carry out authorized registrations, ordinary claims, amendments and matches through verified routes |
+| recoup-catalog-resolve-claims | Pursue documented music-rights and royalty exceptions, preserving disposition and financial evidence |
 | recoup-catalog-review-deal | Underwrite a deal end to end (data room → IC memo) |
 | recoup-catalog-estimate-value | Value a catalog from public data alone (no seller files) |
 | recoup-nft-valuation | Measure an artist's onchain NFT earnings & fold them into a valuation |
 
 The new release, catalog, credits, contract and publishing workflows can review supplied
 material with the host’s file tools. Saving/importing into Recoup requires the corresponding
-supported operation and access; a local worksheet is not a hosted import. No new backend
-capability ships with these skills.
+supported operation and access; a local worksheet is not a hosted import. The catalog case helpers work locally without an artist roster or provider login.
+Service profiles distinguish documented assisted routes from implemented automation;
+no provider is advertised as live-verified from fixtures. Hosted case operations
+have a separate API/database release dependency. See [catalog coverage](docs/catalog-diligence-coverage.md).
 
 ### platform — operate the system
 
 | Skill | What it does |
 |-------|-------------|
 | recoup-platform-connect-account | Connect with MCP OAuth; REST credential fallback when needed |
-| recoup-platform-track-onboarding | Score an account against the activation funnel; route to the next step |
-| recoup-platform-build-os | Build the org's self-managing music-company OS (folders + brain + janitor + plugin), seeded from your live roster |
+| recoup-platform-track-onboarding | Track the applicable company, creator or catalog setup and route to its next useful step |
+| recoup-platform-build-os | Build a music-company workspace from available company, catalog, creator or roster context |
 | recoup-platform-api-access | Call the Recoup API & external connectors directly |
 | recoup-platform-capture-lesson | Capture a reusable lesson (compounding memory) |
 
@@ -156,8 +163,7 @@ capability ships with these skills.
 
 | Skill | What it does |
 |-------|-------------|
-| recoup-internal-dev-issue-tracker | Write & maintain high-signal GitHub tracking issues |
-| recoup-internal-dev-ship-issue | Deliver a tracked issue end-to-end (docs-first, TDD) |
+| recoup-internal-dev | Write, maintain & ship GitHub issues end-to-end (tracking issues, docs-first, TDD) |
 | recoup-internal-eval-skill-benchmark | Benchmark a skill pack/plugin against the frontier |
 | recoup-internal-sales | Daily sales sweep across Stripe/Privy/valuations/Attio/credits/tasks/chats → one ranked follow-up list |
 | recoup-internal-funnel-valuation-pipeline | Work the Attio catalog-valuation sales funnel |
@@ -205,9 +211,36 @@ Add a route for the new skill in [`RESOLVER.md`](RESOLVER.md) and a fixture in `
 
 ## Internal consulting workflows
 
-The 63 `recoup-internal-consulting-*` skills cover client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
+The 65 `recoup-internal-consulting-*` skills cover PMF discovery, client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
 
-Business installs this same repository at `plugin/` as a pinned Git submodule. Consult its workspace rules before accessing data. Integration adapters, credentials and active schedules belong to the selected workspace; installing these skills does not configure them.
+### PMF finder
+
+Use `recoup-internal-consulting-pmf-finder` to ground PMF learning in a real-person PULL anecdote and test whether it repeats. If no anecdote exists, it defines firsthand fieldwork instead. It covers discovery, buying decisions and pilot verification, delivery/retention, and repeatable customer outcomes, with a memo template and dated podcast/author sources. Book-preview coverage is explicitly partial. Example: “recoup-internal pmf-finder: use these customer calls to identify the weakest demand assumption and our next test.” Keep resulting buyer evidence in the selected private business workspace.
+
+### Mono Business workspace
+
+Mono's Business uses the shared sibling `skills/` checkout. Both starting
+directories below refer to the same owning Skills repository:
+
+| Starting directory | Skills repository | Skill authoring path |
+| --- | --- | --- |
+| Mono root | `skills/` | `skills/skills/<skill-name>/SKILL.md` |
+| Business root | `../skills/` | `../skills/skills/<skill-name>/SKILL.md` |
+
+Do not create `business/plugin/` or copy skills into Business. Commit Skills
+changes in the Skills repository and Business records in the Business repository,
+with separate feature branches and PRs targeting `main`. Follow Mono's existing
+coordinator rules for parent references after release; a commit in either
+repository does not publish the other.
+
+For another selected workspace, resolve its authoring repository from that
+workspace's `AGENTS.md`; do not assume a universal nested plugin layout.
+Integration adapters, credentials and active schedules belong to that workspace.
+Installing a skill does not configure them or authorize source ingestion. Mono's
+Business runs no unattended source-ingestion worker; the separate private sync
+coordinator remains outside this workspace.
+
+### Consulting media
 
 Media skills bundle the Recoup Sky identity, DM Sans, IBM Plex Mono, exact logos and approved Finals references. Video engines and modes are supporting GUIDE.md files under the HyperFrames skill. Third-party assets retain their notices; personal-use replica and Virgil font binaries are excluded.
 
@@ -352,3 +385,5 @@ Merges to `main` regenerate the branch after validation. Configure Claude to
 track that branch so it discovers new releases automatically. Anthropic scanning,
 review, and publication remain separate from building or pushing the package.
 Do not edit the generated branch directly. Its README records source provenance.
+
+Unified artifact shapes, parity checks and the buyer manifest contract: [plugin distribution](references/plugin-distribution.md).

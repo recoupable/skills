@@ -112,8 +112,11 @@ Autopilot means "no human in the loop," not "skip the rails." These come straigh
    `[UNVERIFIED]` + digest; no deletes.
 
 4. **Commit (the commit *is* the episodic memory).** Commit each meaningful change with a clear,
-   why-first message. Group sensibly (one commit per deal/item is fine). If you changed a skill in the
-   `plugin/` submodule, commit there too.
+   why-first message. Group sensibly (one commit per deal/item is fine). If you changed a skill,
+   resolve the owning Skills repository from the selected workspace's `AGENTS.md` and commit
+   there, separate from Business/content changes and their PRs. Follow each repository's branch,
+   validation and publication rules. If the authoring root is undeclared, record the missing owner
+   in the digest rather than creating a nested checkout or copying skill definitions.
 
 5. **Write the morning digest** → `business/ops/nightly-digests/<YYYY-MM-DD>.md` (create the folder if
    missing). Keep it skimmable for a 30-second morning read:

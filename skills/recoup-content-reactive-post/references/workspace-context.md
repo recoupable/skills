@@ -1,9 +1,21 @@
 # Artist-workspace context (read first, API second)
 
+**Release-pack branch:** check relevant authorized Recoup context first, then the customer's
+selected material, then accessible public gaps. The local-file-first ordering below
+describes other content workflows; it must not override the pack's source order or
+the customer's current release direction. No local artist folder is required.
+
 Every Recoup content skill is **artist-workspace-native**: when an artist workspace
 exists, the artist's own files are the source of truth for who they are and how they
 sound. Read them before calling any API. The API is the *fallback* for when no workspace
 exists (mirrors the `recoup-platform-api-access` rule: "the filesystem is authoritative for this sandbox").
+
+An existing workspace is an input source, not a prerequisite. In a host without
+local files, use the supplied conversation/assets and authorized connected context.
+For a release pack, collect a compact campaign brief inline and preserve that job;
+do not create an artist, repository or full profile just to find context. Explicit
+current customer choices govern this campaign without silently overwriting the
+artist's maintained brand files.
 
 ## Context is OPTIONAL — three modes
 
@@ -82,8 +94,11 @@ curl -sS "$AUTH_HEADER" "https://api.recoupable.dev/api/artists/$ARTIST_ID/posts
 curl -sS "$AUTH_HEADER" "https://api.recoupable.dev/api/artists/$ARTIST_ID/socials" | jq
 ```
 
-If neither workspace context nor API posts are available, **say so and ask the user for
-voice guidance** rather than producing a generic, off-brand result.
+If neither workspace context nor API posts are available, say so. For a release
+pack, reuse supplied direction or already authorized creative defaults; label any
+proposed voice as new creative work. Ask for voice guidance only when that gap
+still blocks the request. Do not restart intake after the customer said to propose
+a direction from the music.
 
 ## 5. Write outputs BACK into the workspace
 

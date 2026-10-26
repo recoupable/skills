@@ -1,0 +1,162 @@
+{
+  "purpose": "Fresh-host acceptance rubric, not a claim that host execution was tested. Use only exposed tool schemas; no paid generation without a bounded approved quote.",
+  "cases": [
+    {
+      "id": "first-use",
+      "request": "Create a release pack for me.",
+      "context": "No connection, no artist, no assets.",
+      "must": [
+        "Keep pack intent; ask once for artist/title, usable audio, occasion and creative references or permission to propose.",
+        "No required roster, GitHub, valuation or general onboarding."
+      ]
+    },
+    {
+      "id": "audio-first",
+      "request": "Make a pack for this song.",
+      "context": "Audio attachment, artist/title supplied; creative defaults accepted.",
+      "must": [
+        "Analyze actual recording; label suggested direction and hook.",
+        "Retain brief through OAuth; empty roster is valid."
+      ]
+    },
+    {
+      "id": "anniversary",
+      "request": "Celebrate the tenth anniversary of this recording.",
+      "context": "Song and original release date supplied.",
+      "must": [
+        "Use anniversary context and original recording; never invent release dates or historical performance."
+      ]
+    },
+    {
+      "id": "remix",
+      "request": "Promote this remix, not the original.",
+      "context": "Two recordings share a title.",
+      "must": [
+        "Resolve exact selected version before any paid generation."
+      ]
+    },
+    {
+      "id": "plan-only",
+      "request": "Plan a release for me.",
+      "context": "No media requested.",
+      "must": [
+        "Route to rollout planning; do not quote or generate a pack."
+      ]
+    },
+    {
+      "id": "shortfall",
+      "request": "Generate the approved pack.",
+      "context": "Quote returned credit shortfall.",
+      "must": [
+        "Preserve job and brief; show billingUrl; no purchase or automatic paid retry."
+      ]
+    },
+    {
+      "id": "interrupted",
+      "request": "Continue my pack.",
+      "context": "Some assets complete, one provider request uncertain.",
+      "must": [
+        "Read existing job; retain finished assets; reconcile uncertain provider request before retry."
+      ]
+    },
+    {
+      "id": "older-connection",
+      "request": "Make this release pack.",
+      "context": "Required pack tools missing.",
+      "must": [
+        "Name missing capability and retain brief; do not claim prompts are generated assets."
+      ]
+    },
+    {
+      "id": "guided-supplied-board",
+      "request": "Make a pack, but show me the direction first.",
+      "context": "Supplied song and real direction boards; creative_context is exposed.",
+      "must": [
+        "Save references and candidates in the same job.",
+        "Do not quote or generate final assets before a customer direction selection; an agent selection is insufficient."
+      ]
+    },
+    {
+      "id": "autonomous-direction",
+      "request": "Run with it. Choose the look and make the pack.",
+      "context": "Song supplied and creative decisions delegated.",
+      "must": [
+        "Develop and save one selected world; do not impose a preview checkpoint.",
+        "Keep scope and spending approval distinct from creative delegation."
+      ]
+    },
+    {
+      "id": "reference-only-image",
+      "request": "Use this picture for inspiration, not as the artist.",
+      "context": "Reference is attributed as reference_only.",
+      "must": [
+        "Do not silently pass it as a production likeness/image input."
+      ]
+    },
+    {
+      "id": "blocked-public-reference",
+      "request": "Use my Instagram look.",
+      "context": "Recoup has relevant saved context; public profile is inaccessible.",
+      "must": [
+        "Reuse available authorized context first; disclose inaccessible profile.",
+        "Do not invent reviewed posts or require general onboarding."
+      ]
+    },
+    {
+      "id": "direction-schema-unavailable",
+      "request": "Show me some visual worlds first.",
+      "context": "Current connection lacks creative_context and any board-generation tool.",
+      "must": [
+        "Keep an honest conversational checkpoint and name the unavailable capability.",
+        "Do not send unsupported fields or claim generated boards exist."
+      ]
+    },
+    {
+      "id": "recoup-first-reference-pass",
+      "request": "Make a pack for my artist using what you already have.",
+      "context": "Authorized matching Recoup artist has instructions, image and knowledge links; local folder contains an older campaign.",
+      "must": [
+        "Inspect saved Recoup context before asking for branding or handles.",
+        "Current release choices govern the world; stale local campaigns do not override them.",
+        "A returned link is not a claim its contents were inspected."
+      ]
+    },
+    {
+      "id": "selected-folder-only",
+      "request": "Use this folder of photos and the attached recording.",
+      "context": "Host has selected-folder access and no matching Recoup artist.",
+      "must": [
+        "Inspect the selected files without searching the whole computer or creating an artist.",
+        "Keep a private attributed collection and use supported upload operations for selected production images."
+      ]
+    },
+    {
+      "id": "public-namesake",
+      "request": "Find photos for this artist and run with it.",
+      "context": "Two public artists share a name and neither profile is linked to the supplied recording.",
+      "must": [
+        "Ask one focused identity question before using likeness; delegation does not resolve namesakes.",
+        "Do not select the first search result or invent a face."
+      ]
+    },
+    {
+      "id": "expired-reference",
+      "request": "Continue the pack we prepared last week.",
+      "context": "Saved private source URL expired; original source key is retained.",
+      "must": [
+        "Use a supported refresh/read operation and preserve original attribution.",
+        "Update and requote the same pack when required; do not invent a fresh URL or submit an expired input."
+      ]
+    },
+    {
+      "id": "official-references-before-question",
+      "request": "Make a release pack using my official artist page.",
+      "context": "No photos attached; the correctly matched official page links an accessible press kit with sufficient visual references. No paid research is authorized.",
+      "must": [
+        "Inspect the accessible official references during the bounded public pass before asking for artwork.",
+        "Skip the artwork question when the inspected references provide enough visual context.",
+        "Keep public inspiration separate from permission to use photographs as production inputs."
+      ]
+    }
+  ]
+}

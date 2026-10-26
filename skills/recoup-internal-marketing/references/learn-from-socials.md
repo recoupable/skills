@@ -49,6 +49,12 @@ curl -sS "https://api.recoupable.dev/api/apify/runs/<RUN_ID>" \
   auth, hit the public syndication endpoint and read `mediaDetails[].type`.
 - **LinkedIn comment bodies are not exposed** for personal posts, and neither are impressions. Read
   comments by hand. Reactions are available via `LINKEDIN_LIST_REACTIONS`.
+- **An empty scrape is not "unreadable".** When it returns no posts (Recoup official IG/LI, 2026-10-21), read the connectors: `POST /api/connectors/actions?account_id=<artist>` (unscoped shows "not connected"),
+  `INSTAGRAM_GET_IG_MEDIA_INSIGHTS` per reel (views, reach, avg watch time).
+- **LinkedIn company-page post numbers come from `GET /api/posts/{id}/stats`** (impressions, unique
+  impressions, clicks, likes, comments, shares, engagement), for any post published with `POST /api/posts`.
+  It reads through the connection that published the post. Do not use the connector action
+  `LINKEDIN_GET_SHARE_STATS` for this: it ignores the per-post filter and returns the page's lifetime totals.
 - **Custom Shorts thumbnails** show on the watch page and channel but the Shorts feed may still show
   a video frame. Do not conclude the thumbnail failed.
 - **The YouTube scrape is noisy and returns other channels' videos.** For a clean per-video audit

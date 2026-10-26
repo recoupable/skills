@@ -1,5 +1,20 @@
 # Content API (`/api/content/*`) — the building blocks
 
+### Optional saved creative direction
+
+Inspect the connected pack schema before sending `brief.creative_context`.
+Supported connections can save attributed references, up to three direction
+candidates, a starting point, `working_mode` (`autonomous` or `guided`) and a
+selection identifying the customer or agent who chose it. Guided final production
+requires customer selection. Autonomous mode has the agent select its direction
+and continue. This records a creative decision, not budget approval.
+
+References declare `reference_only` or `production` usage; only selected production
+images join the generation inputs, within the existing five-image limit. Direction
+changes follow the same job revision and quote invalidation. A real supplied board
+URL is optional. Saving a candidate does not generate a board or collect public
+artist imagery. Older connections without this object keep their existing fields.
+
 Every Recoup content skill is built on these endpoints. This is the shared contract:
 endpoints, house video frame controls, templates, the async create→poll pattern, and cost
 estimation. For auth + artist-ID resolution, use the account-resolver reference when the
@@ -22,6 +37,18 @@ fi
 ```
 
 ## Endpoints
+
+For a release/content pack, prefer connected `prepare_release_pack`,
+`estimate_release_pack`, `generate_release_pack`, `get_release_pack`,
+`retry_release_pack` and `upload_release_pack_asset` **when actually exposed**.
+They retain the brief, quote, approved ceiling and per-asset progress without an
+existing artist or repository. Use actual schemas and IDs. If those operations
+are absent, retain the brief and name the missing execution capability; never
+extract MCP OAuth credentials to simulate REST access. A working MCP connection
+does not imply that every REST primitive below is available to that host.
+
+The pack quote covers its selected scope. The legacy **GET** `/content/estimate`
+below is an advisory per-video estimate, not a complete mixed-media pack price.
 
 | Capability | Call | Notes |
 | --- | --- | --- |
@@ -143,6 +170,10 @@ curl -sS -X PATCH "$BASE/content" "${AUTH[@]}" -H "Content-Type: application/jso
 
 ## Spend discipline
 
-Generation costs credits (model-specific; the estimate endpoint is advisory and is not a price guarantee). For multi-asset runs (packs,
-per-track fan-outs) call `GET $BASE/content/estimate` and confirm with the user before fanning
-out. On a 402 / `insufficient_credits`, surface the `billingUrl` — don't silently retry.
+Generation costs credits. For release packs, obtain the complete job quote from
+`estimate_release_pack` and approve its current revision and ceiling before
+`generate_release_pack`. The legacy `GET $BASE/content/estimate` is only an advisory
+per-video estimate for standalone workflows; it cannot authorize a mixed-media pack.
+For other multi-asset fan-outs, disclose the complete expected scope/cost and get
+approval before production. On a 402 / `insufficient_credits`, surface the
+`billingUrl` — don't silently retry.

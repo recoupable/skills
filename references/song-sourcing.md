@@ -6,7 +6,18 @@ don't assume the user has one to hand. Never fabricate or substitute audio.
 
 ## Order of attempts
 
-### 1. Check the artist workspace first
+### 1. Reuse the customer's explicitly selected audio first
+
+Use the upload or accessible audio file already supplied for this job. Confirm
+the exact recording/version when ambiguous. A streaming listening-page URL is a
+locator for research, not an audio download. Do not search unrelated local folders
+or replace the selected recording with a similarly named track.
+
+Connected pack upload tools can retain selected audio without an artist account
+or repository. Use their returned signed media locator and actual schema. A host
+without shell/filesystem access does not need a local `song.mp3` to use that path.
+
+### 2. Check existing authorized artist context if no audio was supplied
 
 If you're in an artist workspace, songs live at a predictable path:
 
@@ -23,7 +34,7 @@ then `GET /api/sandboxes/file?path=…`.
 Decode before writing to disk.** Skipping this produces a file that's the right size but
 unplayable, which then fails silently in ffmpeg.
 
-### 2. If no song is found, ask the user how to proceed
+### 3. If no song is found, ask the user how to proceed
 
 Two options — **don't pick silently;** pulling the wrong track from YouTube is costly
 enough that the user should choose:
@@ -33,7 +44,7 @@ enough that the user should choose:
 - *"Want to supply the song yourself?"* — the user provides a path or upload; read from
   there.
 
-### 3. Do not fall back to a placeholder track
+### 4. Do not fall back to a placeholder track
 
 A music asset with the wrong (or no) song is not a deliverable. If sourcing fails through
 both paths, stop and surface the blocker rather than shipping wrong audio.

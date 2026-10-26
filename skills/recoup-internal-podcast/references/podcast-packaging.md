@@ -44,7 +44,8 @@ operator's workspace.
 
 ## Guest photo sourcing
 
-Use the guest's own published artist image, never a fan photo or a screenshot.
+Use the guest's own published artist image, never a fan photo or a screenshot. A photo the owner supplies overrides
+this. If the role line runs into the cutout on the square, shorten it ("Founder, SongVest").
 
 - **Spotify artist image (best, no auth):** `https://open.spotify.com/oembed?url=https://open.spotify.com/artist/<id>`
   returns `thumbnail_url` at 320 px. Swap the image-id prefix `ab67616100005174` for

@@ -47,9 +47,20 @@ For a shipped API or feature the third act is **the contract, not the benchmark*
 **Then end on something the viewer can run**, not "learn more": `docs.recoupable.dev/llms.txt` and
 `chat.recoupable.dev/keys` under "give your agent the docs and a key."
 
-**curl every CTA before scripting it.** "Tell Claude to use it through our MCP" would have been a
-checkable lie: the MCP carries `prompt_sandbox` and `run_sandbox_command` and nothing else. `llms.txt`
-200, `llms-full.txt` 200 and containing the endpoint, the keys page 200; the MCP line was cut.
+**curl every CTA before scripting it.** **Historical check, 2026-08-11:** the inspected session
+exposed only `prompt_sandbox` and `run_sandbox_command`, so that film's "use it through our MCP"
+line was cut. The docs catalogs and keys page returned 200 at that check. This is a dated
+observation, not a current limit on Recoup's tools or a fresh check of those URLs.
+
+For a current capability claim, record three separate evidence states:
+
+1. **source registration** — the operation exists at a named source revision;
+2. **authenticated tool discovery** — it appears for the named host, date, account/organization and grant;
+3. **completed customer behavior** — the intended task succeeds and its result can be read back.
+
+Source registration alone does not establish client access. Tool discovery alone does not establish
+task completion. Verify the exact CTA and intended audience before scripting it; do not hardcode a
+universal tool count or reuse this historical session as evidence of today's capability.
 
 **Route around a tag-eating page and log which defect.** `/pricing` hardcodes `utm_campaign=free` on
 its own free CTA and overwrites the campaign tag on the converting click (five consecutive slates

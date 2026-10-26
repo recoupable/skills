@@ -15,7 +15,7 @@ recoupable/skills/            ← the repo root IS the plugin
 ├── skills/                   ← every skill (recoup-[domain]-[verb]-[noun]); recoup-internal-* are staff-gated
 │   ├── recoup-roster-add-artist/
 │   ├── recoup-research-the-web/
-│   ├── recoup-internal-dev-issue-tracker/
+│   ├── recoup-internal-dev/
 │   └── ...                   (flat skill folders)
 ├── agents/                   ← specialized subagents
 ├── .mcp.json                 ← Claude/Codex remote MCP configuration
@@ -138,7 +138,7 @@ The single plugin (`recoup-plugin`, `source "."`) is listed in **two files that 
 
 `scripts/validate_manifests.py` enforces this "dual-manifest parity" on `(name, source, version)` — **edit one, edit the other**. Keep the version in both marketplaces and both `plugin.json` files in sync.
 
-**Author email must match across layers:** the marketplace entry's email must equal the email in `plugin.json`. Use `support@recoupable.com` everywhere (the support email documented here).
+**Author email must match across layers:** the marketplace entry's email must equal the email in `plugin.json`. Use `agent@recoupable.dev` everywhere (the support email documented here).
 
 ## Naming & branding
 
@@ -170,6 +170,11 @@ python3 scripts/validate_manifests.py      # manifests valid + marketplace parit
 python3 scripts/check_resolvable.py        # every skill reachable from RESOLVER.md (no dark skills)
 python3 scripts/run_resolver_eval.py       # routing fixtures valid + full coverage
 ```
+
+For workspace/consulting ownership guidance, also run
+`python3 -m unittest discover -s tests -p test_business_workspace.py`. Its synthetic
+Mono/Business fixture verifies both documented paths reach the same Skills owner
+and rejects a nested checkout even when that directory exists.
 
 **This repo is the flagship, hand-maintained plugin** — "a record label in a box" rooted at the repo root that ships the full platform in one install: artist setup and API access, research, catalog deals, content, song analysis, and releases — every skill (in `skills/`), agent, MCP connection, reference, script, template, and fixture. It also ships Recoup's internal eng/ops skills (`recoup-internal-*`, staff-gated behind the `recoup-internal` keyword). Edit the skills directly.
 

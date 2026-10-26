@@ -14,6 +14,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 
 
 CHECKS = [
+    ("readiness", "build-deal-readiness.py", lambda workspace: [workspace, "--fail-on-blocked"]),
     ("workspace", "validate-deal-workspace.py", lambda workspace: [workspace]),
     (
         "normalized_ledger",

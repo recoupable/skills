@@ -1,162 +1,95 @@
-# Normalization
+# Royalty normalization and source controls
 
-Normalization converts provider-specific royalty exports into the canonical
-`royalty-ledger.csv` shape. This lets downstream analysis calculate NPS/NLS,
-concentration, and valuation bridges from one consistent ledger.
-
-## Current normalizer
-
-Use `scripts/normalize-royalty-statement.py` for first-pass CSV normalization.
+Use `scripts/normalize-royalty-statement.py` on supplied CSV/TSV or XLSX exports.
+It preserves decimal strings, original rows, source hashes, row/sheet positions and
+parser/mapping versions. It does not establish ownership, entitlement or cash.
 
 ```bash
-python3 scripts/normalize-royalty-statement.py \
-  --provider ascap \
-  --input deals/example/source/ascap.csv \
-  --output deals/example/normalized/royalty-ledger.csv
+python3 scripts/normalize-royalty-statement.py --provider publisher-admin --input original.csv --output royalty-ledger.csv --column-map mapping.json --controls controls.json
+python3 scripts/validate-normalized-ledger.py royalty-ledger.csv
 ```
 
-### Combining multiple providers into one ledger
+`mapping.json` maps **source column names to canonical fields**, for example
+`{"Net Royalty":"owner_net_amount","Currency Code":"currency"}`. An explicit map
+wins over aliases, including an empty mapped value. Do not insert invented USD,
+rights, income type or owner-net amounts. Missing classifications remain held.
+If a contract or statement header establishes a constant absent from every row,
+prepare a separate documented derived input retaining original row references;
+never claim that a provider name alone proves the constant.
 
-A deal almost always has several statements (ASCAP, distributor, MLC, …). They
-must all land in **one** `royalty-ledger.csv` so downstream NPS/NLS and
-concentration math sees the whole catalog. Without `--append`, each call
-**overwrites** the file and you silently keep only the last provider.
+`controls.json` contains `evidence_refs` and `totals`, such as
+`{"evidence_refs":["statement:page-1"],"totals":[{"currency":"USD","field":"owner_net_amount","amount":"12.0049"}]}`.
+Controls compare each supplied currency/field total exactly. Without independent
+source totals, `controls_status` stays `unavailable`, even if rows validate. A
+successful parser is not a reconciled statement or complete data room.
 
-Delete any existing ledger first, then pass `--append` on every call:
+## Inputs and supported scope
+
+Use `--sheet` for an identified XLSX sheet; a missing name fails rather than
+silently using the active sheet. XLSX needs `openpyxl`; the script names the missing
+package. CSV/TSV needs only Python's standard library. Both stream rows; append
+uses a temporary SQLite identity index instead of holding the ledger in memory.
+
+Provider keys select column aliases, **not legal rights or economic categories**:
+ASCAP, BMI, MLC, distributor, publisher-admin, SoundExchange, direct-sync, YouTube
+Content ID, Curve and other keys shown in `--help` still require observed category,
+period and currency fields. A file with unfamiliar columns needs explicit mapping
+and source controls before use. No exact support for every portal/export revision
+is claimed. Kobalt and another administrator's files can use explicit supplied-field
+mappings; this is not a certified Kobalt API or universal account export parser.
+
+Preserve performance/usage periods separately from reporting periods, report dates
+and payment dates. Report Date is never automatically a Payment Date. Ownership,
+collection, raw statement percentages, parent-chain rows and participant shares are
+different fields; do not infer an owner share from them. Sync describes a use and
+may cover master, composition or both, so it cannot determine the underlying right.
+
+## Row conservation, versions and duplicate handling
+
+Each run creates a summary JSON receipt and a `.rows.jsonl` receipt under the
+output ledger's `.receipts` directory. The summary records source SHA256, selected
+sheet, parser/transform IDs, currency totals, row counts and controls status. Every
+input row receives a disposition: detail, held, control, footer, ignored or duplicate.
+A song title starting with “Totals” is not itself a control row. Explicit Row Type
+or row_class fields identify control/footer records; retain their source receipt.
+
+`row_status: ready` means the required observed fields are present; `held` rows
+remain in the ledger with reasons and cannot enter financial aggregation unnoticed.
+Missing owner-net, currency, rights, income type, dates, malformed rows and unknown
+row classifications require resolution. Header-only files cannot pass as complete.
+
+Use a **new output version** for a rebuilt ledger. To add another source to a
+compatible ledger, use `--append`. Exact source-hash/sheet/row identities are stable,
+so reimporting an identical export does not duplicate income. Explicit scoped
+account/statement/transaction IDs also catch repeated and revised transactions.
+Changed mapping of the same source requires a rebuild. Conflicting revisions are
+held for review; unkeyed overlapping exports cannot be automatically deduplicated.
+Do not delete old ledgers/receipts as a routine workflow step.
+
+Amounts remain unrounded through normalization, controls and calculation. Any
+statement-specific rounding is a separately evidenced reporting boundary. Never
+sum different currencies or unrelated periods into a single financial number.
+
+## PDF candidates
+
+`extract-pdf-statement.py` is an experimental text-table candidate extractor using
+`pdfplumber`. Scanned PDFs need another verified extraction route. Candidate rows
+are held and require row/page comparison, exact field mapping and source controls;
+a PDF filename or society label does not prove successful parsing. A generated
+candidate ledger must not be reported as a completed financial reconciliation.
+
+## Validation
+
+Run `validate-normalized-ledger.py` on the result and reconcile its source receipts.
+For maintainer regression coverage in a source checkout, run:
 
 ```bash
-LEDGER=deals/example/normalized/royalty-ledger.csv
-rm -f "$LEDGER"                       # start clean (append never truncates)
-for stmt in ascap:ascap.csv distributor:distributor.csv mlc:mlc.csv; do
-  python3 scripts/normalize-royalty-statement.py \
-    --provider "${stmt%%:*}" \
-    --input "deals/example/source/${stmt##*:}" \
-    --output "$LEDGER" --append
-done
+python3 -m unittest discover -s skills/recoup-catalog-review-deal/tests
 ```
 
-`--append` continues `ledger_line_id` numbering across providers (no collisions),
-writes the header only on the first (fresh) call, and reports
-`"appended"` plus `"ledger_total_rows"` in its JSON so you can confirm the row
-count grows with each statement.
+The public fixtures are synthetic. Tests cover precision, missing fields, repeated
+and revised imports, wrong worksheets, source controls, typed dates/classifications,
+financial eligibility and separate receiving-account evidence. They do not prove a
+live provider integration. Keep private customer statements out of public fixtures.
 
-Supported provider profiles:
-
-| Provider key | Intended source | Rights type | Income type |
-| --- | --- | --- | --- |
-| `ascap` | ASCAP-style performance CSV exports | publishing | performance |
-| `bmi` | BMI-style performance CSV exports | publishing | performance |
-| `mlc` | MLC-style mechanical CSV exports | publishing | mechanical |
-| `distributor` | Distributor/DSP master royalty CSV exports | master | streaming |
-| `publisher-admin` | Publisher administrator mechanical CSV exports | publishing | mechanical |
-| `soundexchange` | SoundExchange/neighboring rights CSV exports | neighboring | radio |
-| `direct-sync` | Direct sync income tracker CSV exports | sync | sync |
-| `youtube-content-id` | YouTube Content ID CSV exports | master | UGC |
-| `curve` | Curve-style royalty accounting CSV exports | source-provided | source-provided |
-
-## PDF statements (experimental, verify-required)
-
-CSV/TSV/XLSX is the happy path. For **text-based PDF** statements (not scanned
-images), `scripts/extract-pdf-statement.py` reads tables with `pdfplumber` and
-maps them via per-society templates. It ships templates for ASCAP, SESAC, HFA,
-SoundExchange, PRS, SACEM, SADAIC, JASRAC, APRA, and SOCAN, matched by file
-path + header signature.
-
-```bash
-python3 scripts/extract-pdf-statement.py \
-  deals/{deal-id}/source/03_royalty_statements \
-  --output deals/{deal-id}/normalized/pdf-extracted-ledger.csv \
-  --workspace-root deals/{deal-id}
-```
-
-It walks a whole directory in one call (no per-file loop), writes to a
-**separate** review ledger, and tags every row `match_confidence: low` /
-`notes: extracted from PDF, verify against source`. **Always spot-check against
-the source PDF and run `validate-normalized-ledger.py` before merging into
-`royalty-ledger.csv`.** Requires `pip3 install -r requirements.txt` (pdfplumber);
-without it the script exits with a clean `missing_dependency` status. Scanned /
-image-only PDFs (true OCR) are still out of scope, and these society templates
-are not yet covered by golden fixtures — treat output as a draft.
-
-## What the normalizer guarantees
-
-The script writes all canonical ledger columns:
-
-- `ledger_line_id`
-- `catalog_asset_id`
-- `source_file`
-- `provider`
-- `period_start`
-- `period_end`
-- `payment_date`
-- `rights_type`
-- `income_type`
-- `territory`
-- `platform_or_licensee`
-- `gross_amount`
-- `deductions`
-- `participant_share`
-- `owner_net_amount`
-- `currency`
-- `fx_rate`
-- `pro_use_type`
-- `pro_credits`
-- `pro_bonus_type`
-- `cue_sheet_ref`
-- `match_confidence`
-- `notes`
-
-It also preserves important PRO details such as use type, credits, bonus type,
-licensee, and work IDs when source columns are present.
-
-## What it does not guarantee
-
-The current normalizer is a first-pass adapter for common CSV shapes. It does
-not yet guarantee:
-
-- Exact support for every real ASCAP, BMI, MLC, distributor, YouTube, or Curve
-  export variant.
-- OCR of scanned / image-only PDFs. (Text-based PDFs have an experimental,
-  verify-required path — see "PDF statements" above.)
-- Automatic ISRC-to-ISWC matching.
-- Contract-based recoupment or reserve calculation.
-- Legal ownership support.
-
-Use validation scripts and human review after normalization.
-
-## How to know it works
-
-Use tests and validations:
-
-1. Run `python3 scripts/test-normalize-royalty-statement.py`.
-2. Run `python3 scripts/test-golden-fixtures.py` (CSV) and
-   `python3 scripts/test-golden-pdf-fixtures.py` (PDF, 9 society templates).
-3. Run `python3 scripts/validate-normalized-ledger.py <royalty-ledger.csv>`.
-4. Spot-check source lineage by comparing normalized rows back to source rows.
-5. Add a new fixture whenever a real provider export has a new column shape.
-
-Provider parsers become trustworthy only when backed by golden fixtures from
-real or representative exports.
-
-## Synthetic data room smoke test
-
-The plugin has been tested against the local Neon River synthetic data room
-generated by `.local/generate_neon_river_data_room.py`. That room includes
-messy seller-style exports for distributor, publisher admin, ASCAP, BMI, MLC,
-SoundExchange, YouTube Content ID, and direct sync sources.
-
-The smoke test normalizes all eight raw statement sources and validates each
-output with `validate-normalized-ledger.py`. The row total matches the
-generator's clean ledger count of 3,188 rows.
-
-## Golden fixtures
-
-Golden fixtures live in `fixtures/golden/{provider-scenario}/`:
-
-- `input.csv` is a small provider-shaped source export.
-- `expected-royalty-ledger.csv` is the exact canonical output expected from the
-  normalizer.
-
-The current fixtures are synthetic and documented in
-`fixtures/external-sources.md`. They are based on public schemas and official
-documentation, not private royalty data.
+Source controls compare all source detail before duplicate disposition. `written_totals` separately reports only rows newly written by this import; existing appended rows are excluded. An economic duplicate requires review and keeps overall status partial even if source controls match.

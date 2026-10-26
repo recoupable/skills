@@ -1,5 +1,10 @@
 # Research signals — ground the content in what's actually true
 
+**Release-pack branch:** collect useful references before extra research.
+A credential is not a spending approval. Reuse saved context,
+read only useful gaps and keep any charged enrichment inside the approved allowance;
+do not fan out these signal calls simply because an artist is named.
+
 Workspace context (`context/artist.md`, `context/audience.md`) tells you **who the artist
 is**. Research signals tell you **what's happening right now** — the song's actual tempo and
 mood, where it's charting, what just hit a milestone, what's trending around the artist.
@@ -36,15 +41,20 @@ UUIDs and Spotify IDs. Resolve a name, inspect the match, and reuse its `id`:
 ### Read without assuming a warm-up job
 
 These GET routes are synchronous. Empty successful data is not a cache-warming
-signal. Check HTTP success before reading JSON. Surface `402` with its `billingUrl`
-and stop the research reads. For transient network errors or `5xx`, use bounded retries;
+signal. Check HTTP success before reading JSON. On `402`, stop research reads:
+`insufficient_credits` uses `billingUrl`; the payment-method gate uses `checkoutUrl`.
+If the expected link is missing or malformed, ask the user to check account billing.
+Do not substitute the other link, follow it, create a session or initiate a purchase.
+Recovery-link validation uses Python 3's standard-library URL parser; if Python is
+unavailable, the helper uses the same account-billing fallback.
+For transient network errors or `5xx`, use bounded retries;
 on `429`, defer research and respect `Retry-After` before a later attempt.
 never loop indefinitely or turn an unavailable count into zero.
 
 ```bash
 BASE="https://api.recoupable.dev/api"
 research_get() {
-  local path=$1 response body status attempt headers retry_after
+  local path=$1 response body status attempt headers retry_after recovery
   shift
   headers=$(mktemp) || return 1
   for attempt in 1 2 3; do
@@ -56,8 +66,23 @@ research_get() {
         200) rm -f "$headers"; printf '%s' "$body"; return 0 ;;
         402)
           rm -f "$headers"
-          printf 'Research needs credits: %s\n' \
-            "$(printf '%s' "$body" | jq -r '.billingUrl // .error // "Check billing"')" >&2
+          recovery=$(printf '%s' "$body" | python3 -c '
+import json, sys
+from urllib.parse import urlsplit
+try:
+    data = json.load(sys.stdin)
+    field = "billingUrl" if isinstance(data, dict) and data.get("error") == "insufficient_credits" else "checkoutUrl"
+    link = data.get(field) if isinstance(data, dict) else None
+    parsed = urlsplit(link) if isinstance(link, str) else None
+    if parsed:
+        parsed.port
+    usable = parsed and parsed.scheme == "https" and parsed.hostname and not any(c.isspace() for c in link)
+    print(link if usable else "Check account billing")
+except (ValueError, TypeError):
+    print("Check account billing")
+          ' 2>/dev/null) || recovery=''
+          printf 'Research access requires billing (402). Review: %s\n' \
+            "${recovery:-Check account billing}" >&2
           return 1 ;;
         429)
           retry_after=$(awk 'tolower($1)=="retry-after:" {sub(/^[^:]*:[[:space:]]*/, ""); sub(/\r$/, ""); print}' "$headers")

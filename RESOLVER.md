@@ -49,7 +49,7 @@
 | cover art / thumbnail / carousel / promo / quote card | `recoup-content-make-graphics` |
 | narrative music video from an approved song, or create the song first (Small Room workflow) | `recoup-music-video` |
 | short video / lyric video / visualizer / reformat for platforms | `recoup-content-make-video` |
-| a whole content pack (15–30 assets) for one song | `recoup-content-asset-pack` |
+| create a release pack / content pack for a song, anniversary, reissue, remix or catalog rediscovery | `recoup-content-asset-pack` |
 | react to a milestone/trend, make something timely | `recoup-content-reactive-post` |
 
 ### release — release workflow
@@ -66,8 +66,13 @@
 | import a distributor/repertoire catalog spreadsheet; organize releases/recordings with unresolved rows | `recoup-catalog-import-catalog` |
 | explain a supplied music contract/license/publishing agreement and its obligations | `recoup-catalog-explain-contract` |
 | organize publishing repertoire, writer/publisher interests, registration references and mandates | `recoup-catalog-organize-publishing` |
-| review/underwrite a catalog deal, clean a data room, value with files, dashboard, IC memo | `recoup-catalog-review-deal` |
+| review/underwrite a proposed catalog transaction; seller-data-room underwriting, deal dashboard or IC memo | `recoup-catalog-review-deal` |
 | value a catalog from public data only (no seller files) | `recoup-catalog-estimate-value` |
+| audit catalog rights, registrations, identifiers, documents and asset condition; produce findings without changing external records | `recoup-catalog-audit-catalog` |
+| reconcile music royalty statements, entitlements, recoupment, royalty remittances or related bank receipts | `recoup-catalog-reconcile-royalties` |
+| register a work/recording, claim an ordinary existing interest, amend repertoire, match recordings to works or transfer a registry/admin mandate | `recoup-catalog-register-catalog` |
+| pursue a documented music-rights conflict, denied correction, royalty hold, missing accounting or disputed royalty amount with a provider | `recoup-catalog-resolve-claims` |
+| correct an already delivered release, enroll eligible existing recordings in UGC monetization or migrate distributors | `recoup-release-manage-delivery` |
 | measure an artist's NFT/onchain earnings, value an artist who sold music NFTs | `recoup-nft-valuation` |
 
 ## Tier 2 — Platform (operate the system; not a label deliverable)
@@ -90,8 +95,8 @@
 |---|---|
 | "recoup-internal" + make MCP extension thumbnails / looping workflow-card preview films | `recoup-internal-content-make-thumbnails` |
 | "recoup-internal" + design a feature-announcement film, product demo or marketing motion graphics | `recoup-internal-content-design-motion` |
-| "recoup-internal" + write/maintain a GitHub tracking issue | `recoup-internal-dev-issue-tracker` |
-| "recoup-internal" + implement/ship a tracked issue end-to-end (docs-first, TDD) | `recoup-internal-dev-ship-issue` |
+| "recoup-internal" + write/maintain/implement/ship a GitHub issue (tracking issues, docs-first delivery, TDD) | `recoup-internal-dev` |
+| "recoup-internal" + verify compiled CLI command discovery, account output, credential failures, or HTTP errors | `recoup-internal-dev-verify-cli` |
 | "recoup-internal" + benchmark/audit/grade a skill pack or plugin | `recoup-internal-eval-skill-benchmark` |
 | "recoup-internal" + run the daily sales sweep / who to follow up with (Stripe + Privy + valuations + Attio + credits + tasks + chats) | `recoup-internal-sales` |
 | "recoup-internal" + podcast guest outreach: find today's invite list, draft invites or nudges | `recoup-internal-sales` |
@@ -164,6 +169,7 @@ The internal namespace is a routing convention, not an access-control boundary.
 | recoup-internal consulting: Phase 2 of the nightly pipeline — the workspace reconciler | `recoup-internal-consulting-nightly-janitor` |
 | recoup-internal consulting: Turn a raw objection into a tailored response | `recoup-internal-consulting-objection-handler` |
 | recoup-internal consulting: The process every personalized outbound email runs through before it is staged — gather full context on the person, decide who it is really for and what the objective is (set by temperature), simulate the reader, and pass the pre-send gate | `recoup-internal-consulting-outbound-email` |
+| recoup-internal consulting: Run pmf-finder, test a PULL anecdote or hypothesis, diagnose weak demand, or choose the next PMF experiment from buyer, delivery, and retention evidence | `recoup-internal-consulting-pmf-finder` |
 | recoup-internal consulting: Sharpen positioning and messaging | `recoup-internal-consulting-positioning-refiner` |
 | recoup-internal consulting: Build three-tier pricing for a deal | `recoup-internal-consulting-pricing-builder` |
 | recoup-internal consulting: Turn verified user-facing releases and merged PRs into cited product-update signals and draft article, LinkedIn, and email bundles | `recoup-internal-consulting-product-engine` |
@@ -184,13 +190,15 @@ The internal namespace is a routing convention, not an access-control boundary.
 
 ## Cross-skill disambiguation (the boundaries that matter)
 
+- **PMF learning vs adjacent consulting work.** Testing buyer pull, demand, retention, or the next PMF experiment → `recoup-internal-consulting-pmf-finder`. A single call qualification summary → `recoup-internal-consulting-discovery-analysis`; niche desk research → `recoup-internal-consulting-market-scanner`; messaging refinement → `recoup-internal-consulting-positioning-refiner`; writing up a delivered win → `recoup-internal-consulting-case-study-builder`. A PMF case-study pattern is an internal repeatability model, not a public testimonial.
+
 - **Audio vs data.** From a song's **audio file** (hook, mix, BPM, lyrics, sync
   brief) → the `recoup-song-*` skills. From **research data / the web** (catalog
   playlist strategy, audience, metrics) → the `recoup-research-*` skills.
 - **Playlists.** Catalog-wide playlist *strategy* (no audio) →
   `recoup-research-playlist-targets`. A single song's playlist *pitch* from its audio
   → `recoup-song-placement-pitch`.
-- **Valuation fork.** With seller files → `recoup-catalog-review-deal`. From public
+- **Valuation fork.** Underwriting a proposed transaction with seller evidence → `recoup-catalog-review-deal`. From public
   data only → `recoup-catalog-estimate-value`. If the artist sold music NFTs, add
   `recoup-nft-valuation` — a streaming-only number understates them, often by an order
   of magnitude.
@@ -203,3 +211,16 @@ The internal namespace is a routing convention, not an access-control boundary.
   First-run connect/scaffold → `recoup-platform-connect-account` /
   `recoup-platform-build-os`. A raw REST/connector call →
   `recoup-platform-api-access`.
+
+- **Catalog stages.** A structural review routes to audit; accounting routes to reconcile.
+  Statements alone do not imply a deal. An ordinary registration claim or technical
+  rejection repair routes to register; an adverse rights/royalty dispute routes to
+  resolve-claims. Existing-release metadata changes and UGC enrollment route to
+  manage-delivery; check-credits/check-metadata only compare evidence.
+- **Continuation is context.** “I sent the email” alone has no fresh skill route and
+  never sends again. Record it as user-reported on the known case. “Did these payments
+  reach my bank?” needs domain context; with identified royalty remittances it routes
+  to reconcile. Provider, subject and intended change resolve ambiguous “claim” tasks.
+- **Review stops at review.** Import, explanation, organization, public estimation,
+  audit, reconciliation and deal review do not authorize downstream messages,
+  registration, transfers or payments. Preserve an already authorized exact action.

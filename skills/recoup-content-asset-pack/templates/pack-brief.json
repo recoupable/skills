@@ -1,0 +1,28 @@
+{
+  "intent": "create_release_pack",
+  "stage": "intake",
+  "job_id": null,
+  "revision": null,
+  "brief": {
+    "artist_name": null,
+    "song_title": null,
+    "recording_version": null,
+    "audio_url": null,
+    "occasion": null,
+    "original_release_date": null,
+    "campaign_date": null,
+    "creative_direction": null,
+    "creative_context": null,
+    "allow_creative_defaults": false,
+    "reference_image_urls": [],
+    "constraints": [],
+    "primary_action": "listen",
+    "platforms": ["instagram", "tiktok"]
+  },
+  "proposed_defaults": ["Listen is the proposed action; Instagram/TikTok are proposed formats."],
+  "missing": [],
+  "quote_id": null,
+  "approved_max_usd": null,
+  "completed_assets": [],
+  "next_action": "Reuse supplied context and ask only for essential gaps. Omit null draft fields when submitting the API request."
+}

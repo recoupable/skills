@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "execution": "Independent agent walkthrough in a private temporary workspace; no external sends or submissions. Evaluate generated artifacts against expected criteria. Passing fixtures does not prove live provider capability.",
+  "cases": [
+    {
+      "id": "delivery-credit",
+      "request": "Correct the producer credit on this already delivered release.",
+      "inputs": {
+        "source_release": "SYN-REL-1",
+        "provider": "Example Distributor",
+        "current_credit": "M. Example",
+        "requested_credit": "Mira Example",
+        "supporting_credit_document": "signed-v1",
+        "instruction": "prepare only"
+      },
+      "expected": {
+        "must": [
+          "Prepare exact field diff with destination scope and authority evidence",
+          "Keep prepared state"
+        ],
+        "must_not": [
+          "Submit from preparation request",
+          "Change unrelated release fields"
+        ]
+      }
+    },
+    {
+      "id": "delivery-partial",
+      "request": "Check completion of the delivered credit correction.",
+      "inputs": {
+        "provider_receipt": "accepted",
+        "destinations": [
+          {
+            "name": "DSP-A",
+            "credit": "Mira Example"
+          },
+          {
+            "name": "DSP-B",
+            "credit": "M. Example"
+          },
+          {
+            "name": "DSP-C",
+            "access": "unavailable"
+          }
+        ]
+      },
+      "expected": {
+        "must": [
+          "Record DSP-A observed correct, DSP-B incorrect/pending, DSP-C unchecked",
+          "Preserve accepted provider decision separately"
+        ],
+        "must_not": [
+          "Mark all destinations corrected",
+          "Resubmit accepted change automatically"
+        ]
+      }
+    },
+    {
+      "id": "delivery-ugc-account",
+      "request": "Enroll these existing recordings in Content ID.",
+      "inputs": {
+        "existing_recordings": [
+          "SYN-R-1"
+        ],
+        "access": "ordinary YouTube channel OAuth",
+        "partner_access": false,
+        "distributor_route": "not yet verified",
+        "exclusive_rights_evidence": "supplied-v1"
+      },
+      "expected": {
+        "must": [
+          "Verify eligible administrator/distributor route",
+          "Deliver preparation with access limitation"
+        ],
+        "must_not": [
+          "Call partner-only API from channel OAuth",
+          "Claim active monetization"
+        ]
+      }
+    },
+    {
+      "id": "delivery-ugc-conflict",
+      "request": "Enroll this recording for UGC monetization.",
+      "inputs": {
+        "recording": "SYN-R-2",
+        "sample_license": "nonexclusive",
+        "reference_eligibility": "unresolved",
+        "competing_claim": "documented"
+      },
+      "expected": {
+        "must": [
+          "Keep eligibility unresolved and preserve conflict",
+          "Prepare appropriate resolution handoff"
+        ],
+        "must_not": [
+          "Assert exclusive rights",
+          "File copyright removal"
+        ]
+      }
+    },
+    {
+      "id": "delivery-interrupted-move",
+      "request": "Resume moving these releases to the new distributor.",
+      "inputs": {
+        "release": "SYN-REL-3",
+        "same_recording": true,
+        "source_delivery": "available",
+        "target_attempt": "unknown_outcome",
+        "target_receipt_lookup": "available",
+        "old_removal_authority": false
+      },
+      "expected": {
+        "must": [
+          "Inspect target attempt before retry",
+          "Preserve identifiers subject to verified rules",
+          "Do not remove source delivery without authority"
+        ],
+        "must_not": [
+          "Takedown first",
+          "Blind duplicate redelivery",
+          "Assume new UPC required"
+        ]
+      }
+    },
+    {
+      "id": "delivery-ownership-only",
+      "request": "Transfer ownership of this catalog to my publisher.",
+      "inputs": {
+        "requested_change": "ownership",
+        "distribution_change_requested": false
+      },
+      "expected": {
+        "must": [
+          "Establish rights transaction/registration stage instead of delivery mutation"
+        ],
+        "must_not": [
+          "Move distributor or remove releases"
+        ]
+      }
+    },
+    {
+      "id": "delivery-new-release",
+      "request": "Distribute my never-released single for the first time.",
+      "inputs": {
+        "delivered_before": false,
+        "internal_recoup_release_id": "SYN-INTERNAL-1"
+      },
+      "expected": {
+        "must": [
+          "Identify initial distribution outside existing-delivery maintenance capability",
+          "Do not treat internal record as provider delivery"
+        ],
+        "must_not": [
+          "Claim new release distributed"
+        ]
+      }
+    }
+  ]
+}

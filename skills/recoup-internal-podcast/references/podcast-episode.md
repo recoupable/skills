@@ -2,7 +2,7 @@
 
 This file covers a Recoup Podcast episode from the moment the raw files exist to the moment it is
 scheduled on Spotify and YouTube, plus its shorts. The guest relationship before (invite, booking,
-outline, consent) and after (live links to the guest, day-7 follow-up) is the `recoup-internal-sales`
+guest brief) and after (live links to the guest, day-7 follow-up) is the `recoup-internal-sales`
 skill's podcast guest pipeline; the recording setup is `references/recording-prep.md`. First run: 2026-10-01/02, a 33-minute
 two-person Restream interview, cut to 32:20, opening + 7 chapters, released on both platforms.
 
@@ -20,10 +20,45 @@ cards, wire-style source cards, a SOURCES ticker. Three shots, cut by the graphi
 | B | a source, a number, a list is being discussed | the card, tiles shrunk to a picture-in-picture column |
 | C | chapter cards, cold-open quote, a headline, a big number | full-frame card, voice continues |
 
-Card types: `headline` (source + date + headline + standfirst + stamp), `tline` (dated rows), `stat` (big
+Card types: `evidence` (a real capture, taped, highlighter on the spoken line, verbatim tag, source line), `headline` (source + date + headline + standfirst + stamp), `tline` (dated rows), `stat` (big
 number, optional market-share-to-usage bar, quote), `versus` (two columns), `quote` (verbatim, lime
 highlight), `list` (numbered chips). Opening = a 6-14s cold open (the guest's strongest line, host muted,
-"Coming up" lower third) + the 7s **Wire intro** (`templates/podcast/wire-intro.html`).
+"Coming up" lower third) + the 7s **Wire intro** (`templates/podcast/wire-intro.html`). Every episode ends
+on the 12s **CTA outro** (`templates/podcast/wire-outro.html`: "Thanks for watching", recoupable.dev).
+
+### Sound (Pete Rango, sound design, 2026-10-08)
+
+- **Music ends on a slope, never a cut.** The show music (`intro-sting.wav` in the show assets, 7.2 s) carries its own
+  ~2 s ring-out; play it to the end. Sid approved the "newsdesk" track 2026-10-18 after the old sting's 0.2 s drop.
+  Do not fake a tail with echo repeats (the owner heard them); a new ending is a new take or a diffuse reverb ring-out.
+- **Sound effects sit under the voice.** High-pass any white-noise effect (whoosh, swipe) before setting its level,
+  then lower it: noise reads loud at low volume. One focused mixing pass on every effect before export.
+
+### Motion grammar: huashu-art-motion (owner rule, 2026-10-18)
+
+Every graphic in the full episode and in the shorts follows the **huashu-art-motion** skill
+(`npx skills add alchaincyf/huashu-art-motion -g`, pinned 8a0d7d7 on 2026-10-18). Read its SKILL.md
+"six ways it goes wrong", `references/动画语法/y2_vox.md` (evidence) and `t3_finance_chart.md` (numbers) before
+writing specs. We take its grammar, not its engine or palette: cards are still HyperFrames in Recoup Sky.
+
+- **Real material is the main picture.** When the guest names a product, a page, a filing, a deal or an article,
+  capture it that day into `edit/refs/` with a `SOURCES.md` line, and use an `evidence` card: the capture fills
+  ~64% of the card, the highlighter sweeps the line on the spoken phrase (`mark_at`). Text-only cards are for
+  moments with nothing real to show.
+  `python3 scripts/podcast/capture_ref.py <url> "<exact page phrase>" edit/refs/<name>.jpg [height] [above]` hides
+  sticky chrome, crops around the phrase and prints the measured `mark`; `check_mark.py <img> x y w h` draws it.
+  Crop landscape (a tall crop is clipped on the card). Cloudflare-guarded blogs (Symphonic) open in a headed
+  browser (`agent-browser --headed`); a "Verify you are human" box (MBW) is never clicked for the owner: use another
+  outlet's report of the same story. A source you cannot find gets a quote card, not a stand-in.
+- **Material is simply there on the cut; elements step at 12 fps** (highlighter, tag). No bounce or drop-in on
+  evidence; the camera stays still while someone reads.
+- **Numbers**: axis first, bars from zero on the word that says them, one lime bar against grey, a title that is the
+  conclusion and can be derived from the bars, a source line.
+- **Rotate the reveal**: never the same card type and reveal three times in a row (huashu: 36 of 37 labels slid in
+  the same way and the audience predicted them).
+- **The 15 s check ignores the screen-share shot** (`screen_share.py` adds it after the build): read `WARN`s inside a
+  shared-screen stretch as covered.
+- **Text to read sits on top**: no tile, tag or ticker over a card's words (also the lower-third rule above).
 
 ## Project layout (one folder per episode, in the marketing workspace; media is gitignored)
 
@@ -36,7 +71,7 @@ content/podcast-<guest>/
   exports/                ch00..chNN.mp4, opening.mp4, final/
 ```
 
-Business keeps the plan, Granola notes, consent and the episode README (link it, don't copy).
+Business keeps the plan, Granola notes and the episode README (link it, don't copy).
 
 ## The run, in order (every stage revealed in Finder and approved before the next)
 
@@ -55,7 +90,7 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    minutes) and prints the early-start host fragments and any dead air. **The host track reads digital zero
    whenever the host is quiet** (mic gate or mute); that alone is not a dropout. Dead air inside the
    interview usually means a line said while muted: on 2026-10-13 the host's sign-off was lost this way and
-   replaced with the host's own later repeat ("I wrapped up by saying thank you for joining us today, Tom").
+   replaced with the host's own later repeat ("I wrapped up by saying thank you for joining us today, <guest>").
    Use Scribe to settle the recorder's mishearings and correct the Business recording notes.
 3. **Camera check**: `python3 scripts/podcast/camera_check.py <project>` prints each camera's offset against
    its audio track (put them in `chapters.json` offsets) and the stretches where a camera dropped frames.
@@ -82,8 +117,8 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
    - **A card over every host question and recap**, mostly full-frame C (host camera is weak, 2026-10-06).
    - **Guest focus**: shot A shows the guest large and the host as a small inset. `build.py` does this by
      default; `"layout": "equal"` in `episode.json` restores side-by-side.
-   - **No more than 30 s of cameras only before a card** (2026-10-10). `build.py` prints `WARN` for each
-     longer stretch; fill it with a verbatim quote, list or stat from that stretch.
+   - **No more than 15 s of cameras only between cards** (30 s on 2026-10-10, 15 s on 2026-10-18). `build.py` prints
+     `WARN` for each longer stretch; fill it with an evidence capture, a verbatim quote, list or stat from that stretch.
    - **Album or single art when a record is named** (2026-10-10): `art=[('file.jpg', 'Artist', 'Title · year')]`
      on the card, files in `<project>/edit/art/` with `SOURCES.md` (Spotify via the Recoup API `/spotify/search`).
      Never substitute another artist's cover when the record isn't found. One cover on a side card; two
@@ -92,15 +127,21 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
      2026-10-14). `build.py` warns on any overlap. With every host line under a card, the host usually gets no tag.
 7. **Prototype first**: build and render ~90s around the strongest chapter before anything else; get the
    look approved once, then every chapter inherits it.
-8. **Build + check**: `python3 scripts/podcast/build.py <project> <ch> --recut`, then
+8. **Build + check**: sandbox path `node --env-file=<env> scripts/podcast/sandbox/studio.mjs build <project> <ch>`
+   (`references/podcast-sandbox.md`); local path `python3 scripts/podcast/build.py <project> <ch> --recut`. Then
    `npx --yes hyperframes snapshot --at <card midpoints> --no-end` in `comp/chapters/<ch>` and read the
    contact sheet before rendering. Also run `npx --yes hyperframes inspect --at <card midpoints> --json` and
    fix every `text_box_overflow` on a card (a wide stat number once pushed its caption over the video tiles);
    the `#ghost` word and ticker `SOURCES` overlaps are by design.
-9. **Render per chapter**: `STOP_AT=HHMM scripts/podcast/render.sh <project> ch04 ch01 ...` (approved chapter
-   first). Open each in Finder as it lands; notes come back per chapter, the fix is one chapter re-render.
-10. **Opening**: `python3 scripts/podcast/make_intro.py <project> --show-assets <show assets dir>` then the
-   join command in its docstring -> `exports/opening.mp4`.
+9. **Render per chapter**: sandbox path `studio.mjs run <project> ch04 ch01 ...` (all in parallel); local path
+   `STOP_AT=HHMM scripts/podcast/render.sh <project> ch04 ch01 ...` (approved chapter first). Open each in Finder as it lands; notes come back per chapter, the fix is one chapter re-render.
+10. **Opening + outro**: `python3 scripts/podcast/make_intro.py <project> --show-assets <show assets dir>`, render
+   `comp/intro` and `comp/outro`, then the join command in its docstring -> `exports/opening.mp4`.
+   `exports/outro.mp4` is required: assemble.py appends it and stops if it is missing.
+   **Non-English episode**: the intro and outro strings are English; replace them in `comp/intro` and
+   `comp/outro/index.html` before rendering (Spanish: "Desde la mesa de derechos", "En este episodio", "Gracias
+   por vernos"). Chapter labels come from `episode.json` `"labels"` (`{"Chapter": "Capítulo", "Sources":
+   "Fuentes"}`) and the shorts end card from `"shorts": {"end_label": "Episodio completo ya disponible"}`.
 11. **Host mic** (when it sounds muffled): measure first (band energy above 4 kHz vs the guest). Adobe
    Podcast Enhance (free tier: 30 min/file, 1 h/day, needs the owner's free account sign-in) cleaned noise
    and lifted presence but did NOT restore missing highs; synthetic highs (ffmpeg `aexciter`) measured
@@ -132,24 +173,34 @@ Business keeps the plan, Granola notes, consent and the episode README (link it,
      the same name exists). Upload the episode file **by drag-and-drop**: DevTools-automated upload of a
      ~700 MB file failed processing; the same file dragged in by hand worked. HTML description switch must
      be clicked through the DOM; timestamps in the description override auto-chapters. Two image slots:
-     16:9 video thumbnail and 1:1 episode art.
+     16:9 video thumbnail and 1:1 episode art. Hung episodes list: open it in a new tab. The description counter lags a
+     paste; it is not a failed fill. Replace a thumbnail by deleting the uploaded one first (that reveals Upload).
+     Nothing saves until the owner clicks **Schedule** on Review; the Review thumbnail preview is blank (10 s
+     signed URL), so check the stored image after saving.
    - **YouTube**: the Recoup connectors can't upload long-form (staging route 500s on large files; the
      Composio SDK base64s the file into one JS string, capping files near 400 MB). Owner uploads + schedules
      in Studio; then set title/description/tags/thumbnail/playlist through the connector
      (`YOUTUBE_UPDATE_VIDEO` with snake_case `video_id`; leave `privacy_status` out so `publishAt` survives),
-     and re-read `status.publishAt` to confirm. Details in the account workspace `POSTING-PLAYBOOK.md`.
+     and re-read `status.publishAt` to confirm. Keep these calls in `exports/final/youtube-finish.mjs`
+     (title read from `youtube-title.txt`, never touches visibility) so the next episode only changes the ID. Details in the account workspace `POSTING-PLAYBOOK.md`.
    - Same release minute on both. Verify every field from the platform's own data (download the stored
      thumbnail/art back), not from the form you filled.
 15. **Captions**: `python3 scripts/podcast/make_srt.py <project>` -> `exports/final/youtube-captions.srt`
-   (accurate names, speaker changes, sliver cues folded so YouTube accepts the file); upload in Studio:
+   (accurate names, speaker changes, sliver cues folded so YouTube accepts the file); then apply the episode's
+   known mishearings (the analysis list, e.g. Songvest -> SongVest, Hypnosis -> Hipgnosis, "gamer songs" -> GEMA); upload in Studio:
    video -> Details -> Subtitles (or Languages) -> ⋮ -> Upload file -> With timing.
-16. **Shorts**: `references/podcast-shorts.md` (clips table, hybrid format, one prototype, then the rest).
-17. **Hand back to sales**: live links to the guest the day it publishes (with the shorts folder), the wrap-up email the day the last short posts (closes the run, asks for guest recommendations), day-7 follow-up. Templates in the `recoup-internal-sales` skill's `references/podcast-guest-pipeline.md`.
+16. **Episode page** (marketing repo): entry in `content/podcast/episodes.json` (first = top card), 1280x720
+   cover in `public/podcast/<slug>-wide.jpg`, transcript `content/podcast/transcripts/<slug>.json` built from the
+   corrected captions (speaker turns alternate at `>>`; untangle overlapping speech by hand). Merge after the
+   release minute: the embed reads "private" until then.
+17. **Shorts**: `references/podcast-shorts.md` (clips table, kinetic by default, one prototype, then the rest; the section 4 QC ladder gates each short).
+18. **Hand back to sales**: live links to the guest the day it publishes (with the shorts folder and the one-page clips sheet; `recoup-internal-sales` `references/podcast-guest-pipeline.md`, The live-links email), the wrap-up email the day the last short posts (closes the run, asks for guest recommendations), day-7 follow-up. Templates in the `recoup-internal-sales` skill's `references/podcast-guest-pipeline.md`.
 
 ## Gotchas that cost real time on the first run
 
-- **Renders**: ~3-5x realtime on the Intel laptop; parallel renders time out the headless-Chrome launch
-  check. One at a time; a failed launch is a retry, not a bug.
+- **Local renders**: ~3-5x realtime on the Intel laptop and the machine is unusable meanwhile; parallel renders
+  time out the headless-Chrome launch check. One at a time; a failed launch is a retry, not a bug. The sandbox
+  path renders ~1x realtime per job, all jobs in parallel (`references/podcast-sandbox.md`).
 - **Never render during a live recording.** CPU load is the likely cause of Restream dropping the host
   camera to 14 fps. A background "kill at 8:30" timer was itself killed by the 2-hour background limit
   before firing; `render.sh` checks `STOP_AT` in its own loop instead.

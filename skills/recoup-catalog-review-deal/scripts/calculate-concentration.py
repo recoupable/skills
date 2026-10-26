@@ -19,6 +19,8 @@ import json
 import os
 import sys
 from collections import defaultdict
+from decimal import Decimal
+from _finance import amount, currency, iso_date, refs, dumps, same_file
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -30,18 +32,12 @@ TOP_N_BUCKETS = (1, 3, 5, 10)
 DEFAULT_FINDING_DIMENSION = "catalog_asset_id"
 
 
-def parse_amount(value: str | None) -> float:
-    if not value:
-        return 0.0
-    cleaned = value.replace("$", "").replace(",", "").replace("(", "-").replace(")", "")
-    try:
-        return float(cleaned)
-    except ValueError:
-        return 0.0
+def parse_amount(value):
+    return amount(value, "concentration amount")
 
 
 def rank_dimension(rows: list[dict], dimension: str, amount_column: str) -> list[tuple[str, float]]:
-    buckets: defaultdict[str, float] = defaultdict(float)
+    buckets: defaultdict[str, float] = defaultdict(Decimal)
     for row in rows:
         key = (row.get(dimension) or "unknown").strip() or "unknown"
         buckets[key] += parse_amount(row.get(amount_column))
@@ -49,10 +45,10 @@ def rank_dimension(rows: list[dict], dimension: str, amount_column: str) -> list
 
 
 def top_n_pct(ranked: list[tuple[str, float]], total: float, n: int) -> float | None:
-    if total == 0 or not ranked:
+    if total <= 0 or not ranked:
         return None
     head = sum(amount for _, amount in ranked[:n])
-    return round(head / total * 100, 2)
+    return float(round(head / total * 100, 2))
 
 
 def build_concentration(
@@ -73,7 +69,7 @@ def build_concentration(
                 {
                     "value": key,
                     "amount": amount,
-                    "percent_of_total": (amount / total * 100) if total else None,
+                    "percent_of_total": float(amount / total * 100) if total > 0 else None,
                 }
                 for key, amount in ranked[:10]
             ],
@@ -163,11 +159,50 @@ def main() -> int:
         default=None,
         help="When the threshold is tripped, write a proposed finding to this path.",
     )
+    parser.add_argument("--comparison-policy", help="JSON with currency, period_start, period_end and evidence_refs for an explicit comparison window")
     args = parser.parse_args()
+
+    inputs = [path for path in (args.ledger_csv, args.assumptions, args.comparison_policy) if path]
+    outputs = [path for path in (args.output, args.emit_finding_output) if path]
+    # Validate the whole output plan before writing either artifact.
+    for output in outputs:
+        if any(same_file(source, output) for source in inputs):
+            parser.error("Outputs cannot overwrite the ledger, assumptions, or comparison policy")
+    if len(outputs) == 2 and same_file(*outputs):
+        parser.error("Analysis and finding outputs must be distinct files")
 
     ledger_path = Path(args.ledger_csv)
     rows = load_rows(ledger_path)
-    total, concentration = build_concentration(rows, args.dimensions, args.amount_column)
+    if not rows:
+        raise SystemExit("No rows to analyze")
+    policy = json.loads(Path(args.comparison_policy).read_text()) if args.comparison_policy else None
+    if policy:
+        refs(policy, "comparison policy")
+        currency(policy)
+        iso_date(policy.get("period_start"), "policy period_start")
+        iso_date(policy.get("period_end"), "policy period_end")
+    groups = defaultdict(list)
+    for row in rows:
+        if row.get("row_status") != "ready":
+            raise SystemExit("Held/unversioned rows cannot be aggregated; normalize and resolve them first")
+        currency(row)
+        start, end = iso_date(row.get("period_start"), "period_start"), iso_date(row.get("period_end"), "period_end")
+        if start > end:
+            raise SystemExit("Invalid ledger period")
+        if policy:
+            if row["currency"] != policy["currency"] or row["period_start"] < policy["period_start"] or row["period_end"] > policy["period_end"]:
+                raise SystemExit("Row is outside the explicit comparison currency/window; FX is not inferred")
+            key = (policy["currency"], policy["period_start"], policy["period_end"])
+        else:
+            key = (row["currency"], row["period_start"], row["period_end"])
+        groups[key].append(row)
+    grouped_results = []
+    for (ccy, start, end), group in sorted(groups.items()):
+        group_total, group_concentration = build_concentration(group, args.dimensions, args.amount_column)
+        grouped_results.append({"currency": ccy, "period_start": start, "period_end": end, "total": group_total,
+                                "concentration": group_concentration, "contains_negative_rows": any(parse_amount(r[args.amount_column]) < 0 for r in group)})
+    total = grouped_results[0]["total"] if len(grouped_results) == 1 else None
+    concentration = grouped_results[0]["concentration"] if len(grouped_results) == 1 else {}
 
     threshold = args.threshold_pct
     threshold_source = "cli"
@@ -179,7 +214,7 @@ def main() -> int:
             threshold_source = "assumptions.yaml"
 
     finding = None
-    if threshold is not None:
+    if threshold is not None and len(grouped_results) == 1:
         breakdown = concentration.get(args.finding_dimension, {})
         workspace = ledger_path.parents[1] if len(ledger_path.parents) >= 2 else ledger_path.parent
         finding = make_finding(threshold, args.finding_dimension, breakdown, workspace)
@@ -189,6 +224,8 @@ def main() -> int:
         "ledger": str(ledger_path),
         "amount_column": args.amount_column,
         "total": total,
+        "groups": grouped_results,
+        "comparison_policy": policy,
         "threshold_pct": threshold,
         "threshold_source": threshold_source if threshold is not None else None,
         "finding_dimension": args.finding_dimension,
@@ -199,19 +236,19 @@ def main() -> int:
     if args.output:
         out_path = Path(args.output)
         out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+        out_path.write_text(dumps(payload) + "\n", encoding="utf-8")
         payload["output_written"] = str(out_path)
 
     if args.emit_finding_output:
         emit_path = Path(args.emit_finding_output)
         emit_path.parent.mkdir(parents=True, exist_ok=True)
         emit_path.write_text(
-            json.dumps({"findings": [finding] if finding else []}, indent=2) + "\n",
+            dumps({"findings": [finding] if finding else []}) + "\n",
             encoding="utf-8",
         )
         payload["finding_output_written"] = str(emit_path)
 
-    print(json.dumps(payload, indent=2))
+    print(dumps(payload))
     return 0
 
 

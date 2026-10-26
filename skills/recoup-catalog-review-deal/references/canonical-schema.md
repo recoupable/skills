@@ -1,7 +1,7 @@
 # Canonical schema
 
 Use these schemas as the hand-off contract between catalog ingestion and later
-analysis. Keep the schema stable even when a source file is messy.
+analysis. The flat CSVs below are review projections, not a universal identity/rights store. Use `references/catalog-contracts.md` for typed cases and evidence. Preserve separate parties, interests, release memberships and many-to-many recording/work links in supporting schedules; do not squeeze them into one ownership row.
 
 ## `data-room-inventory.csv`
 
@@ -60,7 +60,7 @@ up detail until analysis.
 | `provider` | Distributor, PRO, society, platform, or admin. |
 | `period_start` | Revenue/performance period start. |
 | `period_end` | Revenue/performance period end. |
-| `payment_date` | Payment or statement date, if different. |
+| `payment_date` | Observed payment date only; report_date and reported_period remain separate. |
 | `rights_type` | `publishing`, `master`, `neighboring`, `sync`, `mixed`, or `unknown`. |
 | `income_type` | Performance, mechanical, streaming, sync, physical, UGC, radio, other. |
 | `territory` | Reported territory. |
@@ -68,7 +68,7 @@ up detail until analysis.
 | `gross_amount` | Gross income before deductions. |
 | `deductions` | Fees, admin, reserves, returns, or other deductions. |
 | `participant_share` | Writer, artist, producer, co-publisher, or other pass-through. |
-| `owner_net_amount` | Estimated NPS/NLS line amount, if calculable. |
+| `owner_net_amount` | Source-reported owner-net amount; not a computed entitlement, current payable or bank receipt. |
 | `currency` | Currency. |
 | `fx_rate` | FX rate used, if converted. |
 | `pro_use_type` | Feature, background, theme, underscore, live, or other, if available. |
@@ -77,6 +77,12 @@ up detail until analysis.
 | `cue_sheet_ref` | Cue-sheet or program reference, if available. |
 | `match_confidence` | `high`, `medium`, `low`, or `unmatched`. |
 | `notes` | Assumptions or extraction issues. |
+
+Additional normalized provenance fields: `source_version_id`, `source_row`,
+`source_sheet`, `source_record_id`, `parser_version`, `transform_id`, `raw_values`,
+`row_status`, `held_reasons`, `report_date`, `reported_period` and `statement_id`.
+Amounts are decimal strings. A missing amount is unknown; zero is a reported value.
+The statement alias profile never establishes currency, rights or income category.
 
 ## `rights-map.csv`
 
@@ -111,3 +117,15 @@ Use confidence labels instead of fake certainty.
 - `conflicting`: Two or more credible sources disagree.
 
 When in doubt, preserve both source values and explain the conflict.
+
+## Readiness finding exceptions
+
+In `findings/findings.json`, an `accepted` or `deferred` finding requires
+nonblank string fields `disposition_actor`, `disposition_scope` and
+`disposition_reason`, plus a nonempty `disposition_evidence_ids` list of nonblank
+strings. Record the actual reviewer/decision reference and the assets, rights,
+territories or periods covered by the exception; do not invent an actor or infer
+scope from the status. Incomplete exceptions fail readiness validation.
+These fields record a supported disposition, not authentication, legal adjudication
+or authority to share, transact or execute a provider operation. Existing open,
+pending, resolved and closed status rules remain separate.

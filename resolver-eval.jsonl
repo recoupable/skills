@@ -4,6 +4,7 @@
 # Goal: prove each skill fires for a real phrasing, and the cross-skill forks route correctly.
 
 # --- platform ---
+{"intent":"recoup-internal verify the compiled CLI whoami output and HTTP errors without production credentials","expected":"recoup-internal-dev-verify-cli","not":["recoup-platform-api-access","recoup-platform-connect-account"]}
 {"intent": "set me up, verify my email and give me an api key", "expected": "recoup-platform-connect-account"}
 {"intent": "how far am I in setting up recoup, what should I do next", "expected": "recoup-platform-track-onboarding", "not": ["recoup-platform-connect-account"]}
 {"intent": "did I finish onboarding my account, show my activation checklist", "expected": "recoup-platform-track-onboarding"}
@@ -51,7 +52,7 @@
 
 # --- catalog (the valuation fork) ---
 {"intent": "review and underwrite this catalog deal end to end", "expected": "recoup-catalog-review-deal"}
-{"intent": "clean and normalize this messy royalty data room", "expected": "recoup-catalog-review-deal"}
+{"intent": "clean and normalize these royalty statements without evaluating a sale", "expected": "recoup-catalog-reconcile-royalties", "not": ["recoup-catalog-review-deal"]}
 {"intent": "write the IC memo and export a shareable pdf", "expected": "recoup-catalog-review-deal"}
 {"intent": "estimate this catalog's value from public streaming data, no seller files", "expected": "recoup-catalog-estimate-value", "not": ["recoup-research-the-web"]}
 {"intent": "how much did this artist earn from their NFT sales", "expected": "recoup-nft-valuation", "not": ["recoup-catalog-estimate-value"]}
@@ -59,8 +60,8 @@
 {"intent": "measure her onchain earnings and fold them into the valuation", "expected": "recoup-nft-valuation"}
 
 # --- internal (Recoup staff only; gated by the recoup-internal keyword) ---
-{"intent": "recoup-internal write a tracking issue for the auth migration", "expected": "recoup-internal-dev-issue-tracker"}
-{"intent": "recoup-internal ship issue #412 end to end, docs-first and test-driven", "expected": "recoup-internal-dev-ship-issue"}
+{"intent": "recoup-internal write a tracking issue for the auth migration", "expected": "recoup-internal-dev"}
+{"intent": "recoup-internal ship issue #412 end to end, docs-first and test-driven", "expected": "recoup-internal-dev"}
 {"intent": "recoup-internal benchmark this skills folder against the frontier", "expected": "recoup-internal-eval-skill-benchmark"}
 {"intent": "recoup-internal run the daily sales sweep and tell me who to follow up with", "expected": "recoup-internal-sales", "not": ["recoup-internal-weekly-usage-review"]}
 {"intent": "recoup-internal work the valuation funnel and advance this Attio lead", "expected": "recoup-internal-funnel-valuation-pipeline", "not": ["recoup-internal-sales"]}
@@ -197,3 +198,39 @@
 {"intent": "recoup-internal: recreate the Recoup gallery preview video style for the new catalog cards", "expected": "recoup-internal-content-make-thumbnails", "not": ["recoup-content-make-video"]}
 {"intent": "Make a thumbnail image for my new single", "expected": "recoup-content-make-graphics", "not": ["recoup-internal-content-make-thumbnails"]}
 {"intent": "recoup-internal prep tomorrow's podcast recording and check my camera frame rate", "expected": "recoup-internal-podcast", "not": ["recoup-internal-sales", "recoup-internal-marketing"]}
+{"intent": "Create a release pack for this song.", "expected": "recoup-content-asset-pack", "not": ["recoup-release-plan-rollout", "recoup-roster-onboard"]}
+{"intent": "Make a content pack for the tenth anniversary of this recording.", "expected": "recoup-content-asset-pack"}
+{"intent": "Create a release pack for our remix using this audio and artwork.", "expected": "recoup-content-asset-pack"}
+{"intent": "Give this catalog song another moment with a release pack.", "expected": "recoup-content-asset-pack"}
+{"intent": "I have no Recoup artist yet. Create a release pack from this audio.", "expected": "recoup-content-asset-pack", "not": ["recoup-roster-onboard"]}
+{"intent": "Plan a release rollout schedule, no media production yet.", "expected": "recoup-release-plan-rollout", "not": ["recoup-content-asset-pack"]}
+{"intent": "Audit our catalog registrations, rights and missing master files without contacting anyone", "expected": "recoup-catalog-audit-catalog"}
+{"intent": "Reconcile this publisher statement against the agreement and explain my unrecouped balance", "expected": "recoup-catalog-reconcile-royalties"}
+{"intent": "The work already exists at MLC; register my ordinary publisher share", "expected": "recoup-catalog-register-catalog"}
+{"intent": "Prepare the signed-document update for a typo in my BMI work registration", "expected": "recoup-catalog-register-catalog"}
+{"intent": "MLC rejected my filing because the date column has the wrong format; repair it", "expected": "recoup-catalog-register-catalog"}
+{"intent": "The administrator denied my royalty adjustment; assemble the evidence and pursue the case", "expected": "recoup-catalog-resolve-claims"}
+{"intent": "The recording owner contests my interest and the society has frozen royalties; help resolve it", "expected": "recoup-catalog-resolve-claims"}
+{"intent": "Correct the songwriter credit on the single that my distributor already delivered", "expected": "recoup-release-manage-delivery"}
+{"intent": "Move this existing release to my new distributor and verify the destinations", "expected": "recoup-release-manage-delivery"}
+{"intent": "Enroll my existing eligible master in YouTube monetization through my distributor", "expected": "recoup-release-manage-delivery"}
+{"intent": "Check whether the displayed credits are correct, but do not submit a change", "expected": "recoup-song-check-credits"}
+{"intent": "I sent the email.", "expected": "none"}
+{"intent": "Did these payments reach my bank?", "expected": "clarify"}
+{"intent": "Claim this.", "expected": "clarify"}
+{"intent": "I want to file an insurance claim for the studio flood", "expected": "none"}
+{"intent": "Review this catalog acquisition offer; don\u2019t email the seller", "expected": "recoup-catalog-review-deal"}
+{"intent": "Did these payments reach my bank?", "context": [{"role": "user", "content": "We are reconciling my publisher royalty remittances against these supplied account receipts."}], "expected": "recoup-catalog-reconcile-royalties"}
+{"intent": "I sent the email.", "context": [{"role": "assistant", "content": "The existing royalty case has a prepared inquiry; if you send it, we can record your report on that case."}], "expected": "none", "not": ["recoup-catalog-resolve-claims", "recoup-platform-email-helper"]}
+{"intent": "Analyze the song I attached to this chat and tell me its BPM, key, genre and mood", "expected": "recoup-song-analyze-audio"}
+{"intent": "I attached a local MP3 in Codex. Analyze this file without asking me to create a public URL", "expected": "recoup-song-analyze-audio"}
+
+# PMF loop and adjacent consulting boundaries
+{"intent": "recoup-internal pmf-finder: Test whether our AI operations idea has buyer pull and design the next five-call experiment.", "expected": "recoup-internal-consulting-pmf-finder", "not": ["recoup-internal-consulting-market-scanner", "recoup-internal-consulting-positioning-refiner"]}
+{"intent": "recoup-internal: We have one real buyer's PULL anecdote. Test whether it repeats and identify the next buying-behavior experiment.", "expected": "recoup-internal-consulting-pmf-finder", "not": ["recoup-internal-consulting-case-study-builder", "recoup-internal-consulting-discovery-analysis"]}
+{"intent": "recoup-internal: Five buyers praised the demo but nobody took a purchase step. Diagnose product-market fit and choose the next experiment.", "expected": "recoup-internal-consulting-pmf-finder", "not": ["recoup-internal-consulting-discovery-analysis"]}
+{"intent": "recoup-internal: Customers buy but churn; find the retained subgroup, value event, and case-study factory bottleneck.", "expected": "recoup-internal-consulting-pmf-finder", "not": ["recoup-internal-consulting-case-study-builder"]}
+{"intent": "recoup-internal consulting: Analyze this one discovery call for buyer qualification, stakes, objections, and missing questions.", "expected": "recoup-internal-consulting-discovery-analysis", "not": ["recoup-internal-consulting-pmf-finder"]}
+{"intent": "recoup-internal consulting: Write a customer-facing case study from this completed engagement and verified outcome.", "expected": "recoup-internal-consulting-case-study-builder", "not": ["recoup-internal-consulting-pmf-finder"]}
+{"intent": "recoup-internal consulting: Research this niche and its market-rate references; no buyer experiments requested.", "expected": "recoup-internal-consulting-market-scanner", "not": ["recoup-internal-consulting-pmf-finder"]}
+{"intent": "recoup-internal consulting: Refine this positioning statement and pitch wording; keep our existing validated offer.", "expected": "recoup-internal-consulting-positioning-refiner", "not": ["recoup-internal-consulting-pmf-finder"]}

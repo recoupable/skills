@@ -10,7 +10,7 @@ Two measurement modes:
     Spotify counts are store-served (Apify-first) and carry provenance.
   • Portfolio mode (--album-ids/--album-ids-file): snapshot-first. Reads
     GET /research/playcounts per album (one row per track, provenance-labeled),
-    auto-triggers POST /research/snapshots for uncaptured albums, and derives
+    optionally triggers POST /research/snapshots for uncaptured albums with --snapshot, and derives
     TTM from GET /research/track/playcount-deltas (accepted only when the
     capture window >= min_delta_days; labeled `runrate_<N>d`).
 
@@ -21,16 +21,22 @@ Auth: env RECOUP_API_KEY (x-api-key) or RECOUP_ACCESS_TOKEN (Bearer).
 See references/methodology.md for the assumption set; defaults below.
 """
 import argparse, json, os, subprocess, sys, time, datetime as dt
+import math
+import re
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import urlsplit
 
 BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.dev/api")
 
 DEFAULTS = {
+    "currency": "USD",
+    "right_kind": "master",
+    "controlled_share": 1.0,
+    "assumption_status": "illustrative_unverified",
+    "assumption_sources": [],
     "rates": {"spotify": 0.0035, "youtube": 0.00069, "soundcloud": 0.0030},
     "other_dsp_grossup": {"low": 0.25, "central": 0.40, "high": 0.60},  # of Spotify gross
-    "distribution_fee": 0.15,
-    "artist_producer_royalty": 0.25,
     "nls_band": {"low": 0.55, "central": 0.64, "high": 0.70},           # NLS as % of gross
     "multiple": {"low": 10, "central": 13, "high": 16},
     "window_days": 365,
@@ -59,7 +65,18 @@ def api(path, params=None, body=None, timeout=20):
     if status == "402":
         try: j = json.loads(out)
         except (ValueError, TypeError): j = {}
-        link = j.get("billingUrl") or j.get("checkoutUrl") if isinstance(j, dict) else None
+        link = None
+        if isinstance(j, dict):
+            field = "billingUrl" if j.get("error") == "insufficient_credits" else "checkoutUrl"
+            link = j.get(field)
+        try:
+            parsed = urlsplit(link) if isinstance(link, str) else None
+            if parsed:
+                parsed.port
+            if not (parsed and parsed.scheme == "https" and parsed.hostname and not any(c.isspace() for c in link)):
+                link = None
+        except (ValueError, TypeError):
+            link = None
         sys.exit(f"ERROR: research access requires billing (402). Review: {link or 'Check account billing'}")
     if not status.isdigit() or not 200 <= int(status) < 300:
         sys.exit(f"ERROR: research HTTP {status}; no estimate produced from failed requests.")
@@ -82,7 +99,7 @@ def ttm_from_deltas(isrc, asof, cfg):
     """Returns (ttm, ttm_source). Accepts run-rate only when window >= min_delta_days."""
     if not isrc: return 0.0, "none"
     since = (asof - dt.timedelta(days=400)).isoformat()
-    j = api("research/track/playcount-deltas", {"isrc": isrc, "since": since})
+    j = api("research/track/playcount-deltas", {"isrc": isrc, "since": since, "until": asof.isoformat()})
     best = None
     for d in (j.get("deltas") or []):
         if d.get("platform") == "spotify":
@@ -91,8 +108,14 @@ def ttm_from_deltas(isrc, asof, cfg):
     if not best: return 0.0, "none"
     days = num(best.get("days"))
     if days < cfg["min_delta_days"]: return 0.0, "insufficient_window"
-    rr = num(best.get("run_rate_annualized")) or (num(best.get("delta")) / days * 365 if days else 0.0)
-    return max(0.0, rr), f"runrate_{int(days)}d"
+    try:
+        delta = float(best["delta"])
+        if not math.isfinite(delta) or delta < 0: return 0.0, "invalid_delta"
+        rr = delta / days * 365
+    except (KeyError, TypeError, ValueError, ZeroDivisionError):
+        return 0.0, "invalid_delta"
+    if not math.isfinite(rr): return 0.0, "invalid_delta"
+    return rr, f"runrate_{int(days)}d"
 
 # ---------------- track mode ----------------
 def track_current(ident):
@@ -140,17 +163,26 @@ def track_history(d, asof, years, cfg):
     for s in j.get("stats", []) or []:
         if s.get("source") == "spotify":
             hist = s.get("data", {}).get("history", []) or []
-    end_v = nearest(hist, asof.isoformat())
     win_start = asof - dt.timedelta(days=cfg["window_days"])
-    start_v = nearest(hist, win_start.isoformat())
-    span_ok = False
-    if hist:
+    points = []
+    for point in hist:
         try:
-            dates = sorted(dt.date.fromisoformat(h["date"]) for h in hist if h.get("date"))
-            span_ok = dates[0] <= win_start + dt.timedelta(days=45) and dates[-1] >= asof - dt.timedelta(days=45)
-        except Exception: span_ok = False
-    if end_v is not None and start_v is not None and span_ok:
-        d["sp_ttm"] = max(0.0, end_v - start_v); d["ttm_source"] = "measured_365d"
+            date = dt.date.fromisoformat(point["date"])
+            count = float(point["streams_total"])
+            if math.isfinite(count) and count >= 0 and date <= asof:
+                points.append((date, count))
+        except (ValueError, KeyError, TypeError):
+            continue
+    end = min(points, key=lambda p: abs((p[0] - asof).days)) if points else None
+    start = min(points, key=lambda p: abs((p[0] - win_start).days)) if points else None
+    span = (end[0] - start[0]).days if end and start else 0
+    if end and start and abs((end[0] - asof).days) <= 45 and abs((start[0] - win_start).days) <= 45 and span >= cfg["min_delta_days"]:
+        if end[1] < start[1]:
+            d["sp_ttm"], d["ttm_source"] = 0.0, "invalid_delta"
+        else:
+            d["sp_ttm"] = (end[1] - start[1]) * 365 / span
+            d["ttm_source"] = "measured_365d" if span == 365 else f"runrate_{span}d"
+            d["measurement_window"] = {"start": start[0].isoformat(), "end": end[0].isoformat(), "days": span}
     else:
         d["sp_ttm"], d["ttm_source"] = ttm_from_deltas(d.get("isrc"), asof, cfg)
     anns = {}
@@ -207,163 +239,150 @@ def portfolio_tracks(album_ids, asof, cfg, snapshot=True, wait_mins=6, skip_ttm=
         with ThreadPoolExecutor(max_workers=workers) as ex: list(ex.map(fill, tracks))
     return tracks, missing
 
-# ---------------- main ----------------
+# ---------------- reproducible monetary scenarios ----------------
+def accepted_measurement(track, cfg):
+    """Apply the same minimum window to API and supplied annual measurements."""
+    source = track.get("ttm_source")
+    runrate = re.fullmatch(r"runrate_([0-9]+)d", source) if isinstance(source, str) else None
+    accepted_source = source == "measured_365d" or (runrate is not None and int(runrate.group(1)) >= cfg["min_delta_days"])
+    value = track.get("sp_ttm")
+    return accepted_source and not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(value) and value >= 0
+
+
+def model_tracks(tracks, cfg, uncaptured=None, population_complete=True):
+    """Model the measured subset; no missing count becomes estimated zero income."""
+    ids = [t.get("id") for t in tracks]
+    if any(not isinstance(ident, str) or not ident for ident in ids) or len(ids) != len(set(ids)):
+        raise ValueError("Each observation requires a unique nonempty recording id; resolve duplicate/colliding inputs first")
+    for key in ("controlled_share",):
+        if not isinstance(cfg.get(key), (int, float)) or not 0 <= cfg[key] <= 1:
+            raise ValueError(key + " must be between 0 and 1")
+    if cfg.get("window_days") != 365:
+        raise ValueError("window_days must be 365 for this annual model")
+    if isinstance(cfg.get("min_delta_days"), bool) or not isinstance(cfg.get("min_delta_days"), int) or cfg["min_delta_days"] <= 0:
+        raise ValueError("min_delta_days must be a positive integer")
+    for group in ("rates", "other_dsp_grossup", "nls_band", "multiple"):
+        for key, value in cfg[group].items():
+            if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
+                raise ValueError(group + "." + key + " must be finite and nonnegative")
+    if any(value > 1 for value in cfg["nls_band"].values()):
+        raise ValueError("nls_band factors must not exceed 1")
+    for group in ("other_dsp_grossup", "nls_band", "multiple"):
+        if not cfg[group]["low"] <= cfg[group]["central"] <= cfg[group]["high"]:
+            raise ValueError(group + " must have ordered low/central/high scenarios")
+    if not isinstance(cfg.get("currency"), str) or len(cfg["currency"]) != 3 or not cfg["currency"].isupper():
+        raise ValueError("currency must be an explicit three-letter code")
+    covered = [t for t in tracks if accepted_measurement(t, cfg)]
+    status = "complete_input_subset" if len(covered) == len(tracks) and tracks and not uncaptured and population_complete else "partial_subset"
+    if not covered: status = "insufficient_measurement"
+    if cfg.get("right_kind") != "master": status = "unsupported_right"
+    supported = status not in ("insufficient_measurement", "unsupported_right")
+    # Separate annual source measurements are needed for YouTube/SoundCloud. An
+    # all-time ratio is not a comparable annual measurement; retain it as context only.
+    spotify_gross = sum(t["sp_ttm"] for t in covered) * cfg["rates"]["spotify"]
+    annual_gross, annual_nls, value = {}, {}, {}
+    for band in ("low", "central", "high"):
+        gross = spotify_gross * (1 + cfg["other_dsp_grossup"][band])
+        net = gross * cfg["nls_band"][band] * cfg["controlled_share"]
+        annual_gross[band] = gross if supported else None
+        annual_nls[band] = net if supported else None
+        value[band] = net * cfg["multiple"][band] if supported else None
+    return {"status": status, "scope": "covered recording subset only", "currency": cfg["currency"],
+            "covered_tracks": len(covered), "input_tracks": len(tracks),
+            "coverage_share": len(covered) / len(tracks) if tracks else None,
+            "population_complete": population_complete, "uncaptured_albums": uncaptured or [],
+            "annual_gross": annual_gross, "annual_nls": annual_nls, "value": value,
+            "unknown_track_ids": [t.get("id") for t in tracks if t not in covered],
+            "limitations": ["Money is modeled, not reported or collected royalties.",
+                            "Missing tracks/platforms are unknown, not zero; no catalog-wide extrapolation.",
+                            "Rights and controlled share are assumptions, not ownership findings.",
+                            "Net factors already include modeled deductions; do not deduct fees again.",
+                            "A single comparable statement can calibrate one slice; residual uncertainty remains."]}
+
+
 def main():
     ap = argparse.ArgumentParser()
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--ids"); g.add_argument("--isrcs"); g.add_argument("--ids-file")
-    g.add_argument("--album-ids", help="comma-separated Spotify album ids (snapshot-first portfolio mode)")
-    g.add_argument("--album-ids-file")
+    g.add_argument("--album-ids"); g.add_argument("--album-ids-file")
+    g.add_argument("--observations", help="offline JSON with tracks and population_complete; no account required")
     ap.add_argument("--asset-name", default="Catalog")
     ap.add_argument("--owner", default="")
     ap.add_argument("--asof", default=dt.date.today().isoformat())
     ap.add_argument("--config"); ap.add_argument("--out", default="./out")
     ap.add_argument("--no-trajectory", action="store_true")
-    ap.add_argument("--no-snapshot", action="store_true", help="portfolio mode: don't auto-trigger snapshots")
-    ap.add_argument("--skip-ttm", action="store_true", help="portfolio mode: all-time only (no delta calls)")
+    ap.add_argument("--snapshot", action="store_true", help="explicitly authorize snapshot creation for uncaptured albums")
+    ap.add_argument("--no-snapshot", action="store_true", help="compatibility flag; snapshot creation is already opt-in")
+    ap.add_argument("--skip-ttm", action="store_true")
     ap.add_argument("--wait-mins", type=int, default=6)
     a = ap.parse_args()
-
     cfg = json.loads(json.dumps(DEFAULTS))
     if a.config: cfg.update(json.load(open(a.config)))
     asof = dt.date.fromisoformat(a.asof)
     os.makedirs(a.out, exist_ok=True)
-
+    uncaptured, complete = [], True
     portfolio_mode = bool(a.album_ids or a.album_ids_file)
-    uncaptured = []
-    if portfolio_mode:
-        if a.album_ids: album_ids = [x.strip() for x in a.album_ids.split(",") if x.strip()]
-        else: album_ids = [x.strip() for x in open(a.album_ids_file) if x.strip()]
-        tracks, uncaptured = portfolio_tracks(album_ids, asof, cfg,
-                                              snapshot=not a.no_snapshot,
+    if a.observations:
+        supplied = json.load(open(a.observations))
+        tracks = supplied["tracks"]
+        complete = supplied.get("population_complete") is True
+        uncaptured = supplied.get("uncaptured_albums", [])
+    elif portfolio_mode:
+        album_ids = a.album_ids.split(",") if a.album_ids else open(a.album_ids_file).read().splitlines()
+        tracks, uncaptured = portfolio_tracks(list(dict.fromkeys(x.strip() for x in album_ids if x.strip())), asof, cfg,
+                                              snapshot=a.snapshot and not a.no_snapshot,
                                               wait_mins=a.wait_mins, skip_ttm=a.skip_ttm)
-        for i, t in enumerate(tracks):
-            print(f"  [{i+1}/{len(tracks)}] {t['title'][:34]:34}  all-time {t['sp']:>13,.0f}  "
-                  f"TTM {t['sp_ttm']:>12,.0f} ({t['ttm_source']})", file=sys.stderr)
-        years = 0
+        # Playcount snapshots expose mapped tracks; they do not prove the requested
+        # albums' complete ordered track lists. Keep population completeness unknown.
+        complete = False
     else:
-        if a.ids: idents = [x for x in a.ids.split(",") if x.strip()]
-        elif a.isrcs: idents = [x for x in a.isrcs.split(",") if x.strip()]
-        else: idents = [x.strip() for x in open(a.ids_file) if x.strip()]
+        raw = a.ids or a.isrcs
+        idents = raw.split(",") if raw else open(a.ids_file).read().splitlines()
+        idents = list(dict.fromkeys(x.strip() for x in idents if x.strip()))
         years = 0 if a.no_trajectory else cfg["trajectory_years"]
-        workers = int(os.environ.get("ESTIMATE_WORKERS", "6"))
         def fetch(ident):
-            cur = track_current(ident)
-            return track_history(cur, asof, max(years, 1), cfg)
-        tracks = []
-        with ThreadPoolExecutor(max_workers=workers) as ex:
-            for i, cur in enumerate(ex.map(fetch, idents)):
-                tracks.append(cur)
-                print(f"  [{i+1}/{len(idents)}] {cur['title'][:34]:34}  all-time {cur['sp']:>13,.0f}  "
-                      f"TTM {cur['sp_ttm']:>12,.0f} ({cur['ttm_source']})", file=sys.stderr)
-
-    R = cfg["rates"]
-    sp_all = sum(t["sp"] for t in tracks); yt_all = sum(t["yt"] for t in tracks)
-    sc_all = sum(t["sc"] for t in tracks); tt_all = sum(t["tt"] for t in tracks)
-    sp_ttm = sum(t["sp_ttm"] for t in tracks)
-
-    def value_grid(g_sp):
-        g_ytsc = (yt_all * R["youtube"] + sc_all * R["soundcloud"])
-        ratio = (g_ytsc / (sp_all * R["spotify"])) if sp_all else 0.0
-        measured = g_sp + g_sp * ratio
-        out = {}
-        for sk, sv in cfg["other_dsp_grossup"].items():
-            gross = measured + g_sp * sv
-            out[sk] = {"gross": gross, "nls": {nk: gross * nv for nk, nv in cfg["nls_band"].items()}}
-        return out
-
-    annual = value_grid(sp_ttm * R["spotify"])
-    central_gross = annual["central"]["gross"]; central_nls = annual["central"]["nls"]["central"]
-    central_value = central_nls * cfg["multiple"]["central"]
-    low_value = annual["low"]["nls"]["low"] * cfg["multiple"]["low"]
-    high_value = annual["high"]["nls"]["high"] * cfg["multiple"]["high"]
-
-    ranked = sorted(tracks, key=lambda t: t["sp_ttm"], reverse=True)
-    top1 = ranked[0]["sp_ttm"] / sp_ttm if sp_ttm else 0
-    top3 = sum(t["sp_ttm"] for t in ranked[:3]) / sp_ttm if sp_ttm else 0
-
-    traj = {}
-    if years:
-        yrset = set()
-        for t in tracks: yrset |= set(t["anniversaries"].keys())
-        for y in sorted(yrset):
-            traj[y] = {"cumulative": sum(t["anniversaries"].get(y, 0) for t in tracks),
-                       "tracks": sum(1 for t in tracks if y in t["anniversaries"])}
-        yk = sorted(traj)
-        for i in range(1, len(yk)):
-            traj[yk[i]]["annual"] = traj[yk[i]]["cumulative"] - traj[yk[i-1]]["cumulative"]
-
+            return track_history(track_current(ident), asof, max(years, 1), cfg)
+        with ThreadPoolExecutor(max_workers=int(os.environ.get("ESTIMATE_WORKERS", "6"))) as ex:
+            tracks = list(ex.map(fetch, idents))
+    try:
+        model = model_tracks(tracks, cfg, uncaptured, complete)
+    except (ValueError, KeyError) as error:
+        ap.error(str(error))
+    covered = [t for t in tracks if t.get("id") not in model["unknown_track_ids"]]
+    ranked = sorted(covered, key=lambda t: t["sp_ttm"], reverse=True)
+    sp_ttm = sum(t.get("sp_ttm", 0) for t in covered)
     caps = [t["captured_at"] for t in tracks if t.get("captured_at")]
-    provenance = {
-        "mode": "portfolio_snapshot_first" if portfolio_mode else "per_track",
-        "data_sources": dict(Counter(t.get("data_source") or "unknown" for t in tracks)),
-        "ttm_sources": dict(Counter(t.get("ttm_source") or "unknown" for t in tracks)),
-        "captured_at_min": min(caps) if caps else None,
-        "captured_at_max": max(caps) if caps else None,
-        "ttm_coverage_share": (sum(1 for t in tracks if t["sp_ttm"] > 0) / len(tracks)) if tracks else 0,
-        "uncaptured_albums": uncaptured,
-        "notes": "runrate_* TTM is a short-window annualization (>=%dd accepted) — noisier than measured_365d; "
-                 "seasonality uncorrected. Portfolio mode measures Spotify only (yt/sc enter via gross-up)."
-                 % cfg["min_delta_days"],
-    }
+    provenance = {"mode": "offline" if a.observations else "portfolio_snapshot_first" if portfolio_mode else "per_track",
+                  "data_sources": dict(Counter(t.get("data_source") or "unknown" for t in tracks)),
+                  "ttm_sources": dict(Counter(t.get("ttm_source") or "unknown" for t in tracks)),
+                  "captured_at_min": min(caps) if caps else None, "captured_at_max": max(caps) if caps else None,
+                  "ttm_coverage_share": model["coverage_share"], "uncaptured_albums": uncaptured,
+                  "population_complete": complete}
+    result = {"schema_version": "public-estimate/2", "asset": a.asset_name, "owner": a.owner,
+              "as_of": a.asof, "n_tracks": len(tracks), "assumptions": cfg, "provenance": provenance, "model": model,
+              "streams": {"spotify_all_time": sum(t.get("sp") or 0 for t in tracks), "spotify_ttm": sp_ttm if covered else None},
+              "annual_gross": model["annual_gross"], "annual_nls": model["annual_nls"], "value": model["value"],
+              "concentration": {"scope": "covered recording subset only", "top_track": ranked[0].get("title", "") if ranked else "",
+                                "top_track_share": (ranked[0].get("sp_ttm", 0) / sp_ttm) if ranked and sp_ttm else None,
+                                "top3_share": sum(t.get("sp_ttm") or 0 for t in ranked[:3]) / sp_ttm if sp_ttm else None},
+              "tracks": tracks, "trajectory": {},
+              "labels": sorted({label for t in tracks for label in t.get("labels", []) if label}),
+              "distributors": sorted({label for t in tracks for label in t.get("distributors", []) if label})}
+    with open(f"{a.out}/estimate.json", "w") as stream: json.dump(result, stream, indent=2)
+    money = lambda value: "unknown" if value is None else f"{cfg['currency']} {value:,.2f}"
+    lines = [f"# {a.asset_name} — Public-data scenario estimate", "",
+             f"As of {a.asof}. Status: **{model['status']}**. Scope: **{model['scope']}**.",
+             f"Accepted annual measurements: {model['covered_tracks']} / {model['input_tracks']} input recordings; population complete: {complete}.",
+             f"Assumption status: **{cfg['assumption_status']}**. Currency: {cfg['currency']}; modeled controlled interest: {cfg['controlled_share']:.0%}.",
+             "", "| Scenario | Modeled annual gross | Modeled annual net interest | Indicative value |", "|---|---|---|---|"]
+    for band in ("low", "central", "high"):
+        lines.append(f"| {band} | {money(model['annual_gross'][band])} | {money(model['annual_nls'][band])} | {money(model['value'][band])} |")
+    lines += ["", "All-time counts are observations only; the monetary scenario uses accepted Spotify annual counts plus the explicit other-platform scenario.",
+              "The net factor includes deductions exactly once, then applies the assumed controlled share. No bank receipt or receivable is inferred.", ""]
+    lines += ["- " + limitation for limitation in model["limitations"]]
+    with open(f"{a.out}/summary.md", "w") as stream: stream.write("\n".join(lines) + "\n")
+    print(f"Wrote {a.out}/estimate.json and summary.md ({model['status']})")
 
-    result = {
-        "asset": a.asset_name, "owner": a.owner, "as_of": a.asof, "n_tracks": len(tracks),
-        "assumptions": cfg, "provenance": provenance,
-        "streams": {"spotify_all_time": sp_all, "youtube_all_time": yt_all,
-                    "soundcloud_all_time": sc_all, "tiktok_all_time": tt_all,
-                    "spotify_ttm": sp_ttm},
-        "annual_gross": {k: v["gross"] for k, v in annual.items()},
-        "annual_nls": {"low": annual["low"]["nls"]["low"], "central": central_nls,
-                       "high": annual["high"]["nls"]["high"]},
-        "value": {"low": low_value, "central": central_value, "high": high_value},
-        "concentration": {"top_track": ranked[0]["title"] if ranked else "",
-                          "top_track_share": top1, "top3_share": top3},
-        "trajectory": traj,
-        "tracks": [{"title": t["title"], "isrc": t["isrc"], "spotify_all_time": t["sp"],
-                    "spotify_ttm": t["sp_ttm"], "ttm_source": t.get("ttm_source"),
-                    "data_source": t.get("data_source"), "captured_at": t.get("captured_at")}
-                   for t in ranked],
-        "labels": sorted({l for t in tracks for l in t["labels"] if l}),
-        "distributors": sorted({d for t in tracks for d in t["distributors"] if d}),
-    }
-    json.dump(result, open(f"{a.out}/estimate.json", "w"), indent=2)
-
-    M = lambda x: f"{x/1e9:.2f}B" if x >= 1e9 else f"{x/1e6:.1f}M"
-    D = lambda x: f"${x/1e6:.2f}M"
-    ttm_mix = ", ".join(f"{k}: {v}" for k, v in provenance["ttm_sources"].items())
-    src_mix = ", ".join(f"{k}: {v}" for k, v in provenance["data_sources"].items())
-    lines = [f"# {a.asset_name} — Catalog Value Estimate", "",
-        f"*Owner: {a.owner or 'n/a'} · As of {a.asof} · {len(tracks)} recordings · "
-        f"directional model (see methodology). Streams measured; $ figures derived from public rates.*", "",
-        "## Headline", "",
-        f"- **Estimated value:** {D(low_value)} – {D(high_value)} (central **{D(central_value)}**)",
-        f"- **Annual (trailing-12mo) NLS:** {D(annual['low']['nls']['low'])} – {D(annual['high']['nls']['high'])} (central **{D(central_nls)}**)",
-        f"- **All-time Spotify streams:** {M(sp_all)}   ·   **trailing 12 mo:** {M(sp_ttm)}",
-        f"- **Concentration:** top track \"{ranked[0]['title'] if ranked else '—'}\" = {top1*100:.0f}% of TTM streams; top 3 = {top3*100:.0f}%",
-        "", "## Provenance", "",
-        f"- **Counts:** {src_mix} (captured {str(provenance['captured_at_min'])[:10]} → {str(provenance['captured_at_max'])[:10]})",
-        f"- **TTM derivation:** {ttm_mix} · TTM coverage {provenance['ttm_coverage_share']*100:.0f}% of tracks",
-        ""]
-    if result["distributors"]:
-        lines.append(f"- **Distributor(s):** {', '.join(result['distributors'])}")
-    if traj:
-        lines += ["", "## 5-year trajectory (Spotify)", "",
-                  "| As of | Cumulative | Streams that year |", "|---|---|---|"]
-        for y in sorted(traj):
-            t = traj[y]; ann = t.get("annual")
-            lines.append(f"| {y} | {M(t['cumulative'])} | {M(ann) if ann is not None else '—'} |")
-    lines += ["", "## Value model (central)", "",
-        f"Annual gross ≈ {D(central_gross)} → NLS (×{cfg['nls_band']['central']:.2f}) ≈ {D(central_nls)} "
-        f"→ value (×{cfg['multiple']['central']}) ≈ {D(central_value)}.", "",
-        "## Caveats", "",
-        "- Counts are platform-displayed play counts (provenance-labeled per track); not royalty-bearing streams.",
-        "- `runrate_*` TTM is a short-window annualization — noisier than `measured_365d`; seasonality uncorrected.",
-        "- Measured = Spotify (+YouTube/SoundCloud in track mode); Apple/Amazon/Deezer/Tidal approximated (gross-up). Master-side only.",
-        "- Every rate/deduction/multiple is an assumption — calibrate with a real statement to collapse the range."]
-    open(f"{a.out}/summary.md", "w").write("\n".join(lines))
-    print(f"\nWrote {a.out}/estimate.json and {a.out}/summary.md", file=sys.stderr)
-    print(f"VALUE central={D(central_value)}  NLS central={D(central_nls)}  TTM={M(sp_ttm)}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()

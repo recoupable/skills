@@ -1,40 +1,37 @@
 #!/usr/bin/env python3
-"""Calculate a reported-to-normalized NPS/NLS bridge from JSON inputs."""
-
-from __future__ import annotations
-
+"""Calculate an evidenced reported-to-normalized bridge, not contractual entitlement."""
 import argparse
 import json
 from pathlib import Path
+from _finance import amount, currency, refs, iso_date, unique, dumps
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("bridge_json", help="JSON with reported_amount and adjustments")
-    args = parser.parse_args()
-
-    data = json.loads(Path(args.bridge_json).read_text(encoding="utf-8"))
-    reported = float(data.get("reported_amount", 0))
-    adjustments = data.get("adjustments", [])
-    if not isinstance(adjustments, list):
-        raise SystemExit("`adjustments` must be a list")
-
+def calculate(data):
+    currency(data)
+    evidence = refs(data, "reported amount")
+    if iso_date(data.get("period_start"), "period_start") > iso_date(data.get("period_end"), "period_end"):
+        raise ValueError("Invalid period")
+    reported = amount(data.get("reported_amount"), "reported_amount")
+    adjustments = unique(data.get("adjustments", []), "adjustment_id")
     normalized = reported
-    rows = [{"label": "Reported amount", "amount": reported, "running_total": reported}]
-    for adjustment in adjustments:
-        label = adjustment.get("label", "Unnamed adjustment")
-        amount = float(adjustment.get("amount", 0))
-        normalized += amount
-        rows.append({"label": label, "amount": amount, "running_total": normalized})
+    rows = [{"label": "Reported amount", "amount": reported, "running_total": reported, "evidence_refs": evidence}]
+    for identity, adjustment in adjustments.items():
+        if adjustment.get("currency", data["currency"]) != data["currency"]:
+            raise ValueError("Mixed-currency adjustment requires a separate evidenced FX bridge")
+        delta = amount(adjustment.get("amount"))
+        normalized += delta
+        rows.append({"adjustment_id": identity, "label": adjustment.get("label", identity), "amount": delta,
+                     "running_total": normalized, "evidence_refs": refs(adjustment, identity)})
+    return {"status": "ok", "metric": data.get("metric", "NPS/NLS"), "currency": data["currency"],
+            "period_start": data["period_start"], "period_end": data["period_end"], "reported_amount": reported,
+            "normalized_amount": normalized, "bridge": rows, "entitlement_calculated": False}
 
-    payload = {
-        "status": "ok",
-        "metric": data.get("metric", "NPS/NLS"),
-        "reported_amount": reported,
-        "normalized_amount": normalized,
-        "bridge": rows,
-    }
-    print(json.dumps(payload, indent=2))
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("bridge_json")
+    args = parser.parse_args()
+    print(dumps(calculate(json.loads(Path(args.bridge_json).read_text(), parse_float=str))), end="")
     return 0
 
 

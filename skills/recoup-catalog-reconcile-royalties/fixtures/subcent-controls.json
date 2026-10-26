@@ -1,0 +1,17 @@
+{
+  "evidence_refs": [
+    "synthetic-source-summary:v1"
+  ],
+  "totals": [
+    {
+      "currency": "USD",
+      "field": "gross_amount",
+      "amount": "0.0098"
+    },
+    {
+      "currency": "USD",
+      "field": "owner_net_amount",
+      "amount": "0.0098"
+    }
+  ]
+}

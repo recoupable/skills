@@ -1,37 +1,114 @@
 ---
 name: recoup-content-asset-pack
-description: Generate a whole batch of content assets for one song — a cohesive 15–30-piece clip family (videos, quote cards, a carousel, a visualizer, captions) themed to the audience. Use for "content pack", "30 posts for the launch", or "a bunch of content for [song]". Estimates and confirms cost before spending. Stops at the assets; never posts.
+description: 'Create a release pack or content pack for a song: cohesive video clips, artwork, quote cards, a carousel, a visualizer and captions. Use for "create a release pack", "content pack", "30 posts for the launch", catalog rediscovery, an anniversary, a reissue or a remix campaign. Collect essential missing context inline, preserve the job through sign-in, and quote before paid generation. Stops at inspected assets; never posts. For a release plan or rollout schedule without media, use recoup-release-plan-rollout.'
 ---
 
 # Recoup Content — Asset Pack
 
-Orchestrates the other content modes into one cohesive batch for a song. Read the
-bundled references first: `references/workspace-context.md`,
-`references/account-resolver.md`, `references/research-context.md`,
-`references/content-api.md`, `references/song-sourcing.md`,
-`references/analyze-gate.md`.
+Turn the selected music and campaign occasion into a coherent pack the customer
+can actually use. Keep **make this pack** as the active job throughout intake,
+connection, production and recovery. Read `references/release-pack-brief.md` for
+the minimum context and first-use branches. Do not explain the feature or send
+the customer to general onboarding when they already asked you to make it.
 
 ## Procedure
 
-**Estimate + confirm cost before spending** (`POST /content/estimate`; on
-`insufficient_credits` surface `billingUrl`) — no silent 30-asset fan-outs. A
-~20-asset default: 6–10 video clips across looks (each led by a recoup-song-find-hook
-hook), 4–6 quote cards, 1 carousel, 1 visualizer, captions per asset. **Theme to the
-audience** (via recoup-research-artist-overview audience data) — bias looks/copy to
-where the fans are. Analyze-gate every asset; assemble a `pack-manifest.md`.
-Cohesion: a clip *family*, one look + voice.
+1. **Keep the request, find the gaps.** Before asking for context, follow
+   `references/pack-reference-discovery.md`. Read the conversation and reuse relevant
+   authorized Recoup artist/release context before asking for facts again. Then
+   gather supplied audio, artwork, screenshots and selected files or links. Use
+   accessible, correctly matched public references only to fill useful gaps;
+   never pretend to read a blocked profile or search the whole computer.
+   `references/workspace-context.md` describes local files, not a
+   requirement to create them. If connected Context tools can read/compile a
+   selected saved brief, use their actual schemas and coverage. Research is
+   enrichment, not a gate. Do not import a whole catalog for one pack.
+2. **Resolve the real recording.** Use the supplied audio or an explicitly
+   selected accessible recording. A Spotify listening URL is not an audio file.
+   Read `references/song-sourcing.md` only if the song is missing. Resolve remix
+   and namesake ambiguity before production. Analyze available audio and choose
+   a useful hook; metadata alone is not listening. Never substitute another song.
+3. **Ask briefly, only for essentials.** Establish artist/title, usable audio,
+   occasion, and direction/references or permission to propose a direction. Reuse
+   anything already known. A friendly gap question is "Got artwork, past posts,
+   or a look you want me to build on? Send it over or tell me where to find it."
+   Distinguish established direction, a rough idea and no direction. Keep this
+   release's visual world separate from older artist campaigns. Offer clear defaults for audience, platforms and
+   primary action; label them as proposals. No invented brand identity, lyrics,
+   anniversary dates or metrics. Use `templates/pack-brief.json` as a compact
+   checkpoint where files are supported; the host conversation and pack job must
+   also work without a filesystem.
+4. **Connect only when execution needs it.** Discover Recoup tools by name,
+   description and schema. Use the host's connection UI if authentication is
+   required, retain the brief, then resume **this** pack. An empty roster is a
+   valid account. An existing artist, social connection, valuation, catalog claim
+   or GitHub workspace is not a pack prerequisite. Never create a throwaway
+   account, extract OAuth credentials or redirect into bulk roster onboarding.
+5. **Choose the level of creative involvement.** Default to **Run with it** when
+   the customer delegates creative decisions. Offer **Show me directions first**
+   when they want feedback before full production. Ask only if that preference is
+   unclear: "Want me to run with it, or show you a few directions first?"
+   Preserve established direction; develop a rough idea; propose distinct worlds
+   when there is no direction. See `references/release-pack-brief.md` for the
+   saved creative state. A supplied board can be reviewed now. Generate new boards
+   only through a real, available capability with its spending authorization;
+   this skill does not make an unavailable mood-board generator exist. Never label
+   a text concept as a generated board. The guided checkpoint is direction
+   selection, not a mandatory approval for every asset.
+6. **Prepare the same durable job.** Prefer `prepare_release_pack`,
+   `get_release_pack`, `estimate_release_pack`, `generate_release_pack`,
+   `retry_release_pack` and `upload_release_pack_asset` when actually exposed.
+   Use their returned job IDs, revisions, readiness and next actions. A selected
+   Context brief can be reused by ID; inspect coverage and fill essential gaps.
+   Do not claim a newer tool exists on an older connection. If an operation is
+   missing, name it, retain the brief and explain the specific next step. A
+   missing REST credential does not invalidate working MCP authentication.
+   When the discovered schema supports `brief.creative_context`, save references,
+   candidates, working mode and selection there. Record whether the customer or
+   agent selected the direction and the actual decision context; never invent
+   customer approval. Guided mode requires customer selection before final quote
+   or generation. Autonomous mode records the agent's selected world and continues.
+   Keep source inspiration separate from explicitly selected production images.
+7. **Show direction + scope + complete budget.** Default to 15 creative pieces:
+   eight clips, four quote cards, one artwork, one carousel and one visualizer,
+   each with a caption. Adapt to the requested scope. Count a carousel as one
+   piece; disclose its slides and format variants separately. Get the complete
+   pack quote and spending approval before generation. Bind approval to the
+   current input/revision and maximum budget. The legacy **GET**
+   `/content/estimate` is advisory per video, not a complete mixed-pack quote.
+   Surface the returned `billingUrl` on credit shortfall; do not buy or retry.
+8. **Produce, inspect, continue.** Pass the selected direction, exact brief, music window, occasion,
+   aesthetic, voice and constraints into production. Produce a representative
+   asset early and continue the approved batch without another mandatory approval
+   stop, unless the customer requested a preview checkpoint. Use one coherent
+   visual family, purposeful variations and captions tied to the actual occasion.
+   Inspect the real outputs using `references/analyze-gate.md`; verify audio,
+   framing, text and brief fit. A prompt, render request or generated-but-unchecked
+   file is not a usable finished asset.
+9. **Deliver and preserve progress.** Read the job and its export/manifest.
+   Present previews, usable file links, captions, components/variants and honest
+   gaps. Retain successful work on failure and retry only failed stages within
+   budget; reconcile an uncertain submission before any duplicate paid work.
+   Save job state immediately. After value is delivered, offer to save confirmed
+   reusable artist preferences; do not overwrite branding with a one-off concept.
 
 *Boundary:* legitimate creative volume only — no fake-account farms or mass-posting;
 decline the farm, deliver the pack.
 
 ## Guardrails
 
-- **Estimate + confirm** before spending; surface `billingUrl` on insufficient credits.
-- **Analyze-gate every asset.**
-- **Stop at the assets** — no posting/scheduling.
+- **One request, one continuing job.** Connection is not creative context.
+- **Budget applies across the batch and retries.** No silent fan-out or automatic purchase.
+- **Correct audio and inspected media before “done”.** Report partial packs accurately.
+- **Stop at the assets.** No posting, scheduling or permanent public knowledge-base writes.
+- If the customer asked only to **plan a release**, use the planning workflow and
+  do not silently generate media. For both, carry the same brief into production.
 
 ## References
 
-- `references/workspace-context.md` · `references/account-resolver.md` ·
+Use `fixtures/first-use-scenarios.json` when checking first-use behavior in a host.
+
+- `references/pack-reference-discovery.md` · `references/release-pack-brief.md` · `templates/pack-brief.json` ·
+  `references/workspace-context.md` · `references/account-resolver.md` ·
   `references/research-context.md` · `references/content-api.md` ·
   `references/song-sourcing.md` · `references/analyze-gate.md`

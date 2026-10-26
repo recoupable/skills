@@ -1,0 +1,1 @@
+case_id,event_id,occurred_at,evidence_kind,provider_case_id,action_id,attempt_id,recipient_or_sender,channel,payload_version,payload_sha256,attachment_refs,source_refs,event_type,raw_provider_status,requested_scope,granted_scope,next_requirement,next_owner

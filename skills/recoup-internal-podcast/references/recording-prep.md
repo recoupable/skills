@@ -2,8 +2,8 @@
 
 The edit can only use what the recording captured. Most of the time lost in post-production on the first
 six episodes (2026-10-01 to 10-14) traced back to the recording: a host camera at 17-24 fps beside a guest at
-30, words lost while the host was muted, and a render running on the recording machine. Booking, the outline
-and written consent are the sales guest pipeline; this file is the studio.
+30, words lost while the host was muted, and a render running on the recording machine. Booking and the guest
+brief are the sales guest pipeline; this file is the studio.
 
 ## The day before (studio test)
 

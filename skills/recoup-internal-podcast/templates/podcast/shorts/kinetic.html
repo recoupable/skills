@@ -1,0 +1,153 @@
+<!doctype html>
+<!-- Kinetic-split podcast short (1080x1920), "template": "kinetic" in shorts.json. Same builder and beats format as
+     hybrid.html (build_hy.py). Differences: the stage is full-bleed 1080x960 under the hook strip; during a beat the
+     speaker's video becomes a full-width band at the bottom (1080x650) instead of a corner circle, and between beats it
+     fills the frame; captions are one bold word on the seam ("caption_words": 1); .ser is the italic serif accent.
+     Frame 0 is the thumbnail (Kallaway): no fade-ins, ONE centred title at the top (the hook; *word* = serif accent,
+     underlined), the first scene and the speaker band already live. An optional "rehook" swaps the title mid-clip. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>{{TITLE}}</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: 'DM Sans'; src: url('assets/fonts/dm-sans.woff2') format('woff2'); font-weight: 100 1000; font-display: block; }
+  @font-face { font-family: 'Instrument Serif'; src: url('assets/fonts/instrument-serif-italic.woff2') format('woff2'); font-style: italic; font-weight: 400; font-display: block; }
+  @font-face { font-family: 'IBM Plex Mono'; src: url('assets/fonts/ibm-plex-mono.woff2') format('woff2'); font-weight: 400; font-display: block; }
+  :root { --sky: #007EBD; --sky-text: #066A98; --lime: #D6FF62; --forest: #132B26; --ink: #152E37; --muted: #586F78; --pale: #F0F7FA; --border: #E2E9EB; --paper: #FCFEFE; }
+  body { margin: 0; background: var(--pale); }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: 'DM Sans', sans-serif; color: var(--ink); }
+  .ser { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: 0; }
+  .mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+  #bg { position: absolute; inset: 0; background: var(--pale); }
+  #grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,126,189,.10) 2px, transparent 2px), linear-gradient(90deg, rgba(0,126,189,.10) 2px, transparent 2px); background-size: 120px 120px; }
+  .glow { position: absolute; border-radius: 50%; }
+  #glow-sky { width: 1100px; height: 1100px; left: -420px; top: -360px; background: radial-gradient(circle, rgba(0,126,189,.26) 0%, rgba(0,126,189,0) 65%); }
+  #glow-lime { width: 1100px; height: 1100px; right: -420px; bottom: -380px; background: radial-gradient(circle, rgba(214,255,98,.55) 0%, rgba(214,255,98,0) 62%); }
+
+  #hook { position: absolute; left: 50px; right: 50px; top: 0; height: 310px; z-index: 30; }
+  #hook h1 { position: absolute; left: 0; right: 0; bottom: 34px; margin: 0 auto; width: fit-content; max-width: 100%; text-align: center; font-size: {{HOOK_SIZE}}px;
+             line-height: 1.02; letter-spacing: -.035em; font-weight: 800; color: var(--ink); padding-bottom: 16px;
+             background: linear-gradient(var(--sky), var(--sky)) bottom / 100% 8px no-repeat; }
+  #hook h1 .ser { color: var(--sky); font-size: 1.18em; line-height: .8; white-space: nowrap; }   /* the accent never splits across lines */
+  #rehook { opacity: 0; }
+
+  #stage { position: absolute; left: 0; top: 310px; width: 1080px; height: 960px; overflow: hidden; background: var(--paper); z-index: 10; }
+  #stage::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(0,126,189,.16) 2px, transparent 2px); background-size: 40px 40px; }
+  .scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
+  .scene svg { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; overflow: visible; }
+  .kt { position: absolute; left: 0; right: 0; text-align: center; font-weight: 800; letter-spacing: -.03em; line-height: .95; }
+  .lab { position: absolute; left: 0; right: 0; text-align: center; font-size: 26px; color: var(--sky-text); }
+  .hl { background: var(--lime); padding: 0 .12em; border-radius: 8px; }
+
+  {{CSS}}
+  #pip { position: absolute; left: 0; top: 310px; width: 1080px; height: 1610px; overflow: hidden; z-index: 24; background: var(--ink); box-shadow: 0 -6px 0 var(--lime); }
+  #pip video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{OBJ_POS}}; }
+  #pipring { display: none; }
+  /* name tags: every tag/pill text >= 30 px (review 2026-10-25: 17/26 px tags read as ~15 px on a phone) */
+  #who, #whoh { position: absolute; left: 36px; top: 1756px; z-index: 24; background: var(--forest); color: #fff; border-radius: 16px; padding: 12px 24px 14px; font-size: 36px; font-weight: 700; line-height: 1.1; display: flex; flex-direction: column; gap: 4px; opacity: 0; box-shadow: 0 0 0 4px var(--lime); }
+  #who span, #whoh span { font: 400 30px 'IBM Plex Mono', monospace; letter-spacing: .08em; color: var(--lime); text-transform: uppercase; }
+
+  #caps { position: absolute; left: 30px; right: 30px; top: 1196px; z-index: 26; height: 150px; }
+  .cap { position: absolute; left: 0; right: 0; top: 0; text-align: center; font-size: 118px; line-height: 1; font-weight: 800; letter-spacing: -.03em; color: #fff;
+         -webkit-text-stroke: 14px var(--ink); paint-order: stroke fill; text-shadow: 0 10px 30px rgba(21,46,55,.35); opacity: 0; }
+  .cap span { display: inline-block; margin: 0 .12em; padding: 0 .1em; border-radius: 10px; }
+
+  #endcard { position: absolute; inset: 0; z-index: 60; }
+  #endcard .panel { position: absolute; inset: 0; background: var(--forest); }
+  #endcard .inner { position: absolute; left: 80px; right: 80px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 30px; }
+  #endcard img { width: 120px; } #endcard .k { font-size: 26px; color: var(--lime); }
+  #endcard h2 { margin: 0; font-size: 82px; font-weight: 800; color: #fff; letter-spacing: -.02em; line-height: 1.04; }
+  #endcard .rule { height: 6px; width: 100%; background: var(--sky); } #endcard .url { font-size: 54px; font-weight: 700; color: var(--lime); }
+  #endcard .plat { font-size: 24px; color: #C9D6D2; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-width="1080" data-height="1920" data-duration="{{DUR}}">
+  <div id="bg"></div><div id="grid"></div><div id="glow-sky" class="glow"></div><div id="glow-lime" class="glow"></div>
+  <div id="hook"><h1 id="hook1">{{HOOK}}</h1><h1 id="rehook">{{REHOOK}}</h1></div>
+
+  <div id="stage">
+{{STAGE}}
+  </div>
+
+  <div id="pip"><video id="vid-g" src="assets/guest.mp4" data-start="0" data-duration="{{CLIP}}" data-track-index="0" muted playsinline></video>{{HVIDS}}<div id="pipring"></div></div>
+  <div id="who"><span>Guest</span>{{WHO}}</div>
+  <div id="whoh" class="whotag"><span>Host</span>{{HWHO}}</div>
+  <audio id="mix" src="assets/mix.m4a" data-start="0" data-duration="{{CLIP}}" data-track-index="10" data-volume="1"></audio>
+
+  <div id="caps">{{CAPS}}</div>
+
+  <section id="endcard" class="clip" data-start="{{CLIP}}" data-duration="{{END}}" data-track-index="50">
+    <div class="panel"></div>
+    <div class="inner">
+      <img src="assets/logos/symbol-white.svg" alt="" />
+      <div class="k mono">{{END_LABEL}}</div>
+      <h2>{{EP_TITLE}}</h2>
+      <div class="rule"></div>
+      <div class="url">{{END_URL}}</div>
+      <div class="plat mono">YouTube · Spotify · Apple Podcasts</div>
+    </div>
+  </section>
+</div>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  const D = {{DUR}}, CLIP = {{CLIP}};
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+
+  tl.fromTo("#glow-sky", { x: 0, y: 0, scale: 1 }, { x: 120, y: 160, scale: 1.12, duration: D, ease: "sine.inOut" }, 0);
+  tl.fromTo("#glow-lime", { x: 0, y: 0, scale: 1.05 }, { x: -100, y: -120, scale: .95, duration: D, ease: "sine.inOut" }, 0);
+  // frame 0 is the thumbnail: title, stage and speaker band are already at full opacity (no fade-ins)
+  if ({{REHOOK_AT}} >= 0) {
+    tl.to("#hook1", { opacity: 0, y: -20, duration: .2 }, {{REHOOK_AT}});
+    tl.fromTo("#rehook", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .3, ease: "back.out(2)" }, {{REHOOK_AT}} + .1);
+  }
+  tl.fromTo("#who", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: .5, ease: "expo.out" }, {{WHO_AT}});
+  tl.to("#who", { opacity: 0, x: 20, duration: .35 }, {{WHO_AT}} + {{WHO_HOLD}});   // held letters/15 + 1.5 s
+
+  function scene(id, a, b) {
+    tl.set(id, { autoAlpha: 1 }, a);
+    if (a > 0) tl.fromTo(id, { scale: 1.08 }, { scale: 1, duration: .45, ease: "power3.out" }, a);
+    tl.set(id, { autoAlpha: 0 }, b);
+  }
+  const BIG = { left: 0, top: 310, width: 1080, height: 1610 }, SMALL = { left: 0, top: 1270, width: 1080, height: 650 };
+
+{{JS}}
+
+  // scenes -> beats: contiguous scenes form one beat; the guest video shrinks to the circle for each beat
+  const BEATS = []; SC.forEach(([id, a, b]) => { const P = BEATS[BEATS.length - 1]; if (P && a - P[1] < .3) P[1] = b; else BEATS.push([a, b]); });
+  // a beat's first scene shows as the video starts shrinking (a - .3), so the stage is never empty white
+  // and its last scene stays up until the video has grown back over it (b + .3), or under the end card's wipe
+  SC.forEach(([id, a, b]) => scene(id, a < .5 ? 0 : BEATS.some(([s]) => s === a) ? a - .3 : a,   // a scene starting under .5 s shows on frame 0 (the thumbnail)
+                                   !BEATS.some(([, e]) => e === b) ? b : b < CLIP - .2 ? b + .3 : CLIP + .6));
+  for (const [a, b] of BEATS) {
+    if (a < .5) tl.set("#pip", SMALL, 0); else tl.to("#pip", { ...SMALL, duration: .45, ease: "power3.inOut" }, a - .3);
+    if (b < CLIP - .2) tl.to("#pip", { ...BIG, duration: .5, ease: "power3.inOut" }, b - .25);
+  }
+
+  // host-first open: the host camera covers the guest video for each "shot": "host" piece, with the host's name tag
+  // (the host clips' own data-start/data-duration show and hide them: the renderer ignores opacity on a <video>)
+  for (const [a, b] of {{HSHOT}}) {
+    tl.fromTo("#whoh", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: .4, ease: "expo.out" }, a + .15);
+    tl.to("#whoh", { opacity: 0, x: 20, duration: .2 }, Math.max(a + .6, b - .2));   // as long as the host is on camera
+  }
+
+  // guest ring while the guest speaks
+  for (const [a, b] of {{GRING}}) { tl.to("#pipring", { opacity: 1, duration: .2 }, a); tl.to("#pipring", { opacity: 0, duration: .3 }, b); }
+
+  const caps = {{CAP_JS}};
+  caps.forEach(([id, a, b, ws]) => {
+    tl.set(`#${id}`, { opacity: 1 }, a); tl.set(`#${id}`, { opacity: 0 }, b);
+    tl.fromTo(`#${id}`, { scale: .7, y: 14 }, { scale: 1, y: 0, duration: .16, ease: "back.out(2.6)" }, a);   // pop in ~5 frames
+    // one word per line: no active-word box, the word is the highlight
+  });
+
+  tl.fromTo("#endcard .panel", { scaleY: 0 }, { scaleY: 1, transformOrigin: "bottom", duration: .45, ease: "expo.out" }, CLIP);
+  tl.from("#endcard .inner > *", { y: 40, opacity: 0, duration: .5, ease: "power3.out", stagger: .08 }, CLIP + .2);
+  window.__timelines["main"] = tl;
+</script>
+</body>
+</html>

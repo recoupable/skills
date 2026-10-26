@@ -32,7 +32,7 @@ If an external skill cannot be loaded, disclose that limitation and use the incl
 | Bible and character audition | [higgsfield-character-design](https://github.com/OSideMedia/higgsfield-ai-prompt-skill/tree/c0b73ab946df6658cca513db78bdc3909a655bfd/skills/higgsfield-character-design) | World-first bible, character sheet, screen test and identity lock |
 | Story audit | [higgsfield-scene-engine](https://github.com/OSideMedia/higgsfield-ai-prompt-skill/tree/c0b73ab946df6658cca513db78bdc3909a655bfd/skills/higgsfield-scene-engine) | Goal, obstacle, tactic, reversal and audience value shift |
 | Shot list | [higgsfield-shotlist-director](https://github.com/OSideMedia/higgsfield-ai-prompt-skill/tree/c0b73ab946df6658cca513db78bdc3909a655bfd/skills/higgsfield-shotlist-director) | Global style, reference glossary, named prompts, tempo and monotony audits |
-| Composition and verification | [hyperframes](https://github.com/recoupable/skills/tree/main/skills/hyperframes) and [hyperframes-cli](https://github.com/recoupable/skills/tree/main/skills/hyperframes-cli) | HTML timeline, captions, lint, snapshots, render and inspection |
+| Composition and verification | Bundled `references/composition-and-verification.md` | Pinned HyperFrames setup, HTML timeline, captions, lint, snapshots, render and inspection |
 | Recoup authentication, when using its routes | [recoup-platform-api-access](https://github.com/recoupable/skills/tree/main/skills/recoup-platform-api-access) | Verify the account and API contract without exposing credentials |
 
 Small Room adapted these methods: its shot list was `SCRIPT.md`, its audition was silent,
@@ -53,6 +53,15 @@ with ffprobe. Transcribe with **ElevenLabs Scribe**, retaining word timestamps i
 `audio/scribe.json`; compare them with the approved lyrics and flag changes, omissions,
 repeats and cutoff. Do not use Whisper for this workflow. Get the user's listening approval
 before developing the film. An existing approval satisfies this gate.
+
+First verify that the available transcription operation actually supports Scribe and
+word timestamps. Recoup's generic transcription routes are not a Scribe substitute;
+see `references/small-room-production.md` for the inspected route boundaries. An arbitrary
+model override or a file renamed to `scribe.json` does not satisfy this requirement.
+If Scribe access is unavailable, reuse an approved matching Scribe transcript or report
+the missing capability before timing-dependent production. A separately connected Scribe
+service requires its own authorized access and audio submission; do not extract credentials
+from another connection or silently switch transcription providers.
 
 The recording determines the film's musical runtime. A later end card has its own separately
 approved duration. Do not truncate the song to a generic social-video target.
@@ -210,6 +219,9 @@ Use **HyperFrames 0.7.5**, the version used by Small Room. If a tested local vid
 is available, reuse its structure and fonts; Small Room used the LETAL XLUG harness. Clear
 its old media, captions, copy and timing. Otherwise scaffold the same pinned version; no
 private reference project is required to run this skill.
+Read the bundled `references/composition-and-verification.md` for that setup and the
+required host capabilities. Keep automatic Whisper transcription and extra skill installation
+disabled when scaffolding; preserve the approved Scribe timings and existing host setup.
 
 Place the selected clips at the approved song windows, mute clip audio, and add captions
 from the timestamped transcript. Use unique media IDs and explicit start/duration values.
@@ -222,7 +234,7 @@ Run lint, validate and inspect, then snapshot important moments and caption tran
 npx hyperframes@0.7.5 lint .
 npx hyperframes@0.7.5 validate .
 npx hyperframes@0.7.5 inspect .
-npx hyperframes@0.7.5 snapshot --at <review-times> .
+npx hyperframes@0.7.5 snapshot --at <review-times> --describe false .
 ```
 
 Review those images before rendering. Render the film, mux the approved master with FFmpeg

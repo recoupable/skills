@@ -65,18 +65,41 @@ def finding_description(finding: dict[str, object]) -> str:
 
 
 def is_open(finding: dict[str, object]) -> bool:
-    """Treat findings without a status as open. Closed/resolved/deferred are not blockers."""
+    """Unknown states fail closed; dispositions need explicit evidence and a reason."""
     status = finding_status(finding)
-    return status in {"", "open", "in_progress", "in-progress"}
+    allowed = {"", "open", "in_progress", "in-progress", "pending", "resolved", "closed", "accepted", "deferred"}
+    if status not in allowed:
+        raise ValueError(f"Unknown finding status {status!r}: {finding.get('finding_id')}")
+    if status in {"accepted", "deferred"}:
+        for field in ("disposition_actor", "disposition_scope", "disposition_reason"):
+            value = finding.get(field)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"Finding {finding.get('finding_id')} exception requires nonblank {field}")
+    if status in {"resolved", "closed", "accepted", "deferred"}:
+        evidence = finding.get("disposition_evidence_ids")
+        if not isinstance(evidence, list) or not evidence or not all(isinstance(v, str) and v.strip() for v in evidence) or not finding.get("disposition_reason"):
+            raise ValueError(f"Finding {finding.get('finding_id')} disposition requires disposition_evidence_ids and disposition_reason")
+    return status in {"", "open", "in_progress", "in-progress", "pending"}
 
 
 def summarize_findings(
     workspace: Path,
 ) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]]]:
     """Return (all_findings, open_blockers, open_review_items)."""
-    data = load_json(workspace / "findings" / "findings.json", {"findings": []})
-    findings = data.get("findings", []) if isinstance(data, dict) else []
-    typed_findings = [finding for finding in findings if isinstance(finding, dict)]
+    path = workspace / "findings" / "findings.json"
+    if not path.is_file():
+        raise ValueError(f"Missing findings record: {path}")
+    data = load_json(path, {"findings": []})
+    if not isinstance(data, dict) or "findings" not in data:
+        raise ValueError("findings record must contain an explicit findings list")
+    findings = data["findings"]
+    if not isinstance(findings, list) or any(not isinstance(finding, dict) for finding in findings):
+        raise ValueError("findings must be a list of objects")
+    typed_findings = findings
+    for finding in typed_findings:
+        if finding_severity(finding) not in {"critical", "high", "medium", "low", "p0", "p1", "p2", "p3"}:
+            raise ValueError(f"Unknown finding severity: {finding.get('severity')}")
+        is_open(finding)
     open_blockers = [
         finding
         for finding in typed_findings
