@@ -47,6 +47,13 @@ Replication question: which other people share this evidenced situation? If no a
 1. Their project, why now, options, and limitations; question inviting correction.
 2. Narrow help, truthful delivery capability, commercial basis, and purchase next step.
 
+### Offer check, when demand is grounded
+
+- Smallest complete outcome and delivery plan; provider work versus buyer effort/dependencies:
+- Buyer understanding: what it is, how it completes the project, differences from actual alternatives, price:
+- Buyer preference: why this plan fits or fails; unresolved risk, effort, scope, timing, or cost:
+- One demand case being tested; alternative delivery forms for it; unrelated cases parked separately:
+
 ## Evidence ledger
 
 Keep one row per interaction; link detailed records rather than reproducing private transcripts.
@@ -77,6 +84,13 @@ If the buyer has not established demand or fit, return to discovery/offer correc
 - Starting anecdote / replication question → evidence → revised case or question (or reason to retain it):
 - Decision and what would change it:
 
+### Diagnosis, when progress stalls
+
+- Where progress stopped: demand / comprehension / fit / buying process / delivery / unknown:
+- Buyer's words or action, source, and the offer/claim immediately preceding it:
+- Competing explanations and evidence still needed:
+- One change or test; result that would support or disconfirm the diagnosis:
+
 ## Delivery / retention (after commitments)
 
 - Promised outcome:
@@ -86,13 +100,17 @@ If the buyer has not established demand or fit, return to discovery/offer correc
 - Retention, repeat purchase, or other appropriate continued-value evidence:
 - Observation window; churn/nonrenewal/drop-off reasons; pending evidence:
 - Retained versus lost segments; hypothesis to retest:
+- If delivery stalled: changed/misunderstood demand, expectation mismatch, or execution failure; evidence and correction:
 
 ## Repeatable pattern / current constraint
 
 - Same person/situation → project/urgency → failed alternatives → offer → outcome → continued value:
+- Strong buying-and-value case compared with stalled/lost cases; distinguishing circumstance and counterexamples:
 - Pipeline: right buyers reached, conversations, dates, drop-offs:
 - Sales: qualified conversations, purchase progress, completed sales, buying-cycle blockers:
 - Delivery: outcome achieved, time to value, continued value, labor/economic constraints:
 - Evidenced bottleneck (or measurement needed):
+- Feasible improvement → additional successful outcomes; assumptions, lag, capacity, cost, and uncertainty:
+- Any activity target rewarding poor-fit buyers or promises delivery cannot fulfill:
 - After a buyer/project change: which targeting, acquisition, sales, and delivery assumptions must be retested?
 - One next experiment and checkpoint:

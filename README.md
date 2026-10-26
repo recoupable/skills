@@ -215,7 +215,7 @@ The 65 `recoup-internal-consulting-*` skills cover PMF discovery, client/deal op
 
 ### PMF finder
 
-Use `recoup-internal-consulting-pmf-finder` to ground PMF learning in a real-person PULL anecdote and test whether it repeats. If no anecdote exists, it defines firsthand fieldwork instead. It covers discovery, buying decisions and pilot verification, delivery/retention, and repeatable customer outcomes, with a memo template and dated podcast/author sources. Book-preview coverage is explicitly partial. Example: “recoup-internal pmf-finder: use these customer calls to identify the weakest demand assumption and our next test.” Keep resulting buyer evidence in the selected private business workspace.
+Use `recoup-internal-consulting-pmf-finder` to ground PMF learning in a real-person PULL anecdote and test whether it repeats. If no anecdote exists, it defines firsthand fieldwork instead. It covers discovery, offer comprehension and fit, buying decisions and pilot verification, delivery/retention, and repeatable customer outcomes. Its memo template and references draw on Snyder's podcast, author essays, and a targeted review of *The Power of Pull*, with printed-page locators and reading scope documented. Example: “recoup-internal pmf-finder: use these customer calls to identify the weakest demand assumption and our next test.” Keep resulting buyer evidence in the selected private business workspace.
 
 ### Mono Business workspace
 

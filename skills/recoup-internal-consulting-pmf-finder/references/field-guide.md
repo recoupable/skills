@@ -33,7 +33,7 @@ These are text outlines, not a request to render a presentation.
 
 “We could help you achieve [outcome] by [narrow approach], with [scope, delivery mode, timing, and price hypothesis]. [Existing capability] is available; [manual work/unbuilt capability] would be part of delivery. What would you need to decide whether to start?”
 
-The second slide is a testable offer, not a product vision. When capabilities or pricing are unknown, label them as proposals to validate. Do not promise a finished platform if the first version is a service.
+The second slide is a testable offer, not a product vision. When capabilities or pricing are unknown, label them as proposals to validate. Do not promise a finished platform if the first version is a service. Use `references/power-of-pull.md` to check the buyer's understanding separately from preference, including the implementation work the offer creates for them.
 
 ### Hail Mary
 
@@ -150,4 +150,4 @@ Read this section when reconciling older “hypothesis” terminology or checkin
 | [The PULL Quickstart Guide](https://thephysicsofstartups.substack.com/p/the-pull-quickstart-guide), May 15, 2026 | Separate learning access from demand capture and diagnose upstream targeting before downstream tactics. |
 | [Deep Dive: The Path to PMF](https://thephysicsofstartups.substack.com/p/deep-dive-the-path-to-pmf), July 11, 2025 | Repeat customer success; changing the target buyer can break previously working acquisition or sales assumptions. |
 
-**Book coverage:** Rob Snyder's *The Power of Pull*, US ebook ISBN 9781541705968, Basic Venture, published July 7, 2026 ([publisher](https://www.hachettebookgroup.com/titles/rob-snyder/the-power-of-pull/9781541705968/)). Research on October 26, 2026 read only the licensed [contents](https://books.google.com/books?id=fWqUEQAAQBAJ&pg=PT3) and four opening introduction pages ([PT6](https://books.google.com/books?id=fWqUEQAAQBAJ&pg=PT6) through PT9). The introduction corroborates the demand-first framing; the nine chapter bodies were not read. Do not call this a full-book adaptation or infer later-chapter methods from the contents. No full transcript, book text, or private customer evidence is bundled.
+**Book coverage:** Rob Snyder's *The Power of Pull*, US ebook ISBN 9781541705968, Basic Venture, published July 7, 2026 ([publisher](https://www.hachettebookgroup.com/titles/rob-snyder/the-power-of-pull/9781541705968/)). The initial contents/introduction preview has been supplemented by a licensed web-reader review of relevant passages across all nine chapters on October 25–26, 2026. See `references/power-of-pull.md` for additional methods, printed-page locators, and reading limitations. The book supplements the later author guidance above; preserve the anecdote terminology. No full transcript, book text, or private customer evidence is bundled.
