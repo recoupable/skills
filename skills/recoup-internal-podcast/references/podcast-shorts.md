@@ -147,6 +147,9 @@ Write each short's beats in `edit/shorts/<id>.html` (kinetic: `kinetic-beats.exa
 - **Let viewers read it**: every text stays on screen >= letters/15 + 1.5 s. Where a browser is allowed,
   `scripts/podcast/shorts/readcheck.js` (chrome-devtools `evaluate_script` with `sourcePath` on
   `comp/shorts/<id>/index.html`) lists every failure; extend holds until `fails` is empty.
+  The last text is the usual failure: the end card cuts it at the clip's last word. Bring it in a phrase
+  early (on "This is, this is" before "a new path"), shorten it to the quoted fragment, or end the last
+  piece in the silence before the next word (Zac 2026-10-26: four of seven shorts needed one of these).
 - **Labels show state.** A toggle with static OUT/IN labels read "OUT" while switched on; put the state
   text on the knob.
 - **Keep low text clear of the circle**: kinetic text below `top:600` gets right padding automatically
