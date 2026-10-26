@@ -169,6 +169,7 @@ The internal namespace is a routing convention, not an access-control boundary.
 | recoup-internal consulting: Phase 2 of the nightly pipeline — the workspace reconciler | `recoup-internal-consulting-nightly-janitor` |
 | recoup-internal consulting: Turn a raw objection into a tailored response | `recoup-internal-consulting-objection-handler` |
 | recoup-internal consulting: The process every personalized outbound email runs through before it is staged — gather full context on the person, decide who it is really for and what the objective is (set by temperature), simulate the reader, and pass the pre-send gate | `recoup-internal-consulting-outbound-email` |
+| recoup-internal consulting: Run pmf-finder, test a PULL anecdote or hypothesis, diagnose weak demand, or choose the next PMF experiment from buyer, delivery, and retention evidence | `recoup-internal-consulting-pmf-finder` |
 | recoup-internal consulting: Sharpen positioning and messaging | `recoup-internal-consulting-positioning-refiner` |
 | recoup-internal consulting: Build three-tier pricing for a deal | `recoup-internal-consulting-pricing-builder` |
 | recoup-internal consulting: Turn verified user-facing releases and merged PRs into cited product-update signals and draft article, LinkedIn, and email bundles | `recoup-internal-consulting-product-engine` |
@@ -188,6 +189,8 @@ The internal namespace is a routing convention, not an access-control boundary.
 ---
 
 ## Cross-skill disambiguation (the boundaries that matter)
+
+- **PMF learning vs adjacent consulting work.** Testing buyer pull, demand, retention, or the next PMF experiment → `recoup-internal-consulting-pmf-finder`. A single call qualification summary → `recoup-internal-consulting-discovery-analysis`; niche desk research → `recoup-internal-consulting-market-scanner`; messaging refinement → `recoup-internal-consulting-positioning-refiner`; writing up a delivered win → `recoup-internal-consulting-case-study-builder`. A PMF case-study pattern is an internal repeatability model, not a public testimonial.
 
 - **Audio vs data.** From a song's **audio file** (hook, mix, BPM, lyrics, sync
   brief) → the `recoup-song-*` skills. From **research data / the web** (catalog
