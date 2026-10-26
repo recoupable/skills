@@ -17,7 +17,7 @@ approved before building anything.
   share. Not for long."), never "new episode". Hooks over ~45 characters use `hook_size: 58` to stay on two lines.
 - **Title truth** (review, 2026-10-25): keep the speaker's hedges ("close to", "as <guest> tells it"); check time
   words against `post_date` ("just got" is stale by post day); keep qualifiers inside quotes ("for us, at least
-  ... it failed", not "it failed"). Each short gets its own `end_title`, true to that clip.
+  ... it failed", not "it failed"). The end card carries the episode title, never a per-clip line (owner, 2026-10-25: viewers search for the episode by it).
 - **Length** 25-60 s. A short can open on the host's question if the answer needs it (the guest name tag
   then waits for the guest's first word: anchor named `who`).
 - **The 5-second hook window** (Sid, 2026-10-23): the hook bar, the first spoken sentence, the first on-screen text
@@ -41,7 +41,7 @@ approved before building anything.
   tag still needs >= 3 s before it. Record `"variant": "host-open"|"guest-only"` per
   short and in posts-log, and compare the two at the re-pull.
 - Write the approved table to `edit/shorts.json` (`templates/podcast/shorts/shorts.example.json`): per short
-  `post_date`, `variant`, `context`/`lean`/`snapback` (`raw` times + `text`), `rehook`, `end_title`, `approved`.
+  `post_date`, `variant`, `context`/`lean`/`snapback` (`raw` times + `text`), `rehook`, `approved`.
 
 ### Re-running an episode whose shorts already exist (Ali Lieberman case)
 
@@ -63,7 +63,7 @@ like**, five moments of the approved cut:
 - Lean: one huge figure ("$640K") with a two-word headline and the song chips, held >= 3 s.
 - Snapback: "Streaming" struck through, then a forest "All sync" lane slides in on the words.
 - Rehook: the title swaps to "So who was *paying?*" and the answer scene builds (Film, TV, Games -> Sync).
-- End card: forest panel, "Full episode out now", that short's `end_title`, the URL.
+- End card: forest panel, "Full episode out now", the episode title, the URL.
 
 - Split screen: motion graphic on the top ~60%, the speaker's camera live in the bottom third, one bold word as
   caption. No show bar or separate hook bar; the brand is on the end card.

@@ -14,8 +14,7 @@ Reads (all inside <project>):
                                 {"id": "s1", "day": "Mon", "hook": "...", "hook_size": 66, "pieces": [...]}
                                 optional per short: "template": "kinetic" (templates/podcast/shorts/<name>.html, default
                                 "hybrid"), "caption_words": 1 (words per caption line, default 3) and (kinetic only)
-                                "rehook": {"text": "So who *paid?*", "at": "<anchor name>"} (swaps the title there),
-                                "end_title" (this short's end-card line; default episode.json shorts.end_title).
+                                "rehook": {"text": "So who *paid?*", "at": "<anchor name>"} (swaps the title there).
                                 In "hook"/"rehook" text, *word* is the italic serif accent.
   edit/transcripts/{host,guest}.json   ElevenLabs Scribe word timestamps (same files the episode uses)
   edit/shorts/<id>.html         the beats: <!--ANCHORS {json}--> then <!--CSS-->, <!--HTML-->, <!--JS--> sections.
@@ -202,7 +201,7 @@ def build(sid):
         json.dump({"$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
                    "registry": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry",
                    "paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}}, open(hf, 'w'), indent=2)
-    ep_title = c.get('end_title') or CFG.get('end_title', EP['title'])
+    ep_title = CFG.get('end_title', EP['title'])
     end = max(END, math.ceil((len(ep_title) / 15 + 1.5) * 10) / 10)   # the end card holds long enough to read its title
     CLIP = sh.total; D = round(CLIP + end, 2)
     T = {k: sh.anchor(tuple(a) if isinstance(a, list) else a, end=k.endswith('_end')) for k, a in anchors.items()}
