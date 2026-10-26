@@ -4,16 +4,20 @@ Use only sections relevant to the current stage. Keep unknowns visible; this is 
 
 ## Decision and current bet
 
-- Date / owner / hypothesis version:
+- Date / owner / learning-record version:
 - Decision needed:
 - Product or service; available versus proposed capability:
 - Buyer/person and current situation; user/champion/approver if different:
-- Stage: hypothesis / observed pull / purchase / delivery / retention / repeatability.
+- Stage: idea without anecdote / partial real-person evidence / grounded PULL anecdote / replication test / purchase / delivery / retention / repeatability.
 - Evidence available and missing; sources and observation window:
 
-## PULL hypothesis
+## Real-person PULL anecdote
 
-We believe [person in situation] must [project] now because [reason], but [options] fail because [limitations].
+Starting person and source, or **anecdote missing**:
+
+Evidence supports: [person in situation] is trying to [project] now because [reason], but [options] fail because [limitations].
+
+Leave unsupported fields unknown. An ungrounded idea is a lead for fieldwork, not an anecdote. Record a founder's own case only with a concrete experienced need, inadequate alternatives, and genuine willingness to pay. A completed sale is not required to investigate the case.
 
 | Field | Current claim | Observed / inferred / unknown / contradicted | Evidence locator + date | Counterevidence / next question |
 |---|---|---|---|---|
@@ -24,12 +28,15 @@ We believe [person in situation] must [project] now because [reason], but [optio
 
 Proposed help (separate from buyer evidence):
 
+Replication question: which other people share this evidenced situation? If no anecdote exists, leave replication pending and define firsthand evidence to seek instead.
+
 ## Next experiment
 
 - Weakest assumption / current constraint:
-- Comparable buyer selection and proposed batch:
+- Mode: find an anecdote / clarify this person's demand / test replication / verify offer-fit / resolve buying obstacle / test delivery or retention:
+- Person/workflow to observe, or comparable buyers and proposed batch when grounded:
 - Action or offer; scope, delivery mode, price hypothesis if relevant:
-- Observable behavior that would support the hypothesis:
+- Observable behavior that would support the current test:
 - Observation that would disconfirm it:
 - Continue / narrow / revise / pause rules:
 - Owner, next action, review date or event, and budget if relevant:
@@ -48,7 +55,18 @@ Keep one row per interaction; link detailed records rather than reproducing priv
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
-Do not combine different buyers' evidence into a single validated hypothesis. Record no response as missing evidence, not proof of absent demand.
+Do not combine different buyers' evidence into a single anecdote. Qualify direct records versus user reports. Record no response as missing evidence, not proof of absent demand.
+
+## Buyer-requested pilot gate (only when relevant)
+
+- Buyer's current demand and whether they already believe the offer fits:
+- Why verification is required; purchase obstacle versus missing demand/fit:
+- Specific result that would rule out purchase:
+- If that result does not occur, remaining purchase steps and approvals:
+- Sponsor / decision owner; scope, commercial status, verification evidence, end date:
+- Agreed next purchase decision, still distinguished from a completed sale:
+
+If the buyer has not established demand or fit, return to discovery/offer correction rather than design a pilot to create them. Unknown decision conditions remain unknown; do not invent commitment.
 
 ## Batch review
 
@@ -56,7 +74,7 @@ Do not combine different buyers' evidence into a single validated hypothesis. Re
 - Buying behavior versus compliments:
 - Completed sales versus proposed or pending purchases:
 - Shared pattern and exceptions:
-- Old hypothesis → evidence → revised hypothesis (or reason to retain it):
+- Starting anecdote / replication question → evidence → revised case or question (or reason to retain it):
 - Decision and what would change it:
 
 ## Delivery / retention (after commitments)
@@ -76,4 +94,5 @@ Do not combine different buyers' evidence into a single validated hypothesis. Re
 - Sales: qualified conversations, purchase progress, completed sales, buying-cycle blockers:
 - Delivery: outcome achieved, time to value, continued value, labor/economic constraints:
 - Evidenced bottleneck (or measurement needed):
+- After a buyer/project change: which targeting, acquisition, sales, and delivery assumptions must be retested?
 - One next experiment and checkpoint:

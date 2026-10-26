@@ -1,6 +1,6 @@
 ---
 name: recoup-internal-consulting-pmf-finder
-description: "Find and test product-market fit through buyer pull, paid demand, retention, and repeatable outcomes. Use for recoup-internal requests to run pmf-finder, test a pull hypothesis, diagnose weak demand, or choose the next PMF experiment."
+description: "Find and test product-market fit through buyer pull, paid demand, retention, and repeatable outcomes. Use for recoup-internal requests to run pmf-finder, test a PULL anecdote or hypothesis, diagnose weak demand, or choose the next PMF experiment."
 ---
 
 # PMF Finder
@@ -9,7 +9,7 @@ Turn an idea or customer evidence into the next demand test using Rob Snyder's P
 
 ## Contract
 
-- Produce an evidence-backed pull hypothesis, the weakest assumption, and one next experiment with a decision rule.
+- Produce a real-person PULL anecdote and a test of whether it repeats; without one, return a field-evidence task, not an imagined buyer story.
 - Distinguish buyer pull, completed sales, delivered value, retention, and repeatability. None substitutes for the others.
 - Preserve unknowns and disconfirming evidence; never certify PMF from a score, a small call batch, or enthusiasm alone.
 
@@ -19,11 +19,13 @@ This is a PMF loop, not generic call summarization, proposal writing, or marketi
 
 ## Phases
 
-### 1. Establish the current bet
+### 1. Find the real-person starting point
 
-Identify the product/service, buyer/person, outcome, stage, and decision needed. Separate buyer, user, champion, and approver when they differ. Read evidence before asking for context that changes the decision. With sparse inputs, make a provisional hypothesis and name the field evidence needed; never invent interviews.
+Identify the product/service, buyer/person, outcome, stage, and decision needed. Separate buyer, user, champion, and approver when they differ. Read evidence before asking for missing context. Find one real person with current demand; a concrete user report can supply evidence, but label it as reported, not independently verified. The founder's own experienced need can count if they would pay to solve it and adequate options are missing.
 
-**Complete when:** one buyer/project is scoped; inputs distinguish records, user reports, and assumptions. Label unknown observation dates rather than inventing them.
+No real-person evidence means **anecdote missing**: keep the idea as an untested lead and choose firsthand observation or discovery. Do not fill a plausible PULL story from market trends, personas, or projected ROI. Earlier sources call this a hypothesis; use **anecdote** for the grounded starting case and test its replication, not an invented world. This does not require a completed sale before investigating demand.
+
+**Complete when:** a real buyer/project is identified or its absence is explicit; inputs distinguish records, user reports, and assumptions. Label unknown observation dates.
 
 ### 2. Fill PULL before describing the solution
 
@@ -38,27 +40,29 @@ For that person, fill these four fields:
 
 Mark fields **observed**, **inferred**, **unknown**, or **contradicted**, with evidence locators and counterevidence. Qualify observed claims as user-reported or directly verified. All four concern the same person/project, not a composite of interviews. Recurring work can be a project without a written to-do; tie time savings to that work.
 
-Write: “We believe [person in situation] must [project] now because [trigger/consequence], but [options] fail because [limitations].” Keep proposed help separate. If an existing option works well enough, report the missing pull instead of adding persuasive messaging.
+Write only what evidence supports: “[person in situation] is trying to [project] now because [trigger/consequence], but [options] fail because [limitations].” Leave missing fields unknown and keep proposed help separate. If an existing option works well enough, report the missing pull instead of adding persuasive messaging. An observed complaint alone does not establish all four fields.
 
-**Complete when:** each PULL field has a status and the hypothesis could be disproved. Read `references/field-guide.md` for discovery and signal distinctions when needed.
+**Complete when:** each PULL field has a status and the case can be challenged, or missing-person fieldwork is specified. Read `references/field-guide.md` for discovery, pilots, and dated source distinctions.
 
 ### 3. Design the smallest buying-behavior test
 
-Choose the nearest untested assumption. If the blocker is unknown or contradicted, observe/discover it first; leave the offer pending. With a plausible buyer/project, prepare two text slides: (1) reflect PULL for correction; (2) propose narrow help, commercial basis, and next step. State what exists, is manual, or remains unbuilt. Do not build a platform to avoid customer contact.
+Choose the nearest untested assumption. Without an anecdote, seek one through firsthand contact; do not call that a replication test. If the person's blocker is unknown or contradicted, discover it first; leave the offer pending. With grounded demand, prepare two text slides: (1) reflect PULL for correction; (2) propose narrow help, commercial basis, and next step. State what exists, is manual, or remains unbuilt. Do not build a platform to avoid customer contact.
 
 Prepare discovery: why they accepted, agreed agenda, permission for questions, missing PULL fields, then the narrow offer. Ask for a purchase step, not whether they like the idea. Without pull, use the Hail Mary in `references/field-guide.md` to discover work they would pay to complete now.
 
-For a new hypothesis, propose a small batch of comparable buyers; roughly five conversations is a useful review checkpoint, not a statistical threshold. Record buyer-selection criteria, the test, expected observable behavior, falsifying evidence, review date, owner, and what decision each outcome would change. When access is the bottleneck, propose direct observation or a short truthful outreach draft instead of more desk research.
+To test replication, select buyers matching the anecdote's situation; roughly five conversations is a review checkpoint, not a statistical threshold. Record selection criteria, expected behavior, falsifying evidence, review date, owner, and what each outcome would change. Before demand is established, outreach seeks learning access; afterward, test where matching buyers encounter the need. When access is the bottleneck, propose observation or a truthful outreach draft.
 
 **Complete when:** the user has a runnable test and pass/revise/stop criteria. Drafts do not authorize sending outreach, scheduling calls, offering binding terms, spending money, or publishing customer evidence; execute those only within the user's existing authorization.
 
 ### 4. Review actual behavior and revise the bet
 
-Log each interaction separately: PULL evidence, exact buying action or absence, objections, next step/owner/date, purchase state, and new learning. Use `templates/pmf-loop.md` to maintain the hypothesis and evidence ledger; omit later-stage sections that have no evidence yet.
+Log each interaction separately: PULL evidence, exact buying action or absence, objections, next step/owner/date, purchase state, and new learning. Use `templates/pmf-loop.md` for the anecdote, replication question, and evidence ledger; omit later-stage sections without evidence.
 
 Distinguish compliments and hypothetical future use from buyer-driven attempts to start. A requested contract, payment, or an owned procurement step is more informative than excitement; still label which happened, not all as closed revenue. Enterprise procurement can delay a sale despite real pull: identify the buyer's required outcome date and work backward through approvals. Do not confuse an active buying process with an unowned “maybe next quarter.”
 
-At the checkpoint, compare like-for-like buyers. If a minority pulls, retest that subgroup. If none pulls, revise the person, urgency, or limitation from the evidence. Without learning, return to firsthand observation. Record the old hypothesis, evidence, change, and next test. Extend a batch only when further evidence could change the decision.
+For a requested pilot, distinguish demand and offer-fit from purchase obstacles. Establish what the buyer already believes, what would rule out purchase, and remaining approvals before defining verification. A pilot cannot create missing demand; use the field guide's pilot gate.
+
+At the checkpoint, compare like-for-like buyers. If a minority pulls, retest that subgroup. If none pulls, revise the person, urgency, or limitation from the evidence. Without learning, return to firsthand observation. Record the old case, evidence, revised replication question, and next test. Extend a batch only when further evidence could change the decision.
 
 **Complete when:** continue, narrow, revise, or pause follows from observed behavior, with one next action. Evidence missing is “not yet tested,” not “no demand.”
 
@@ -74,7 +78,7 @@ Track who reached X, time to value, subsequent use/renewal/churn, and reasons ov
 
 Define an internal case-study pattern: same buyer situation → unavoidable project → failed alternatives → offer → achieved outcome → continued value. Seek matching customers, not unrelated wins. A sale alone is not a repeatable case study; learning records need not become public testimonials.
 
-Inspect counts, time windows, and drop-offs across **pipeline** (right-buyer conversations), **sales** (purchase progress), and **delivery** (value and retention). Choose the evidenced bottleneck or, with sparse data, what to measure next. Test that constraint before adding features, segments, or volume.
+Inspect counts, time windows, and drop-offs across **pipeline** (right-buyer conversations), **sales** (purchase progress), and **delivery** (value and retention). Diagnose upstream demand/targeting before treating downstream friction as a script or feature problem. Changing the buyer/project requires rechecking acquisition, sales, and delivery assumptions that depended on it. Choose the evidenced bottleneck or what to measure next; test it before adding segments or volume.
 
 **Complete when:** the repeatable unit, current constraint, and next learning checkpoint are explicit. A promising pattern is stronger evidence, not a guarantee of market size or enduring PMF.
 
@@ -83,7 +87,7 @@ Inspect counts, time windows, and drop-offs across **pipeline** (right-buyer con
 Return a concise decision memo using the relevant sections of `templates/pmf-loop.md`:
 
 1. Current bet and evidence stage.
-2. PULL hypothesis with evidence, unknowns, and contradictions.
+2. Real-person PULL anecdote and replication question, or an explicit missing-anecdote finding; evidence, unknowns, and contradictions.
 3. Buying behavior observed, separately from sales, delivery, and retention.
 4. Biggest uncertainty or evidenced bottleneck.
 5. One next experiment: buyer, action, expected behavior, disconfirmation, owner, review point.
@@ -93,12 +97,12 @@ Save to the selected workspace's existing opportunity/learning record when autho
 
 ## Anti-Patterns
 
-- Substituting TAM, personas, competitor lists, or feature roadmaps for buyer evidence.
+- Substituting TAM, personas, projected ROI, or a plausible fictional hypothesis for a real person's demand.
 - Treating stated pain, free design-partner feedback, usage, or one sale as PMF.
-- Offering free pilots to evade a buying decision. A buyer-required pilot can be valid; define commercial terms, success criteria, decision owner, and conversion step.
+- Offering pilots to manufacture demand or evade a buying decision. Buyer-required verification is valid only with its demand, fit, and remaining decision conditions made explicit.
 - Inventing customers, prices, ROI, urgency, or competitive limitations to fill the framework.
 - Scaling acquisition before learning why customers fail to buy, get value, or stay.
 
 ## Source
 
-Adapted from Rob Snyder on Lenny's Podcast, *An 86-minute guide to finding PMF*: https://www.youtube.com/watch?v=19qrLchbQEc. See `references/field-guide.md` for timestamps, tactics, and source/adaptation distinctions. No transcript fetch or API credential required.
+Adapted from Rob Snyder on Lenny's Podcast: https://www.youtube.com/watch?v=19qrLchbQEc, plus five primary-author essays, including his September 2026 anecdote update. See `references/field-guide.md` for timestamps, dated sources, and operational adaptations. Book access covered only the contents and four introduction pages, not the full book. No source fetch or API credential required.

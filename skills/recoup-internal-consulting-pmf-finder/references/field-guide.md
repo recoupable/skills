@@ -7,6 +7,7 @@
 - Learning batches and recovery
 - Delivery and the case-study factory
 - Timestamped source map
+- Author updates and book coverage
 
 ## Discovery and the two-slide test
 
@@ -36,11 +37,13 @@ The second slide is a testable offer, not a product vision. When capabilities or
 
 ### Hail Mary
 
-When the proposed project does not matter enough, ask what work on their plate they would pay someone to complete now. Capture the answer as a **different hypothesis** with its own PULL fields; do not quietly count it as validation of the original idea.
+When the proposed project does not matter enough, ask what work on their plate they would pay someone to complete now. Capture that person's answer as a **different case** with its own PULL evidence and unknowns; do not quietly count it as validation of the original idea.
 
 ### Getting the conversation
 
 Use a brief, truthful, audience-relevant reason to meet. Founder history or firsthand domain experience can be useful; the message's job is to start a conversation, not to prove the whole value proposition. Do not invent credentials, investor names, mutual contacts, or personalization. Draft within the authorized channel; sending needs existing authority. The source suggests aiming for two to three conversations per day once access works, not an automatic quota or permission to spam.
+
+Distinguish **access to learn** from **demand capture**. Without a real-person starting case, seek firsthand contact with the work; do not invent precise buyer criteria from an imagined story. Once a case repeats, investigate where and when similar buyers face the blockage and test acquisition there. A successful learning invitation is not proof of a repeatable acquisition channel. This distinction comes from the author's Quickstart essay, listed below.
 
 ## Signals, pricing, and buying process
 
@@ -49,7 +52,7 @@ Keep evidence stages separate; this is a qualitative reading guide, not a scorin
 | Observation | Interpretation | Next evidence |
 |---|---|---|
 | “Interesting,” feature suggestions, hypothetical future use | Interest only; pull unproven | Current project, why now, real alternatives, willingness to act |
-| Buyer supplies all four PULL fields but has taken no buying step | Plausible pull hypothesis | Test a concrete, credible offer |
+| One real buyer supplies all four PULL fields but has taken no buying step | Grounded starting anecdote, not a sale or demonstrated repeatability | Test a concrete, credible offer |
 | Buyer asks how to start, requests a contract, or initiates procurement | Buying behavior; not automatically a completed sale | Named owner, next step/date, commercial decision |
 | Money paid or a binding order, as supported by the record | Sale supported | Fulfill the promised outcome and observe retention |
 | Customer reaches a meaningful value event | Delivery evidence | Continued use/renewal over a relevant period |
@@ -67,7 +70,15 @@ The episode describes discussing comparable pricing examples to invite a buyer's
 
 Once a credible buyer/project and buying process are identified, ask when the customer needs the outcome working. Work backward through procurement, security, budget, legal, onboarding, and delivery as applicable, with owners and dates. Procurement activity is evidence of progress, not closed revenue; no movement calls for investigation, not automatic dismissal or automatic validation.
 
-Do not proactively offer free design partnerships as a substitute for selling an outcome. If the customer's actual buying process requires a pilot, define scope, price or explicit commercial status, success measures, sponsor/decision owner, end date, and the decision that follows. A required pilot is not PMF by itself.
+Do not proactively offer a pilot or free design partnership to rescue weak demand. Separate **purchase causes** (the buyer has demand and believes the offer fits) from **purchase obstacles** (for example security, implementation, procurement, or verification). Clearing an obstacle does not create a reason to buy.
+
+When the buyer requests a pilot, establish:
+
+1. Whether they already believe the offer solves the current project, and what still needs verification.
+2. The specific evidence that would rule out purchase; if it does not arise, what other approvals or steps remain.
+3. Scope, commercial status, sponsor/decision owner, end date, verification evidence, and the next purchase decision.
+
+If fit or demand is missing, return to discovery or offer correction; do not design an open-ended audition to create them. A pilot verifies an otherwise fitting offer, but neither a request nor successful verification is automatically a sale. Do not invent a buyer's commitment when decision conditions are unknown. This gate draws on the author's pilot essay; the memo logistics are implementation choices.
 
 ## Learning batches and recovery
 
@@ -77,9 +88,9 @@ After roughly five conversations, review what changed. The episode explicitly tr
 
 - **Several buyers try to purchase the same outcome:** pursue the real next commercial step and begin delivery learning; keep testing repeatability.
 - **One subgroup pulls:** specify what differs and test more buyers in that subgroup. One customer's demand may remain bespoke.
-- **Polite interest, no buying behavior:** locate the missing P/U/L/L field, change the hypothesis or offer, and test again.
+- **Polite interest, no buying behavior:** locate the missing P/U/L/L field, revise the case or offer from evidence, and test again.
 - **They can already get it done:** their alternatives are adequate. Do not treat “better UX” or “more AI” as sufficient rebuttals.
-- **Different urgent work emerges:** record a new hypothesis from that work; retain the original result.
+- **Different urgent work emerges:** record a new real-person case from that work; retain the original result.
 - **No useful learning:** go observe or participate in the workflow firsthand. Change access or method instead of repeating hundreds of undirected interviews.
 
 The episode's “goblin mode” is an occasional intensive search for firsthand contact when stuck. Translate that into a bounded, user-authorized fieldwork sprint with a goal, time/budget limit, and review point. It is not a requirement to travel, spend, harass prospects, or overwork.
@@ -100,17 +111,17 @@ For a one-off project, measure its promised completion outcome and repeat purcha
 - Enough comparable conversations, little purchase progress: revisit PULL/offer fit or the buying process using call evidence.
 - Sales without value or retention: investigate delivery, the value event, and segment fit before pouring in more leads.
 
-Work on the evidenced constraint and measure again. Do not force all problems into a single explanation when data is missing.
+Work on the evidenced constraint and measure again. Check upstream demand and buyer selection before treating every sales slowdown as an objection-handling problem. If the buyer/project changes, revisit the acquisition, offer, sales, and delivery assumptions that depended on the old case; an earlier successful channel may no longer work. Do not force all problems into a single explanation when data is missing.
 
 ## Timestamped source map
 
 **Source:** Rob Snyder, *An 86-minute guide to finding PMF*, Lenny's Podcast. https://www.youtube.com/watch?v=19qrLchbQEc
 
-Derived from the YouTube-caption transcript extracted on 2026-10-26. Captions contain transcription mistakes; the framework below is paraphrased, not a verified verbatim transcript. Source anecdotes are explanations of the model, not independently verified legal, market, or product claims.
+This table maps the YouTube-caption transcript extracted on 2026-10-26; later author updates are distinguished in the next section. Captions contain transcription mistakes, so these are paraphrases, not verified quotations. Source anecdotes explain the model; their business outcomes are not independently verified claims.
 
 | Video time | Source idea | Application in this skill |
 |---|---|---|
-| 04:10–06:21; 07:35–09:44 | Pull; project, unavoidable, list of options, limitations | Four-field buyer hypothesis before a solution pitch |
+| 04:10–06:21; 07:35–09:44 | Pull; project, unavoidable, list of options, limitations | Four-field buyer case before a solution pitch |
 | 09:56–14:47 | Worked comparison; recurring work; all fields must fit | Urgency and inadequate alternatives cannot be assumed from a broad persona |
 | 15:14–17:13 | Buying behavior; pull belongs to a person | Individual buyer/project, not “the company needs AI” |
 | 17:31–23:41 | Firsthand work, hypothesis, testing whether it repeats | Observe the workflow and test comparable buyers |
@@ -126,3 +137,17 @@ Derived from the YouTube-caption transcript extracted on 2026-10-26. Captions co
 | 1:17:01–1:19:26 | Buyer-required pilot exception; new products at established companies | Do not impose a blanket pilot ban or founder-only workflow |
 
 **Operational additions:** evidence statuses/locators, memo structure, explicit review criteria, authorization boundaries, one-off-project retention distinctions, commercial-state labels, and protection against fabricated pricing are this skill's implementation choices. They are not claims that Snyder prescribed those exact mechanisms. The framework helps organize experiments; it does not guarantee PMF.
+
+## Author updates and book coverage
+
+Read this section when reconciling older “hypothesis” terminology or checking provenance. These are primary-author essays, not quotations from book chapters. Their operative guidance is incorporated above; no network access is required to run the skill.
+
+| Source and publication date | Contribution |
+|---|---|
+| [No More PULL Hypotheses](https://thephysicsofstartups.substack.com/p/no-more-pull-hypotheses), September 4, 2026 | Start from a real person's current demand and test replication. Snyder says the book already has a Real Person Rule; this later essay changes the terminology to anecdote to prevent imagined starting cases. |
+| [The No-Speculation Rule](https://thephysicsofstartups.substack.com/p/the-no-speculation-rule), August 7, 2026 | Anchor decisions in individual words/actions, not plausible market stories or assumed purchase intent. |
+| [Pilots, PoCs, and Trials](https://thephysicsofstartups.substack.com/p/pilots-pocs-and-trials), June 5, 2026 | Distinguish purchase causes from obstacles; buyer-requested verification tests an otherwise fitting offer, with disqualifiers and remaining purchase steps explicit. |
+| [The PULL Quickstart Guide](https://thephysicsofstartups.substack.com/p/the-pull-quickstart-guide), May 15, 2026 | Separate learning access from demand capture and diagnose upstream targeting before downstream tactics. |
+| [Deep Dive: The Path to PMF](https://thephysicsofstartups.substack.com/p/deep-dive-the-path-to-pmf), July 11, 2025 | Repeat customer success; changing the target buyer can break previously working acquisition or sales assumptions. |
+
+**Book coverage:** Rob Snyder's *The Power of Pull*, US ebook ISBN 9781541705968, Basic Venture, published July 7, 2026 ([publisher](https://www.hachettebookgroup.com/titles/rob-snyder/the-power-of-pull/9781541705968/)). Research on October 26, 2026 read only the licensed [contents](https://books.google.com/books?id=fWqUEQAAQBAJ&pg=PT3) and four opening introduction pages ([PT6](https://books.google.com/books?id=fWqUEQAAQBAJ&pg=PT6) through PT9). The introduction corroborates the demand-first framing; the nine chapter bodies were not read. Do not call this a full-book adaptation or infer later-chapter methods from the contents. No full transcript, book text, or private customer evidence is bundled.
