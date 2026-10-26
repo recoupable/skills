@@ -7,7 +7,6 @@
       "template": "kinetic", "caption_words": 1,
       "hook": "Two Marlowes songs earn *$640K* a year.", "hook_size": 80,
       "rehook": { "text": "So who was *paying?*", "at": "alot" },
-      "end_title": "Dana Whitlock on two songs and sync",
       "context": { "raw": [[430.1, 433.9]], "text": "(host) Which songs carried the Marlowes catalog?" },
       "lean": { "raw": [[512.02, 513.4], [515.1, 515.4], [515.7, 517.9]], "text": "Saltwater Radio and Night Ferry, did over half a million, about 640 thousand a year" },
       "snapback": { "raw": [[440.6, 443.2]], "text": "that wasn't streaming, by the way. That was all sync." },
