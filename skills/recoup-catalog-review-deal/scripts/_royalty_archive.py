@@ -3,6 +3,7 @@ from collections import Counter
 import csv
 import hashlib
 import json
+import re
 from pathlib import Path
 import shutil
 import stat
@@ -15,7 +16,8 @@ CHUNK = 1024 * 1024
 DEFAULT_LIMITS = dict(max_members=128, max_archive_bytes=256 * CHUNK,
                       max_directory_bytes=CHUNK, max_member_bytes=512 * CHUNK,
                       max_expanded_bytes=1024 * CHUNK, max_ratio=200,
-                      max_record_chars=CHUNK, max_columns=1024)
+                      max_record_chars=CHUNK, max_columns=1024,
+                      max_controls_bytes=CHUNK, max_controls_entries=128)
 
 
 class BoundedCsvLines:
@@ -117,8 +119,51 @@ def members_checked(archive, limits, expected_count):
     return sorted(result, key=lambda info: info.filename)
 
 
+def load_controls_manifest(path, archive_hash, names, limits):
+    """Read once with a byte budget; bind controls without filename inference."""
+    def unique_object(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError('Duplicate controls manifest JSON key')
+            result[key] = value
+        return result
+
+    with Path(path).open('rb') as stream:
+        raw = stream.read(limits['max_controls_bytes'] + 1)
+    if len(raw) > limits['max_controls_bytes']:
+        raise ValueError('Controls manifest byte limit exceeded')
+    try:
+        manifest = json.loads(raw, parse_float=str, object_pairs_hook=unique_object,
+                              parse_constant=lambda value: (_ for _ in ()).throw(ValueError('Nonfinite manifest number')))
+    except (UnicodeError, RecursionError) as exc:
+        raise ValueError('Invalid controls manifest encoding or nesting') from exc
+    if (not isinstance(manifest, dict) or type(manifest.get('schema_version')) is not int
+            or manifest['schema_version'] != 1
+            or set(manifest) - {'schema_version', 'archive_version_id', 'members'}):
+        raise ValueError('Invalid controls manifest schema')
+    if 'archive_version_id' in manifest and manifest['archive_version_id'] != archive_hash:
+        raise ValueError('Controls manifest archive hash mismatch')
+    members = manifest.get('members')
+    if not isinstance(members, list) or len(members) > limits['max_controls_entries']:
+        raise ValueError('Controls manifest entries must be a bounded list')
+    bindings = {}
+    for entry in members:
+        if not isinstance(entry, dict) or set(entry) != {'member', 'source_version_id', 'controls'}:
+            raise ValueError('Controls binding requires exact member, source_version_id and controls')
+        name = entry['member']; digest = entry['source_version_id']
+        if not isinstance(name, str) or name not in names:
+            raise ValueError('Unknown controls manifest member')
+        if name in bindings:
+            raise ValueError('Duplicate controls manifest member')
+        if not isinstance(digest, str) or not re.fullmatch('[0-9a-f]{64}', digest):
+            raise ValueError('Controls binding requires lowercase member SHA256')
+        bindings[name] = entry
+    return raw, bindings
+
+
 def normalize_zip(normalize, provider, input_path, output_path, *, delimiter='auto',
-                  column_map_path=None, statement_id=None, **overrides):
+                  column_map_path=None, statement_id=None, archive_controls_path=None, **overrides):
     limits = {**DEFAULT_LIMITS, **overrides}
     if set(limits) != set(DEFAULT_LIMITS) or any(type(v) is not int or v <= 0 for v in limits.values()):
         raise ValueError('Archive limits must be positive integers with known names')
@@ -133,11 +178,16 @@ def normalize_zip(normalize, provider, input_path, output_path, *, delimiter='au
         tmp = Path(tmp); snapshot = tmp / 'archive.zip'; bundle = tmp / 'bundle'; bundle.mkdir()
         with input_path.open('rb') as source, snapshot.open('wb') as target:
             archive_bytes, archive_hash = copy_bounded(source, target, limits['max_archive_bytes'])
-        entries = []; expanded = 0
+        entries = []; expanded = 0; controls_hash = None; bindings = {}
         with snapshot.open('rb') as stream:
             expected_count = preflight_directory(stream, limits)
             with zipfile.ZipFile(stream) as archive:
                 infos = members_checked(archive, limits, expected_count)
+                if archive_controls_path is not None:
+                    raw, bindings = load_controls_manifest(archive_controls_path, archive_hash,
+                                                           {info.filename for info in infos}, limits)
+                    controls_hash = hashlib.sha256(raw).hexdigest()
+                    (bundle / 'controls-manifest.json').write_bytes(raw)
                 for index, info in enumerate(infos, 1):
                     member_path = tmp / ('member' + Path(info.filename).suffix.lower())
                     with archive.open(info) as source, member_path.open('wb') as target:
@@ -146,19 +196,28 @@ def normalize_zip(normalize, provider, input_path, output_path, *, delimiter='au
                     if size != info.file_size or size > max(info.compress_size, 1) * limits['max_ratio']:
                         raise ValueError('Expanded member differs from bounded metadata')
                     entry = dict(member=info.filename, source_version_id=member_hash, bytes=size)
-                    if member_path.suffix not in {'.csv', '.tsv'}:
+                    binding = bindings.get(info.filename)
+                    if binding is not None and binding['source_version_id'] != member_hash:
+                        entry.update(status='error', reason='Controls binding member hash mismatch')
+                    elif member_path.suffix not in {'.csv', '.tsv'}:
                         entry.update(status='unsupported', reason='Only UTF-8 CSV/TSV members are supported; no nested archives or spreadsheets')
                     else:
+                        controls_path = None
+                        if binding is not None:
+                            controls_path = tmp / 'member-controls.json'
+                            controls_path.write_text(json.dumps(binding['controls']))
                         try:
                             receipt = normalize(provider, member_path, bundle / 'ledger.csv',
                                                 delimiter=delimiter, column_map_path=column_map_path,
-                                                append=True, statement_id=statement_id,
+                                                append=True, statement_id=statement_id, controls_path=controls_path,
                                                 source_label=f'zip:{archive_hash}!/{info.filename}',
                                                 csv_limits=(limits['max_record_chars'], limits['max_columns']))
                         except (ValueError, UnicodeError, csv.Error, OverflowError) as exc:
                             entry.update(status='error', reason=str(exc))
                         else:
                             # Bundle-relative receipt paths survive the atomic directory publication.
+                            if binding is not None:
+                                receipt['archive_controls_version_id'] = controls_hash
                             old_receipt = Path(receipt['receipt'])
                             old_rows = Path(receipt['row_receipt'])
                             relative = f'receipts/{index:04d}'
@@ -178,7 +237,10 @@ def normalize_zip(normalize, provider, input_path, output_path, *, delimiter='au
                        member_conservation={'total': len(entries), **dict(counts)},
                        members=entries, output=str(output_path),
                        overlap_detection='Existing normalizer only: exact member bytes and scoped transaction keys. Unkeyed overlap requires manual review.',
-                       controls_status='unavailable: archive mode has no per-member independent source controls; use individual files to supply them')
+                       controls_status='unavailable: no independent source controls supplied; use --archive-controls for member bindings')
+        if archive_controls_path is not None:
+            payload.update(controls_status='per-member: see individual receipts; no aggregate control conclusion',
+                           archive_controls_version_id=controls_hash, controls_manifest='controls-manifest.json')
         (bundle / 'manifest.json').write_text(json.dumps(payload, indent=2)+'\n')
         if output_path.exists() or output_path.is_symlink():
             raise ValueError('Archive output appeared during processing; refusing replacement')

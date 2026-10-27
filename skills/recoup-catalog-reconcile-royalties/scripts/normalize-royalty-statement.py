@@ -973,6 +973,7 @@ def main() -> int:
             "providers into one royalty-ledger.csv. Delete the ledger first to start fresh."
         ),
     )
+    parser.add_argument("--archive-controls", help="Bounded JSON controls manifest binding exact archive member names and SHA256 hashes")
     parser.add_argument("--controls", help="JSON source totals with evidence_refs and totals[{currency,field,amount}]")
     parser.add_argument("--statement-id", help="Observed statement identity, for source transaction overlap detection")
     args = parser.parse_args()
@@ -982,13 +983,17 @@ def main() -> int:
         delimiter = bytes(delimiter, "utf-8").decode("unicode_escape")
     column_map_path = Path(args.column_map) if args.column_map else None
 
+    if args.archive_controls and not args.archive:
+        parser.error("--archive-controls requires --archive")
+
     if args.archive:
         if args.append or args.sheet or args.controls:
             parser.error("Archive mode does not accept --append, --sheet or --controls; use per-file normalization for source controls")
         try:
             payload = normalize_archive(args.provider, Path(args.input), Path(args.output),
                                         delimiter=delimiter, column_map_path=column_map_path,
-                                        statement_id=args.statement_id)
+                                        statement_id=args.statement_id,
+                                        archive_controls_path=Path(args.archive_controls) if args.archive_controls else None)
         except (ValueError, OSError, zipfile.BadZipFile, zlib.error, RuntimeError, EOFError) as exc:
             parser.exit(2, f"normalize-royalty-statement: archive rejected: {exc}\n")
         print(json.dumps(payload, indent=2))
