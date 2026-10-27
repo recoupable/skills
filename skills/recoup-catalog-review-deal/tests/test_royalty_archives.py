@@ -40,6 +40,136 @@ class ArchiveTests(unittest.TestCase):
     def run_batch(self, **limits):
         return normalizer.normalize_archive('distributor', self.source, self.output, **limits)
 
+    def controls_manifest(self, entries, **extra):
+        import hashlib
+        path = self.root / 'controls.json'
+        path.write_text(json.dumps({'schema_version': 1, 'members': entries, **extra}))
+        return path
+
+    def control_entry(self, name, content, amount='0.0049', currency='USD'):
+        import hashlib
+        data = content.encode() if isinstance(content, str) else content
+        return {'member': name, 'source_version_id': hashlib.sha256(data).hexdigest(),
+                'controls': {'evidence_refs': ['synthetic-independent-control'],
+                             'totals': [{'currency': currency, 'field': 'owner_net_amount', 'amount': amount}]}}
+
+    def test_member_controls_matched_mismatch_missing_and_replay(self):
+        a = statement(); b = statement(transaction='two'); c = statement(transaction='three')
+        self.archive([('a.csv', a), ('b.csv', b), ('c.csv', c)])
+        path = self.controls_manifest([self.control_entry('a.csv', a), self.control_entry('b.csv', b, '99')])
+        result = self.run_batch(archive_controls_path=path)
+        self.assertEqual(result['status'], 'partial')
+        self.assertEqual([m['receipt']['controls_status'] for m in result['members']], ['matched', 'mismatch', 'unavailable'])
+        self.assertEqual([m['status'] for m in result['members']], ['ok', 'partial', 'ok'])
+        self.assertEqual((self.output/'controls-manifest.json').read_bytes(), path.read_bytes())
+        ledger = (self.output/'ledger.csv').read_bytes()
+        self.output = self.root/'replay'
+        again = self.run_batch(archive_controls_path=path)
+        self.assertEqual(again['members'], result['members'])
+        self.assertEqual((self.output/'ledger.csv').read_bytes(), ledger)
+
+    def test_member_controls_zero_is_not_absent(self):
+        data = statement(net='0')
+        self.archive([('a.csv', data)])
+        entry = self.control_entry('a.csv', data, '0')
+        path = self.controls_manifest([entry])
+        result = self.run_batch(archive_controls_path=path)
+        self.assertEqual(result['members'][0]['receipt']['controls_status'], 'matched')
+        entry['controls']['totals'][0]['currency'] = 'EUR'
+        path = self.controls_manifest([entry]); self.output = self.root/'absent'
+        result = self.run_batch(archive_controls_path=path)
+        self.assertEqual(result['members'][0]['receipt']['controls_status'], 'mismatch')
+        self.assertIn('no observed source amount', str(result['members'][0]['receipt']))
+
+    def test_stale_member_controls_do_not_apply_and_later_member_runs(self):
+        data = statement()
+        self.archive([('a.csv', data), ('b.csv', statement(transaction='later'))])
+        entry = self.control_entry('a.csv', data); entry['source_version_id'] = '0'*64
+        result = self.run_batch(archive_controls_path=self.controls_manifest([entry]))
+        self.assertEqual([m['status'] for m in result['members']], ['error', 'ok'])
+        self.assertIn('hash', result['members'][0]['reason'])
+        self.assertNotIn('receipt', result['members'][0])
+        with (self.output/'ledger.csv').open() as stream: rows=list(csv.DictReader(stream))
+        self.assertEqual(len(rows), 1)
+        self.assertTrue(rows[0]['source_file'].endswith('!/b.csv'))
+
+    def test_manifest_rejects_unknown_duplicate_stale_archive_and_limits(self):
+        import hashlib
+        data = statement(); self.archive([('a.csv', data)])
+        entry = self.control_entry('a.csv', data)
+        cases = [([entry, entry], {}, {}),
+                 ([self.control_entry('A.csv', data)], {}, {}),
+                 ([entry], {'archive_version_id': '0'*64}, {}),
+                 ([entry], {}, {'max_controls_bytes': 10}),
+                 ([entry, self.control_entry('b.csv', data)], {}, {'max_controls_entries': 1})]
+        for entries, extra, limits in cases:
+            with self.subTest(entries=entries, extra=extra, limits=limits):
+                with self.assertRaises(ValueError):
+                    self.run_batch(archive_controls_path=self.controls_manifest(entries, **extra), **limits)
+                self.assertFalse(self.output.exists())
+        result = self.run_batch(archive_controls_path=self.controls_manifest([entry], archive_version_id=hashlib.sha256(self.source.read_bytes()).hexdigest()))
+        self.assertEqual(result['status'], 'ok')
+
+    def test_manifest_invalid_controls_and_failed_member_remain_partial(self):
+        good = statement(); bad = b'Title,Title\nx,y\n'
+        self.archive([('a.csv', good), ('b.csv', bad)])
+        entry = self.control_entry('a.csv', good); entry['controls']['evidence_refs'] = []
+        result = self.run_batch(archive_controls_path=self.controls_manifest([entry, self.control_entry('b.csv', bad)]))
+        self.assertEqual([m['status'] for m in result['members']], ['partial', 'error'])
+        self.assertEqual(result['members'][0]['receipt']['controls_status'], 'mismatch')
+        self.assertNotIn('receipt', result['members'][1])
+
+    def test_controls_evidence_strings_use_portable_json_serialization(self):
+        data = statement(); self.archive([('a.csv', data)])
+        entry = self.control_entry('a.csv', data)
+        entry['controls']['evidence_refs'] = ['unicode-é', chr(0xd800)]
+        result = self.run_batch(archive_controls_path=self.controls_manifest([entry]))
+        self.assertEqual(result['members'][0]['receipt']['controls_status'], 'matched')
+
+    def test_manifest_json_duplicate_keys_and_invalid_schema_rejected(self):
+        self.archive([('a.csv', statement())])
+        path = self.root/'controls.json'
+        for raw in ['{"schema_version":1,"schema_version":1,"members":[]}',
+                    '{"schema_version":true,"members":[]}', '{"schema_version":1,"members":[],"totals":[]}',
+                    '{"schema_version":1,"members":[NaN]}', '['*2000, 'not json']:
+            path.write_text(raw)
+            with self.assertRaises(ValueError): self.run_batch(archive_controls_path=path)
+            self.assertFalse(self.output.exists())
+
+    def test_controls_preserve_exact_numeric_json_and_duplicate_source_totals(self):
+        data = statement(net='0.123456789012345678')
+        self.archive([('a.csv', data), ('b.csv', data)])
+        entries = [self.control_entry(name, data, '0.123456789012345678') for name in ['a.csv', 'b.csv']]
+        path = self.controls_manifest(entries)
+        path.write_text(path.read_text().replace('"0.123456789012345678"', '0.123456789012345678'))
+        result = self.run_batch(archive_controls_path=path)
+        self.assertEqual([m['receipt']['controls_status'] for m in result['members']], ['matched', 'matched'])
+        self.assertEqual(result['members'][1]['receipt']['row_conservation']['duplicate_rows'], 1)
+        with (self.output/'ledger.csv').open() as stream: self.assertEqual(len(list(csv.DictReader(stream))), 1)
+
+    def test_controls_cli_and_vendored_copy(self):
+        import subprocess
+        data = statement(); self.archive([('a.csv', data)])
+        path = self.controls_manifest([self.control_entry('a.csv', data)])
+        for index, script in enumerate([SCRIPTS/'normalize-royalty-statement.py',
+                SCRIPTS.parents[1]/'recoup-catalog-reconcile-royalties/scripts/normalize-royalty-statement.py']):
+            command = [sys.executable, str(script), '--provider', 'distributor', '--input', str(self.source),
+                       '--output', str(self.root/f'cli-{index}'), '--archive-controls', str(path)]
+            rejected = subprocess.run(command, cwd=self.root, capture_output=True, text=True)
+            self.assertEqual(rejected.returncode, 2)
+            result = subprocess.run(command+['--archive'], cwd=self.root, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(json.loads(result.stdout)['members'][0]['receipt']['controls_status'], 'matched')
+
+    def test_late_failure_with_bound_controls_preserves_previous_receipts(self):
+        original = self.run_batch
+        def controlled_batch(**limits):
+            with zipfile.ZipFile(self.source) as archive:
+                entries = [self.control_entry(name, archive.read(name), '0.0098' if name == 'c-after.csv' else '0.0049') for name in archive.namelist()]
+            return original(archive_controls_path=self.controls_manifest(entries), **limits)
+        self.run_batch = controlled_batch
+        self.test_late_member_failure_rolls_back_rows_and_receipts_then_continues()
+
     def test_order_lineage_exact_totals_revisions_and_reversals(self):
         self.archive([('03-eur.csv', statement('-0.0049', 'EUR', 'reverse')),
                       ('02-correction.csv', statement('0.0051')),
