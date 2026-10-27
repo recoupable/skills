@@ -35,7 +35,7 @@ def review_test_cases():
             {
                 'description': 'Inspect accessible catalog records without external research',
                 'prompt': 'List the music catalogs available to my connected demo account. If there is one, show the first catalog\'s recording titles and available identifiers. Use saved records only; do not fetch paid research or estimate missing numbers. If there are no catalogs, say so.',
-                'tools_triggered': 'select_catalogs; select_catalog_songs when a catalog is returned',
+                'tools_triggered': 'select_catalogs, select_catalog_songs',
                 'expected_behavior': 'Return only accessible saved catalogs and, when present, their recordings. Preserve missing identifiers and empty results accurately. Do not invent ownership, metrics or catalog contents, or start provider work.',
             },
         ],
