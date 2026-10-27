@@ -270,7 +270,8 @@
     {
       "canonical": "references/normalization.md",
       "copies": [
-        "skills/recoup-catalog-review-deal/references/normalization.md"
+        "skills/recoup-catalog-review-deal/references/normalization.md",
+        "skills/recoup-catalog-reconcile-royalties/references/normalization.md"
       ]
     },
     {
@@ -377,6 +378,12 @@
       "canonical": "skills/recoup-catalog-review-deal/fixtures/finance/remittance-input.json",
       "copies": [
         "skills/recoup-catalog-reconcile-royalties/fixtures/finance/remittance-input.json"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/_royalty_archive.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/_royalty_archive.py"
       ]
     }
   ]
