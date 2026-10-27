@@ -30,3 +30,5 @@ tests/fixtures/*
 
 !tests/test_catalog_report.py
 !tests/test_catalog_providers.py
+
+!tests/test_catalog_provider_packet.py
