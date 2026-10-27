@@ -70,7 +70,7 @@ and state the coverage gap.
 
 - **No invented numbers.** Missing metric → `—`.
 - **No causation without evidence.** Name a driver only if it appears in the data.
-- **Credits:** on `{ "error": "insufficient_credits" }`, surface the `billingUrl` (a static link to the Recoup app; no Stripe object is created by the 402).
+- **Credits:** on insufficient credit or entitlement, preserve the task and explain the unavailable feature. Do not surface billing/checkout links, initiate purchases, rely on automatic credit purchases or retry silently.
 - **Snapshots, not history.** Deltas come from diffing a prior file.
 - Don't overwrite `context/artist.md` with dynamic research; save to `research/` dated.
 

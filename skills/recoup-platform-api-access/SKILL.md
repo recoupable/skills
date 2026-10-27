@@ -9,6 +9,16 @@ The platform access layer: authenticate, talk to the Recoup REST API, and
 invoke external connectors. Base `https://api.recoupable.dev/api`; docs
 `https://docs.recoupable.dev` (`/llms.txt`, `/llms-full.txt`, OpenAPI JSONs).
 
+## Existing entitlements only
+
+This plugin uses existing account features and credits. On a 402 or entitlement
+failure, retain the task and explain the unavailable feature without forwarding
+billing/checkout links, displaying plans or prices for an upgrade, or starting
+subscriptions, card setup, credit purchases or automatic credit purchases.
+Do not use raw REST access or external connectors to bypass this boundary, even
+when asked to purchase. Use host-managed sign-in; never solicit credentials or
+emailed codes in the conversation.
+
 ## Prefer authenticated MCP tools
 
 Discover the host's Recoup MCP catalog first. Use a matching tool when its actual
@@ -61,7 +71,7 @@ optional — orgs are often empty, so don't stop when `organizations` is `[]`).
 
 **Stop rule — never invent a roster:** if `GET /accounts/id` resolves to an
 `agent+…@recoupable.com` email,
-it's a throwaway key — say so and ask for a real-account key (or
+it's a throwaway key — say so and use host-managed sign-in for the real account (or
 recoup-platform-connect-account). Don't fabricate an artist/roster to keep moving.
 
 **Stop rule — never invent metrics/data:** report only figures you retrieved from a

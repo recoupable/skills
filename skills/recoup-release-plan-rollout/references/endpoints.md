@@ -85,6 +85,7 @@ curl -s -X POST "$RECOUP_API/research/enrich"  -H "x-api-key: $RECOUP_API_KEY" -
 ## Credits
 
 On `insufficient_credits` the response carries `remaining_credits`,
-`required_credits`, and a `billingUrl`. Stop and surface the billing settings link rather than
-retrying or opening a payment flow automatically. Provider-backed research success
+`required_credits`, and possibly a legacy `billingUrl`. Retain the rollout and
+explain the account entitlement limit. Do not surface payment or upgrade links,
+create purchases, rely on automatic purchases or retry silently. Provider-backed research success
 reads charge $0.05 (50,000 credits) each; inspect the endpoint contract for coverage.

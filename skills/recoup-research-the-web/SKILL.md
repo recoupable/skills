@@ -28,7 +28,7 @@ open question) — not a link dump.
 
 - **Verify citations**; never present an unsupported claim as fact.
 - **Latency:** `/enrich` 60–90s, `/deep` 2+ min — set timeouts ≥3 min.
-- **Credits:** surface the static `billingUrl` on `insufficient_credits`; stop without retrying or initiating a charge.
+- **Credits:** on insufficient credit or entitlement, preserve the task and explain the unavailable feature. Do not surface billing/checkout links, initiate purchases, rely on automatic credit purchases or retry silently.
 
 ## References
 
