@@ -21,19 +21,22 @@ protagonist, photoreal style, palette, plot, duration or exact number of shots.
 
 ## Supporting skills and precedence
 
-Load the linked skill at its relevant step. The Higgsfield links are pinned to the reviewed
-community library; its character-design framework credits **@vavavinca**. The essential
-instructions used by Small Room are included below so no private project checkout is needed.
-If an external skill cannot be loaded, disclose that limitation and use the included method.
+The essential Small Room methods are included below; no external skill download
+or private project checkout is required. Already installed, reviewed helpers may
+assist at the relevant step. Do not fetch remote skill instructions, install
+packages or run dependency/bootstrap commands as part of this workflow.
+The Higgsfield character-design framework credits **@vavavinca**; the community
+reference was OSideMedia/higgsfield-ai-prompt-skill at revision
+`c0b73ab946df6658cca513db78bdc3909a655bfd`. This is attribution, not a load step.
 
 | Stage | Accompanying skill | What this workflow takes from it |
 |---|---|---|
-| New song, only when needed | [recoup-song](https://github.com/recoupable/skills/tree/main/skills/recoup-song) | Four approvals; Recoup API generation; maximum duration headroom |
-| Bible and character audition | [higgsfield-character-design](https://github.com/OSideMedia/higgsfield-ai-prompt-skill/tree/c0b73ab946df6658cca513db78bdc3909a655bfd/skills/higgsfield-character-design) | World-first bible, character sheet, screen test and identity lock |
-| Story audit | [higgsfield-scene-engine](https://github.com/OSideMedia/higgsfield-ai-prompt-skill/tree/c0b73ab946df6658cca513db78bdc3909a655bfd/skills/higgsfield-scene-engine) | Goal, obstacle, tactic, reversal and audience value shift |
-| Shot list | [higgsfield-shotlist-director](https://github.com/OSideMedia/higgsfield-ai-prompt-skill/tree/c0b73ab946df6658cca513db78bdc3909a655bfd/skills/higgsfield-shotlist-director) | Global style, reference glossary, named prompts, tempo and monotony audits |
+| New song, only when needed | Already installed recoup-song, when available | Four approvals; Recoup API generation; maximum duration headroom |
+| Bible and character audition | Included method; optional installed higgsfield-character-design | World-first bible, character sheet, screen test and identity lock |
+| Story audit | Included method; optional installed higgsfield-scene-engine | Goal, obstacle, tactic, reversal and audience value shift |
+| Shot list | Included method; optional installed higgsfield-shotlist-director | Global style, reference glossary, named prompts, tempo and monotony audits |
 | Composition and verification | Bundled `references/composition-and-verification.md` | Pinned HyperFrames setup, HTML timeline, captions, lint, snapshots, render and inspection |
-| Recoup authentication, when using its routes | [recoup-platform-api-access](https://github.com/recoupable/skills/tree/main/skills/recoup-platform-api-access) | Verify the account and API contract without exposing credentials |
+| Recoup authentication, when using its routes | Host-managed connection; optional installed recoup-platform-api-access | Verify the account and API contract without exposing credentials |
 
 Small Room adapted these methods: its shot list was `SCRIPT.md`, its audition was silent,
 and its scene motion was H3 Max Turbo. Do not import the linked skills' Seedance multi-cut
@@ -217,8 +220,9 @@ takes separately, along with model, prompt, start/end refs and requested/measure
 
 Use **HyperFrames 0.7.5**, the version used by Small Room. If a tested local video harness
 is available, reuse its structure and fonts; Small Room used the LETAL XLUG harness. Clear
-its old media, captions, copy and timing. Otherwise scaffold the same pinned version; no
-private reference project is required to run this skill.
+its old media, captions, copy and timing. Otherwise use an already available, reviewed
+blank template for the same pinned version. If none is available, prepare the edit
+plan and report the missing local rendering capability; do not install a harness.
 Read the bundled `references/composition-and-verification.md` for that setup and the
 required host capabilities. Keep automatic Whisper transcription and extra skill installation
 disabled when scaffolding; preserve the approved Scribe timings and existing host setup.
@@ -231,10 +235,10 @@ override was explicit, not permission to silently alter captions in future films
 Run lint, validate and inspect, then snapshot important moments and caption transitions:
 
 ```bash
-npx hyperframes@0.7.5 lint .
-npx hyperframes@0.7.5 validate .
-npx hyperframes@0.7.5 inspect .
-npx hyperframes@0.7.5 snapshot --at <review-times> --describe false .
+hyperframes lint .
+hyperframes validate .
+hyperframes inspect .
+hyperframes snapshot --at <review-times> --describe false .
 ```
 
 Review those images before rendering. Render the film, mux the approved master with FFmpeg
