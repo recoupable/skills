@@ -69,3 +69,7 @@ from this skill to check calculation and missing-coverage behavior.
 For the development-only Catalog scenario contract, read `references/scenario-contract.md`.
 `scripts/scenario.py` reuses the existing model for one explicit Spotify-rate sensitivity;
 it is a local domain reference, not browser integration or a verified rate card.
+
+The canonical browser ES module is `scripts/scenario.mjs`; read
+`references/browser-scenario.md` for runtime requirements, conformance and source pinning.
+Shared App/Context integration remains a separate consumer responsibility.

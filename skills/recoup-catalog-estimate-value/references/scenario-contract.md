@@ -46,9 +46,9 @@ unknown: coverage is1/2 and status is partial_subset in both results. Reset retu
 ## Consumer boundary
 
 This is an owning-domain reference helper and machine-readable contract, not a shipped
-browser control. The App must not reimplement these formulas ad hoc. Root/UI must select
-and review a browser-compatible local execution adapter against these vectors and the
-pinned source before shared integration. That adapter must preserve all refusal checks,
+browser control. The App must not reimplement these formulas ad hoc. The canonical browser adapter is `scripts/scenario.mjs`, with cross-runtime
+conformance tests and consumption instructions in `references/browser-scenario.md`.
+Root/UI must review its consumption before shared integration. Consumers must preserve all refusal checks,
 coverage, full assumptions and reset, run without model/network calls, and refuse
 incompatible periods/currencies/cohorts. A Python server round-trip would not establish
 the requested in-browser behavior. Existing daily/cumulative explorer fixtures require
