@@ -1,7 +1,7 @@
 /** Catalog-owned browser adapter. No imports, network, storage or model calls. */
 export const METHOD_VERSION = 'public-estimate-spotify-rate/1';
 export const ADAPTER_VERSION = 'catalog-browser-scenario/1';
-export const REFERENCE_SOURCE_SHA256 = '4f16497387a73eaca0f900a9a4136443ef84ef174894772655b51c6a8ebda055';
+export const REFERENCE_SOURCE_SHA256 = '0ab7106d293520ed7f5f9fca1ba6bc090d5764326eb2e38ef4a42caf1b2bc938';
 const bands = ['low', 'central', 'high'];
 const basisKeys = ['cohort_id', 'period_start', 'period_end', 'currency', 'right_kind', 'unit'];
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
