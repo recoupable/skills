@@ -29,7 +29,7 @@ algorithmic, and which catalog tracks to push. Full chains in
 
 - **No invented placements.** `followers_total` is a formatted string ("34.3M") —
   parse it if sorting numerically.
-- **Credits:** surface the static `billingUrl` on `insufficient_credits`; stop without retrying or initiating a charge.
+- **Credits:** on insufficient credit or entitlement, preserve the task and explain the unavailable feature. Do not surface billing/checkout links, initiate purchases, rely on automatic credit purchases or retry silently.
 
 ## References
 

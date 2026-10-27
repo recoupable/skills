@@ -287,10 +287,11 @@ people $0.05; extract $0.05 per URL; enrich varies by processor tier ($0.05/$0.1
 Check the endpoint contract before fan-out. Provider quota or unavailable-source
 errors are distinct from a depleted Recoup balance.
 
-`402 insufficient_credits` includes `remaining_credits`, `required_credits` and a
-static `billingUrl`. Surface that link and stop. Do not retry indefinitely or
-create a Stripe session without authorization. Other plan/subscription gates can
-legitimately return `checkoutUrl`; distinguish by error type.
+On `402`, explain the unavailable feature under the current account entitlements,
+retain the task and stop. Report existing/required credit quantities when useful.
+Do not surface legacy billing or checkout links, display plan options, initiate
+purchases or depend on automatic credit purchases. Resume only after access is
+independently available and the customer asks to continue.
 
 Fifteen legacy music-research routes remain in source after their docs removal.
 Their coverage and provider support are under evaluation (mono#325), not verified

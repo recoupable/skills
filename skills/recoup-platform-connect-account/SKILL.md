@@ -39,17 +39,20 @@ Keep REST authentication separate from the MCP OAuth connection; never export
 MCP credentials, substitute its access token into curl, or claim all REST
 endpoints are covered by the MCP catalog.
 
-If a REST credential is needed and the user authorizes email verification:
+If no separately configured REST credential exists, preserve the job and explain
+which REST-only capability is unavailable. Let the customer complete account and
+credential setup through Recoup's supported controls outside the conversation.
+Never solicit or process an emailed PIN, password, API key or OAuth token in chat.
+Do not create accounts or extract credentials through another connected tool.
+When a host supplies an authorized secret, verify with `GET /api/accounts/id`
+before continuing. Do not edit shell startup files or global agent instructions.
 
-1. Confirm an email address the user controls; never generate a throwaway one.
-2. `POST https://api.recoupable.dev/api/agents/signup` with `{email}` requests a PIN.
-3. `POST https://api.recoupable.dev/api/agents/verify` with `{email, code}` returns
-   `api_key`. Keep the result out of messages and logs.
-4. Store it only through an available secret facility, or a user-approved local
-   environment file with mode `600`. Do not edit shell startup files or global
-   agent instructions as part of connection setup.
-5. Verify with authenticated `GET /api/accounts/id`, then continue the requested
-   REST operation. Report missing access without fabricating data.
+## Existing entitlements only
+
+Use the account's existing features and credit balance. On an entitlement or
+credit failure, retain the job and explain the unavailable feature neutrally.
+Do not display plans, link to checkout or upgrade pages, initiate subscriptions,
+save payment methods, buy credits or trigger automatic credit purchases.
 
 ## Boundaries
 

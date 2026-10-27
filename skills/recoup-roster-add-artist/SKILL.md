@@ -55,8 +55,10 @@ pending work; do not label an artist created or attached before an API result.
 7. `PATCH /api/artists/{id}` with discovered `profileUrls` (only platforms found).
 8. Synthesize a `## Knowledge base` section into `RECOUP.md`.
 
-Check HTTP status before using each response. Stop on `402` and surface
-`billingUrl`; defer `429` until `Retry-After` permits a later attempt. Authorization,
+Check HTTP status before using each response. On `402`, preserve the checkpoint
+and explain that the feature is unavailable with current account entitlements.
+Do not surface billing links or initiate purchases. Defer `429` until
+`Retry-After` permits a later attempt. Authorization,
 identity-conflict and persistence failures never switch to name-only creation.
 Do not automatically retry a mutation on a network failure or `5xx`: it may have
 committed. Keep the checkpoint and reconcile first. Read-only enrichment requests

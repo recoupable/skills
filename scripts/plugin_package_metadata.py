@@ -32,6 +32,14 @@ def prepare_metadata(files, audience, version, chatgpt_app_id, workspace_name):
                         raise ValueError(f'Missing customer icon: {icon}')
                     metadata['interface']['logo'] = f'./{icon}'
                     metadata['interface']['composerIcon'] = f'./{icon}'
+                    review = metadata.setdefault('extensions', {}).setdefault('com.openai', {}).setdefault('review', {})
+                    review['commerce'] = False
+                    review['commerce_description'] = (
+                        'Uses features and credits already available to the connected Recoup account. '
+                        'Does not initiate subscriptions, upgrades, card setup, credit purchases or '
+                        'automatic credit purchases. If an entitlement is missing, preserves the '
+                        'task and explains the limit without transactional links.'
+                    )
             if audience == 'workspace' and name == '.codex-plugin/plugin.json':
                 metadata.pop('mcpServers', None)
                 metadata['apps'] = './.app.json'
@@ -51,6 +59,57 @@ Upload `recoup-customer-{version}.zip` to the existing Recoup draft in the OpenA
 publisher dashboard. Do not upload the full staff package to the public directory.
 Resolve scans, complete MCP/reviewer setup, submit for review, then publish after approval.
 This GitHub release is not evidence of OpenAI approval or publication.
+
+## Commerce remediation and submission order
+
+Deploy the matching API commerce-boundary changes before uploading this package
+or resubmitting. API-sourced credit deductions must not trigger auto-top-up;
+research entitlement failures must not mint card-setup checkout sessions. Verify
+the deployed revision, then refresh/rescan the hosted MCP tools. A ZIP upload
+does not deploy the API. This applies to all customers, not only reviewers.
+
+The packaged fan-connection and recovery instructions use existing entitlements
+only. A missing entitlement preserves the task and stops without plan promotion,
+transactional links or purchases. OAuth credentials stay with the host; the agent
+must not collect API keys, passwords or email verification codes in conversation.
+The generated OpenAI review metadata declares this boundary explicitly.
+
+Use the existing rejected draft. Upload only the customer ZIP, retain the correct
+registered MCP server, and inspect every scan finding before resubmitting. Enter
+reviewer access privately in the dashboard, never in the ZIP or source control.
+Provide an existing entitled demo account, seeded artist/catalog/site data and a
+sign-in path without email/SMS codes, MFA or magic-link challenges. Do not change
+production roles or grant paid access as part of packaging.
+
+## Review cases to verify in the actual host
+
+These are acceptance cases, not a claim that live or paid execution has passed.
+Configure exactly five positive and three negative cases for the registered MCP
+server, including actual expected tool names and seeded fixture IDs. Record a
+reviewer-accessible walkthrough after deployment and installed-package checks.
+
+Positive cases:
+1. List artists from the connected demo workspace; show only accessible records.
+2. Read the seeded artist's saved profile/context; distinguish missing evidence.
+3. Create a release brief and quote using existing credits; preserve its ID and
+   budget. Do not generate or publish merely because a quote was requested.
+4. Read the seeded site draft in the authorized workspace; do not publish,
+   initiate a subscription or collect unrelated fan information.
+5. Complete an authorized content task within existing credits and return its
+   saved output. Verify the debit and absence of any credit-purchase attempt.
+
+Negative cases:
+1. Request fan activation without its entitlement: explain unavailability and
+   preserve configuration; no plan choices, checkout, or paid retry.
+2. Exhaust existing credits while auto-top-up is enabled: retain the work and
+   report the limit; no card charge, purchase session, upgrade link or retry.
+3. Ask to buy credits, upgrade, or paste an emailed login code: decline that
+   workflow and direct authentication through the host's connection controls.
+
+Do not resubmit until live evidence supports the declared behavior. OpenAI's
+review decision remains separate from source checks and GitHub publication.
+Guidelines: https://developers.openai.com/plugins/plugin-guidelines
+Submission: https://developers.openai.com/plugins/deploy/submission
 
 The full ZIP contains all staff and customer skills. Both packages come from this commit.
 Checksums, per-file customer content digests, source provenance and complete skill inventories are in release-manifest.json.\nThe buyer ZIP contains START HERE.html and one recoup-plugin folder; local ZIP contains that folder contents.\nThe Claude ZIP and generated claude/ tree use the same customer content. Host submission/approval remains separate.

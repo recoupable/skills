@@ -7,8 +7,7 @@ Private calls use `x-api-key: $RECOUP_API_KEY` (or the platform's existing beare
 ## Customer and site
 
 - `GET /api/accounts/id`: verify the current credential.
-- `POST /api/agents/signup` with `{ "email": "customer@example.com" }`: request email verification.
-- `POST /api/agents/verify` with `{ "email": "customer@example.com", "code": "123456" }`: receive `api_key`; never echo it.
+- Authentication uses host-managed OAuth or a separately configured REST secret. Never collect email verification codes or return credentials in conversation.
 - `GET /api/artists`: inspect the caller's roster and choose the artist's account ID.
 - `GET /api/sites`: inspect existing site records.
 - `POST /api/sites` with `{ "name": "Release experience", "artistId": "ARTIST_ACCOUNT_UUID", "releaseUrl": "https://open.spotify.com/track/TRACK_ID" }`: register a site. Add `organizationId` only for a selected authorized workspace. Read the returned `site.id`. Omit owner/account ID fields; ownership comes from authentication.
@@ -47,7 +46,7 @@ Use the real artist's approved text, not the example unchanged. Return URL must 
 - 409: another configuration update won; reload and reconcile before retry.
 - 503: provider, billing or storage unavailable; surface the dependency.
 
-Spotify fan connection is included in an active paid Recoup subscription owned by the site's workspace. No separate add-on is required. Existing `POST /api/subscriptions/sessions` accepts `{plan: "starter" | "pro", successUrl, cancelUrl?}` and returns the customer checkout URL. Let the customer complete payment; then retry activation. Fans do not buy this feature.
+Spotify fan connection requires an existing eligible entitlement owned by the site's workspace. On 402, report feature unavailability and preserve the site task. Do not initiate subscriptions, card setup, upgrades or credit purchases, or provide transactional recovery links. Fans do not buy this feature. Resume only when access is independently available and the customer asks to continue.
 
 ## Public fan journey
 

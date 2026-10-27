@@ -25,7 +25,6 @@ import math
 import re
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import urlsplit
 
 BASE = os.environ.get("RECOUP_API_BASE", "https://api.recoupable.dev/api")
 
@@ -63,21 +62,7 @@ def api(path, params=None, body=None, timeout=20):
     out, _, status = result.stdout.rpartition("\n")
     if status == "404": return {}
     if status == "402":
-        try: j = json.loads(out)
-        except (ValueError, TypeError): j = {}
-        link = None
-        if isinstance(j, dict):
-            field = "billingUrl" if j.get("error") == "insufficient_credits" else "checkoutUrl"
-            link = j.get(field)
-        try:
-            parsed = urlsplit(link) if isinstance(link, str) else None
-            if parsed:
-                parsed.port
-            if not (parsed and parsed.scheme == "https" and parsed.hostname and not any(c.isspace() for c in link)):
-                link = None
-        except (ValueError, TypeError):
-            link = None
-        sys.exit(f"ERROR: research access requires billing (402). Review: {link or 'Check account billing'}")
+        sys.exit("ERROR: research unavailable with current account entitlements (402). Retain the task; no purchase was started.")
     if not status.isdigit() or not 200 <= int(status) < 300:
         sys.exit(f"ERROR: research HTTP {status}; no estimate produced from failed requests.")
     try: j = json.loads(out)

@@ -64,8 +64,9 @@ Inspect dates and activity fields before using an event in public content.
 ## Errors and recovery
 
 An error response uses `status: "error"` and an `error` field. Check the HTTP
-status before parsing success fields. For `402 insufficient_credits`, show
-`billingUrl` and stop. Empty successful data means no matching data was returned;
+status before parsing success fields. For `402 insufficient_credits`, preserve
+the task, explain the account entitlement limit and stop without payment links
+or a purchase. Empty successful data means no matching data was returned;
 it is not a warm-up signal. A `501` means the operation is unsupported by the
 configured research connection. Surface that gap and use an available workflow.
 For transient failures, retry only a bounded number of times.
