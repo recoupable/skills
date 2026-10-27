@@ -39,7 +39,10 @@ permission to send another message.
    Preserve original values and row references; inventory archive members and
    missing sheets/periods. Revision, reversal and replacement exports need explicit
    relationships. Reimporting the same bytes must not create fresh earnings.
-3. Normalize only formats the available helper actually supports. Inspect ambiguous
+3. For ZIP batches of UTF-8 CSV/TSV, use `scripts/normalize-royalty-statement.py`
+   with `--archive`; its `--output` must be a new bundle directory. Read
+   `references/normalization.md` for limits, member receipts and partial/error
+   states. Normalize only formats the available helper actually supports. Inspect ambiguous
    headers, currencies, amount basis and classifications before accepting results.
    Keep every source row accounted for as a detail, control/summary, header/note or
    excluded row with a reason. Empty files and failed controls are not clean data.

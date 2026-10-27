@@ -115,6 +115,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-organize-publishing/scripts/build-catalog-report.py
 - skills/recoup-catalog-organize-publishing/scripts/catalog-case.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_finance.py
+- skills/recoup-catalog-reconcile-royalties/scripts/_royalty_archive.py
 - skills/recoup-catalog-reconcile-royalties/scripts/build-catalog-report.py
 - skills/recoup-catalog-reconcile-royalties/scripts/calculate-entitlements.py
 - skills/recoup-catalog-reconcile-royalties/scripts/catalog-case.py
@@ -127,6 +128,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-resolve-claims/scripts/catalog-case.py
 - skills/recoup-catalog-review-deal/scripts/_finance.py
 - skills/recoup-catalog-review-deal/scripts/_helpers.py
+- skills/recoup-catalog-review-deal/scripts/_royalty_archive.py
 - skills/recoup-catalog-review-deal/scripts/auto-column-map.py
 - skills/recoup-catalog-review-deal/scripts/build-catalog-report.py
 - skills/recoup-catalog-review-deal/scripts/build-deal-readiness.py
@@ -147,11 +149,13 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-review-deal/scripts/validate-findings-evidence.py
 - skills/recoup-catalog-review-deal/scripts/validate-normalized-ledger.py
 - skills/recoup-catalog-review-deal/scripts/validate-workspace-consistency.py
+- skills/recoup-catalog-review-deal/tests/benchmark_archives.py
 - skills/recoup-catalog-review-deal/tests/benchmark_finance.py
 - skills/recoup-catalog-review-deal/tests/test_concentration_outputs.py
 - skills/recoup-catalog-review-deal/tests/test_finance.py
 - skills/recoup-catalog-review-deal/tests/test_normalizer_controls.py
 - skills/recoup-catalog-review-deal/tests/test_readiness_dispositions.py
+- skills/recoup-catalog-review-deal/tests/test_royalty_archives.py
 - skills/recoup-content-build-sites/scripts/find_references.py
 - skills/recoup-platform-build-os/evals/validate.py
 - skills/recoup-platform-email-helper/scripts/send-email.mjs
@@ -169,5 +173,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: 0fc34357ab1c9b501ce8fc24f885d7420d880e3d
-Version: 2026.1025.62
+Source commit: f0ef77f29f101603b4aebef25de59221f6220894
+Version: 2026.1026.63

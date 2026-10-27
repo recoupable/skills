@@ -70,6 +70,57 @@ Amounts remain unrounded through normalization, controls and calculation. Any
 statement-specific rounding is a separately evidenced reporting boundary. Never
 sum different currencies or unrelated periods into a single financial number.
 
+## ZIP statement batches
+
+Use the existing command's explicit archive mode for a ZIP of UTF-8 CSV/TSV
+exports using one chosen provider profile and column map:
+
+```bash
+python3 scripts/normalize-royalty-statement.py --archive --provider publisher-admin --input statements.zip --output normalized-batch --column-map mapping.json
+```
+
+The output must be a **new directory**. It contains `ledger.csv` when any CSV/TSV
+member parsed, `manifest.json`, and per-member summary/row receipts in `receipts/`.
+Keep the original ZIP. Each receipt binds its exact archive SHA256, original member
+name, member SHA256, parser/transform version and source-row dispositions. Ledger
+`source_file` uses `zip:<archive SHA256>!/<member name>` rather than a deleted
+extraction path. Member content hashes retain the normalizer's existing identity;
+identical bytes in different members do not create new ledger rows.
+
+Members run in ascending exact-name order, **not inferred statement chronology**.
+The existing normalizer handles explicitly keyed original/corrected/reversal rows;
+conflicting keyed revisions remain held. Unkeyed overlap still needs manual review.
+No mixed-currency or cross-period aggregate is produced. Exact source and written
+totals remain separate per member. The archive command does not choose which
+revision is authoritative or infer replacement relationships from filenames.
+
+Malformed CSV members record errors without dropping previously parsed members.
+Header-only and held rows keep the batch partial. Non-CSV/TSV files are recorded as
+unsupported, including PDFs, spreadsheets and nested archives. They are never
+silently skipped. A partial bundle exits 1; an unsafe/corrupt ZIP exits 2 without
+publishing a bundle. Successful parsing exits 0 but is not independent financial
+reconciliation. Archive mode has no per-member source controls interface:
+`controls_status` stays unavailable. Use ordinary per-file normalization with
+`--controls` when supplied control evidence needs comparison. `--append`, `--sheet`
+and `--controls` are rejected in archive mode; do not apply one file's totals to
+an entire ZIP. Mixed provider formats require separately selected batches.
+
+Limits are fixed in the shipped CLI: 128 entries (including directories), 256 MiB
+compressed input, 1 MiB central-directory metadata, 512 MiB expanded per member,
+1 GiB expanded across files and a 200:1 per-member compression ratio. Archive
+CSV parsing also caps each logical record at 1,048,576 Unicode characters
+(at most 4 MiB UTF-8) before parser allocation and headers/rows at 1,024 columns.
+Quoted multiline records share one budget; over-limit members record errors. ZIP64,
+multidisk/encrypted archives, other compression methods, unsafe/duplicate names,
+links and special files are rejected. Supported methods are stored and deflated.
+No member paths are extracted. The command snapshots the archive to bounded
+local temporary disk and streams one member at a time. Output disk scales with
+ledger and raw-row receipts; allow space for those plus temporary staging. Each
+member append scans the prior ledger using the existing disk-backed identity
+index, so CPU/I/O grows with both row and member counts. These limits are not a
+performance guarantee for arbitrary provider files. Keep oversized inputs split
+into separately reviewed, bounded source batches.
+
 ## PDF candidates
 
 `extract-pdf-statement.py` is an experimental text-table candidate extractor using
