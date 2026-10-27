@@ -10,6 +10,8 @@ The host needs Node.js 22 or later, HyperFrames **0.7.5**, FFmpeg/ffprobe, an av
 Chromium-compatible rendering browser, and authorized access to the selected local media.
 Browser checks and rendering must be possible in this host. Check the installed versions
 and capabilities; do not claim a check passed because its command appears below.
+Use only the host's already installed, reviewed tools. Do not download packages,
+remote code, browser dependencies or additional skills during this workflow.
 
 If a capability is missing, name it. The agent can prepare the timeline and review plan
 from available approved inputs, but must label the unperformed checks and withhold a
@@ -18,17 +20,13 @@ verified-film claim. A hosted preset is a separate workflow, not an automatic su
 ## Start from an empty composition
 
 Use a new project directory, or reuse a tested project only after preserving its existing
-work. From the project's parent directory, this pinned scaffold skips both automatic
-Whisper transcription and installation of additional agent skills:
+work. Copy an already available, reviewed HyperFrames 0.7.5 blank template or
+local harness. If none is available, prepare the clip manifest and edit plan,
+report the missing composition environment, and stop before local execution.
+Do not bootstrap a project or install dependencies to work around that limit.
 
-```bash
-npx hyperframes@0.7.5 init video --example blank --resolution portrait --non-interactive --skip-transcribe --skip-skills
-```
-
-Choose the approved aspect ratio; `portrait` is an example, not a new creative decision.
-Do not add `--audio` or `--video` to trigger a second transcript. Reuse `audio/scribe.json`
-from the approved recording. Downloading tools or browser dependencies needs the host's
-normal authorized setup; this guide grants no additional access.
+Choose the approved aspect ratio. Keep automatic Whisper transcription and extra
+skill installation disabled. Reuse `audio/scribe.json` from the approved recording.
 
 Copy the selected clips into the new project's media directory and retain a manifest
 mapping each copy to its approved source. Keep source masters unchanged. Set the canvas
@@ -64,10 +62,10 @@ scaffold's example audio active or double the song by mixing it into both stages
 From the composition directory, run:
 
 ```bash
-npx hyperframes@0.7.5 lint .
-npx hyperframes@0.7.5 validate .
-npx hyperframes@0.7.5 inspect .
-npx hyperframes@0.7.5 snapshot . --at 0,1.5,4 --describe false
+hyperframes lint .
+hyperframes validate .
+hyperframes inspect .
+hyperframes snapshot . --at 0,1.5,4 --describe false
 ```
 
 Replace the example snapshot times with this film's cuts, caption transitions, end frames
@@ -81,7 +79,7 @@ Review moving playback as well as snapshots, and obtain approval of the assemble
 Only then render the picture locally:
 
 ```bash
-npx hyperframes@0.7.5 render . --output renders/picture.mp4 --fps 30 --strict
+hyperframes render . --output renders/picture.mp4 --fps 30 --strict
 ```
 
 Use the approved frame rate; 30 fps is an example. Keep this a local render; no cloud
@@ -108,3 +106,4 @@ including its CLI command declarations, blank template and bundled composition/C
 Its npm integrity is
 `sha512-VUmuyjU5R6DI3p/FFqA8usT5LqXEFAoA/4HOeEtrKZCbxE4TuKUsAY4ne6qBtbJqJwDFr1h3ZD6lPx85dmr8+w==`.
 This is a static package inspection, not a film render or a hosted provider test.
+The package link records provenance only; do not fetch or execute it from this workflow.

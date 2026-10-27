@@ -1,6 +1,7 @@
 """Host-specific metadata and submission instructions for generated packages."""
 import hashlib
 import json
+from plugin_openai_review import review_test_cases
 
 def stamp_versions(value, version):
     if isinstance(value, dict):
@@ -40,6 +41,8 @@ def prepare_metadata(files, audience, version, chatgpt_app_id, workspace_name):
                         'automatic credit purchases. If an entitlement is missing, preserves the '
                         'task and explains the limit without transactional links.'
                     )
+                    if audience == 'customer':
+                        review['test_cases'] = review_test_cases()
             if audience == 'workspace' and name == '.codex-plugin/plugin.json':
                 metadata.pop('mcpServers', None)
                 metadata['apps'] = './.app.json'
@@ -77,34 +80,29 @@ The generated OpenAI review metadata declares this boundary explicitly.
 Use the existing rejected draft. Upload only the customer ZIP, retain the correct
 registered MCP server, and inspect every scan finding before resubmitting. Enter
 reviewer access privately in the dashboard, never in the ZIP or source control.
-Provide an existing entitled demo account, seeded artist/catalog/site data and a
-sign-in path without email/SMS codes, MFA or magic-link challenges. Do not change
-production roles or grant paid access as part of packaging.
+Provide an existing entitled demo account with sample data only. Use a sign-in
+method accepted by the current publisher form: dedicated demo credentials or the
+reviewer email supplied there for a supported email-code/magic-link flow. Keep
+reviewer access private and verify that no account setup is left to the reviewer.
+Do not change production roles or grant paid access as part of packaging.
 
 ## Review cases to verify in the actual host
 
 These are acceptance cases, not a claim that live or paid execution has passed.
-Configure exactly five positive and three negative cases for the registered MCP
-server, including actual expected tool names and seeded fixture IDs. Record a
+The customer ZIP declares exactly five positive and three negative cases for its
+single registered MCP server; review their prompts and expected outcomes in the
+publisher form. Local/workspace adapters do not overwrite those review cases. Record a
 reviewer-accessible walkthrough after deployment and installed-package checks.
 
-Positive cases:
-1. List artists from the connected demo workspace; show only accessible records.
-2. Read the seeded artist's saved profile/context; distinguish missing evidence.
-3. Create a release brief and quote using existing credits; preserve its ID and
-   budget. Do not generate or publish merely because a quote was requested.
-4. Read the seeded site draft in the authorized workspace; do not publish,
-   initiate a subscription or collect unrelated fan information.
-5. Complete an authorized content task within existing credits and return its
-   saved output. Verify the debit and absence of any credit-purchase attempt.
+Positive cases cover workflow/roster discovery, saved release-pack context with
+missing inputs, one original graphic within existing credits, an unpublished
+site draft and accessible saved catalog records. The generation case requires
+the dedicated demo account's existing credits and access; do not run it as part
+of packaging or claim it passed from source/ZIP checks.
 
-Negative cases:
-1. Request fan activation without its entitlement: explain unavailability and
-   preserve configuration; no plan choices, checkout, or paid retry.
-2. Exhaust existing credits while auto-top-up is enabled: retain the work and
-   report the limit; no card charge, purchase session, upgrade link or retry.
-3. Ask to buy credits, upgrade, or paste an emailed login code: decline that
-   workflow and direct authentication through the host's connection controls.
+Negative cases cover purchase/upgrade requests, unauthorized workspace access
+and credential export/login-code collection. Separately verify exhausted-credit
+and missing-fan-entitlement recovery without starting a purchase or paid retry.
 
 Do not resubmit until live evidence supports the declared behavior. OpenAI's
 review decision remains separate from source checks and GitHub publication.

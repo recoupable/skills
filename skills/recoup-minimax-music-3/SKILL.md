@@ -15,23 +15,20 @@ Two inputs drive this model and they do different jobs:
 > **Naming trap.** The open-weights repo and the model card call these `instructions` and `input`.
 > **On fal they are `prompt` and `lyrics`.** Same two things, different names.
 
-## Do not write the Caption by hand. Delegate it.
+## Build the structured Caption from the brief
 
-MiniMax ships an official skill for exactly this, with a thousand style templates and a genre router:
+Use three headings: **Global Metadata**, **Vocal Details**, **Arrangement**.
+Describe genre, BPM and key first, then vocal delivery, instrumentation and the
+per-section arrangement. Aim for roughly 250 to 450 words for a detailed brief.
+Keep sung words in `lyrics`; the Caption describes their delivery and structure.
 
-```bash
-npx skills add MiniMax-AI/MiniMax-Music3 --skill music-caption-rewriter
-```
+Use the included format below. An already installed, reviewed caption helper may
+assist, but this workflow must not download skills, install packages or execute
+remote code. Generation uses an already connected provider tool or preconfigured
+SDK; if that capability is absent, prepare the caption and lyrics and report the gap.
 
-Hand it your brief and it returns a caption under three required headings: **Global Metadata**,
-**Vocal Details**, **Arrangement**. That is the format the model was trained to read, so use it.
-It targets roughly 250 to 450 words.
-
-**It will not write your lyrics.** It reads bracketed tags only and is forbidden from quoting or
-paraphrasing lyric content. Lyrics are this skill's job, below.
-
-If you are writing a caption without it, the minimum viable shape is a labelled header, then
-instrumentation, then per-section arrangement:
+The minimum viable shape is a labelled header, then instrumentation, then
+per-section arrangement:
 
 ```
 Genre: playful indie pop, bedroom pop. BPM: 112. Key: D major. Bright and bouncy: handclaps,
@@ -97,7 +94,8 @@ const url = res.data?.audio?.url;
 
 **Cost: $0.002 per second of audio produced**, measured twice against the production bill
 (223.97s = $0.44794 on 2026-08-27; 110.13s = $0.2203 on 2026-09-02). It matches to the cent, so a
-song is the cheapest thing in any film. A 110-second track is 22 cents. **Re-roll freely.**
+song was a low-cost step in that historical film. A 110-second track was 22 cents.
+Verify the current price and retry only within the user's approved budget.
 
 ## Check the audio before you build anything on it
 
