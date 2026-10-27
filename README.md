@@ -105,7 +105,9 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-estimate-value/scripts/build_report.py
 - skills/recoup-catalog-estimate-value/scripts/estimate.py
 - skills/recoup-catalog-estimate-value/scripts/fetch_album_tracks.py
+- skills/recoup-catalog-estimate-value/scripts/scenario.mjs
 - skills/recoup-catalog-estimate-value/scripts/scenario.py
+- skills/recoup-catalog-estimate-value/tests/scenario-browser.test.mjs
 - skills/recoup-catalog-estimate-value/tests/test_estimate.py
 - skills/recoup-catalog-estimate-value/tests/test_scenario.py
 - skills/recoup-catalog-explain-contract/scripts/build-catalog-report.py
@@ -176,5 +178,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: 0c18b7c9621cdd1946fa15ac8a75debafbdd0797
-Version: 2026.1026.66
+Source commit: f9b56047655689b12fe7dbfe77b8e8ba6e989d45
+Version: 2026.1027.67
