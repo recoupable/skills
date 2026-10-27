@@ -38,6 +38,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Catalog browser scenario cross-runtime conformance
+        run: node --test skills/recoup-catalog-estimate-value/tests/scenario-browser.test.mjs
       - name: Consulting media and runtime regression checks
         run: node --test tests/consulting-brand.test.mjs tests/consulting-runtime.test.mjs
       - name: CLI verification helper regressions

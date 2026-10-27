@@ -25,11 +25,17 @@
   "comparison_gate": "Exact same cohort,365-day period,currency,master rights,Spotify-stream unit for every included record. Only measured_365d or explicitly unknown records; no conversion from cumulative or run-rate data in v1.",
   "coverage": "Retain original observations,source references,capture dates,coverage notes and null unknowns; subset status never expands to whole catalog.",
   "ui_contract": [
-    "Do not copy finance formulas into App. Consume domain method via an explicitly reviewed local runtime adapter; this Python reference does not itself execute in a browser.",
+    "Consume the canonical scripts/scenario.mjs module with an exact commit and byte hash; do not copy finance formulas into App. Python remains the conformance reference.",
     "Persist/export full observations,baseline and scenario assumptions,method revision/hash and coverage. Context selection descriptors remain separately owned.",
     "Reset uses null override to restore original baseline config; never writes modeled values into observations.",
     "Label every monetary output hypothetical and distinguish source Spotify observations,other-platform assumptions and realized cash.",
     "Missing compatible annual data means refusal or unknown; never repurpose daily or cumulative explorer fixtures."
   ],
-  "remaining_integration": "Browser-compatible local execution adapter and schema-to-UI wiring require a separately reviewed integration. No model call, network endpoint, paid read, provider operation or new ingestion is implemented."
+  "remaining_integration": "Catalog browser adapter is available; shared App and Context integration remain separately owned and reviewed. No model call, network endpoint, paid read, provider operation or new ingestion is implemented.",
+  "browser_adapter": {
+    "entrypoint": "scripts/scenario.mjs:runScenario",
+    "version": "catalog-browser-scenario/1",
+    "requirements": "ES modules, TextEncoder and Web Crypto in a secure context or localhost",
+    "consumption": "Pin exact Skills commit and module SHA-256; vendor byte-identically and check drift; see browser-scenario.md"
+  }
 }
