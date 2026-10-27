@@ -99,11 +99,44 @@ Header-only and held rows keep the batch partial. Non-CSV/TSV files are recorded
 unsupported, including PDFs, spreadsheets and nested archives. They are never
 silently skipped. A partial bundle exits 1; an unsafe/corrupt ZIP exits 2 without
 publishing a bundle. Successful parsing exits 0 but is not independent financial
-reconciliation. Archive mode has no per-member source controls interface:
-`controls_status` stays unavailable. Use ordinary per-file normalization with
-`--controls` when supplied control evidence needs comparison. `--append`, `--sheet`
-and `--controls` are rejected in archive mode; do not apply one file's totals to
-an entire ZIP. Mixed provider formats require separately selected batches.
+reconciliation. Supply independent member controls with optional `--archive-controls batch-controls.json`.
+The external JSON manifest has this shape (replace the hashes with actual SHA256s):
+
+```json
+{
+  "schema_version": 1,
+  "archive_version_id": "<optional exact original ZIP SHA256>",
+  "members": [{
+    "member": "statements/q1.csv",
+    "source_version_id": "<required exact member bytes SHA256>",
+    "controls": {
+      "evidence_refs": ["independent-statement-summary"],
+      "totals": [{"currency": "USD", "field": "owner_net_amount", "amount": "0.0049"}]
+    }
+  }]
+}
+```
+
+Names match exact archive paths, including case. No filename/chronology inference,
+ZIP-wide total or shared control fallback is allowed. The `controls` object uses the
+ordinary per-file format and validator unchanged: an observed zero may match zero,
+but a missing amount is not zero. Compare source detail before duplicate disposition;
+matching controls do not resolve revised transactions or prove independent reconciliation.
+
+The manifest is read once, limited to 1 MiB and 128 bindings. Unknown or duplicate
+member names, duplicate JSON keys, malformed bindings/schema and an optional archive
+hash mismatch reject the bundle. A stale member hash makes that member an error with
+no ledger rows or receipt; other members continue. Unsupported files remain unsupported.
+Invalid control objects or differing totals produce the existing mismatch/partial result.
+Missing bindings remain visibly `unavailable`; no manifest preserves ordinary archive
+behavior. No aggregate monetary/control conclusion is emitted across members.
+
+The bundle retains the exact supplied manifest as `controls-manifest.json`, binds its
+SHA256 in the batch manifest and each controlled successful receipt, and exposes each
+member's `controls_status`. Preserve the referenced independent control evidence too.
+`--archive-controls` requires `--archive`. Ordinary per-file `--controls` is unchanged;
+`--append`, `--sheet` and `--controls` remain rejected in archive mode. Mixed provider
+formats require separately selected batches.
 
 Limits are fixed in the shipped CLI: 128 entries (including directories), 256 MiB
 compressed input, 1 MiB central-directory metadata, 512 MiB expanded per member,
