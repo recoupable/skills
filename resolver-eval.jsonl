@@ -234,3 +234,13 @@
 {"intent": "recoup-internal consulting: Write a customer-facing case study from this completed engagement and verified outcome.", "expected": "recoup-internal-consulting-case-study-builder", "not": ["recoup-internal-consulting-pmf-finder"]}
 {"intent": "recoup-internal consulting: Research this niche and its market-rate references; no buyer experiments requested.", "expected": "recoup-internal-consulting-market-scanner", "not": ["recoup-internal-consulting-pmf-finder"]}
 {"intent": "recoup-internal consulting: Refine this positioning statement and pitch wording; keep our existing validated offer.", "expected": "recoup-internal-consulting-positioning-refiner", "not": ["recoup-internal-consulting-pmf-finder"]}
+
+# Toon account pipelines and neighboring intent boundaries
+{"intent": "recoup-internal research how viral toon accounts work and turn these references into a repeatable pipeline; do not invent account ideas", "expected": "recoup-internal-consulting-toon-accounts", "not": ["recoup-internal-consulting-content-idea-generator", "recoup-internal-consulting-higgsfield", "recoup-internal-consulting-persona-script-voice"]}
+{"intent": "recoup-internal audit our recurring cartoon account from character consistency through episode production and audience learning", "expected": "recoup-internal-consulting-toon-accounts", "not": ["recoup-content-make-video", "recoup-internal-marketing"]}
+{"intent": "recoup-internal diagnose why our AI animation page has one viral reel but the rest fail; compare its cohort and improve the pipeline", "expected": "recoup-internal-consulting-toon-accounts", "not": ["recoup-internal-consulting-content-recycler", "recoup-internal-consulting-metrics-updater"]}
+{"intent": "recoup-internal prepare the production-to-growth process for this existing cartoon cast without changing its identity", "expected": "recoup-internal-consulting-toon-accounts", "not": ["recoup-internal-consulting-persona-script-voice"]}
+{"intent": "recoup-internal make this founder script sound like the speaker in these transcripts", "expected": "recoup-internal-consulting-persona-script-voice", "not": ["recoup-internal-consulting-toon-accounts"]}
+{"intent": "create a lyric video for this artist song", "expected": "recoup-content-make-video", "not": ["recoup-internal-consulting-toon-accounts"]}
+{"intent": "recoup-internal generate this approved single character reference image with Higgsfield", "expected": "recoup-internal-consulting-higgsfield", "not": ["recoup-internal-consulting-toon-accounts"]}
+{"intent": "recoup-internal brainstorm content idea variants for our next campaign", "expected": "recoup-internal-consulting-content-idea-generator", "not": ["recoup-internal-consulting-toon-accounts"]}
