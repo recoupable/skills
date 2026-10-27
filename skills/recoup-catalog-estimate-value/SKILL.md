@@ -65,3 +65,7 @@ new contracts/statements support a deal review or accounting stage. Calibrate on
 comparable rights, services, currency, period and measurement coverage; one statement
 does not eliminate residual uncertainty. Run `python3 -m unittest discover -s tests`
 from this skill to check calculation and missing-coverage behavior.
+
+For the development-only Catalog scenario contract, read `references/scenario-contract.md`.
+`scripts/scenario.py` reuses the existing model for one explicit Spotify-rate sensitivity;
+it is a local domain reference, not browser integration or a verified rate card.
