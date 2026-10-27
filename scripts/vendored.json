@@ -385,6 +385,12 @@
       "copies": [
         "skills/recoup-catalog-reconcile-royalties/scripts/_royalty_archive.py"
       ]
+    },
+    {
+      "canonical": "scripts/prepare-provider-packet.py",
+      "copies": [
+        "skills/recoup-catalog-register-catalog/scripts/prepare-provider-packet.py"
+      ]
     }
   ]
 }
