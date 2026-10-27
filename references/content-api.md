@@ -175,5 +175,7 @@ Generation costs credits. For release packs, obtain the complete job quote from
 `generate_release_pack`. The legacy `GET $BASE/content/estimate` is only an advisory
 per-video estimate for standalone workflows; it cannot authorize a mixed-media pack.
 For other multi-asset fan-outs, disclose the complete expected scope/cost and get
-approval before production. On a 402 / `insufficient_credits`, surface the
-`billingUrl` — don't silently retry.
+approval before production. On a 402 / `insufficient_credits`, preserve the job
+and explain that current account entitlements do not cover this operation. Do not
+surface billing/checkout links, buy credits, trigger automatic purchases or retry
+silently. Existing credit usage approval is not purchase authorization.

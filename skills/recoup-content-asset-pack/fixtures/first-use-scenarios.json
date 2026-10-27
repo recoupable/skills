@@ -48,7 +48,7 @@
       "request": "Generate the approved pack.",
       "context": "Quote returned credit shortfall.",
       "must": [
-        "Preserve job and brief; show billingUrl; no purchase or automatic paid retry."
+        "Preserve job and brief; explain current entitlement limit without payment links, purchases or automatic paid retry."
       ]
     },
     {

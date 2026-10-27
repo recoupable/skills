@@ -35,10 +35,11 @@ sleep() {{ :; }}
             result = subprocess.run(['bash', '-c', mock + helper + '\nresearch_get "metrics?id=verified"'], capture_output=True, text=True)
             return result, len(log.read_text().splitlines())
 
-    def test_billing_failure_stops_and_surfaces_recovery_without_retry(self):
+    def test_billing_failure_stops_without_transactional_recovery_or_retry(self):
         result, calls = self.run_helper(402)
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn('https://example.invalid/billing', result.stderr)
+        self.assertIn('current account entitlements', result.stderr)
+        self.assertNotIn('https://example.invalid/billing', result.stderr)
         self.assertEqual(calls, 1)
 
     def test_transient_failure_has_bounded_retries(self):
@@ -362,8 +363,8 @@ class EstimatorExamples(unittest.TestCase):
         with self.assertRaisesRegex(SystemExit, 'research HTTP 503'):
             self.run_api('<html>Unavailable</html>\n503')
 
-    def test_non_json_billing_error_still_identifies_billing(self):
-        with self.assertRaisesRegex(SystemExit, 'billing \\(402\\)'):
+    def test_non_json_billing_error_still_identifies_entitlement_limit(self):
+        with self.assertRaisesRegex(SystemExit, 'current account entitlements \\(402\\)'):
             self.run_api('\n402')
 
     def test_billing_url_exits_instead_of_returning_missing_counts(self):
@@ -373,8 +374,9 @@ class EstimatorExamples(unittest.TestCase):
         spec.loader.exec_module(module)
         response = subprocess.CompletedProcess([], 0, '{"error":"insufficient_credits","billingUrl":"https://example.invalid/billing"}\n402', '')
         with patch.object(module, 'auth_header', return_value=[]), patch.object(module.subprocess, 'run', return_value=response):
-            with self.assertRaisesRegex(SystemExit, 'https://example.invalid/billing'):
+            with self.assertRaisesRegex(SystemExit, 'current account entitlements') as error:
                 module.api('research/track/stats')
+            self.assertNotIn('https://example.invalid/billing', str(error.exception))
 
 
 if __name__ == '__main__':

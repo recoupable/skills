@@ -79,23 +79,25 @@ sleep() { echo 'Unexpected retry' >&2; return 91; }
         self.assertIn("recoup.fixture.invalid/api/research", str(calls[0]))
         return stderr
 
-    def test_credit_shortfall_uses_billing_link_and_ignores_checkout(self):
+    def test_credit_shortfall_does_not_surface_transactional_recovery(self):
         for runner in (self.run_research, self.run_estimator):
             with self.subTest(example=runner.__name__):
                 error = self.denied(runner, {
                     "error": "insufficient_credits", "remaining_credits": 0,
                     "required_credits": 1, "billingUrl": BILLING, "checkoutUrl": CHECKOUT,
                 })
-                self.assertIn(BILLING, error)
+                self.assertIn("current account entitlements", error)
+                self.assertNotIn(BILLING, error)
                 self.assertNotIn(CHECKOUT, error)
 
-    def test_payment_method_gate_preserves_checkout_link(self):
+    def test_payment_method_gate_does_not_surface_checkout_link(self):
         for runner in (self.run_research, self.run_estimator):
             with self.subTest(example=runner.__name__):
                 error = self.denied(runner, {
                     "status": "error", "error": PAYMENT_ERROR, "checkoutUrl": CHECKOUT,
                 })
-                self.assertIn(CHECKOUT, error)
+                self.assertNotIn(CHECKOUT, error)
+                self.assertIn("current account entitlements", error)
                 self.assertNotIn("needs credits", error)
 
     def test_missing_credit_link_does_not_fall_back_to_card_setup(self):
@@ -104,7 +106,7 @@ sleep() { echo 'Unexpected retry' >&2; return 91; }
                 error = self.denied(runner, {
                     "error": "insufficient_credits", "checkoutUrl": CHECKOUT,
                 })
-                self.assertIn("Check account billing", error)
+                self.assertIn("current account entitlements", error)
                 self.assertNotIn(CHECKOUT, error)
 
     def test_payment_gate_does_not_substitute_credit_link(self):
@@ -113,7 +115,7 @@ sleep() { echo 'Unexpected retry' >&2; return 91; }
                 error = self.denied(runner, {
                     "error": PAYMENT_ERROR, "billingUrl": BILLING,
                 })
-                self.assertIn("Check account billing", error)
+                self.assertIn("current account entitlements", error)
                 self.assertNotIn(BILLING, error)
 
     def test_missing_or_malformed_links_remain_blocked(self):
@@ -124,7 +126,7 @@ sleep() { echo 'Unexpected retry' >&2; return 91; }
                               "https://billing.fixture.invalid:bad/setup"):
                     with self.subTest(example=runner.__name__, field=field, value=value):
                         message = self.denied(runner, {"error": error, field: value})
-                        self.assertIn("Check account billing", message)
+                        self.assertIn("current account entitlements", message)
                         if isinstance(value, str) and value:
                             self.assertNotIn(value, message)
 
@@ -133,7 +135,7 @@ sleep() { echo 'Unexpected retry' >&2; return 91; }
             for body in (None, [], "unavailable"):
                 with self.subTest(example=runner.__name__, body=body):
                     error = self.denied(runner, body)
-                    self.assertIn("Check account billing", error)
+                    self.assertIn("current account entitlements", error)
 
     def test_successful_reads_preserve_payload_without_recovery_calls(self):
         payload = {"stats": [], "data_source": "fixture"}

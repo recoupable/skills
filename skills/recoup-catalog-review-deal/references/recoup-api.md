@@ -9,7 +9,8 @@ back to Songstats; inspect provenance where present. Base URL: `https://api.reco
 Send one of:
 
 - `x-api-key: $RECOUP_API_KEY` — a key created for the user's real account
-  through account settings or the approved email/PIN verification flow.
+  through host-managed OAuth or a separately configured secret. Never solicit
+  API keys, passwords or email verification codes in conversation.
 - `Authorization: Bearer $RECOUP_ACCESS_TOKEN` — an application-provided
   Privy JWT. MCP OAuth credentials stay in the host and are separate from REST.
 
@@ -110,8 +111,9 @@ Empty `deltas` (not an error) when history is insufficient.
   and gaps before annualizing; missing data is not zero.
 - Always handle `streams_total` as a possibly-stringified float.
 - Billed successful research reads charge $0.05 (50,000 micro-dollar credits) and may return **402** with a
-  `billingUrl` when credits are insufficient. Stop and surface it; do not retry
-  or initiate payment automatically. Snapshot estimates and limits have their
+  legacy `billingUrl` when credits are insufficient. Preserve the task and stop;
+  explain unavailable account entitlements without forwarding payment links,
+  initiating a purchase, relying on automatic purchases or retrying. Snapshot estimates and limits have their
   own contract and are not a guarantee of zero provider spend.
 - Calibration: snapshot-derived counts agreed with Songstats `streams_total`
   to ±0.1–1.7% on the 679-track Rostrum calibration set (2026-06-09) — label

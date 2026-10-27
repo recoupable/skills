@@ -76,7 +76,9 @@ the customer to general onboarding when they already asked you to make it.
    pack quote and spending approval before generation. Bind approval to the
    current input/revision and maximum budget. The legacy **GET**
    `/content/estimate` is advisory per video, not a complete mixed-pack quote.
-   Surface the returned `billingUrl` on credit shortfall; do not buy or retry.
+   On credit shortfall, retain the brief and quote and explain the current
+   entitlement limit. Do not surface billing/checkout links, buy credits, depend
+   on automatic credit purchases or retry silently.
 8. **Produce, inspect, continue.** Pass the selected direction, exact brief, music window, occasion,
    aesthetic, voice and constraints into production. Produce a representative
    asset early and continue the approved batch without another mandatory approval

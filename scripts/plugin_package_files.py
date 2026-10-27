@@ -4,6 +4,12 @@ import re
 from plugin_package_dependencies import validate_customer_dependencies
 
 INTERNAL = re.compile(r'\brecoup-internal-[a-z0-9-]+')
+CUSTOMER_TRANSACTION = re.compile(
+    r'/(?:api/)?(?:subscriptions|credits)/sessions\b|'
+    r'https?://(?:checkout|buy)\.stripe\.com\b|'
+    r'/(?:api/)?agents/(?:signup|verify)\b|'
+    r'use the existing customer checkout path|after checkout, retry activation', re.I,
+)
 
 def package_files(root, tracked, audience):
     result = {}
@@ -29,6 +35,8 @@ def package_files(root, tracked, audience):
                 text = ''
             if INTERNAL.search(text):
                 raise ValueError(f'Customer file references excluded internal skill: {name}')
+            if CUSTOMER_TRANSACTION.search(text):
+                raise ValueError(f'Customer commerce/auth boundary: {name}')
         result[name] = data
     if audience == 'customer':
         validate_customer_dependencies(result)

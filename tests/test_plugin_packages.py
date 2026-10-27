@@ -84,6 +84,11 @@ class PackagesTest(unittest.TestCase):
                 self.assertFalse(any('recoup-internal-' in n for n in z.namelist()))
                 self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['version'],'2026.1008.1')
                 self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['interface']['shortDescription'], 'A record label inside ChatGPT')
+                review = json.loads(z.read('.codex-plugin/plugin.json'))['extensions']['com.openai']['review']
+                self.assertIs(review['commerce'], False)
+                self.assertIn('already available', review['commerce_description'])
+                self.assertNotIn('test_credentials', review)
+                self.assertNotIn('reviewer_instructions', review)
             with zipfile.ZipFile(root/'out'/report['packages']['full']['file']) as z:
                 self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['interface']['shortDescription'], 'A record label inside Codex')
             self.assertEqual(json.loads((root/'.codex-plugin/plugin.json').read_text())['version'],'1.0.0')
@@ -128,6 +133,29 @@ class PackagesTest(unittest.TestCase):
             (root/'skills/recoup-public/references/data.txt').write_text('Run recoup-internal-staff')
             with self.assertRaisesRegex(ValueError,'excluded internal'):
                 packages.package_files(root,files,'customer')
+
+    def test_customer_release_rejects_transaction_and_credential_collection_paths(self):
+        for instructions in (
+            'POST /api/subscriptions/sessions to open checkout',
+            'POST /api/credits/sessions to buy credits',
+            'Go to https://checkout.stripe.com/c/pay_fixture',
+            'POST /api/agents/verify with the emailed code',
+            'Use the existing customer checkout path; after checkout, retry activation.',
+        ):
+            with self.subTest(instructions=instructions), tempfile.TemporaryDirectory() as tmp:
+                root=Path(tmp); files=self.fixture(root)
+                (root/'skills/recoup-public/SKILL.md').write_text(instructions)
+                with self.assertRaisesRegex(ValueError, 'Customer commerce/auth boundary'):
+                    packages.package_files(root,files,'customer')
+
+    def test_customer_release_keeps_existing_entitlement_use(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); files=self.fixture(root)
+            (root/'skills/recoup-public/SKILL.md').write_text(
+                'Use connected OAuth and existing account entitlements. On 402 retain the job and stop. Never purchase credits.'
+            )
+            _, skills=packages.package_files(root,files,'customer')
+            self.assertEqual(skills, ['recoup-public'])
 
     def test_missing_recoup_web_dependency_blocks_customer_release(self):
         with tempfile.TemporaryDirectory() as tmp:

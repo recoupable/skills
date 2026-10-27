@@ -1,6 +1,6 @@
 ---
 name: recoup-content-connect-fans
-description: Add Recoup's paid Spotify fan connection to an artist site, including customer account setup, site attribution, activation, the public connection button and retrieving connected fans. Use for "add login with Spotify", "connect fans to my Recoup account", or "collect Spotify fans on this release site". Works with externally built sites as well as Recoup Sites.
+description: Add Recoup's Spotify fan connection to an artist site using an existing eligible account, including site attribution, activation, the public connection button and retrieving connected fans. Use for "add login with Spotify", "connect fans to my Recoup account", or "collect Spotify fans on this release site". Works with externally built sites as well as Recoup Sites.
 ---
 
 # Connect a site's fans to the artist
@@ -11,9 +11,9 @@ Read `references/api.md` for exact calls, responses and release dependencies. Ch
 
 ## 1. Connect the customer
 
-Reuse a customer-provided Recoup API credential from the host's secure environment. Verify it with `GET /api/accounts/id`. Never print credentials or put them into website code, URLs, generated screenshots or logs.
+Prefer connected Recoup MCP tools when their actual schemas cover the operation. The host handles OAuth sign-in and secrets. For REST-only operations, reuse a credential already configured in the host's secure environment and verify it with `GET /api/accounts/id`. Never request or print credentials or put them into website code, URLs, generated screenshots or logs.
 
-If no credential exists, use the customer's real email with `POST /api/agents/signup`, ask for the emailed code, then submit `POST /api/agents/verify`. Use the returned `api_key` in the host's secret store or session environment. Ask before writing home-directory files or modifying shell configuration. Do not create a disposable identity for the artist. An empty roster can be a legitimate new account; it is not proof of invalid credentials.
+If access is missing, use the host's Recoup connection controls and retain this site task. If the required REST-only operation has no configured credential, explain the capability gap and stop that operation. Never collect emailed codes, passwords, API keys or OAuth tokens in conversation, or create a disposable identity. An empty roster can be a legitimate account.
 
 ## 2. Establish ownership and attribution
 
@@ -21,11 +21,11 @@ Resolve the intended artist from the authenticated roster. Use its Recoup artist
 
 Reuse the existing Recoup site ID when provided. For an externally hosted site, register a Recoup site record with its artist and release URL. This record provides attribution without requiring Recoup to host or generate the website. Do not duplicate a site on every retry. Never accept an owner ID from public browser input.
 
-## 3. Activate the paid feature
+## 3. Activate the existing entitlement
 
 Read the site's current fan connection settings. Configure the final HTTPS return URL, the customer's clear marketing acceptance text, `enabled: true` and the current revision (0 when absent). Name the artist and the communication purpose in the text. The hosted journey presents it with one agreement button; Spotify presents its own permissions screen next. Do not add separate checkboxes to work around the configured journey.
 
-If activation returns 402, explain that the owning workspace needs an eligible paid plan. The feature is included in an active paid Recoup subscription. Use the existing customer checkout path; do not create an add-on or charge without authorization. After checkout, retry activation. A 503 requires provider or billing configuration by Recoup and is not fixed by asking the customer to pay again.
+If activation returns 402, explain that fan connection is unavailable with the site's current account entitlements and preserve the site and configuration. Do not display plan choices, offer an upgrade, surface payment links, create checkout sessions or buy credits. Customer consent does not turn this workflow into a purchase flow. Resume only after access is independently available and the customer asks to continue. A 503 is a service configuration issue; preserve the task and report the dependency.
 
 ## 4. Add the returned public link
 
