@@ -71,6 +71,77 @@ class ArchiveTests(unittest.TestCase):
         self.assertEqual(result['member_conservation'], {'total': 5, 'ok': 1, 'partial': 1, 'error': 2, 'unsupported': 1})
         self.assertEqual(result['members'][1]['receipt']['row_conservation'].get('source_rows', 0), 0)
 
+    def test_late_member_failure_rolls_back_rows_and_receipts_then_continues(self):
+        from dataclasses import replace
+        from unittest.mock import patch
+
+        header, detail = statement(net='99', transaction='failed').splitlines(keepends=True)
+        # Put invalid UTF-8 beyond both the delimiter sample and the text buffer,
+        # so this exercises a failure after financial detail has been processed.
+        cases = [('utf8', (header + detail * 256).encode() + b'\xff\n', {}),
+                 ('logical-record', (header + detail + 'x' * 1025 + '\n').encode(),
+                  {'max_record_chars': 1024})]
+        for name, failed_member, limits in cases:
+            with self.subTest(failure=name):
+                self.output = self.root / name
+                with zipfile.ZipFile(self.source, 'w', compression=zipfile.ZIP_STORED) as archive:
+                    archive.writestr('a-before.csv', statement(transaction='before'))
+                    archive.writestr('b-failed.csv', failed_member)
+                    archive.writestr('c-after.csv', statement(net='0.0098', transaction='after'))
+                profile = normalizer.PROFILES['distributor']
+                normalize = normalizer.normalize
+                processed = []
+                snapshots = []
+
+                def observe_detail(raw, source_row, source_label):
+                    result = profile.normalize(raw, source_row, source_label)
+                    if source_label.endswith('!/b-failed.csv'):
+                        processed.append(result['owner_net_amount'])
+                    return result
+
+                def observe_member(provider, source, ledger, **options):
+                    if not options['source_label'].endswith('!/b-failed.csv'):
+                        return normalize(provider, source, ledger, **options)
+                    before = ledger.read_bytes()
+                    receipt_files = {str(p.relative_to(ledger.parent)): p.read_bytes()
+                                     for p in ledger.parent.rglob('*') if p.is_file() and p != ledger}
+                    try:
+                        return normalize(provider, source, ledger, **options)
+                    except (ValueError, UnicodeError, csv.Error):
+                        self.assertEqual(ledger.read_bytes(), before)
+                        after_files = {str(p.relative_to(ledger.parent)): p.read_bytes()
+                                       for p in ledger.parent.rglob('*') if p.is_file() and p != ledger}
+                        self.assertEqual(after_files, receipt_files)
+                        snapshots.append(before)
+                        raise
+
+                with patch.dict(normalizer.PROFILES, {'distributor': replace(profile, normalize=observe_detail)}), \
+                        patch.object(normalizer, 'normalize', side_effect=observe_member):
+                    result = self.run_batch(**limits)
+                self.assertGreater(len(processed), 0, 'Failure must occur after valid financial rows')
+                self.assertEqual(set(processed), {'99'})
+                self.assertEqual(len(snapshots), 1)
+                self.assertEqual(result['status'], 'partial')
+                self.assertEqual([(m['member'], m['status']) for m in result['members']],
+                                 [('a-before.csv', 'ok'), ('b-failed.csv', 'error'), ('c-after.csv', 'ok')])
+                self.assertEqual(result['member_conservation'], {'total': 3, 'ok': 2, 'error': 1})
+                self.assertNotIn('receipt', result['members'][1])
+                ledger_bytes = (self.output / 'ledger.csv').read_bytes()
+                self.assertTrue(ledger_bytes.startswith(snapshots[0]))
+                rows = list(csv.DictReader(io.StringIO(ledger_bytes.decode())))
+                self.assertEqual([r['owner_net_amount'] for r in rows], ['0.0049', '0.0098'])
+                self.assertEqual([r['source_file'] for r in rows],
+                                 [f"zip:{result['archive_version_id']}!/{member}" for member in ['a-before.csv', 'c-after.csv']])
+                self.assertEqual(sorted(p.name for p in (self.output / 'receipts').iterdir()),
+                                 ['0001.json', '0001.rows.jsonl', '0003.json', '0003.rows.jsonl'])
+                self.assertFalse((self.output / 'ledger.csv.receipts').exists())
+                for index, row in zip([0, 2], rows):
+                    receipt = result['members'][index]['receipt']
+                    records = [json.loads(line) for line in (self.output / receipt['row_receipt']).read_text().splitlines()]
+                    self.assertEqual(len(records), 1)
+                    self.assertEqual(records[0]['ledger_line_id'], row['ledger_line_id'])
+                    self.assertEqual(records[0]['disposition'], 'detail')
+
     def test_traversal_duplicate_symlink_and_encrypted_fail_before_output(self):
         for name in ['../bad.csv', '/bad.csv', 'a/../bad.csv', 'C:/bad.csv', 'a\\bad.csv']:
             with self.subTest(name=name):
