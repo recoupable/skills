@@ -19,6 +19,11 @@ storage and refresh. The plugin contains no account credentials.
    controls. In Claude Code, open `/mcp` and authenticate the plugin's Recoup
    server. On other hosts, use their MCP/plugin connection UI. Let the user
    complete browser sign-in and consent; never ask them to paste an OAuth token.
+   If the customer does not have a Recoup account, say: "Create your Recoup
+   account at https://chat.recoupable.dev, then come back here and connect
+   Recoup." Preserve their original task and continue it after connection.
+   Account creation is separate from a subscription or credit purchase; do not
+   direct them to pricing, checkout or an upgrade as part of connecting.
 4. For the full business catalog, approve `mcp:tools` in the consent flow. This
    covers accessible personal and organization workspaces and includes writes,
    deletion, messages, publication and paid generation. Existing limited grants
