@@ -19,6 +19,8 @@ import sqlite3
 import tempfile
 import os
 import uuid
+import zipfile
+import zlib
 from collections import Counter, defaultdict
 from decimal import Decimal, InvalidOperation, getcontext
 getcontext().prec = 128
@@ -550,7 +552,7 @@ def detect_delimiter(text_sample: str, requested: str) -> str:
 
 
 @contextmanager
-def read_rows(input_path: Path, delimiter: str, sheet: str | None = None):
+def read_rows(input_path: Path, delimiter: str, sheet: str | None = None, csv_limits=None):
     """Yield headers, row iterator and selected sheet; memory independent of CSV size."""
     if input_path.suffix.lower() in {".xlsx", ".xlsm", ".xls"}:
         if input_path.suffix.lower() == ".xls":
@@ -580,10 +582,23 @@ def read_rows(input_path: Path, delimiter: str, sheet: str | None = None):
         with input_path.open(newline="", encoding="utf-8-sig") as handle:
             sample = handle.read(8192)
             handle.seek(0)
-            reader = csv.DictReader(handle, delimiter=detect_delimiter(sample, delimiter))
+            lines = handle
+            if csv_limits:
+                from _royalty_archive import BoundedCsvLines
+                lines = BoundedCsvLines(handle, csv_limits[0])
+            reader = csv.DictReader(lines, delimiter=detect_delimiter(sample, delimiter))
             headers = list(reader.fieldnames or [])
+            if csv_limits:
+                if len(headers) > csv_limits[1]:
+                    raise ValueError("CSV header column limit exceeded")
+                lines.reset()
             def body():
                 for row in reader:
+                    if csv_limits:
+                        columns = len(row) + (len(row[None]) - 1 if None in row else 0)
+                        if columns > csv_limits[1]:
+                            raise ValueError("CSV row column limit exceeded")
+                        lines.reset()
                     yield reader.line_num, row
             yield headers, body(), ""
 
@@ -742,7 +757,7 @@ def validate_source_controls(controls, totals):
 
 
 def normalize(provider, input_path, output_path, delimiter="auto", column_map_path=None,
-              sheet=None, append=False, controls_path=None, statement_id=None):
+              sheet=None, append=False, controls_path=None, statement_id=None, source_label=None, csv_limits=None):
     profile = PROFILES.get(provider)
     if profile is None:
         raise ValueError(f"Unsupported provider {provider!r}")
@@ -790,7 +805,7 @@ def normalize(provider, input_path, output_path, delimiter="auto", column_map_pa
                         if row.get("source_record_id"):
                             db.execute("INSERT OR IGNORE INTO transactions VALUES (?, ?)", (row["source_record_id"], economic_key(row)))
                         existing_count += 1
-            with read_rows(input_path, delimiter, sheet) as (headers, rows, selected_sheet):
+            with read_rows(input_path, delimiter, sheet, csv_limits) as (headers, rows, selected_sheet):
                 if not headers or any(not h for h in headers) or len(set(h.lower() for h in headers)) != len(headers):
                     raise ValueError("Missing, blank or duplicate source headers")
                 absent = set(column_map) - set(headers)
@@ -801,7 +816,7 @@ def normalize(provider, input_path, output_path, delimiter="auto", column_map_pa
                     row_class = first(raw, "Row Type", "row_class").lower() or ("detail" if has_meaningful_value(raw) else "ignored")
                     malformed = None in raw or any(isinstance(v, list) for v in raw.values())
                     safe_raw = {str(k): str(v) if v is not None else "" for k, v in raw.items()}
-                    output = profile.normalize(safe_raw, source_row, str(input_path.resolve()))
+                    output = profile.normalize(safe_raw, source_row, source_label or str(input_path.resolve()))
                     # Only observed fields or explicit maps establish classification, currency and dates.
                     output.update({"rights_type": first(safe_raw, "Rights Type", "rights_type").lower(),
                                    "income_type": first(safe_raw, "Income Type", "income_type").lower(),
@@ -898,7 +913,7 @@ def normalize(provider, input_path, output_path, delimiter="auto", column_map_pa
         os.replace(staged, output_path)
         os.replace(rowlog, rows_path)
     status = "partial" if counts["held"] or counts["economic_duplicate_rows"] or counts["duplicate_held_rows"] or control_errors or not (counts["detail"] or counts["duplicate_rows"]) else "ok"
-    payload = {"status": status, "provider": profile.provider_name, "input": str(input_path.resolve()),
+    payload = {"status": status, "provider": profile.provider_name, "input": source_label or str(input_path.resolve()),
                "source_version_id": source_hash, "source_sheet": selected_sheet, "parser_version": PARSER_VERSION,
                "transform_id": transform_id, "output": str(output_path), "rows": counts["written_rows"],
                "appended": appending, "ledger_total_rows": existing_count + counts["written_rows"],
@@ -920,8 +935,17 @@ def economic_key(row):
     return json.dumps([row.get(key, "") for key in ("catalog_asset_id", "currency", "period_start", "period_end", "rights_type", "income_type", "gross_amount", "owner_net_amount", "deductions")])
 
 
+def normalize_archive(provider, input_path, output_path, **options):
+    from _royalty_archive import normalize_zip
+    if provider not in PROFILES:
+        raise ValueError(f"Unsupported provider {provider!r}")
+    load_column_map(options.get("column_map_path"))
+    return normalize_zip(normalize, provider, input_path, output_path, **options)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--archive", action="store_true", help="Bounded ZIP of UTF-8 CSV/TSV; --output is a new bundle directory")
     parser.add_argument("--provider", required=True, help=f"One of: {', '.join(sorted(PROFILES))}")
     parser.add_argument("--input", required=True, help="Provider CSV/TSV export")
     parser.add_argument("--output", required=True, help="Output royalty-ledger.csv path")
@@ -957,6 +981,18 @@ def main() -> int:
     if delimiter != "auto":
         delimiter = bytes(delimiter, "utf-8").decode("unicode_escape")
     column_map_path = Path(args.column_map) if args.column_map else None
+
+    if args.archive:
+        if args.append or args.sheet or args.controls:
+            parser.error("Archive mode does not accept --append, --sheet or --controls; use per-file normalization for source controls")
+        try:
+            payload = normalize_archive(args.provider, Path(args.input), Path(args.output),
+                                        delimiter=delimiter, column_map_path=column_map_path,
+                                        statement_id=args.statement_id)
+        except (ValueError, OSError, zipfile.BadZipFile, zlib.error, RuntimeError, EOFError) as exc:
+            parser.exit(2, f"normalize-royalty-statement: archive rejected: {exc}\n")
+        print(json.dumps(payload, indent=2))
+        return 0 if payload["status"] == "ok" else 1
 
     payload = normalize(
         args.provider,
