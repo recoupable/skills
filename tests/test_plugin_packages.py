@@ -26,6 +26,12 @@ class PackagesTest(unittest.TestCase):
             )
             install = root / "isolated-install"
             with zipfile.ZipFile(root / "packages" / report["packages"]["customer"]["file"]) as archive:
+                for name in (
+                    'skills/recoup-minimax-music-3/SKILL.md',
+                    'skills/recoup-music-video/SKILL.md',
+                    'skills/recoup-music-video/references/composition-and-verification.md',
+                ):
+                    self.assertNotRegex(archive.read(name).decode(), r'\bnpx\s|github\.com/[^\s)]+/(?:tree|blob)/(?:main|master)/')
                 archive.extractall(install)
             foreign = root / "unrelated-project"
             foreign.mkdir()
@@ -89,6 +95,16 @@ class PackagesTest(unittest.TestCase):
                 self.assertIn('already available', review['commerce_description'])
                 self.assertNotIn('test_credentials', review)
                 self.assertNotIn('reviewer_instructions', review)
+                cases = review['test_cases']
+                self.assertEqual(len(cases['positive']), 5)
+                self.assertEqual(len(cases['negative']), 3)
+                for case in cases['positive']:
+                    for key in ('description', 'prompt', 'tools_triggered', 'expected_behavior'):
+                        self.assertIsInstance(case[key], str)
+                        self.assertTrue(case[key].strip())
+                for case in cases['negative']:
+                    self.assertTrue(case['description'].strip())
+                    self.assertTrue(case['prompt'].strip())
             with zipfile.ZipFile(root/'out'/report['packages']['full']['file']) as z:
                 self.assertEqual(json.loads(z.read('.codex-plugin/plugin.json'))['interface']['shortDescription'], 'A record label inside Codex')
             self.assertEqual(json.loads((root/'.codex-plugin/plugin.json').read_text())['version'],'1.0.0')
@@ -110,6 +126,7 @@ class PackagesTest(unittest.TestCase):
                 self.assertEqual(manifest['apps'], './.app.json')
                 self.assertEqual(json.loads(z.read('.app.json')), {'apps': {'recoup': {'id':'asdk_app_example-1_x', 'required':True}}})
                 self.assertEqual(manifest['interface']['logo'], './assets/recoup-customer-icon.png')
+                self.assertNotIn('test_cases', manifest['extensions']['com.openai']['review'])
                 self.assertFalse(any('recoup-internal-' in n for n in z.namelist()))
             with zipfile.ZipFile(root/'out'/report['packages']['customer']['file']) as z:
                 self.assertIn('.mcp.json', z.namelist())
