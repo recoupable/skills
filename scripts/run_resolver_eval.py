@@ -49,7 +49,7 @@ PLUGIN = REPO_ROOT
 # fixtures ship and CI can run them on a fresh checkout.
 FIXTURES = PLUGIN / "resolver-eval.jsonl"
 # Dots are allowed mid-slug (e.g. `recoup-internal-video-grok-1.5-imagine-facetime`).
-SKILL_TOKEN = re.compile(r"`(recoup-[a-z0-9-]+(?:\.[a-z0-9-]+)*)`")
+SKILL_TOKEN = re.compile(r"`([a-z][a-z0-9]*-[a-z0-9-]+(?:\.[a-z0-9-]+)*)`")
 
 
 def skill_dirs() -> set[str]:
@@ -83,7 +83,7 @@ GATEWAY_MODEL = os.environ.get("RECOUP_RESOLVER_EVAL_MODEL", "openai/gpt-5.4-nan
 GATEWAY_KEY = os.environ.get("AI_GATEWAY_API_KEY") or os.environ.get("VERCEL_AI_GATEWAY_API_KEY")
 MIN_PASS = float(os.environ.get("RECOUP_RESOLVER_EVAL_MIN_PASS", "1.0"))
 FRONTMATTER_KEY = re.compile(r"^([A-Za-z][\w-]*):\s?(.*)$")
-SKILL_TOKEN_PLAIN = re.compile(r"recoup-[a-z0-9-]+")
+SKILL_TOKEN_PLAIN = re.compile(r"[a-z][a-z0-9]*-[a-z0-9-]+")
 
 
 def _gateway_ssl_context() -> ssl.SSLContext:

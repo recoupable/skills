@@ -244,3 +244,6 @@
 {"intent": "recoup-internal: Only qualify this buyer from the discovery transcript; do not propose a package.", "expected": "recoup-internal-consulting-discovery-analysis", "not": ["recoup-internal-consulting-enablement-offer"]}
 {"intent": "recoup-internal: Build three pricing tiers for our existing implementation scope.", "expected": "recoup-internal-consulting-pricing-builder", "not": ["recoup-internal-consulting-enablement-offer"]}
 {"intent": "recoup-internal: Render this approved AI enablement proposal as a branded PDF without rewriting the offer.", "expected": "recoup-internal-consulting-proposal-designer", "not": ["recoup-internal-consulting-enablement-offer"]}
+{"intent": "What is the UI pattern called when an interactive panel opens beside its trigger?", "expected": "ui-design-vocabulary", "not": []}
+{"intent": "Turn this cramped dashboard feedback into a precise UI design prompt", "expected": "ui-design-vocabulary", "not": []}
+{"intent": "Describe the motion of a thumbnail expanding into its detail view", "expected": "ui-design-vocabulary", "not": []}
