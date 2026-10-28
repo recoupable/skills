@@ -10,6 +10,13 @@ Reality headings. Business paths below are relative to that project. Bundled res
 to this installed skill; sibling capabilities resolve by their installed names. Never search another
 private checkout for missing inputs. Use workspace identity, audience, pricing, and `DESIGN.md` fonts.
 
+## Required editorial checks
+
+Read `references/public-content-quality.md` before drafting. Apply its client-recognition check,
+conversational voice and concrete agent throughline to each article, post and email. Keep proposed
+examples distinct from implemented work, and explain relevant human decisions without inventing
+an approval step. A short companion must make sense without the source article.
+
 ## Steps
 1. Take the signal (from `signals/`) — read its `source`/`related` and traverse to the raw for context.
 2. **Ground research-derived drafts (pull the wiki).** If the idea cites `[[wiki pages]]` (it came
@@ -28,7 +35,8 @@ Output: a draft ready for review. Sources: Ch. 5 + (for agent/skill topics) the 
 ## Newsletter and distribution work
 Read the selected workspace’s approved publishing system and current status through its AGENTS.md before drafting. Keep private strategy and customer proof in that workspace, not in this public skill.
 
-Treat a newsletter as one publication with channel variants. Preserve its core value across email and native newsletter editions; adapt formatting and the next action for the audience. A blog is a durable reference, and a feed post is a standalone discovery piece. Neither automatically requires another email. Use one primary action without banning useful source links. Human-review discussion is conditional on the topic, not a required section.
+Treat a newsletter as one publication with channel variants. Preserve its core value across email and native newsletter editions; adapt formatting and the next action for the audience. A blog is a durable reference, and a feed post is a standalone discovery piece. Neither automatically requires another email. Use one primary action without banning useful source links. Explain the agent task throughout relevant Recoup business content. Human-review discussion is
+conditional on the actual workflow, not a mandatory standalone section.
 
 Keep editorial broadcasts separate from welcome/sales sequences and customer adoption messages. CRM membership or a social subscription is not email consent. Resolve active subscriptions and suppressions before dispatch; never automatically enroll scraped contacts or reset an unsubscribe. Stop redundant acquisition pitches for current customers.
 

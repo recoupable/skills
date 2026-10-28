@@ -60,7 +60,10 @@ Plain uncertainty when genuinely uncertain: "I think," "probably," "my guess is.
 
 ## Specificity as proof
 
-Numbers, names, dates, tools, prices, percentages, time periods. These are not decoration — they're what makes claims believable.
+Specific inputs, actions, outputs and decisions make a claim understandable. Numbers, names, dates,
+tools and prices can help only when supported, useful and appropriate to disclose. Private client
+recognition risk takes priority over vividness: remove identifying detail that does not explain the
+work, including combinations of otherwise ordinary facts. Never manufacture replacement figures.
 
 **Synthetic examples only:** these invented figures illustrate specificity, not anyone's results.
 
@@ -71,11 +74,15 @@ Numbers, names, dates, tools, prices, percentages, time periods. These are not d
 > "The fictional support team resolved 12 of 20 test cases without escalation. That is test coverage,
 > not a claim about production performance."
 
-In a social post, one specific number can carry the entire hook. In a case study, layer them. In a cold email, one specific result replaces three paragraphs of description.
+A social hook can name the task or unresolved question without a number. In a case study, use only
+the client detail needed to understand the work. In an email, a supported result can replace a long
+description; an unverified outcome cannot.
 
 ### Evidence over vague authority
 
-To a senior reader, vague authority reads as positioning — a setup for a pitch they can feel coming. Phrases like "I keep seeing," "the teams pulling it off," and "everyone is realizing" signal a sales move, not a real observation. Earn the point with one concrete, real, named example, or drop the claim and ask the genuine question instead. Never invent the example to fill the gap: if you don't have a real one, go get it.
+To a senior reader, vague authority reads as positioning — a setup for a pitch they can feel coming. Phrases like "I keep seeing," "the teams pulling it off," and "everyone is realizing" signal a sales move, not a real observation. Earn the point with a supported example whose identifying details are safe to disclose, or clearly
+label an illustrative scenario. A client name is not required proof. Never invent an experience or
+seek missing private originals to fill the gap; qualify or remove an unsupported claim.
 
 ---
 
