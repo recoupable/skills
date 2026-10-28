@@ -170,6 +170,12 @@ async function job(proj, id, snapshotId, drive, skillTar, projTar, render) {
       outRel = `exports/${id}.mp4`; compRel = `comp/chapters/${id}`;
       await sh(sbx, id, `cd ${S} && python3 scripts/podcast/build.py ${P} ${id} --recut 2>&1 | tail -4` +
         (share ? ` && python3 ${P}/edit/screen_share.py ${P} ${id} 2>&1 | tail -3` : ""));
+      // step 8 checks without a local browser: inspect + snapshot at every card midpoint, kept in the comp
+      // (comp/<ch>/inspect.json, comp/<ch>/snapshots/). Overflow on the #ghost word or the ticker is by design.
+      await sh(sbx, id, `cd ${P}/${compRel} && AT=$(python3 -c "import re;h=open('index.html').read();print(','.join('%.2f'%(float(s)+float(d)/2) for s,d in re.findall(r'class=\\"card [^\\"]*\\" data-start=\\"([\\d.]+)\\" data-duration=\\"([\\d.]+)\\"',h)))") && ` +
+        `if [ -n "$AT" ]; then npx --yes ${HF} inspect --at "$AT" --json --max-issues 5000 > inspect.json 2>/dev/null; ` +
+        `npx --yes ${HF} snapshot --at "$AT" --no-end -o snapshots > /dev/null 2>&1; ` +
+        `python3 -c "import json;d=json.load(open('inspect.json'));i=[x for x in d.get('issues',[]) if x.get('severity')!='info' and not any(k in x.get('selector','')+x.get('containerSelector','') for k in ('#run','div.lab','#ghost'))];print('inspect: %d card issues' % len(i));[print(json.dumps(x)[:240]) for x in i[:6]]" || echo "inspect: unreadable"; fi`);
       if (render) await sh(sbx, id, `cd ${P}/${compRel} && npx --yes ${HF} render -o ${P}/${outRel} > ${P}/exports/render-${id}.log 2>&1; ` +
         `grep -q "Render complete" ${P}/exports/render-${id}.log && grep -E "MB ·" ${P}/exports/render-${id}.log | tr -s ' '`);
     }
