@@ -139,6 +139,7 @@ The internal namespace is a routing convention, not an access-control boundary.
 | recoup-internal consulting: Advance a deal cleanly when its state changes | `recoup-internal-consulting-deal-stage-mover` |
 | recoup-internal consulting: Analyze a sales/discovery call transcript to surface stakes, pain points, success metrics, objections, gaps, and buyer qualification | `recoup-internal-consulting-discovery-analysis` |
 | recoup-internal consulting: Fan one source insight into several scheduled, segment-routed email touches (trend-jack, proof, insight, build-in-public, 1:1 nudge) staged as drafts, never one-offs | `recoup-internal-consulting-email-atomizer` |
+| recoup-internal consulting: Turn a discovery meeting into a paid AI-enablement entry offer, including role-specific training, the opportunity-map review, and an optional separately scoped build handoff | `recoup-internal-consulting-enablement-offer` |
 | recoup-internal consulting: Identify land-and-expand opportunities within a client | `recoup-internal-consulting-expansion-spotter` |
 | recoup-internal consulting: Capture a recurring answer as a canonical FAQ | `recoup-internal-consulting-faq-builder` |
 | recoup-internal consulting: Generate the timed follow-up cadence for a deal, personalized to the client's stated stakes | `recoup-internal-consulting-followup-sequencer` |
@@ -189,6 +190,8 @@ The internal namespace is a routing convention, not an access-control boundary.
 ---
 
 ## Cross-skill disambiguation (the boundaries that matter)
+
+- **Enablement entry offer vs adjacent consulting work.** A paid training-first offer after discovery, an enablement alternative to a stalled audit, or its later opportunity-map/build handoff → `recoup-internal-consulting-enablement-offer`. Qualification only → `recoup-internal-consulting-discovery-analysis`; a general proposal or already selected audit/build → `recoup-internal-consulting-proposal-drafting`; pricing alone → `recoup-internal-consulting-pricing-builder`; rendering approved copy → `recoup-internal-consulting-proposal-designer`. Keep an existing successful offer unless the user selects a change.
 
 - **PMF learning vs adjacent consulting work.** Testing buyer pull, demand, retention, or the next PMF experiment → `recoup-internal-consulting-pmf-finder`. A single call qualification summary → `recoup-internal-consulting-discovery-analysis`; niche desk research → `recoup-internal-consulting-market-scanner`; messaging refinement → `recoup-internal-consulting-positioning-refiner`; writing up a delivered win → `recoup-internal-consulting-case-study-builder`. A PMF case-study pattern is an internal repeatability model, not a public testimonial.
 

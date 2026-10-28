@@ -211,11 +211,15 @@ Add a route for the new skill in [`RESOLVER.md`](RESOLVER.md) and a fixture in `
 
 ## Internal consulting workflows
 
-The 65 `recoup-internal-consulting-*` skills cover PMF discovery, client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
+The 66 `recoup-internal-consulting-*` skills cover enablement offers, PMF discovery, client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
 
 ### PMF finder
 
 Use `recoup-internal-consulting-pmf-finder` to ground PMF learning in a real-person PULL anecdote and test whether it repeats. If no anecdote exists, it defines firsthand fieldwork instead. It covers discovery, buying decisions and pilot verification, delivery/retention, and repeatable customer outcomes, with a memo template and dated podcast/author sources. Book-preview coverage is explicitly partial. Example: “recoup-internal pmf-finder: use these customer calls to identify the weakest demand assumption and our next test.” Keep resulting buyer evidence in the selected private business workspace.
+
+### Post-discovery enablement offer
+
+Use `recoup-internal-consulting-enablement-offer` to turn a discovery meeting into a bounded, paid team-enablement offer with standalone value. Includes a client-offer template, delivery plan, evidence-backed opportunity map, live-review workflow, and optional separately scoped build handoff. Example: “recoup-internal: turn this discovery call into an AI-enablement entry offer.” Preserve successful audit offers; keep client evidence and drafts in the selected private workspace.
 
 ### Mono Business workspace
 
