@@ -1,6 +1,6 @@
 ---
 name: recoup-internal-consulting-proposal-drafting
-description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-internal consulting requests. Draft a situational-assessment proposal from a discovery transcript or discovery analysis. Use when a qualified deal needs a proposal, or the user says \"draft a proposal\", \"write the SOW\", \"put together options\". Applies the 3-option, 5-10x pricing framework. Send within 48h."
+description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-internal consulting requests. Draft a situational-assessment proposal from a discovery transcript or discovery analysis. Use when a qualified deal needs a proposal, or the user says \"draft a proposal\", \"write the SOW\", \"put together options\". Applies the 3-option, 5-10x pricing framework. Send within 48h. A paid AI-enablement entry offer belongs to recoup-internal-consulting-enablement-offer."
 ---
 
 # Consulting Proposal Drafting
@@ -22,7 +22,7 @@ to this installed skill; sibling capabilities resolve by their installed names. 
 private checkout for missing inputs. Use workspace identity, audience, pricing, and `DESIGN.md` fonts.
 
 ## When to run
-After discovery analysis on a qualified deal.
+After discovery analysis on a qualified deal. For a dedicated post-discovery AI-enablement entry offer, use `recoup-internal-consulting-enablement-offer`; preserve its approved scope and price if later rendering or formalizing it. Do not replace it with three tiers automatically. General proposals and already selected audit/build offers stay here.
 
 ## Steps
 1. Read the discovery transcript/analysis and the master template at

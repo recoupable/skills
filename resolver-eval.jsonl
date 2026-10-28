@@ -234,3 +234,13 @@
 {"intent": "recoup-internal consulting: Write a customer-facing case study from this completed engagement and verified outcome.", "expected": "recoup-internal-consulting-case-study-builder", "not": ["recoup-internal-consulting-pmf-finder"]}
 {"intent": "recoup-internal consulting: Research this niche and its market-rate references; no buyer experiments requested.", "expected": "recoup-internal-consulting-market-scanner", "not": ["recoup-internal-consulting-pmf-finder"]}
 {"intent": "recoup-internal consulting: Refine this positioning statement and pitch wording; keep our existing validated offer.", "expected": "recoup-internal-consulting-positioning-refiner", "not": ["recoup-internal-consulting-pmf-finder"]}
+
+# Post-discovery enablement offer and adjacent boundaries
+{"intent": "recoup-internal: Turn this discovery call into a paid AI enablement offer with hands-on departmental training.", "expected": "recoup-internal-consulting-enablement-offer", "not": ["recoup-internal-consulting-proposal-drafting", "recoup-internal-consulting-discovery-analysis"]}
+{"intent": "recoup-internal: Our standalone audit proposal keeps stalling. Package a training-first entry offer that has value without a build.", "expected": "recoup-internal-consulting-enablement-offer", "not": ["recoup-internal-consulting-pricing-builder"]}
+{"intent": "recoup-internal: The enablement sessions are done. Prepare the live opportunity-map review and optional implementation handoff.", "expected": "recoup-internal-consulting-enablement-offer", "not": ["recoup-internal-consulting-proposal-drafting"]}
+{"intent": "recoup-internal: Create an AI enablement entry offer; discovery does not yet confirm budget or department participation.", "expected": "recoup-internal-consulting-enablement-offer", "not": ["recoup-internal-consulting-discovery-analysis"]}
+{"intent": "recoup-internal: Our paid audit is already agreed. Draft its situational-assessment proposal, not a new training offer.", "expected": "recoup-internal-consulting-proposal-drafting", "not": ["recoup-internal-consulting-enablement-offer"]}
+{"intent": "recoup-internal: Only qualify this buyer from the discovery transcript; do not propose a package.", "expected": "recoup-internal-consulting-discovery-analysis", "not": ["recoup-internal-consulting-enablement-offer"]}
+{"intent": "recoup-internal: Build three pricing tiers for our existing implementation scope.", "expected": "recoup-internal-consulting-pricing-builder", "not": ["recoup-internal-consulting-enablement-offer"]}
+{"intent": "recoup-internal: Render this approved AI enablement proposal as a branded PDF without rewriting the offer.", "expected": "recoup-internal-consulting-proposal-designer", "not": ["recoup-internal-consulting-enablement-offer"]}
