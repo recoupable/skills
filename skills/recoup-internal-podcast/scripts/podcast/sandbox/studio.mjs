@@ -160,7 +160,9 @@ async function job(proj, id, snapshotId, drive, skillTar, projTar, render) {
       // render.sh logs a failed build and still exits 0: the output file is the only proof the short rendered
       await sh(sbx, id, render ? `cd ${S} && RECUT=1 zsh scripts/podcast/shorts/render.sh ${P} ${id}:${s.slug}; ` +
         `test -s ${P}/${outRel} || { cat ${P}/exports/shorts/build-${id}.log 2>/dev/null | tail -5; exit 1; }`
-        : `cd ${S} && python3 scripts/podcast/shorts/build_hy.py ${P} ${id} --recut 2>&1 | tail -4`);
+        : `cd ${S} && python3 scripts/podcast/shorts/build_hy.py ${P} ${id} --recut > /work/build.log 2>&1; ` +
+        // a pipe into tail hid build_hy's exit code: a rejected beat (e.g. a caption id) reported "ok" with no index.html
+        `rc=$?; tail -4 /work/build.log; exit $rc`);
     } else {
       // Chapters build and render here rather than through render.sh, which rebuilds the comp and would drop an
       // episode-only overlay such as edit/screen_share.py.
