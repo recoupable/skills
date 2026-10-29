@@ -10,6 +10,12 @@
 > `scripts/check_resolvable.py` (every skill has a route; every route resolves) and
 > `scripts/run_resolver_eval.py` (routing fixtures + full coverage).
 
+## UI design vocabulary
+
+| Intent | Skill |
+|---|---|
+| Name a UI pattern, describe interface motion, or translate vague visual feedback into a precise design prompt | `ui-design-vocabulary` |
+
 ## Tier 1 — Capabilities (the label work)
 
 ### roster — your artists

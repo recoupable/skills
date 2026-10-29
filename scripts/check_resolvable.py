@@ -9,7 +9,7 @@ nowhere.
 
 Two findings, both fatal (exit 1):
   1. UNREACHABLE — a skills/<name>/SKILL.md with no row in RESOLVER.md.
-  2. BROKEN ROUTE — a `recoup-*` token in RESOLVER.md with no matching skill dir.
+  2. BROKEN ROUTE — a skill-slug token in RESOLVER.md with no matching skill dir.
 
 Usage:
   python3 scripts/check_resolvable.py                 # default: repo root (skills/ + RESOLVER.md)
@@ -24,9 +24,9 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_PLUGIN = REPO_ROOT
 
-# A skill reference in RESOLVER.md is a backtick-wrapped slug: `recoup-foo-bar`.
+# A skill reference in RESOLVER.md is a backtick-wrapped slug, including user-named skills.
 # Dots are allowed mid-slug (e.g. `recoup-internal-video-grok-1.5-imagine-facetime`).
-SKILL_TOKEN = re.compile(r"`(recoup-[a-z0-9-]+(?:\.[a-z0-9-]+)*)`")
+SKILL_TOKEN = re.compile(r"`([a-z][a-z0-9]*-[a-z0-9-]+(?:\.[a-z0-9-]+)*)`")
 
 
 def skill_dirs(plugin: Path) -> set[str]:
