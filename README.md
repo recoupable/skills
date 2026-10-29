@@ -97,6 +97,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - recoup-song-check-credits
 - recoup-song-find-hook
 - recoup-song-placement-pitch
+- ui-design-vocabulary
 
 ## Bundled helpers
 
@@ -175,8 +176,11 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-song-analyze-audio/scripts/upload_chat_audio.py
 - skills/recoup-song-check-credits/scripts/build-catalog-report.py
 - skills/recoup-song-check-credits/scripts/catalog-case.py
+- skills/ui-design-vocabulary/assets/atlas-data.js
+- skills/ui-design-vocabulary/assets/atlas.js
+- skills/ui-design-vocabulary/scripts/validate_atlas.py
 
 ## Release provenance
 
-Source commit: 2c3ddad873a40c4e88c73a08cea307336792fcff
-Version: 2026.1027.73
+Source commit: faa5469c9004131d0407e8df969bb6930330adbd
+Version: 2026.1029.74
