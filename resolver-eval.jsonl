@@ -247,3 +247,16 @@
 {"intent": "What is the UI pattern called when an interactive panel opens beside its trigger?", "expected": "ui-design-vocabulary", "not": []}
 {"intent": "Turn this cramped dashboard feedback into a precise UI design prompt", "expected": "ui-design-vocabulary", "not": []}
 {"intent": "Describe the motion of a thumbnail expanding into its detail view", "expected": "ui-design-vocabulary", "not": []}
+
+# Collection-level text normalization and adjacent boundaries
+{"intent": "recoup-internal: Normalize these 30 AI-generated dashboard cards as a collection so a reader can compare them at a glance.", "expected": "recoup-internal-content-normalize-text", "not": ["ui-design-vocabulary", "recoup-internal-consulting-copy-editor"]}
+{"intent": "recoup-internal: Rewrite this batch of session titles with consistent syntax, useful differences up front, and the actual task state preserved.", "expected": "recoup-internal-content-normalize-text"}
+{"intent": "recoup-internal: Audit these feed items for inconsistent vocabulary and repetitive openings. Return findings only; do not rewrite yet.", "expected": "recoup-internal-content-normalize-text", "not": ["recoup-research-the-web"]}
+{"intent": "recoup-internal: Normalize our notification text as a set, keeping evidence-backed tense and sentiment without flattening important differences.", "expected": "recoup-internal-content-normalize-text", "not": ["recoup-internal-social-ship-posts"]}
+{"intent": "recoup-internal: Make these issue summaries easier to scan together. Keep all facts and unresolved work; do not implement the issues.", "expected": "recoup-internal-content-normalize-text", "not": ["recoup-internal-dev"]}
+{"intent": "Normalize these AI-generated dashboard cards and session titles for quick scanning.", "expected": "none", "not": ["recoup-internal-content-normalize-text"]}
+{"intent": "Write one Instagram caption for my artist in her own voice.", "expected": "recoup-content-write-caption", "not": ["recoup-internal-content-normalize-text"]}
+{"intent": "recoup-internal consulting: Copy-edit this single finished article for narrative flow and conversational language.", "expected": "recoup-internal-consulting-copy-editor", "not": ["recoup-internal-content-normalize-text"]}
+{"intent": "recoup-internal: Describe the cramped dashboard layout with precise UI design vocabulary; leave its text unchanged.", "expected": "ui-design-vocabulary", "not": ["recoup-internal-content-normalize-text"]}
+{"intent": "Research current examples of agent dashboards on the web and cite your sources; there is no text collection to edit.", "expected": "recoup-research-the-web", "not": ["recoup-internal-content-normalize-text"]}
+{"intent": "recoup-internal: Publish this approved product-announcement post to LinkedIn and track its performance.", "expected": "recoup-internal-social-ship-posts", "not": ["recoup-internal-content-normalize-text"]}
