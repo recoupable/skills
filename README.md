@@ -164,6 +164,7 @@ have a separate API/database release dependency. See [catalog coverage](docs/cat
 | Skill | What it does |
 |-------|-------------|
 | recoup-internal-dev | Write, maintain & ship GitHub issues end-to-end (tracking issues, docs-first, TDD) |
+| recoup-internal-content-normalize-text | Audit and normalize batches of AI-generated interface text for consistent, evidence-backed scanning |
 | recoup-internal-eval-skill-benchmark | Benchmark a skill pack/plugin against the frontier |
 | recoup-internal-sales | Daily sales sweep across Stripe/Privy/valuations/Attio/credits/tasks/chats → one ranked follow-up list |
 | recoup-internal-funnel-valuation-pipeline | Work the Attio catalog-valuation sales funnel |
@@ -290,6 +291,10 @@ each supported host. JSON validation is not proof of a working host connection.
 ## Internal motion design
 
 `recoup-internal-content-design-motion` creates feature-announcement films, product demos and marketing motion graphics. Invoke with the literal `recoup-internal` keyword. It includes original motion kernels, executable tests, image/video asset production, and a bundled independent gauntlet review loop against inspected references; it is not the customer release-pack generator. Private assets stay in the selected project workspace.
+
+## Internal text normalization
+
+`recoup-internal-content-normalize-text` audits or rewrites collections of AI-generated dashboard cards, feed items, session titles, notifications and issue summaries. It makes useful distinctions visible early, aligns syntax and vocabulary, and preserves evidence-backed tense, sentiment and meaningful variation. Example: “recoup-internal: normalize these 30 session titles as a set, preserving each task's actual state.” Supply the collection and its supporting facts; it does not research missing facts, invent summaries, redesign layouts, write standalone marketing copy or publish anything. It ships in the full staff package, not the customer package.
 
 ## Automatic plugin packages
 
