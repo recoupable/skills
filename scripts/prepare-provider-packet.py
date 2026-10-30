@@ -2,6 +2,7 @@
 """Prepare a local profile-bound evidence packet; never authorize or submit."""
 import argparse
 import copy
+from decimal import Decimal, InvalidOperation
 import hashlib
 import importlib.util
 import json
@@ -27,14 +28,26 @@ def bounded_bytes(path, limit):
     return data
 
 
-def strict_json(raw):
+def strict_json(raw, *, exact_floats=False):
     def pairs(items):
         result = {}
         for key, value in items:
             require(key not in result, 'Duplicate JSON key')
             result[key] = value
         return result
+    def decimal_float(token):
+        message = 'Numeric precision would be lost; supply high-precision decimals as quoted strings'
+        value = float(token)
+        try:
+            exact = Decimal(token)
+            decoded = Decimal(str(value))
+            require(exact == decoded, message)
+            require(decoded.is_finite(), 'Nonfinite JSON number')
+        except InvalidOperation:
+            raise ValueError(message) from None
+        return value
     return json.loads(raw, object_pairs_hook=pairs,
+                      parse_float=decimal_float if exact_floats else float,
                       parse_constant=lambda value: (_ for _ in ()).throw(ValueError('Nonfinite JSON number')))
 
 
@@ -47,7 +60,7 @@ def prepare(case_path, mapping_path, output_path):
     case = case_api.read_case(case_path)
     require(bounded_bytes(case_path, 16 * 1024 * 1024) == case_raw, 'Case changed while reading')
     mapping_raw = bounded_bytes(mapping_path, 1024 * 1024)
-    mapping = strict_json(mapping_raw)
+    mapping = strict_json(mapping_raw, exact_floats=True)
     fields = {'case_id', 'revision', 'action_id', 'payload_sha256', 'profile_id',
               'profile_version', 'role', 'required_inputs'}
     require(isinstance(mapping, dict) and set(mapping) in (fields, fields | {'field_values'}), 'Mapping requires exact binding and evidence fields')

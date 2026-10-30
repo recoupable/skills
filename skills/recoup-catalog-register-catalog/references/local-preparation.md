@@ -123,3 +123,12 @@ The public sources and retrieval date remain in `public_preparation_guidance`.
 
 Do not create a new action just to bypass an existing attempt or to split a batch
 for this checker. Resume the existing case; unsupported batch checks remain manual.
+
+JSON numeric mapping values must retain their decimal value when decoded and
+serialized through the helper. Tokens that would lose precision are rejected
+(exit 2, no packet) before field checking; provide high-precision percentages as
+quoted decimal strings instead. Strings are checked with decimal arithmetic and
+retained unchanged, so an out-of-range string produces a blocked artifact with a
+field finding. Ordinary numeric boundaries `0.01` and `100` remain supported.
+The original mapping bytes, including numeric spelling, stay bound by SHA256;
+case/profile parsing and their existing fingerprints are unchanged.
