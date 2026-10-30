@@ -129,6 +129,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-reconcile-royalties/scripts/validate-normalized-ledger.py
 - skills/recoup-catalog-register-catalog/scripts/build-catalog-report.py
 - skills/recoup-catalog-register-catalog/scripts/catalog-case.py
+- skills/recoup-catalog-register-catalog/scripts/mlc-public-fields.py
 - skills/recoup-catalog-register-catalog/scripts/prepare-provider-packet.py
 - skills/recoup-catalog-resolve-claims/scripts/build-catalog-report.py
 - skills/recoup-catalog-resolve-claims/scripts/catalog-case.py
@@ -182,5 +183,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: c558a57075d249afbf8445a85c888a22c229d9c5
-Version: 2026.1030.76
+Source commit: dfde0fe7304aebcc0b9bf81ae18d0bb3c40a48f0
+Version: 2026.1030.77
