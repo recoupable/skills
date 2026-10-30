@@ -391,6 +391,12 @@
       "copies": [
         "skills/recoup-catalog-register-catalog/scripts/prepare-provider-packet.py"
       ]
+    },
+    {
+      "canonical": "scripts/mlc-public-fields.py",
+      "copies": [
+        "skills/recoup-catalog-register-catalog/scripts/mlc-public-fields.py"
+      ]
     }
   ]
 }

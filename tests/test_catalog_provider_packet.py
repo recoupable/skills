@@ -82,6 +82,90 @@ class PacketTests(unittest.TestCase):
         self.assertEqual(result['template_retrieval'], 'not_performed_by_helper')
         self.assertTrue(result['public_preparation_guidance']['required_input_guidance'])
 
+    def test_optional_values_bind_to_existing_action_and_block_bad_fields(self):
+        self.mapping['field_values'] = {'subject_id': 'synthetic-work', 'work_title': 'Example',
+            'writers': [{'name': 'Example Writer', 'role': 'CA'}],
+            'collection_shares': [{'party': 'Example Publisher', 'percent': 0}]}
+        result = self.run_packet()
+        self.assertEqual(result['status'], 'blocked')
+        self.assertEqual(result['missing_inputs'], [])
+        self.assertEqual(result['field_validation'], 'needs_attention')
+        self.assertEqual(result['public_field_checks']['values'], self.mapping['field_values'])
+        self.assertEqual(result['mapping_sha256'], hashlib.sha256(self.mapfile.read_bytes()).hexdigest())
+        self.assertEqual(result['external_preflight'], 'unverified')
+        self.output.unlink()
+        self.mapping['field_values']['collection_shares'][0]['percent'] = 50
+        result = self.run_packet()
+        self.assertEqual(result['status'], 'prepared')
+        self.assertEqual(result['field_validation'], 'checked_public_subset')
+        self.assertEqual(result['public_field_checks']['authority_verification'], 'unverified')
+
+    def test_field_values_cannot_check_another_subject(self):
+        self.mapping['field_values'] = {'subject_id': 'other'}
+        with self.assertRaises(ValueError): self.run_packet()
+        self.assertFalse(self.output.exists())
+
+    def test_portable_cli_exports_field_findings_with_blocked_exit(self):
+        self.mapping['field_values'] = {'subject_id': 'synthetic-work'}
+        self.save()
+        for index, script in enumerate([ROOT/'scripts/prepare-provider-packet.py',
+                ROOT/'skills/recoup-catalog-register-catalog/scripts/prepare-provider-packet.py']):
+            output = self.root / f'fields{index}.json'
+            run = subprocess.run([sys.executable, str(script), '--case', str(self.casefile),
+                '--mapping', str(self.mapfile), '--output', str(output)], cwd=self.root,
+                text=True, capture_output=True)
+            self.assertEqual(run.returncode, 1, run.stderr)
+            result = json.loads(output.read_text())
+            self.assertEqual(result['field_validation'], 'needs_attention')
+            self.assertEqual(len(result['public_field_checks']['findings']), 3)
+
+    def test_cli_rejects_precision_loss_in_numeric_percent_literals(self):
+        self.mapping['field_values'] = {'subject_id': 'synthetic-work', 'work_title': 'Example',
+            'writers': [{'name': 'Example Writer', 'role': 'CA'}],
+            'collection_shares': [{'party': 'Example Publisher', 'percent': 'RAW_TOKEN'}]}
+        self.save()
+        template = self.mapfile.read_text()
+        for index, token in enumerate(['100.0000000000000001', '0.0099999999999999999',
+                                       '1.00000000000000001e2', '9.9999999999999999e-3',
+                                       '1e999999999999999999999999', '0e999999999999999999999999',
+                                       '1e-999999999999999999999999']):
+            for variant, script in enumerate([ROOT/'scripts/prepare-provider-packet.py',
+                    ROOT/'skills/recoup-catalog-register-catalog/scripts/prepare-provider-packet.py']):
+                self.mapfile.write_text(template.replace('"RAW_TOKEN"', token))
+                original = self.mapfile.read_bytes()
+                output = self.root / f'precision-{index}-{variant}.json'
+                run = subprocess.run([sys.executable, str(script), '--case', str(self.casefile),
+                    '--mapping', str(self.mapfile), '--output', str(output)], cwd=self.root,
+                    text=True, capture_output=True)
+                self.assertEqual(run.returncode, 2, (token, run.stdout, run.stderr))
+                self.assertIn('precision', run.stderr)
+                self.assertNotIn('Traceback', run.stderr)
+                self.assertFalse(output.exists())
+                self.assertEqual(self.mapfile.read_bytes(), original)
+
+    def test_decimal_mapping_precision_and_existing_contract(self):
+        for token in ['0.01', '100.0', '5e1', '0.5']:
+            self.assertEqual(packet.strict_json(token.encode(), exact_floats=True), float(token))
+        for token in ['100.0000000000000001', '0.0099999999999999999', '1e999', '1e-999']:
+            with self.assertRaises(ValueError):
+                packet.strict_json(token.encode(), exact_floats=True)
+        # Case/profile parsing keeps its existing contract; only mapping parsing opts in.
+        self.assertEqual(packet.strict_json(b'100.0000000000000001'), 100.0)
+        self.assertEqual(packet.strict_json(b'2', exact_floats=True), 2)
+        self.assertIs(type(packet.strict_json(b'2', exact_floats=True)), int)
+
+    def test_quoted_exact_decimals_block_without_changing_values_or_hash(self):
+        for token in ['100.0000000000000001', '0.0099999999999999999']:
+            self.mapping['field_values'] = {'subject_id': 'synthetic-work', 'work_title': 'Example',
+                'writers': [{'name': 'Example Writer', 'role': 'CA'}],
+                'collection_shares': [{'party': 'Example Publisher', 'percent': token}]}
+            result = self.run_packet()
+            self.assertEqual(result['status'], 'blocked')
+            self.assertEqual(result['field_validation'], 'needs_attention')
+            self.assertEqual(result['public_field_checks']['values'], self.mapping['field_values'])
+            self.assertEqual(result['mapping_sha256'], hashlib.sha256(self.mapfile.read_bytes()).hexdigest())
+            self.output.unlink()
+
     def test_mapping_mismatch_rejected_without_output(self):
         for field,value in [('case_id','other'),('revision',1),('payload_sha256','0'*64),
                             ('profile_version','stale'),('profile_id','unknown'),('role','songwriter_hub')]:
@@ -134,8 +218,8 @@ class PacketTests(unittest.TestCase):
         from unittest.mock import patch
         original=packet.strict_json
         for invalid in ['route','source']:
-            def parse(raw):
-                value=original(raw)
+            def parse(raw, **kwargs):
+                value=original(raw, **kwargs)
                 if isinstance(value,dict) and invalid=='route' and 'operations' in value:
                     next(p for p in value['operations'] if p['profile_id']=='mlc-new-work')['documented_route']='unverified'
                 if isinstance(value,dict) and invalid=='source' and isinstance(value.get('sources'),list):

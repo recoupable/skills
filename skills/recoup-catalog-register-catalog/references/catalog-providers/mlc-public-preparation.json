@@ -1,7 +1,7 @@
 {
   "guidance_version": "mlc-public-preparation/1",
   "checked_at": "2026-10-30",
-  "scope": "Public instructions only. This helper neither obtains nor inspects the account template; supplied template evidence remains semantically unverified. No field values validated. Recheck current portal rules before filing.",
+  "scope": "Public instructions only. This helper neither obtains nor inspects the account template; supplied template evidence remains semantically unverified. This guidance itself performs no field checks; any optional worksheet checks are reported separately. Recheck current portal rules before filing.",
   "required_input_guidance": {
     "work identity": {
       "next_step": "Reuse the existing case and work IDs. Search by at least two criteria before creation; route an existing work to a claim. Supply the composition title.",
