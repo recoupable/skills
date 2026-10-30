@@ -1,0 +1,55 @@
+{
+  "guidance_version": "mlc-public-preparation/1",
+  "checked_at": "2026-10-30",
+  "scope": "Public instructions only. This helper neither obtains nor inspects the account template; supplied template evidence remains semantically unverified. No field values validated. Recheck current portal rules before filing.",
+  "required_input_guidance": {
+    "work identity": {
+      "next_step": "Reuse the existing case and work IDs. Search by at least two criteria before creation; route an existing work to a claim. Supply the composition title.",
+      "sources": [
+        "https://help.themlc.com/en/support/how-to-register-works-in-the-mlc-portal"
+      ]
+    },
+    "writers/publishers": {
+      "next_step": "Identify all known writers and roles; new registrations require at least one C or CA role. Preserve the original publisher relationship.",
+      "sources": [
+        "https://help.themlc.com/en/support/how-to-register-works-in-the-mlc-portal"
+      ]
+    },
+    "supported shares": {
+      "next_step": "Document the collection percentage for the publisher or administrator, from 0.01% to 100%. Bulk entries must cover only represented publishing shares; do not invent a split.",
+      "sources": [
+        "https://help.themlc.com/en/support/how-to-register-works-in-the-mlc-portal",
+        "https://help.themlc.com/en/support/how-do-i-complete-the-bulk-work-document"
+      ]
+    },
+    "mandate": {
+      "next_step": "Link existing evidence of the represented interest, administration authority, territory and dates. Account access does not establish these facts.",
+      "sources": [],
+      "basis": "Local catalog authority contract; not a provider form rule"
+    },
+    "current provider form": {
+      "next_step": "Download the current template in Member Hub > Works Registration > Bulk Registration Tool. Keep columns in place and inspect required markers and Field Definitions. Limit each upload to 300 rows, counting writer continuation rows. A self-administered writer without publisher IPI uses individual registration.",
+      "sources": [
+        "https://help.themlc.com/en/support/how-do-i-complete-the-bulk-work-document"
+      ]
+    }
+  },
+  "optional_field_guidance": [
+    {
+      "next_step": "Bulk dependent pairs: AKA title/type, administrator name/IPI, recording title/artist. Subsequent writer rows leave A-F blank; repeat no work title.",
+      "sources": [
+        "https://help.themlc.com/en/support/how-do-i-complete-the-bulk-work-document"
+      ]
+    },
+    {
+      "next_step": "Recording details are optional; when supplied, include recording title and artist.",
+      "sources": [
+        "https://help.themlc.com/en/support/how-to-register-works-in-the-mlc-portal"
+      ]
+    }
+  ],
+  "remaining_account_checks": [
+    "Obtain the current account template or inspect the individual form; this guidance is not a replacement upload schema.",
+    "Verify supplied values, existing provider records, account role and mandate before any separately authorized submission."
+  ]
+}

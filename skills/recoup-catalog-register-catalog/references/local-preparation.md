@@ -71,3 +71,21 @@ and route, account role, mandate/territory/effective dates, existing work search
 disclosure/costs and action authority. Use authentic required fields/documents and
 record actual provider receipts/readback only after those events. The profile's dated
 references are source provenance, not a claim they were refreshed by this command.
+
+## Public instructions and missing-input guidance
+
+The packet includes dated `public_preparation_guidance`, its canonical SHA256, and
+`missing_input_guidance` for exactly the missing evidence labels. Read
+`references/catalog-providers/mlc-public-preparation.json` for official source links
+and concrete preparation steps. These are public instructions checked October 30,
+2026; the existing operation profile retains its separate verification date.
+
+Use these steps to gather evidence within the same case. The helper does not parse
+source contents or validate title, writer, share or spreadsheet values. Both blocked
+and locally prepared packets explicitly report `field_validation: not_performed`
+and `template_retrieval: not_performed_by_helper`. The current bulk template is obtained inside
+the Member Hub; no provider workbook or CWR export is generated here. Preserve
+unknown account-only fields and verify the actual template before preparing an upload.
+
+A user may already have supplied template evidence. The helper neither retrieves
+nor inspects its contents; that evidence remains semantically unverified.

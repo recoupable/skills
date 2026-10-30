@@ -61,6 +61,27 @@ class PacketTests(unittest.TestCase):
         self.assertEqual(result['missing_inputs'],['current provider form'])
         self.assertTrue(self.output.exists())
 
+    def test_public_guidance_is_dated_bound_and_does_not_validate_fields(self):
+        self.mapping['required_inputs'] = {}
+        result = self.run_packet()
+        guidance = result['public_preparation_guidance']
+        self.assertEqual(guidance['checked_at'], '2026-10-30')
+        self.assertEqual(result['public_preparation_guidance_sha256'], packet.fingerprint(guidance))
+        self.assertEqual(set(guidance['required_input_guidance']), set(result['missing_inputs']))
+        self.assertEqual(result['status'], 'blocked')
+        self.assertEqual(result['field_validation'], 'not_performed')
+        self.assertEqual(result['template_retrieval'], 'not_performed_by_helper')
+        self.assertIn('300 rows', guidance['required_input_guidance']['current provider form']['next_step'])
+        self.assertEqual(result['missing_input_guidance'], guidance['required_input_guidance'])
+        self.assertEqual(self.case['attempts'], {})
+
+    def test_complete_mapping_keeps_guidance_without_claiming_form_validation(self):
+        result = self.run_packet()
+        self.assertEqual(result['missing_input_guidance'], {})
+        self.assertEqual(result['field_validation'], 'not_performed')
+        self.assertEqual(result['template_retrieval'], 'not_performed_by_helper')
+        self.assertTrue(result['public_preparation_guidance']['required_input_guidance'])
+
     def test_mapping_mismatch_rejected_without_output(self):
         for field,value in [('case_id','other'),('revision',1),('payload_sha256','0'*64),
                             ('profile_version','stale'),('profile_id','unknown'),('role','songwriter_hub')]:
