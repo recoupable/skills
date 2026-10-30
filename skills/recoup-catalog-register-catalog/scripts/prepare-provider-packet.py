@@ -146,6 +146,16 @@ def prepare(case_path, mapping_path, output_path):
                   'Search existing case attempts and provider records before any separately authorized submission.',
                   'Record an actual submission receipt and provider readback separately only if execution later occurs.'],
               'authority_effect': 'None: preparation neither grants authority nor creates an attempt or receipt'}
+    guidance = strict_json(bounded_bytes(references / 'mlc-public-preparation.json', 1024 * 1024))
+    require(set(guidance['required_input_guidance']) == set(profile['required_inputs']),
+            'Public guidance does not cover the current profile inputs')
+    packet.update({
+        'public_preparation_guidance': guidance,
+        'public_preparation_guidance_sha256': fingerprint(guidance),
+        'missing_input_guidance': {label: guidance['required_input_guidance'][label] for label in missing},
+        'field_validation': 'not_performed',
+        'template_retrieval': 'not_performed_by_helper',
+    })
     encoded = (json.dumps(packet, indent=2, allow_nan=False) + '\n').encode('utf-8')
     require(bounded_bytes(case_path, 16 * 1024 * 1024) == case_raw, 'Case changed during preparation')
     # Exclusive creation also rejects hard links, symlinks and a racing output writer.
