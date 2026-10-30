@@ -82,6 +82,43 @@ class PacketTests(unittest.TestCase):
         self.assertEqual(result['template_retrieval'], 'not_performed_by_helper')
         self.assertTrue(result['public_preparation_guidance']['required_input_guidance'])
 
+    def test_optional_values_bind_to_existing_action_and_block_bad_fields(self):
+        self.mapping['field_values'] = {'subject_id': 'synthetic-work', 'work_title': 'Example',
+            'writers': [{'name': 'Example Writer', 'role': 'CA'}],
+            'collection_shares': [{'party': 'Example Publisher', 'percent': 0}]}
+        result = self.run_packet()
+        self.assertEqual(result['status'], 'blocked')
+        self.assertEqual(result['missing_inputs'], [])
+        self.assertEqual(result['field_validation'], 'needs_attention')
+        self.assertEqual(result['public_field_checks']['values'], self.mapping['field_values'])
+        self.assertEqual(result['mapping_sha256'], hashlib.sha256(self.mapfile.read_bytes()).hexdigest())
+        self.assertEqual(result['external_preflight'], 'unverified')
+        self.output.unlink()
+        self.mapping['field_values']['collection_shares'][0]['percent'] = 50
+        result = self.run_packet()
+        self.assertEqual(result['status'], 'prepared')
+        self.assertEqual(result['field_validation'], 'checked_public_subset')
+        self.assertEqual(result['public_field_checks']['authority_verification'], 'unverified')
+
+    def test_field_values_cannot_check_another_subject(self):
+        self.mapping['field_values'] = {'subject_id': 'other'}
+        with self.assertRaises(ValueError): self.run_packet()
+        self.assertFalse(self.output.exists())
+
+    def test_portable_cli_exports_field_findings_with_blocked_exit(self):
+        self.mapping['field_values'] = {'subject_id': 'synthetic-work'}
+        self.save()
+        for index, script in enumerate([ROOT/'scripts/prepare-provider-packet.py',
+                ROOT/'skills/recoup-catalog-register-catalog/scripts/prepare-provider-packet.py']):
+            output = self.root / f'fields{index}.json'
+            run = subprocess.run([sys.executable, str(script), '--case', str(self.casefile),
+                '--mapping', str(self.mapfile), '--output', str(output)], cwd=self.root,
+                text=True, capture_output=True)
+            self.assertEqual(run.returncode, 1, run.stderr)
+            result = json.loads(output.read_text())
+            self.assertEqual(result['field_validation'], 'needs_attention')
+            self.assertEqual(len(result['public_field_checks']['findings']), 3)
+
     def test_mapping_mismatch_rejected_without_output(self):
         for field,value in [('case_id','other'),('revision',1),('payload_sha256','0'*64),
                             ('profile_version','stale'),('profile_id','unknown'),('role','songwriter_hub')]:

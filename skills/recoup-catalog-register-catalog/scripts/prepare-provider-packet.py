@@ -15,6 +15,9 @@ case_api = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(case_api)
 require = case_api.require
 fingerprint = case_api.fingerprint
+field_spec = importlib.util.spec_from_file_location('mlc_fields', HERE / 'mlc-public-fields.py')
+field_api = importlib.util.module_from_spec(field_spec)
+field_spec.loader.exec_module(field_api)
 
 
 def bounded_bytes(path, limit):
@@ -47,7 +50,7 @@ def prepare(case_path, mapping_path, output_path):
     mapping = strict_json(mapping_raw)
     fields = {'case_id', 'revision', 'action_id', 'payload_sha256', 'profile_id',
               'profile_version', 'role', 'required_inputs'}
-    require(isinstance(mapping, dict) and set(mapping) == fields, 'Mapping requires exact binding and evidence fields')
+    require(isinstance(mapping, dict) and set(mapping) in (fields, fields | {'field_values'}), 'Mapping requires exact binding and evidence fields')
     require(isinstance(case.get('case_id'), str) and case['case_id'].strip(), 'Missing case ID')
     require(type(case['revision']) is int and case['revision'] >= 0, 'Invalid case revision')
     require(mapping['case_id'] == case['case_id'] and type(mapping['revision']) is int
@@ -156,6 +159,12 @@ def prepare(case_path, mapping_path, output_path):
         'field_validation': 'not_performed',
         'template_retrieval': 'not_performed_by_helper',
     })
+    if 'field_values' in mapping:
+        checks = field_api.check_fields(mapping['field_values'], payload['subjects'])
+        packet['public_field_checks'] = checks
+        packet['field_validation'] = checks['status']
+        if checks['status'] == 'needs_attention':
+            packet['status'] = 'blocked'
     encoded = (json.dumps(packet, indent=2, allow_nan=False) + '\n').encode('utf-8')
     require(bounded_bytes(case_path, 16 * 1024 * 1024) == case_raw, 'Case changed during preparation')
     # Exclusive creation also rejects hard links, symlinks and a racing output writer.

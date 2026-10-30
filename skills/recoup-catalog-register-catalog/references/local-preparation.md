@@ -80,12 +80,46 @@ The packet includes dated `public_preparation_guidance`, its canonical SHA256, a
 and concrete preparation steps. These are public instructions checked October 30,
 2026; the existing operation profile retains its separate verification date.
 
-Use these steps to gather evidence within the same case. The helper does not parse
-source contents or validate title, writer, share or spreadsheet values. Both blocked
-and locally prepared packets explicitly report `field_validation: not_performed`
-and `template_retrieval: not_performed_by_helper`. The current bulk template is obtained inside
+Use these steps to gather evidence within the same case. The helper does not parse source contents or spreadsheet values. Without the
+optional worksheet below, packets report `field_validation: not_performed`.
+All packets report `template_retrieval: not_performed_by_helper`. The current bulk template is obtained inside
 the Member Hub; no provider workbook or CWR export is generated here. Preserve
 unknown account-only fields and verify the actual template before preparing an upload.
 
 A user may already have supplied template evidence. The helper neither retrieves
 nor inspects its contents; that evidence remains semantically unverified.
+
+## Optional public field checks (one existing work)
+
+Add `field_values` to the same mapping to check a small documented subset of MLC
+individual-registration fields. Use the existing action's sole subject ID. This
+local worksheet is not a provider upload schema; multi-subject actions are rejected
+for these optional checks so a partial check cannot imply batch coverage.
+
+```json
+{
+  "subject_id": "existing-work-id",
+  "work_title": "Example composition",
+  "writers": [{"name": "Example Writer", "role": "CA"}],
+  "collection_shares": [{"party": "Example Publisher", "percent": "50"}],
+  "recordings": [{"title": "Example recording", "artist": "Example Artist"}]
+}
+```
+
+Use evidence-supported values only; preserve missing fields or nulls instead of
+inventing values. Names and collecting parties are local worksheet labels, not
+provider identity verification. Collection percentages concern collection authority,
+not ownership or PRO shares. The checker does not require the represented shares
+to total 100, infer another party's share, or verify duplicate identities.
+
+The packet retains the supplied worksheet under `public_field_checks.values`; the
+existing mapping hash binds its exact input bytes. Missing or invalid title, writer
+name/role, collection party/percentage, or supplied recording title/artist produces
+path-specific findings and a blocked packet even if evidence mappings are complete.
+A clean result is `checked_public_subset`, never filing-ready. Required evidence gaps
+still block it. Omitted recordings are optional. No template schema, IPI/ISRC format,
+account eligibility, actual share entitlement or provider search is certified.
+The public sources and retrieval date remain in `public_preparation_guidance`.
+
+Do not create a new action just to bypass an existing attempt or to split a batch
+for this checker. Resume the existing case; unsupported batch checks remain manual.
