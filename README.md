@@ -396,3 +396,7 @@ review, and publication remain separate from building or pushing the package.
 Do not edit the generated branch directly. Its README records source provenance.
 
 Unified artifact shapes, parity checks and the buyer manifest contract: [plugin distribution](references/plugin-distribution.md).
+
+### Feature campaigns
+
+Staff can use `recoup-internal-consulting-feature-campaign` to turn verified features into a complete daily LinkedIn schedule with copywriting, independent editing, branded Higgsfield thumbnails and provider verification.

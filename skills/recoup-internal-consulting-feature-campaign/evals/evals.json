@@ -1,0 +1,43 @@
+{
+  "skill_name": "recoup-internal-consulting-feature-campaign",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Authorized campaign: schedule one company feature post daily November 1 through November 4, 2026, at 10 a.m. America/New_York. Two posts already exist for November 1 and 2. Provider accepts only two posts per call. Add official logo. Feature source says it prepares a worksheet, with hosted saving requiring a supported importer. Draft an execution plan and an example company caption plus founder take. Use https://recoupable.com CTA. Do not call real providers.",
+      "expected_output": "Complete four-date plan; preserve two existing items; no unsupported hosted claim; exact logo overlay; conversational CTA both variants; independent review step.",
+      "files": [],
+      "assertions": [
+        "Plans all four dates and preserves the two existing posts within the two-post batch limit.",
+        "Maintains the supported-importer condition for hosted saving in the example copy.",
+        "Uses the official logo as a separate exact overlay rather than generated logo pixels.",
+        "Provides a conversational website CTA in both company and founder examples.",
+        "Includes independent review before scheduling without claiming the dry run performed it.",
+        "Uses correct local/UTC timestamps for the November 1\u20134 morning slots."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Schedule a daily company original and native founder repost for December 1\u20133. Provider supports company originals but cannot schedule dependent native reposts. No company original has been published. User authorized existing daily repost follow-up. Explain exact deliverables and state ledger; do not call providers.",
+      "expected_output": "All three company slots handled; founder copy pending native repost after verified originals; no standalone substitutes or false scheduled repost claims.",
+      "files": [],
+      "assertions": [
+        "Plans all three company dates while leaving native reposts pending original publication.",
+        "Does not substitute standalone founder posts for native reposts.",
+        "Uses the existing authorized follow-up and checks for prior reposts before retry.",
+        "Distinguishes verified company scheduling from live publication and native repost completion."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "A campaign batch timed out after creating a post. One post ID was returned, another outcome is unknown. Image renderer returned success but final image has blank background. Company copy was edited after review. Describe recovery and completion criteria; do not call providers.",
+      "expected_output": "Reconcile before retry, preserve known IDs, rerender and visually inspect, invalidate copy hash/review, no completion from tool success.",
+      "files": [],
+      "assertions": [
+        "Preserves known IDs and reconciles the unknown create before retrying only missing work.",
+        "Rejects renderer success as proof; repairs and visually inspects the final exported asset.",
+        "Invalidates review for edited copy and ties renewed review to the exact current version or hash.",
+        "Requires provider readback and distinguishes scheduled state from live publication."
+      ]
+    }
+  ]
+}
