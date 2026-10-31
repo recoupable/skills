@@ -3,7 +3,7 @@
 `python3 scripts/prepare-provider-packet.py --case case.json --mapping preparation-map.json --output new-packet.json`
 
 This command supports the sourced `mlc-new-work`, `mlc-transfer` and
-`mlc-amend-work` and `mlc-member-match` profiles. It produces
+`mlc-amend-work`, `mlc-member-match` and `mlc-songwriter-match` profiles. It produces
 an evidence preparation JSON artifact, **not an MLC form, CWR file, submission,
 external preflight or filing-ready payload**. It reads the existing catalog case and
 never edits it, grants authorization, records an attempt or invents a provider receipt.
@@ -240,7 +240,8 @@ the same case/revision/action/payload binding fields. The existing profile accep
 only the supplied role `member_rightsholder`. It rejects
 `authorized_member_representative` and Songwriter roles; this local profile limit
 is not a claim about every provider account permission. Actual eligibility remains
-unverified. The helper does not implement `mlc-songwriter-match`.
+unverified. Songwriter matching uses the separate `mlc-songwriter-match` profile
+and role described below.
 
 Map the three existing labels to active sources with exact versions:
 
@@ -272,3 +273,39 @@ No Member account is inspected or changed. The original disclosure stays intact;
 a complete packet neither authorizes a suggestion nor claims an accepted match,
 collection entitlement, payment or receipt. Follow the existing uncertain-attempt
 reconciliation rule before any separately authorized provider operation.
+
+
+## Songwriter Hub recording-to-work matching
+
+Use the existing Songwriter matching action with the same provider `The MLC`,
+operation `recording_work_match`, stage `register`, local subject type
+`recording_work_link` and right `composition mechanical`. Keep the exact original
+work/group subjects, account, party, scope, disclosure and costs; do not relabel a
+Member action or create a duplicate action to bypass an attempt.
+
+Select `profile_id: "mlc-songwriter-match"`, `profile_version: "2026-10-22.1"`
+and supplied role `songwriter_hub_user`, with the same case/revision/action/payload
+binding fields and three evidence labels shown for Member matching. Map active
+sources and exact versions for `work in eligible catalog`, `recording group/ISRC`
+and `identity evidence`. All withdrawal, stale/dependency/version and duplicate
+attempt/outcome checks still apply. Missing labels block local preparation.
+
+The profiles share a documented route name, but their roles are not interchangeable:
+Songwriter matching rejects `member_rightsholder` and
+`authorized_member_representative`; Member matching rejects `songwriter_hub_user`
+and `authorized_member_representative`. These are existing local profile limits,
+not an account permission audit. Actual Hub eligibility remains unknown. Songwriter
+catalog visibility is not Member status, a share claim or collection authority.
+
+Read `references/catalog-providers/mlc-songwriter-match-preparation.json` for
+separately dated Songwriter guidance. `songwriter_match_review` keeps Hub eligibility,
+identity comparison, group coverage, Match History and authority unverified. Compare
+writers, recording version, artist and identifiers, not title alone. Preserve
+per-group partial/rematched observations separately if actually received; a suggested
+match is not acceptance, and approval is not necessarily an observed updated record.
+
+The helper does not inspect source contents, verify identity, validate ISRC format,
+automatically match recordings, retrieve an account form or alter access. It rejects
+`field_values`. Complete evidence mappings remain local preparation, never a claim
+of rights, filing readiness, provider acceptance or a receipt. Account capabilities,
+mandate and disclosure still need review before any separately authorized action.
