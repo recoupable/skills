@@ -2,7 +2,8 @@
 
 `python3 scripts/prepare-provider-packet.py --case case.json --mapping preparation-map.json --output new-packet.json`
 
-This command supports the sourced `mlc-new-work` and `mlc-transfer` profiles. It produces
+This command supports the sourced `mlc-new-work`, `mlc-transfer` and
+`mlc-amend-work` profiles. It produces
 an evidence preparation JSON artifact, **not an MLC form, CWR file, submission,
 external preflight or filing-ready payload**. It reads the existing catalog case and
 never edits it, grants authorization, records an attempt or invents a provider receipt.
@@ -174,3 +175,52 @@ original disclosure rather than changing it or approving recipients. Review actu
 authority before any separately requested upload. These review entries are neither
 provider receipts nor observed outcomes. Keep authentic termination evidence,
 retained rights and collection tails available for the human/provider checks.
+
+
+## Technical amendment of an existing work
+
+Use the existing amendment action with provider `The MLC`, operation
+`amend_existing_work`, stage `register`, and local scope
+`subject_type: "composition"`, `rights: ["composition mechanical"]`.
+Preserve its exact subjects, account, party, territory, dates, disclosure, costs and
+payload fingerprint. Do not turn an ordinary existing-interest claim or adverse
+rights dispute into a technical correction just to use this helper.
+
+Use `profile_id: "mlc-amend-work"`, `profile_version: "2026-10-22.1"`, the same
+case/revision/action/payload binding fields and an eligible supplied role. Map the
+three exact required-input labels to existing active evidence sources:
+
+```json
+{
+  "existing work ID": [{"source_id": "existing-identity-evidence", "version": "v1"}],
+  "current record": [
+    {"source_id": "current-record-observation", "version": "v2"},
+    {"source_id": "prior-submission-evidence", "version": "v1"}
+  ],
+  "evidenced correction": [{"source_id": "proposed-correction-evidence", "version": "v3"}]
+}
+```
+
+This fragment belongs under `required_inputs`; it is not a new case or complete
+mapping. Keep actual current and proposed values in their original evidence and
+retain superseded submission history. An active source documenting an older
+submission is valid evidence; a withdrawn, withheld, stale or version-mismatched
+source is not. Never overwrite a source version or erase a prior receipt to make
+an amendment pass. The case remains byte-for-byte unchanged and its history stays
+bound by the case hash. The packet retains mapped source records and versions, not
+source-document contents or an exported copy of all case history.
+
+Missing mappings produce a blocked packet with specific guidance. Complete mappings
+produce local preparation only: source meaning, work identity and correction
+accuracy remain unverified. The helper does not compare current and proposed field
+values, authenticate documents or interpret rights. `field_values` is rejected for
+amendments; new-work validation rules are not reused as amendment rules.
+
+Read `references/catalog-providers/mlc-amendment-preparation.json` for separately
+dated public instructions. `amendment_review` keeps superseded history, affected
+interests/authority, operation scope and accepted-record readback separately
+unverified. The packet preserves original disclosure and supplies no new authority.
+Current Member Hub form/account review is still required before any separately
+authorized operation; no provider form, transport, filing-ready payload or receipt
+is generated. Preserve submission, acceptance and observed correction as distinct
+actual events when they later occur.
