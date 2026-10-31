@@ -3,7 +3,8 @@
 `python3 scripts/prepare-provider-packet.py --case case.json --mapping preparation-map.json --output new-packet.json`
 
 This command supports the sourced `mlc-new-work`, `mlc-transfer` and
-`mlc-amend-work`, `mlc-member-match` and `mlc-songwriter-match` profiles. It produces
+`mlc-amend-work`, `mlc-member-match`, `mlc-songwriter-match` and
+`mlc-existing-share` profiles. It produces
 an evidence preparation JSON artifact, **not an MLC form, CWR file, submission,
 external preflight or filing-ready payload**. It reads the existing catalog case and
 never edits it, grants authorization, records an attempt or invents a provider receipt.
@@ -309,3 +310,53 @@ automatically match recordings, retrieve an account form or alter access. It rej
 `field_values`. Complete evidence mappings remain local preparation, never a claim
 of rights, filing readiness, provider acceptance or a receipt. Account capabilities,
 mandate and disclosure still need review before any separately authorized action.
+
+
+## Ordinary interest claim on an existing work
+
+Use the existing action with provider `The MLC`, operation `existing_interest_claim`,
+stage `register`, local subject type `composition` and right
+`composition mechanical`. Keep its exact subjects, account, party, territory,
+effective period, share convention, original disclosure, costs and payload hash.
+Do not repurpose a new-work, amendment or dispute action to pass preparation.
+
+Select `profile_id: "mlc-existing-share"`, `profile_version: "2026-10-22.1"` and
+either supplied `member_rightsholder` or `authorized_member_representative` role.
+Songwriter roles are ineligible for this profile. Preserve the usual case/revision/
+action/payload binding fields and map the four exact evidence labels:
+
+```json
+{
+  "existing work ID": [{"source_id": "existing-work-evidence", "version": "v1"}],
+  "claimed interest": [{"source_id": "claimed-interest-evidence", "version": "v3"}],
+  "authority": [{"source_id": "mandate-evidence", "version": "v1"}],
+  "before/after values": [
+    {"source_id": "current-record-evidence", "version": "v2"},
+    {"source_id": "claimed-interest-evidence", "version": "v3"}
+  ]
+}
+```
+
+This fragment belongs under `required_inputs` of the existing action mapping. It
+is not a provider form. Preserve current and claimed values in their original
+source evidence. The helper retains mapped source records/versions and the original
+payload; it does not inspect documents, compare values or prove an interest.
+Missing labels block local preparation. Complete mappings remain semantically
+unverified, including mandate, work identity and actual collection entitlement.
+
+Read `references/catalog-providers/mlc-existing-share-preparation.json` for dated
+generic Claiming Tool guidance. `existing_share_review` keeps existing-work identity,
+interest/authority, before/after values, ordinary-claim scope and accepted-claim
+readback unverified. Use the already registered work instead of creating a duplicate.
+An ordinary claim is not automatically a dispute; substantive competing interests
+require their own resolution review. Technical corrections and new registrations
+remain separate operations.
+
+Do not invent shares, infer ownership from collection percentages, force a total,
+reduce another party's interest or infer a mandate. `field_values` is rejected;
+new-work public-field checks are not existing-interest validation. The helper never
+changes source values, grants authority or records a claim/receipt. Retain actual
+item history, provider acceptance, observed record and financial eligibility as
+separate events. Current account/form/mandate checks still precede any separately
+authorized operation. A narrative readiness handoff for an ineligible role is
+separate from running this role-restricted profile; do not relabel a Songwriter user.
