@@ -1,8 +1,9 @@
 # Thumbnails and carousels that explain the work
 
 Readers may skim only the large text. Make that text tell the useful story before relying on
-captions, footnotes or artwork. Preserve source limits: a documented skill is not a verified
-customer result, and a free skill does not make its AI client, app or API usage free.
+captions, footnotes or artwork. Keep source evidence and operational limits in the private brief and installed skill. Describe
+the supported job accurately; do not turn documentation into a customer-result claim or imply
+that a free skill includes free client/API use. These are author checks, not mandatory disclaimers.
 
 ## Write the headline story first
 
@@ -13,7 +14,7 @@ not a product claim. Prefer short familiar words and large editable type over a 
 
 For a carousel, draft only the headlines, then read them in order. The sequence should make clear:
 what problem the agent addresses; what the person supplies; what the agent does and returns;
-what evidence or limits matter; what the person decides; and how to take the next step.
+what evidence it returns; what the person decides; and how to take the next step.
 Combine or separate these ideas as needed rather than forcing a fixed slide count.
 
 Name AI or the agent early. Later pronouns are fine when their antecedent is clear; repeating
@@ -21,9 +22,17 @@ Name AI or the agent early. Later pronouns are fine when their antecedent is cle
 Take action,” which conceal the mechanism. Keep human approval or judgment explicit where required.
 Do not imply that preparing a report executes corrections, sends messages or changes source records.
 
-The final headline should identify the actual offer, such as getting a free agent skill. Add a
-conversational invitation and readable website on the closing card. Preserve the campaign's
-website invitation in its company and founder captions too. Keep necessary scope limits readable.
+The closing card is only a CTA: one clear invitation naming the offer, plus the website or
+next-action destination. Do not introduce a new concept, feature, benefit, caveat, disclaimer or
+explanation there. Do not repeat the headline invitation in smaller body text. Do not move scope
+notes, operating limitations or disclaimers to another card merely to clear the CTA. The installed
+skill explains those details when the reader tries it. The post explains the useful job and the
+next step. Keep the offer accurate through precise wording rather than boilerplate caveats.
+The reader should arrive at the CTA already understanding the offer. Apply the same rule to the CTA block in captions and thumbnails:
+explain first, then invite; no new lesson or qualification after the invitation.
+
+Preserve the campaign's conversational website invitation in company and founder captions. A
+brand logo and simple action-supporting artwork can remain on the closing card.
 
 ## One concept and one visible action per card
 
@@ -33,7 +42,7 @@ receives the next task. A lone folder or pencil often names the topic without ex
 Avoid dense tables, dashboard imitations, multiple competing concepts and paragraphs inside images.
 Use short labels only when they disambiguate the scene. Keep supporting text to one short thought
 where possible; remove repetition rather than shrinking it. These are comprehension choices, not
-rigid word limits. Do not replace essential conditions with tiny disclaimers.
+rigid word limits. Do not add tiny disclaimers or a new operational lesson.
 
 ## Reuse the cover; illustrate the supporting narrative
 
@@ -62,6 +71,9 @@ Before approving either format:
   still makes sense. Check at about 360px per card and the thumbnail at about 160px wide.
 - Aim for understanding the focal idea in roughly three seconds. Label this as a design target
   unless a real timed reader test was conducted; author or independent visual review is not that test.
+- Read the closing card on its own: it contains only one invitation and its destination, without
+  repeated copy, new concepts or scope disclaimers. Check that removed boilerplate was not merely
+  relocated to another slide. Verify supported claims privately against the source skill.
 - Inspect final images/PDF for readable type, loaded art, clipping, collisions, seam-free composition,
   correct logo, ordering and consistent page size. A renderer success is not visual verification.
 - Independently edit headline sequence, body, labels, alt text and captions against the source.

@@ -56,6 +56,13 @@ Before drafting, read `references/voice-principles.md`, `references/anti-slop.md
 `references/formats.md`. Use `references/persuasion-playbook.md` for audience and positioning;
 clarity and the user's conversational tone override pressure tactics.
 
+These posts help people understand the useful job and try the skill. Keep installation details,
+operating scope and limitations in the installed skill, not as a routine disclaimer in marketing
+copy. Do not append caveats to the CTA or move them onto another card. This campaign-specific
+rule takes precedence over generic reference advice to add qualifications. Keep claims accurate
+by describing the supported action precisely; rewrite or omit an overclaim rather than adding
+a warning to compensate for it. “Free skill” names the offer without implying free client/API use.
+
 For this campaign, the rules in this skill take precedence over optional advice in those references:
 every company post and every founder take needs its own conversational website CTA. Advice that a
 CTA is optional does not apply. Factual, plain language takes precedence over coined concepts,
@@ -65,7 +72,7 @@ otherwise express an honest opinion or conditional decision. Do not invent a sto
 Company pattern, applied flexibly:
 - Open with the concrete reader task or decision.
 - Name the supplied input, documented action and result someone can inspect.
-- Explain one useful detail of the workflow. Preserve material conditions beside the claim.
+- Explain one useful detail of the workflow. Describe only the supported action; leave operational detail to the installed skill.
 - Include a practical starting prompt when it helps.
 - End with one short, conversational website invitation.
 
@@ -84,8 +91,7 @@ the skill itself, not the paid app, AI client, API or third-party usage. Example
 > If you want help figuring out where AI fits in your company, you can book a call with us at https://recoupable.com.
 
 Keep short paragraphs and ordinary words. Rough targets are 100–180 words for company copy and
-50–100 for the founder; exceptions can be longer when necessary. Never cut a meaningful condition
-to force a word count. No Markdown headings/frontmatter in the actual provider payload.
+50–100 for the founder; exceptions can be longer when necessary. Never exaggerate a supported action to force a word count. No Markdown headings/frontmatter in the actual provider payload.
 
 ## 4. Copy edit, then normalize the complete collection
 
@@ -151,7 +157,9 @@ visual language. Show composed final examples, not only raw generator results.
 Follow `references/visual-storytelling.md` for carousel and thumbnail adaptations. Write the title
 sequence first: it must explain the agent, supplied inputs, action, inspectable output/evidence,
 human decision and next step without captions or small text. Use the shortest complete story;
-these are narrative requirements, not a mandatory six-slide template.
+these are narrative requirements, not a mandatory six-slide template. The closing card contains
+only one CTA and its destination. Introduce no new concepts, explanations or disclaimers there;
+do not relocate disclaimers to another card, and avoid repeating the CTA.
 
 Reuse the existing thumbnail artwork for card 1, cropping and recomposing it on a seamless matching
 background. Reuse artwork, not a flattened thumbnail with its old empty text area. Keep its headline

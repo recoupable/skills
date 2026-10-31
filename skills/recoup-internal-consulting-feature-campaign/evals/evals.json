@@ -8,7 +8,7 @@
       "files": [],
       "assertions": [
         "Plans all four dates and preserves the two existing posts within the two-post batch limit.",
-        "Maintains the supported-importer condition for hosted saving in the example copy.",
+        "Describes worksheet preparation accurately without implying unconditional hosted saving; does not add a mandatory operational disclaimer to public copy.",
         "Uses the official logo as a separate exact overlay rather than generated logo pixels.",
         "Provides a conversational website CTA in both company and founder examples.",
         "Includes independent review before scheduling without claiming the dry run performed it.",
@@ -49,7 +49,7 @@
         "Headline sequence explains input, agent action/output and human decision without body copy.",
         "Reuses cropped cover artwork on a matching seamless background rather than regenerating it or hard-coding blue.",
         "Plans narrative-specific supporting Higgsfield scenes, one concept per card, without claiming actual generation.",
-        "Keeps the free-skill offer separate from AI client costs and includes a conversational website CTA.",
+        "Offers the free skill accurately without implying free AI client usage or adding a pricing disclaimer; includes a conversational website CTA.",
         "Includes headline-only, caption-hidden and phone-size review; three-second comprehension is a target, not a measured outcome."
       ]
     },
@@ -63,6 +63,17 @@
         "Preserves all suitable artwork; no fresh generation for a copy-only repair.",
         "Refreshes affected composed exports, alt text, transcript, preview, review and hashes.",
         "Does not replace scheduled originals or create duplicate posts as part of drafting."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "A carousel closing card repeats Get the free invoice review skill and adds Reviews supplied invoices. Does not approve payments. The user says operational scope belongs in the installed skill and posts should get people to try it. Simplify the card and explain your editorial treatment. The agent flags invoice mismatches; it does not pay invoices. No providers or generation.",
+      "expected_output": "One invitation and destination. Remove boilerplate without relocating it to earlier cards. Describe mismatch detection accurately and leave operating scope to the installed skill.",
+      "files": [],
+      "assertions": [
+        "Closing card contains one clear offer invitation and destination only, with no duplicated invitation or new explanation.",
+        "Removes scope boilerplate without moving it to another card; keeps the actual mismatch-detection claim accurate and does not promise automatic payment.",
+        "Preserves suitable artwork; updates copy and affected exports only."
       ]
     }
   ]
