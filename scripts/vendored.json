@@ -389,13 +389,15 @@
     {
       "canonical": "scripts/prepare-provider-packet.py",
       "copies": [
-        "skills/recoup-catalog-register-catalog/scripts/prepare-provider-packet.py"
+        "skills/recoup-catalog-register-catalog/scripts/prepare-provider-packet.py",
+        "skills/recoup-catalog-resolve-claims/scripts/prepare-provider-packet.py"
       ]
     },
     {
       "canonical": "scripts/mlc-public-fields.py",
       "copies": [
-        "skills/recoup-catalog-register-catalog/scripts/mlc-public-fields.py"
+        "skills/recoup-catalog-register-catalog/scripts/mlc-public-fields.py",
+        "skills/recoup-catalog-resolve-claims/scripts/mlc-public-fields.py"
       ]
     }
   ]

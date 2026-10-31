@@ -1,0 +1,50 @@
+{
+  "guidance_version": "mlc-overclaim-preparation/1",
+  "checked_at": "2026-10-31",
+  "scope": "Local overclaim evidence preparation only. No verified adverse state, ownership, mandate, provider form, contact, amendment, relinquishment, upload, disposition or receipt. Preserve contrary evidence and original share conventions.",
+  "required_input_guidance": {
+    "overclaim/work ID": {
+      "next_step": "Map the exact existing overclaim and work identifiers with their observed state. A local label does not prove the current provider state.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-an-overclaim-and-how-do-i-resolve-one-using-the-overclaims-tool"
+      ]
+    },
+    "competing claims": {
+      "next_step": "Preserve all relevant competing and contrary evidence, claimant context, source share conventions, territory and periods. Do not infer the correct allocation or reduce claims to a total.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-an-overclaim-and-how-do-i-resolve-one-using-the-overclaims-tool"
+      ],
+      "basis": "The MLC describes conflicting reported shares; preservation and non-adjudication follow the local resolution contract."
+    },
+    "supporting documents": {
+      "next_step": "Map authentic supporting documents and their exact source versions. Retain material contrary evidence; do not invent consent or infer mandate from login access.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-an-overclaim-and-how-do-i-resolve-one-using-the-overclaims-tool"
+      ]
+    },
+    "exact selected remedy": {
+      "next_step": "Map only the existing requested remedy and its scope. Contacting claimants, amending shares, relinquishing shares and uploading documents require distinct matching authority; preparation performs none.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-an-overclaim-and-how-do-i-resolve-one-using-the-overclaims-tool"
+      ]
+    }
+  },
+  "overclaim_review": {
+    "selected_remedy": "Verify the exact requested remedy, affected work/claims, periods and original disclosure against the existing action. Ordinary claims and technical rejections stay in their registration workflows.",
+    "contact_authority": "Review specific recipients, content and channel authority before any contact. This packet sends no message and does not infer authority to contact claimants.",
+    "amendment_authority": "Review exact requested share changes and their authority separately. Do not reduce a claim to satisfy a total or infer ownership from reported collection shares.",
+    "relinquishment_authority": "Review any relinquishment as a separate consequential action; preparing evidence neither waives rights nor authorizes removal of shares.",
+    "upload_authority": "Review each document, necessary disclosure, actual recipients and upload authority separately. No document is sent or uploaded by preparation.",
+    "case_disposition": "Preserve actual provider case disposition and granted versus requested scope separately; local preparation does not resolve or adjudicate the dispute.",
+    "share_readback": "Verify any exact share change on the actual work independently of a submission or case closure, retaining previous claims and source versions.",
+    "financial_effect": "Keep accounting adjustment, payable eligibility, remittance and received cash separate from a case or share correction. No current balance or recovery is inferred."
+  },
+  "review_sources": [
+    "https://help.themlc.com/en/support/what-is-an-overclaim-and-how-do-i-resolve-one-using-the-overclaims-tool"
+  ],
+  "review_basis": "The MLC documents contact, share amendment/relinquishment and supporting-document routes. Separate authority, contrary evidence and outcome checks preserve the local resolution contract; no provider schema is invented.",
+  "remaining_account_checks": [
+    "Inspect the current Member Overclaims Tool and actual adverse state, account role and mandate before any separately authorized step.",
+    "A complete mapping is not filing-ready, a granted remedy, share readback or financial evidence."
+  ]
+}
