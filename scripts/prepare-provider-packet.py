@@ -72,7 +72,8 @@ def prepare(case_path, mapping_path, output_path):
               'mlc-transfer': 'member_catalog_transfer_tool',
               'mlc-amend-work': 'member_portal',
               'mlc-member-match': 'eligible_hub_matching_tool',
-              'mlc-songwriter-match': 'eligible_hub_matching_tool'}
+              'mlc-songwriter-match': 'eligible_hub_matching_tool',
+              'mlc-existing-share': 'member_claiming_tool'}
     require(mapping['profile_id'] in routes, 'Unsupported preparation profile')
     require(mapping['profile_id'] == 'mlc-new-work' or 'field_values' not in mapping,
             'field_values are supported only for mlc-new-work')
@@ -173,7 +174,8 @@ def prepare(case_path, mapping_path, output_path):
                      'mlc-transfer': 'mlc-transfer-preparation.json',
                      'mlc-amend-work': 'mlc-amendment-preparation.json',
                      'mlc-member-match': 'mlc-member-match-preparation.json',
-                     'mlc-songwriter-match': 'mlc-songwriter-match-preparation.json'}[profile['profile_id']]
+                     'mlc-songwriter-match': 'mlc-songwriter-match-preparation.json',
+                     'mlc-existing-share': 'mlc-existing-share-preparation.json'}[profile['profile_id']]
     guidance = strict_json(bounded_bytes(references / guidance_file, 1024 * 1024))
     require(set(guidance['required_input_guidance']) == set(profile['required_inputs']),
             'Public guidance does not cover the current profile inputs')
@@ -196,6 +198,9 @@ def prepare(case_path, mapping_path, output_path):
     if profile['profile_id'] == 'mlc-songwriter-match':
         packet['songwriter_match_review'] = {key: {'requirement': value, 'verification': 'unverified'}
                                             for key, value in guidance['songwriter_match_review'].items()}
+    if profile['profile_id'] == 'mlc-existing-share':
+        packet['existing_share_review'] = {key: {'requirement': value, 'verification': 'unverified'}
+                                          for key, value in guidance['existing_share_review'].items()}
     if 'field_values' in mapping:
         checks = field_api.check_fields(mapping['field_values'], payload['subjects'])
         packet['public_field_checks'] = checks

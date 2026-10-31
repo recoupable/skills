@@ -1,0 +1,48 @@
+{
+  "guidance_version": "mlc-existing-share-preparation/1",
+  "checked_at": "2026-10-31",
+  "scope": "Local ordinary existing-interest evidence mapping only. No verified share, work identity, authority, provider form, submission, acceptance or receipt. Preserve the original collection-share convention and account-specific unknowns.",
+  "required_input_guidance": {
+    "existing work ID": {
+      "next_step": "Map the exact already registered work and observed version. Corroborate its identity before an ordinary claim; do not create a duplicate registration.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-the-claiming-tool"
+      ]
+    },
+    "claimed interest": {
+      "next_step": "Map the documented interest being claimed, preserving its original share convention, represented party, territory and effective period. Do not invent shares, infer ownership totals or reduce another interest.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-the-claiming-tool"
+      ],
+      "basis": "The Claiming Tool handles available shares on existing works; scope and non-inference safeguards come from the local catalog contract."
+    },
+    "authority": {
+      "next_step": "Map actual mandate/authority evidence for the represented interest and period. A Member role or login is not proof of entitlement; administered interests remain subject to the documented mandate.",
+      "sources": [],
+      "basis": "Local catalog authority contract; not a provider form field."
+    },
+    "before/after values": {
+      "next_step": "Preserve current and requested values as separate versioned evidence, retaining prior submissions and original disclosure. No current interest is changed by preparation.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-the-claiming-tool",
+        "https://help.themlc.com/en/support/what-do-the-statuses-mean-in-registration-history"
+      ]
+    }
+  },
+  "existing_share_review": {
+    "existing_work": "Verify the exact existing work identity and observed version. Use the existing-record claim path rather than duplicate creation.",
+    "interest_and_authority": "Verify the claimed collection interest, source share convention, mandate, territory and dates. Do not infer entitlement from account access or force an ownership total.",
+    "before_after": "Review exact current and claimed values and original disclosure, preserving source versions and prior history. Do not invent consent or reduce others shares to satisfy a total.",
+    "ordinary_claim_scope": "Distinguish an ordinary existing-interest claim from a technical amendment, new registration or substantive competing claim. Preserve adverse facts for resolution; the helper does not classify evidence contents.",
+    "accepted_claim": "Preserve actual item history and any accepted collection claim on the exact work separately from submission, observed record and financial eligibility. A local packet has none of those outcomes."
+  },
+  "review_sources": [
+    "https://help.themlc.com/en/support/what-is-the-claiming-tool",
+    "https://help.themlc.com/en/support/what-do-the-statuses-mean-in-registration-history"
+  ],
+  "review_basis": "MLC instructions document existing-work claiming and registration history. Exact evidence, scope and authority review preserve local catalog safeguards; these are not provider form fields.",
+  "remaining_account_checks": [
+    "Inspect current Member Hub claiming capability, work record, affected interests and mandate before any separately authorized claim.",
+    "Confirm actual provider fields and disclosure; complete local mappings do not establish filing readiness or authority."
+  ]
+}
