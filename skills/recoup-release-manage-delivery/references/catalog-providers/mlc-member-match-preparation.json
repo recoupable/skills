@@ -1,0 +1,44 @@
+{
+  "guidance_version": "mlc-member-match-preparation/1",
+  "checked_at": "2026-10-31",
+  "scope": "Local Member matching evidence mapping only. No identity, ISRC-format, eligible-account or match validation; no provider form, automatic matching, submission, acceptance or receipt. This does not implement the Songwriter profile.",
+  "required_input_guidance": {
+    "work in eligible catalog": {
+      "next_step": "Map evidence of the exact work in the eligible catalog. Inspect the actual Member Hub/account capability before any operation; a supplied role is not verified eligibility.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-the-matching-tool"
+      ]
+    },
+    "recording group/ISRC": {
+      "next_step": "Map the selected recording group and its underlying recordings/ISRC evidence. Preserve group scope and original identifiers; the helper does not validate or normalize ISRCs.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-the-matching-tool"
+      ]
+    },
+    "identity evidence": {
+      "next_step": "Compare the work and recording evidence across writers, recording artist, version and identifiers. Inspect group details; title similarity alone cannot establish identity.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-the-matching-tool",
+        "https://help.themlc.com/en/support/best-practices-for-using-the-matching-tool"
+      ],
+      "basis": "The MLC recommends considering all result data; writer/version comparison also preserves the existing local profile preflight."
+    }
+  },
+  "member_match_review": {
+    "hub_eligibility": "Verify the actual Member Hub capability and work in eligible catalog. The existing profile accepts only the supplied member_rightsholder role; account access and eligibility remain unknown.",
+    "identity_comparison": "Compare writers, version, recording artist and identifiers for the exact work and recording group. Do not infer a match from title alone; source meaning is not checked by this helper.",
+    "group_coverage": "Review all recordings in each selected group and preserve the original group/work scope. A complete evidence mapping does not certify a group or apply a suggested match.",
+    "match_history": "Retain observed per-group submitted, in-progress, accepted, partially accepted, rejected or rematched status separately. Rematching may move recordings into another group; do not collapse partial/rematched results into acceptance.",
+    "authority": "Verify applicable mandate, rights, territory, dates and original disclosure before any separately authorized action. Preparation establishes neither collection entitlement nor provider authority."
+  },
+  "review_sources": [
+    "https://help.themlc.com/en/support/what-is-the-matching-tool",
+    "https://help.themlc.com/en/support/best-practices-for-using-the-matching-tool",
+    "https://help.themlc.com/en/support/what-do-the-statuses-mean-in-match-history"
+  ],
+  "review_basis": "Public MLC instructions describe matching and Match History. Exact evidence binding, authority and writer/version review preserve local catalog safeguards; these are not provider schema fields.",
+  "remaining_account_checks": [
+    "Inspect the actual account capability, selected work and recording groups before any separately authorized suggestion.",
+    "Only actual provider responses and readback establish match status; preparation records no receipt or financial result."
+  ]
+}
