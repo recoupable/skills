@@ -123,9 +123,18 @@ A complete hosted `snapshot` can resume locally without a `history` field. Save
 only the returned snapshot as the local case (not its response envelope), preserving
 its case/workspace IDs and revision. The first local change starts history at that
 revision; it does not reconstruct earlier hosted revisions. Redacted snapshots
-containing `withheld` records remain readable for status but cannot be edited;
+containing `withheld` records remain readable for status but cannot be edited or
+pass local preflight;
 reassemble them explicitly from permitted evidence first. Hosted saves still use
 the last hosted revision and omit local history, as specified by the Context API.
+
+Before local preflight passes, the recorder checks the selected action's full
+`depends_on`, `source_refs` and `action_id` chain. Missing, stale, withdrawn,
+version-mismatched or cyclic dependencies block it even if the imported action
+lacks a stale flag. Unrelated stale records do not block an otherwise current
+chain. Unknown attempts still block retries even when marked stale; current
+accepted provider outcomes still block resends. Passing this local check leaves
+external preflight required and grants no provider capability or filing authority.
 
 The safe export is an **allowlisted status projection**: IDs, stages, statuses,
 staleness and counts only. It excludes summaries, payloads, source locators, account
