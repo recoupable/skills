@@ -1,6 +1,6 @@
 {
   "name": "recoup-plugin",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "A record label inside Cursor. Recoup music workflows and authenticated MCP tools.",
   "skills": "./skills/",
   "mcpServers": "./mcp.json"
