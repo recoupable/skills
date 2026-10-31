@@ -69,7 +69,8 @@ def prepare(case_path, mapping_path, output_path):
     require(mapping['case_id'] == case['case_id'] and type(mapping['revision']) is int
             and mapping['revision'] == case['revision'], 'Case/revision binding mismatch')
     routes = {'mlc-new-work': 'member_portal_or_eligible_cwr',
-              'mlc-transfer': 'member_catalog_transfer_tool'}
+              'mlc-transfer': 'member_catalog_transfer_tool',
+              'mlc-amend-work': 'member_portal'}
     require(mapping['profile_id'] in routes, 'Unsupported preparation profile')
     require(mapping['profile_id'] == 'mlc-new-work' or 'field_values' not in mapping,
             'field_values are supported only for mlc-new-work')
@@ -166,8 +167,9 @@ def prepare(case_path, mapping_path, output_path):
                   'Search existing case attempts and provider records before any separately authorized submission.',
                   'Record an actual submission receipt and provider readback separately only if execution later occurs.'],
               'authority_effect': 'None: preparation neither grants authority nor creates an attempt or receipt'}
-    guidance_file = ('mlc-public-preparation.json' if profile['profile_id'] == 'mlc-new-work'
-                     else 'mlc-transfer-preparation.json')
+    guidance_file = {'mlc-new-work': 'mlc-public-preparation.json',
+                     'mlc-transfer': 'mlc-transfer-preparation.json',
+                     'mlc-amend-work': 'mlc-amendment-preparation.json'}[profile['profile_id']]
     guidance = strict_json(bounded_bytes(references / guidance_file, 1024 * 1024))
     require(set(guidance['required_input_guidance']) == set(profile['required_inputs']),
             'Public guidance does not cover the current profile inputs')
@@ -181,6 +183,9 @@ def prepare(case_path, mapping_path, output_path):
     if profile['profile_id'] == 'mlc-transfer':
         packet['transfer_review'] = {key: {'requirement': value, 'verification': 'unverified'}
                                      for key, value in guidance['transfer_review'].items()}
+    if profile['profile_id'] == 'mlc-amend-work':
+        packet['amendment_review'] = {key: {'requirement': value, 'verification': 'unverified'}
+                                      for key, value in guidance['amendment_review'].items()}
     if 'field_values' in mapping:
         checks = field_api.check_fields(mapping['field_values'], payload['subjects'])
         packet['public_field_checks'] = checks

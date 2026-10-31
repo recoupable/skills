@@ -1,0 +1,38 @@
+{
+  "guidance_version": "mlc-amendment-preparation/1",
+  "checked_at": "2026-10-31",
+  "scope": "Local amendment evidence mapping only. No provider form, field validation, verified work identity, authority, submission or receipt. Inspect the current authorized Member Hub before a separately authorized operation.",
+  "required_input_guidance": {
+    "existing work ID": {
+      "next_step": "Bind the exact existing work in the case to supporting provider identity evidence. Corroborate that record before editing; do not create a duplicate registration.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-the-claiming-tool"
+      ]
+    },
+    "current record": {
+      "next_step": "Map the current work record and preserve the prior submission history that explains its values. Keep each original observation or receipt as evidence with its own source ID/version.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-the-claiming-tool",
+        "https://help.themlc.com/en/support/what-do-the-statuses-mean-in-registration-history"
+      ]
+    },
+    "evidenced correction": {
+      "next_step": "Map evidence supporting the proposed correction against the current record. Preserve original and proposed values and affected interests; an evidence mapping does not approve the change.",
+      "sources": [
+        "https://help.themlc.com/en/support/what-is-the-claiming-tool"
+      ],
+      "basis": "Existing-work edits are documented by The MLC; evidence and affected-interest review follow the local catalog contract."
+    }
+  },
+  "amendment_review": {
+    "superseded_history": "Preserve prior submissions and original values separately from the proposed correction. The MLC distinguishes submitted, accepted, rejected and superseded; preparation does not assign any provider status.",
+    "affected_interests_and_authority": "Review affected interests, mandate, territory, effective period and original disclosure before any change. Supplied role and complete evidence mappings do not establish authority.",
+    "operation_scope": "Keep a technical correction distinct from an ordinary existing-interest claim or an adverse rights dispute. The helper does not classify source contents; do not relabel another operation to pass this profile.",
+    "accepted_record": "After any separately authorized operation, verify corrected fields on the accepted work separately from a submission receipt, preserving the previous record and unresolved observations."
+  },
+  "review_basis": "MLC instructions document existing-work editing and registration statuses. Evidence preservation, operation separation and authority review are local catalog safeguards, not provider form fields.",
+  "remaining_account_checks": [
+    "Inspect the actual current work, editing route, account role and applicable authority before a separately authorized correction.",
+    "A prepared packet does not report submission, acceptance or observed correction. Retain raw provider history only when actually supplied or observed."
+  ]
+}
