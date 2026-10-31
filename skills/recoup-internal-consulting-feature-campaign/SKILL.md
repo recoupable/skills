@@ -1,6 +1,6 @@
 ---
 name: recoup-internal-consulting-feature-campaign
-description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-internal requests to turn verified app features and agent skills into a complete dated LinkedIn campaign: company posts, distinct founder repost takes, copywriting and independent copy editing, Higgsfield thumbnails with exact Recoup typography and logo, and authorized daily scheduling through a requested end date."
+description: "INTERNAL — Recoup staff consulting workflow. Use for recoup-internal requests to turn verified app features and agent skills into a complete dated LinkedIn campaign: company posts, distinct founder repost takes, copywriting and independent copy editing, Higgsfield thumbnails and caption-independent carousels with exact Recoup typography and logo, and authorized daily scheduling through a requested end date."
 ---
 
 # Feature-to-LinkedIn campaign
@@ -99,7 +99,8 @@ across comparable items without making every sentence identical. Review all comp
 all founder takes. Preserve IDs, dates, sources, uncertainty, conditions and distinct topics.
 
 Normalize the exact publishing text: real newlines, stable Unicode, no literal backslash-n, no
-accidental metadata, private paths or doubled CTAs. Check provider length and links. Save the final
+accidental metadata, private paths or doubled CTAs. For visual formats, apply the headline-only and caption-hidden checks in
+`references/visual-storytelling.md` before approving copy. Check provider length and links. Save the final
 payload and hash. Run the bundled checker with actual public files:
 `python3 scripts/check_public_copy.py <public-file> ...`.
 Scripts ship alongside this skill; resolve paths from its installation. Mechanical checks do not
@@ -108,13 +109,18 @@ reviews and hashes.
 
 ## 5. Create the final branded thumbnail
 
-Read `brand/GUIDE.md`, `brand/finals.json` and `references/prompt-kit.md`. Stage the brand with
+Read `brand/GUIDE.md`, `brand/finals.json`, `references/prompt-kit.md` and
+`references/visual-storytelling.md`. Stage the brand with
 `node brand/materialize.mjs <output-directory>` using the installed script path. Inspect an actual
 approved reference; record whether it was inspected for direction or passed to the generator.
 
 Use the established blog-thumbnail workflow:
-1. Write a clear 3–6 word hook that states the feature's job without needing the caption.
-2. Use Higgsfield for one text-free, logo-free illustration with room for editable headline and logo.
+1. Write a clear hook that states the feature's job and benefit without needing the caption.
+   For an AI/agent feature, name AI or the agent in the headline so a reader understands who
+   performs the work. Start around 3–6 words, but use more when clarity needs it; reflow rather
+   than hiding the mechanism in small copy or shrinking the type.
+2. Reuse suitable approved thumbnail artwork when it exists. When new art is needed, use
+   Higgsfield for one text-free, logo-free illustration with room for editable headline and logo.
    Select a currently available image model and supported settings. Preview cost before paid
    submission, state the known estimate, and stay within authorized scope. No credit purchases,
    budget changes or unbounded regeneration loops. Save every returned job ID immediately.
@@ -139,6 +145,27 @@ Use the established blog-thumbnail workflow:
 Do not replace distinct illustrations with a repeated card template to finish a large batch. For
 precise charts use verified numbers and deterministic geometry, keeping the rest of the campaign's
 visual language. Show composed final examples, not only raw generator results.
+
+## 5a. Adapt features into visual stories when requested
+
+Follow `references/visual-storytelling.md` for carousel and thumbnail adaptations. Write the title
+sequence first: it must explain the agent, supplied inputs, action, inspectable output/evidence,
+human decision and next step without captions or small text. Use the shortest complete story;
+these are narrative requirements, not a mandatory six-slide template.
+
+Reuse the existing thumbnail artwork for card 1, cropping and recomposing it on a seamless matching
+background. Reuse artwork, not a flattened thumbnail with its old empty text area. Keep its headline
+editable and improve it when necessary. For supporting cards, generate simple narrative-specific
+Higgsfield scenes when the required art is missing; preserve already suitable scenes. Each card
+shows one concept through an action or relationship. Inspect final exports at phone width and run
+an independent headline-only/caption-hidden review. A three-second comprehension target is not a
+measured result without a reader test.
+
+Export the approved story as a LinkedIn PDF or ordered Instagram images when requested, plus
+matching alt text and a transcript. Verify current platform/provider constraints before delivery.
+A derivative draft does not authorize another platform, account or publication. Preserve good
+scheduled originals and provider IDs; any authorized format replacement needs reconciliation,
+exact-payload review and readback. Never create a second original merely to add a carousel.
 
 ## 6. Schedule every authorized company slot and verify it
 

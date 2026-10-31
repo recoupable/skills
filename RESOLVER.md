@@ -235,4 +235,4 @@ The internal namespace is a routing convention, not an access-control boundary.
   audit, reconciliation and deal review do not authorize downstream messages,
   registration, transfers or payments. Preserve an already authorized exact action.
 
-| recoup-internal consulting: Turn verified product features into a complete daily LinkedIn campaign with company posts, founder repost takes, branded illustrations and scheduling through an end date | `recoup-internal-consulting-feature-campaign` |
+| recoup-internal consulting: Turn verified product features into a complete daily LinkedIn campaign with company posts, founder repost takes, branded thumbnails, caption-independent carousels and scheduling through an end date | `recoup-internal-consulting-feature-campaign` |

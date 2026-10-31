@@ -38,6 +38,32 @@
         "Invalidates review for edited copy and ties renewed review to the exact current version or hash.",
         "Requires provider readback and distinguishes scheduled state from live publication."
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "Synthetic source: an AI agent compares supplied purchase orders and invoices, flags mismatches with source references, and leaves approval and changes to a human. The skill is free; its AI client is separate. Create a thumbnail hook and a caption-independent carousel storyboard. An approved thumbnail has an orange brand background; supporting art does not exist. Explain reuse, generation and review. Do not call providers, spend or publish.",
+      "expected_output": "Headlines alone explain the AI agent, inputs, findings/evidence, human decision and free skill. Reuse cover art on its matching orange field; create simple supporting narrative scenes.",
+      "files": [],
+      "assertions": [
+        "Thumbnail hook makes the AI/agent task clear without a caption.",
+        "Headline sequence explains input, agent action/output and human decision without body copy.",
+        "Reuses cropped cover artwork on a matching seamless background rather than regenerating it or hard-coding blue.",
+        "Plans narrative-specific supporting Higgsfield scenes, one concept per card, without claiming actual generation.",
+        "Keeps the free-skill offer separate from AI client costs and includes a conversational website CTA.",
+        "Includes headline-only, caption-hidden and phone-size review; three-second comprehension is a target, not a measured outcome."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Existing carousel illustrations and original thumbnail artwork are approved and suitable. Its headlines say only Gather / Compare / Act and explain AI only in small text. Revise the copy and describe which artifacts and provider state change. Do not call providers.",
+      "expected_output": "Copy-layer repair with explicit agent narrative, suitable artwork retained, refreshed dependent exports and review, no new generation or scheduling mutation.",
+      "files": [],
+      "assertions": [
+        "Repairs headline-only comprehension by naming AI/agent and distinguishing agent action from human decision.",
+        "Preserves all suitable artwork; no fresh generation for a copy-only repair.",
+        "Refreshes affected composed exports, alt text, transcript, preview, review and hashes.",
+        "Does not replace scheduled originals or create duplicate posts as part of drafting."
+      ]
     }
   ]
 }
