@@ -198,6 +198,43 @@ def validate_authorization(action):
         raise ValueError("Authorization requires an ISO UTC valid_until") from exc
 
 
+
+def validate_preflight_dependencies(case, action_id):
+    # Hosted snapshots retain assertions; their stale flags are not a preflight proof.
+    require(not any(record.get("withheld") for group in COLLECTIONS for record in case[group].values()),
+            "Redacted snapshot must be reassembled from permitted evidence before preflight")
+    records = all_records(case)
+    require(len(records) == sum(len(case[group]) for group in COLLECTIONS), "Ambiguous record IDs")
+    visiting, complete = set(), set()
+    pending = [(action_id, False)]
+    while pending:
+        rid, leaving = pending.pop()
+        if leaving:
+            visiting.remove(rid)
+            complete.add(rid)
+            continue
+        if rid in complete:
+            continue
+        require(rid not in visiting, "Cyclic preflight dependency")
+        record = records.get(rid)
+        require(record and not record.get("stale"), "Preflight dependency is missing or stale")
+        if rid in case["sources"]:
+            require(record["status"] == "active", "Preflight dependency source is withdrawn")
+        if rid in case["actions"]:
+            require(record["status"] != "withdrawn", "Preflight dependency action is withdrawn")
+        dependencies = list(record.get("depends_on", []))
+        for ref in record.get("source_refs", []):
+            source = case["sources"].get(ref["source_id"])
+            require(source and source["status"] == "active" and source["version"] == ref["version"],
+                    "Preflight dependency requires a current active source version")
+            dependencies.append(ref["source_id"])
+        if record.get("action_id"):
+            dependencies.append(record["action_id"])
+        visiting.add(rid)
+        pending.append((rid, True))
+        pending.extend((dependency, False) for dependency in dependencies)
+
+
 def invalidate(case, changed, reason):
     affected = {changed}
     while True:
@@ -315,6 +352,7 @@ def main(argv=None):
                 action = case["actions"].get(args.action_id)
                 require(action and action["status"] == "authorized" and not action.get("stale"), "Action is not currently authorized")
                 validate_authorization(action)
+                validate_preflight_dependencies(case, args.action_id)
                 require(not any(a["action_id"] == args.action_id and a["status"] == "unknown_outcome" for a in case["attempts"].values()), "Unknown outcome must be reconciled before retry")
                 require(not any(o["action_id"] == args.action_id and o["dimension"] == "provider_decision" and o["status"] in {"accepted", "partially_accepted"} and not o.get("stale") for o in case["outcomes"].values()), "Do not resend accepted items; prepare a separate action for unresolved items")
                 print(json.dumps({"local_preflight": "passed", "external_preflight": "required", "payload_sha256": fingerprint(action["payload"])}))
