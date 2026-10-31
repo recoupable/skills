@@ -79,7 +79,7 @@ class MemberMatchTests(unittest.TestCase):
         # Exercise the shared guards against this profile, not just new work.
         for field, value in [('case_id', 'other'), ('revision', 1), ('action_id', 'other'),
                              ('payload_sha256', '0'*64), ('profile_version', 'old'),
-                             ('profile_id', 'mlc-songwriter-match'), ('role', 'songwriter_hub'),
+                             ('profile_id', 'mlc-songwriter-details'), ('role', 'songwriter_hub_user'),
                              ('role', 'authorized_member_representative')]:
             old = self.mapping[field]; self.mapping[field] = value
             with self.subTest(field=field), self.assertRaises(ValueError): self.run_packet()

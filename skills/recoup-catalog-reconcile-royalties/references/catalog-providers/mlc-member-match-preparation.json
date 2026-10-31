@@ -1,7 +1,7 @@
 {
   "guidance_version": "mlc-member-match-preparation/1",
   "checked_at": "2026-10-31",
-  "scope": "Local Member matching evidence mapping only. No identity, ISRC-format, eligible-account or match validation; no provider form, automatic matching, submission, acceptance or receipt. This does not implement the Songwriter profile.",
+  "scope": "Local Member matching evidence mapping only. No identity, ISRC-format, eligible-account or match validation; no provider form, automatic matching, submission, acceptance or receipt. This Member guidance does not confer Songwriter eligibility; use the separate Songwriter profile and guidance.",
   "required_input_guidance": {
     "work in eligible catalog": {
       "next_step": "Map evidence of the exact work in the eligible catalog. Inspect the actual Member Hub/account capability before any operation; a supplied role is not verified eligibility.",

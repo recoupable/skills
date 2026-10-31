@@ -1,0 +1,46 @@
+{
+  "guidance_version": "mlc-songwriter-match-preparation/1",
+  "checked_at": "2026-10-31",
+  "scope": "Local Songwriter Hub matching evidence mapping only. No identity, ISRC-format or account validation, provider form, automatic matching, submission, acceptance or receipt. Songwriter Hub access does not establish Member status, collection entitlement or rights authority.",
+  "required_input_guidance": {
+    "work in eligible catalog": {
+      "next_step": "Map the exact work in the relevant Songwriter catalog. Confirm the actual Songwriter Hub capability; do not infer Member status or collection authority from catalog access.",
+      "sources": [
+        "https://help.themlc.com/en/support/how-to-use-the-matching-tool-in-the-songwriter-hub-",
+        "https://help.themlc.com/en/support/what-is-the-songwriter-hub-"
+      ]
+    },
+    "recording group/ISRC": {
+      "next_step": "Map the selected recording group and original recording/ISRC evidence. Inspect underlying recording details without changing identifiers or assuming a confirmed match.",
+      "sources": [
+        "https://help.themlc.com/en/support/how-to-use-the-matching-tool-in-the-songwriter-hub-"
+      ]
+    },
+    "identity evidence": {
+      "next_step": "Compare writers, recording artist, version and identifiers against the exact work and group. Use corroborating criteria; title similarity alone is insufficient.",
+      "sources": [
+        "https://help.themlc.com/en/support/how-to-use-the-matching-tool-in-the-songwriter-hub-",
+        "https://help.themlc.com/en/support/best-practices-for-using-the-matching-tool"
+      ],
+      "basis": "Public guidance requires selecting the correct work; writer/version review also preserves the existing local profile preflight."
+    }
+  },
+  "songwriter_match_review": {
+    "hub_eligibility": "Confirm actual Songwriter Hub/account capability and catalog scope. Only supplied songwriter_hub_user is eligible for this local profile; Member roles are not interchangeable and account access remains unverified.",
+    "identity_comparison": "Review writers, version, artist and identifiers for the exact work and recording group. The helper does not inspect source contents or infer identity from titles.",
+    "group_coverage": "Review each selected group and its underlying recordings. Bound evidence is not a suggested or confirmed provider match.",
+    "match_history": "Preserve observed per-group pending, partial, accepted, rejected and rematched results separately. A local packet reports none of these outcomes; an approved suggestion and a visible matched recording are distinct observations.",
+    "authority": "Songwriter Hub visibility does not establish Member status, collection shares, mandate or authority. Review applicable rights, dates, territory and original disclosure before any separately authorized action."
+  },
+  "review_sources": [
+    "https://help.themlc.com/en/support/how-to-use-the-matching-tool-in-the-songwriter-hub-",
+    "https://help.themlc.com/en/support/what-is-the-songwriter-hub-",
+    "https://help.themlc.com/en/support/best-practices-for-using-the-matching-tool",
+    "https://help.themlc.com/en/support/what-do-the-statuses-mean-in-match-history"
+  ],
+  "review_basis": "Songwriter Hub instructions document catalog visibility and match suggestions. Source binding, authority and writer/version review preserve local catalog safeguards; these are not provider form fields.",
+  "remaining_account_checks": [
+    "Inspect the actual Songwriter Hub capability and work/group identity before a separately authorized suggestion.",
+    "Record only actual provider responses and observations; preparation grants no rights and produces no filing-ready payload or receipt."
+  ]
+}
