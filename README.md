@@ -117,6 +117,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-import-catalog/scripts/catalog-case.py
 - skills/recoup-catalog-import-catalog/scripts/import_catalog.py
 - skills/recoup-catalog-import-catalog/tests/test_intake.py
+- skills/recoup-catalog-import-catalog/tests/test_scoped_identity.py
 - skills/recoup-catalog-organize-publishing/scripts/build-catalog-report.py
 - skills/recoup-catalog-organize-publishing/scripts/catalog-case.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_finance.py
@@ -185,5 +186,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: 865dfd4bf78d6c1ed77854d5c0cbd1a5bfa7c9a6
-Version: 2026.1031.83
+Source commit: 4a7b1f38d8c64e9345afe737ca17dcffddfd1335
+Version: 2026.1031.84

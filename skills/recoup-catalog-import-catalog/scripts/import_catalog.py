@@ -84,6 +84,7 @@ def intake(source, mapping, sheet=None, previous=None):
     same = bool(previous and previous.get("import_id") == import_id)
     entity_map, row_results, memberships, interests, work_links = {}, [], [], [], []
     entity_rows, identity_conflicts = defaultdict(list), set()
+    provider_observations = defaultdict(list)
     for number, values, cells in rows[header_row:]:
         row_id = "row_" + digest([import_id, number])[:24]
         raw = dict(zip(headers, values))
@@ -100,11 +101,22 @@ def intake(source, mapping, sheet=None, previous=None):
             if not any(fields.values()):
                 continue
             identifiers = {field: value for field, value in fields.items() if field in IDENTIFIERS and value}
-            # Provider IDs are local to their namespace/account. Unscoped IDs are observations only.
-            if identifiers.get("provider_id") and not fields.get("provider_namespace"):
-                result["reasons"].append(kind + " provider_id lacks provider_namespace")
-                identifiers.pop("provider_id")
+            # Provider identity requires both explicit scopes; never infer an account.
+            provider_key = None
+            unscoped_provider = False
+            if identifiers.get("provider_id"):
+                missing = [field for field in ("provider_namespace", "account_scope", "provider_id")
+                           if not fields.get(field, "").strip()]
+                if missing:
+                    unscoped_provider = True
+                    result["reasons"].append(kind + " provider identity lacks nonblank " + ", ".join(missing))
+                else:
+                    provider_key = (kind, fields["provider_namespace"], fields["account_scope"], fields["provider_id"])
             key = [kind, sorted(identifiers.items()), fields.get("provider_namespace", "")] if identifiers else [kind, row_id]
+            if unscoped_provider:
+                key = [kind, row_id]
+            elif provider_key:
+                key.append(fields["account_scope"])
             entity_id = kind + "_" + digest(key)[:24]
             result["entity_ids"][kind] = entity_id
             if not identifiers:
@@ -116,11 +128,13 @@ def intake(source, mapping, sheet=None, previous=None):
                 result["reasons"].append(kind + " contains unevaluated formula")
             entity_rows[entity_id].append(result)
             existing = entity_map.get(entity_id)
-            if existing and existing["fields"] != fields:
+            if existing and not provider_key and existing["fields"] != fields:
                 identity_conflicts.add(entity_id)
             if not existing:
-                entity_map[entity_id] = {"entity_id": entity_id, "kind": kind, "fields": fields, "identity_status": "identifier_candidate" if identifiers else "unresolved", "observations": []}
+                entity_map[entity_id] = {"entity_id": entity_id, "kind": kind, "fields": fields, "identity_status": "identifier_candidate" if identifiers and not unscoped_provider else "unresolved", "observations": []}
             entity_map[entity_id]["observations"].append({"row_id": row_id, "source_version": source_version, "fields": fields})
+            if provider_key:
+                provider_observations[provider_key].append((entity_id, result, fields))
         ids = result["entity_ids"]
         if "release" in ids and "recording" in ids:
             memberships.append({"membership_id": "membership_" + digest([ids["release"], ids["recording"], {k: raw.get(v, "") for k, v in membership_columns.items()}])[:24], "release_id": ids["release"], "recording_id": ids["recording"], "fields": {k: raw.get(v, "") for k, v in membership_columns.items()}, "row_id": row_id})
@@ -152,6 +166,19 @@ def intake(source, mapping, sheet=None, previous=None):
             result["reasons"].append("no mapped entity values")
         if result["reasons"]:
             result["status"] = "held"
+    for observations in provider_observations.values():
+        values = defaultdict(set)
+        for _, _, fields in observations:
+            for field, value in fields.items():
+                if value.strip():
+                    values[field].add(value)
+        conflicts = sorted(field for field, observed in values.items() if len(observed) > 1)
+        if conflicts:
+            reason = "conflicting " + ", ".join(conflicts) + " for scoped provider identity"
+            for entity_id, row, _ in observations:
+                entity_map[entity_id]["identity_status"] = "conflicting_observations"
+                row["status"] = "held"
+                row["reasons"].append(reason)
     for entity_id in identity_conflicts:
         entity_map[entity_id]["identity_status"] = "conflicting_observations"
         for row in entity_rows[entity_id]:

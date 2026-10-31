@@ -10,8 +10,14 @@ python3 scripts/import_catalog.py --source /private/work/repertoire.xlsx --sheet
 ```
 
 Copy `templates/import-map.json`, remove unmapped entity/edge sections and map exact
-column names. Values are column names, including `provider_namespace`; a namespace
-must include the provider/account scope where IDs are not globally unique. No guessed
+column names. Values are column names. For provider IDs, map `provider_id`,
+`provider_namespace` and `account_scope` to explicit source columns. A combined
+namespace is not used to infer an account: missing or blank namespace/account scope
+holds the observation as a row-scoped candidate, even if another identifier is present.
+A whitespace-only provider ID is also held as unresolved and never groups works.
+An empty provider ID supplies no provider identity; other supplied identifiers retain
+their ordinary candidate handling. Original values are never stripped or rewritten.
+Supply an explicit reviewed mapping/source revision to resolve that hold. No guessed
 column mapping, default share, title-only match or implicit rights authority is applied.
 CSV input uses UTF-8 (optional BOM). XLSX needs openpyxl; multiple sheets require an
 explicit selection, and each selected sheet is a separate source slice. Keep original
@@ -24,6 +30,14 @@ remain candidates pending review. A row without IDs is a usable unresolved recor
 ISRC/ISWC and provider IDs are separate namespaces. Same title does not join two works.
 Do not collapse aliases into people or contributors into artist accounts. A conflicting
 observation holds all affected rows; retain all variants until a sourced decision.
+Observations sharing entity kind, provider namespace, account scope and provider ID
+are checked together even when different ISWCs produce separate candidate IDs.
+Conflicting nonempty mapped entity values (including ISWC or writers) hold every row
+in that scoped group with the conflicting field names. Missing values do not establish
+a contradiction or fill another observation. Distinct provider/account scopes remain
+separate; no title matching or cross-account identity inference is performed. Raw
+observations, source locators and parented interest edges remain unchanged.
+
 The helper deliberately holds numeric identifier cells whose original leading zeros
 may already be lost. It does not invent zeros or interpret formula results.
 
