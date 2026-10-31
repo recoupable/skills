@@ -2,12 +2,12 @@
 
 `python3 scripts/prepare-provider-packet.py --case case.json --mapping preparation-map.json --output new-packet.json`
 
-This command currently supports only the sourced `mlc-new-work` profile. It produces
+This command supports the sourced `mlc-new-work` and `mlc-transfer` profiles. It produces
 an evidence preparation JSON artifact, **not an MLC form, CWR file, submission,
 external preflight or filing-ready payload**. It reads the existing catalog case and
 never edits it, grants authorization, records an attempt or invents a provider receipt.
 
-Use the existing action's exact provider (`The MLC`), operation
+For new work, use the existing action's exact provider (`The MLC`), operation
 (`new_work_registration`) and stage (`register`). For this command the action must
 explicitly state local scope fields `subject_type: "composition"` and
 `rights: ["composition mechanical"]`. These scope fields describe the local action,
@@ -91,7 +91,7 @@ nor inspects its contents; that evidence remains semantically unverified.
 
 ## Optional public field checks (one existing work)
 
-Add `field_values` to the same mapping to check a small documented subset of MLC
+For `mlc-new-work` only, add `field_values` to the same mapping to check a small documented subset of MLC
 individual-registration fields. Use the existing action's sole subject ID. This
 local worksheet is not a provider upload schema; multi-subject actions are rejected
 for these optional checks so a partial check cannot imply batch coverage.
@@ -132,3 +132,45 @@ retained unchanged, so an out-of-range string produces a blocked artifact with a
 field finding. Ordinary numeric boundaries `0.01` and `100` remain supported.
 The original mapping bytes, including numeric spelling, stay bound by SHA256;
 case/profile parsing and their existing fingerprints are unchanged.
+
+
+## Existing registered catalog transfer
+
+Use the existing transfer action, provider `The MLC`, operation
+`collection_catalog_transfer`, stage `register`, and local scope
+`subject_type: "collection_mandate"`, `rights: ["composition mechanical"]`.
+Keep its exact subjects, source/target account context, represented party, territory,
+effective dates, disclosure, costs and payload fingerprint. These are local case
+scope fields, not a claimed MLC form schema. Do not repurpose a new-work action.
+
+Set `profile_id` to `mlc-transfer` and `profile_version` to `2026-10-22.1`, keeping
+the same case/revision/action/payload binding fields shown above. Map the four exact
+labels to existing active source IDs and versions:
+
+```json
+{
+  "registered work list": [{"source_id": "existing-work-evidence", "version": "v1"}],
+  "source member": [],
+  "effective date": [],
+  "authentic authority/termination evidence": []
+}
+```
+
+This fragment is `required_inputs`, not a standalone mapping. Missing entries yield
+a blocked packet. Complete mappings yield local preparation only; the helper does
+not confirm registration, identify a Member, authenticate a document or interpret
+termination rights. The same role, source-version, stale/withheld, withdrawn-source,
+existing-attempt and existing-outcome checks apply to both profiles.
+
+Read `references/catalog-providers/mlc-transfer-preparation.json` for dated official
+source links and input guidance. It is separate from new-work guidance. Transfer
+mappings reject `field_values`; no new-work title, writer-role or percentage rules
+are applied. There is no invented transfer form, CWR output or submission adapter.
+
+The packet's `transfer_review` keeps document forwarding to existing claimants
+visible and marks disclosure review, source release, target acceptance/effective
+scope and collection tails separately **unverified**. It preserves the action's
+original disclosure rather than changing it or approving recipients. Review actual
+authority before any separately requested upload. These review entries are neither
+provider receipts nor observed outcomes. Keep authentic termination evidence,
+retained rights and collection tails available for the human/provider checks.
