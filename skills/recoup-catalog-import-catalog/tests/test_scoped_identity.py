@@ -87,6 +87,34 @@ class ScopedIdentityTests(unittest.TestCase):
                     self.assertEqual(len(packet['entities']), 3)
                     self.assertFalse(any('scoped provider identity' in reason for r in packet['rows'] for reason in r['reasons']))
 
+    def test_whitespace_provider_ids_do_not_group_unrelated_works(self):
+        first = self.row.copy()
+        first[1] = '   '
+        second = first.copy()
+        second[4:6] = ['T0000000002', 'Writer B']
+        packet = self.run_rows([first, second])
+        self.assertEqual(packet['controls']['dispositions'], {'held': 2})
+        self.assertEqual(len(packet['entities']), 2)
+        for row, raw in zip(packet['rows'], [first, second]):
+            self.assertEqual(row['raw_values'], raw)
+            self.assertTrue(any('provider_id' in reason for reason in row['reasons']))
+            self.assertFalse(any('conflict' in reason for reason in row['reasons']))
+        for entity in packet['entities']:
+            self.assertEqual(entity['identity_status'], 'unresolved')
+            self.assertEqual(entity['fields']['provider_id'], '   ')
+            self.assertEqual(entity['observations'][0]['source_version'], hashlib.sha256(self.source.read_bytes()).hexdigest())
+        self.assertEqual({o['row_id'] for e in packet['entities'] for o in e['observations']}, {r['row_id'] for r in packet['rows']})
+
+    def test_empty_provider_ids_use_distinct_supplied_iswcs_without_grouping(self):
+        first = self.row.copy()
+        first[1] = ''
+        second = first.copy()
+        second[4:6] = ['T0000000002', 'Writer B']
+        packet = self.run_rows([first, second])
+        self.assertEqual(packet['controls']['dispositions'], {'proposed': 2})
+        self.assertEqual(len(packet['entities']), 2)
+        self.assertEqual([r['raw_values'] for r in packet['rows']], [first, second])
+
     def test_missing_identifier_value_does_not_claim_contradiction(self):
         other = self.row.copy()
         other[4] = ''

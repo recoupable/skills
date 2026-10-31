@@ -105,11 +105,11 @@ def intake(source, mapping, sheet=None, previous=None):
             provider_key = None
             unscoped_provider = False
             if identifiers.get("provider_id"):
-                missing = [field for field in ("provider_namespace", "account_scope")
+                missing = [field for field in ("provider_namespace", "account_scope", "provider_id")
                            if not fields.get(field, "").strip()]
                 if missing:
                     unscoped_provider = True
-                    result["reasons"].append(kind + " provider_id lacks " + ", ".join(missing))
+                    result["reasons"].append(kind + " provider identity lacks nonblank " + ", ".join(missing))
                 else:
                     provider_key = (kind, fields["provider_namespace"], fields["account_scope"], fields["provider_id"])
             key = [kind, sorted(identifiers.items()), fields.get("provider_namespace", "")] if identifiers else [kind, row_id]

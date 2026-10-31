@@ -14,6 +14,9 @@ column names. Values are column names. For provider IDs, map `provider_id`,
 `provider_namespace` and `account_scope` to explicit source columns. A combined
 namespace is not used to infer an account: missing or blank namespace/account scope
 holds the observation as a row-scoped candidate, even if another identifier is present.
+A whitespace-only provider ID is also held as unresolved and never groups works.
+An empty provider ID supplies no provider identity; other supplied identifiers retain
+their ordinary candidate handling. Original values are never stripped or rewritten.
 Supply an explicit reviewed mapping/source revision to resolve that hold. No guessed
 column mapping, default share, title-only match or implicit rights authority is applied.
 CSV input uses UTF-8 (optional BOM). XLSX needs openpyxl; multiple sheets require an
