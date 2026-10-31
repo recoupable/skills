@@ -87,3 +87,10 @@ For a named provider, read `references/catalog-providers/index.md` and only its
 applicable family/profile. The dated registry separates documented preparation
 from implemented transports and live verification; refresh current account rules
 before claiming provider validation or executing an operation.
+
+
+For local MLC overclaim evidence preparation, read `references/local-preparation.md`
+and run the co-located `scripts/prepare-provider-packet.py` with an existing
+`resolve_claims` action. It preserves exact remedy/disclosure and source versions;
+missing inputs block the packet. Complete mappings remain unverified preparation,
+not authority to contact, amend, relinquish or upload. No case state is changed.

@@ -133,6 +133,8 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-register-catalog/scripts/prepare-provider-packet.py
 - skills/recoup-catalog-resolve-claims/scripts/build-catalog-report.py
 - skills/recoup-catalog-resolve-claims/scripts/catalog-case.py
+- skills/recoup-catalog-resolve-claims/scripts/mlc-public-fields.py
+- skills/recoup-catalog-resolve-claims/scripts/prepare-provider-packet.py
 - skills/recoup-catalog-review-deal/scripts/_finance.py
 - skills/recoup-catalog-review-deal/scripts/_helpers.py
 - skills/recoup-catalog-review-deal/scripts/_royalty_archive.py
@@ -183,5 +185,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: a3f90e4830e4b15e90870cc61f7d6e0689345077
-Version: 2026.1031.82
+Source commit: 865dfd4bf78d6c1ed77854d5c0cbd1a5bfa7c9a6
+Version: 2026.1031.83
