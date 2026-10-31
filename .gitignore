@@ -33,3 +33,5 @@ tests/fixtures/*
 
 !tests/test_catalog_provider_packet.py
 !tests/test_mlc_public_fields.py
+
+!tests/test_catalog_transfer_packet.py

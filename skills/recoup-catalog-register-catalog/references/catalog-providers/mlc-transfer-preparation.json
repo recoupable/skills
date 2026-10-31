@@ -1,0 +1,42 @@
+{
+  "guidance_version": "mlc-transfer-preparation/1",
+  "checked_at": "2026-10-31",
+  "scope": "Local evidence mapping only; no transfer form, field validation, document authentication, authority, submission or receipt. Recheck the authorized Member Hub before any separately authorized operation.",
+  "required_input_guidance": {
+    "registered work list": {
+      "next_step": "Identify the existing registered works in scope; unregistered works belong to new-work registration. Later inspect and verify the selected works in the transfer tool.",
+      "sources": [
+        "https://help.themlc.com/en/support/catalog-transfer-process-and-faqs"
+      ]
+    },
+    "source member": {
+      "next_step": "Supply evidence identifying the Member whose registered works are in scope.",
+      "sources": [
+        "https://help.themlc.com/en/support/catalog-transfer-process-and-faqs"
+      ]
+    },
+    "effective date": {
+      "next_step": "Supply evidence of the effective date for the rights being transferred.",
+      "sources": [
+        "https://help.themlc.com/en/support/catalog-transfer-process-and-faqs"
+      ]
+    },
+    "authentic authority/termination evidence": {
+      "next_step": "Map authentic authorization to collect for the owner. For self-administered writers returning from an administrator, inspect relinquishment, agreement-term or termination-request documentation as applicable. The helper does not authenticate it.",
+      "sources": [
+        "https://help.themlc.com/en/support/catalog-transfer-process-and-faqs"
+      ]
+    }
+  },
+  "transfer_review": {
+    "document_disclosure": "Supporting documents are forwarded to existing claimants. Review recipients and disclosure authority separately; the local packet does not send documents or grant consent.",
+    "source_release": "Verify source relinquishment separately from a prepared packet or target acceptance.",
+    "target_acceptance": "Verify target acceptance and effective scope separately from source release.",
+    "collection_tails": "Preserve retained rights and old/new collection tails from the mandate evidence; no financial outcome is inferred."
+  },
+  "review_basis": "Document forwarding is stated in the linked MLC guidance. Separate release, acceptance and collection-tail checks preserve the local catalog transfer contract; they are not invented provider fields.",
+  "remaining_account_checks": [
+    "Inspect the current Member Hub Catalog Transfer Tool and the actual account role and mandate before any separately authorized operation.",
+    "Record real receipts and readback only after the corresponding external event."
+  ]
+}

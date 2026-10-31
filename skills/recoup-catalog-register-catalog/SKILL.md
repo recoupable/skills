@@ -89,7 +89,7 @@ applicable family/profile. The dated registry separates documented preparation
 from implemented transports and live verification; refresh current account rules
 before claiming provider validation or executing an operation.
 
-For local `mlc-new-work` evidence preparation, read `references/local-preparation.md`
+For local `mlc-new-work` or `mlc-transfer` evidence preparation, read `references/local-preparation.md`
 and use `scripts/prepare-provider-packet.py` with an existing case action and explicit
 required-input evidence mapping. The result is a bound preparation artifact, not an
 MLC form/CWR file or verified external preflight. Missing inputs remain blocked;

@@ -68,7 +68,11 @@ def prepare(case_path, mapping_path, output_path):
     require(type(case['revision']) is int and case['revision'] >= 0, 'Invalid case revision')
     require(mapping['case_id'] == case['case_id'] and type(mapping['revision']) is int
             and mapping['revision'] == case['revision'], 'Case/revision binding mismatch')
-    require(mapping['profile_id'] == 'mlc-new-work', 'Only sourced mlc-new-work preparation is implemented')
+    routes = {'mlc-new-work': 'member_portal_or_eligible_cwr',
+              'mlc-transfer': 'member_catalog_transfer_tool'}
+    require(mapping['profile_id'] in routes, 'Unsupported preparation profile')
+    require(mapping['profile_id'] == 'mlc-new-work' or 'field_values' not in mapping,
+            'field_values are supported only for mlc-new-work')
     references = HERE.parent / 'references' / 'catalog-providers'
     registry_raw = bounded_bytes(references / 'operations.json', 1024 * 1024)
     sources_raw = bounded_bytes(references / 'sources.json', 1024 * 1024)
@@ -78,7 +82,7 @@ def prepare(case_path, mapping_path, output_path):
     profile = profiles[0]
     require(mapping['profile_version'] == profile['profile_version'], 'Profile version mismatch')
     require(profile['capability']['preparation'] == 'evidence_packet'
-            and profile['documented_route'] == 'member_portal_or_eligible_cwr', 'Unverified or unsupported preparation route')
+            and profile['documented_route'] == routes[mapping['profile_id']], 'Unverified or unsupported preparation route')
     source_index = {s['id']: s for s in sources['sources']}
     profile_sources = [source_index[sid] for sid in profile['source_ids']]
     require(profile_sources and all(s['check_result'] == 'verified' for s in profile_sources),
@@ -162,7 +166,9 @@ def prepare(case_path, mapping_path, output_path):
                   'Search existing case attempts and provider records before any separately authorized submission.',
                   'Record an actual submission receipt and provider readback separately only if execution later occurs.'],
               'authority_effect': 'None: preparation neither grants authority nor creates an attempt or receipt'}
-    guidance = strict_json(bounded_bytes(references / 'mlc-public-preparation.json', 1024 * 1024))
+    guidance_file = ('mlc-public-preparation.json' if profile['profile_id'] == 'mlc-new-work'
+                     else 'mlc-transfer-preparation.json')
+    guidance = strict_json(bounded_bytes(references / guidance_file, 1024 * 1024))
     require(set(guidance['required_input_guidance']) == set(profile['required_inputs']),
             'Public guidance does not cover the current profile inputs')
     packet.update({
@@ -172,6 +178,9 @@ def prepare(case_path, mapping_path, output_path):
         'field_validation': 'not_performed',
         'template_retrieval': 'not_performed_by_helper',
     })
+    if profile['profile_id'] == 'mlc-transfer':
+        packet['transfer_review'] = {key: {'requirement': value, 'verification': 'unverified'}
+                                     for key, value in guidance['transfer_review'].items()}
     if 'field_values' in mapping:
         checks = field_api.check_fields(mapping['field_values'], payload['subjects'])
         packet['public_field_checks'] = checks
