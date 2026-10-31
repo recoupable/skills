@@ -40,3 +40,5 @@ tests/fixtures/*
 !tests/test_catalog_songwriter_match_packet.py
 !tests/test_catalog_existing_share_packet.py
 !tests/test_catalog_overclaim_packet.py
+
+!tests/test_catalog_case_preflight.py
