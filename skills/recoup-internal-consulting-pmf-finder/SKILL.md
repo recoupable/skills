@@ -48,9 +48,13 @@ Write only what evidence supports: “[person in situation] is trying to [projec
 
 Choose the nearest untested assumption. Without an anecdote, seek one through firsthand contact; do not call that a replication test. If the person's blocker is unknown or contradicted, discover it first; leave the offer pending. With grounded demand, prepare two text slides: (1) reflect PULL for correction; (2) propose narrow help, commercial basis, and next step. State what exists, is manual, or remains unbuilt. Do not build a platform to avoid customer contact.
 
+Treat supply as a credible plan to finish the buyer's project. Choose the smallest complete outcome, including service or manual delivery when appropriate, and expose work the buyer must do. Test **understanding** (what it is, how it works, differences, price) separately from **preference** over actual alternatives. Read `references/power-of-pull.md` for offer design and diagnosis.
+
 Prepare discovery: why they accepted, agreed agenda, permission for questions, missing PULL fields, then the narrow offer. Ask for a purchase step, not whether they like the idea. Without pull, use the Hail Mary in `references/field-guide.md` to discover work they would pay to complete now.
 
 To test replication, select buyers matching the anecdote's situation; roughly five conversations is a review checkpoint, not a statistical threshold. Record selection criteria, expected behavior, falsifying evidence, review date, owner, and what each outcome would change. Before demand is established, outreach seeks learning access; afterward, test where matching buyers encounter the need. When access is the bottleneck, propose observation or a truthful outreach draft.
+
+Default to one demand case per learning loop; park unrelated cases for later. Testing alternative delivery forms for the same demand is different from mixing multiple buyer projects. Test replication before deep customization for one enthusiastic customer.
 
 **Complete when:** the user has a runnable test and pass/revise/stop criteria. Drafts do not authorize sending outreach, scheduling calls, offering binding terms, spending money, or publishing customer evidence; execute those only within the user's existing authorization.
 
@@ -64,6 +68,8 @@ For a requested pilot, distinguish demand and offer-fit from purchase obstacles.
 
 At the checkpoint, compare like-for-like buyers. If a minority pulls, retest that subgroup. If none pulls, revise the person, urgency, or limitation from the evidence. Without learning, return to firsthand observation. Record the old case, evidence, revised replication question, and next test. Extend a batch only when further evidence could change the decision.
 
+Locate where progress stopped: demand, offer comprehension, actual fit, buying process, or delivery. Capture the buyer's objection and the preceding offer/claim; explore the mismatch before prescribing a feature, discount, or new script. Invite correction and stop the pitch when the project does not fit. Use the diagnostic guide in `references/power-of-pull.md`; an objection is evidence to investigate, not a verdict by itself.
+
 **Complete when:** continue, narrow, revise, or pause follows from observed behavior, with one next action. Evidence missing is “not yet tested,” not “no demand.”
 
 ### 5. Test delivery and retention after a sale
@@ -72,13 +78,19 @@ When buyers commit, define the promised outcome and a candidate **X**: the concr
 
 Track who reached X, time to value, subsequent use/renewal/churn, and reasons over a stated observation window. Compare retained and churned cohorts before broadening the offer. One retained segment in a churning horizontal product is a new hypothesis to test, not automatic permission to declare victory or pivot the whole business. Service-shaped delivery is legitimate if sold honestly; track custom labor and what must become repeatable rather than calling bespoke consulting software PMF.
 
+For stalled delivery, distinguish misunderstood or changed demand, mismatched expectations, and failure to fulfill an agreed outcome. Feed that finding back into buyer selection, the promise, or onboarding. Adding leads does not repair these failures.
+
 **Complete when:** delivery and retention have separate evidence or are explicitly pending, and the next test addresses the actual gap.
 
 ### 6. Repeat one successful customer pattern
 
 Define an internal case-study pattern: same buyer situation → unavoidable project → failed alternatives → offer → achieved outcome → continued value. Seek matching customers, not unrelated wins. A sale alone is not a repeatable case study; learning records need not become public testimonials.
 
+Anchor the candidate pattern in a real customer with both strong buying behavior and achieved value. Compare that case with stalled, lost, and churned cases to identify differences; keep counterexamples and cohort denominators visible. Do not average conflicting projects into a generic persona.
+
 Inspect counts, time windows, and drop-offs across **pipeline** (right-buyer conversations), **sales** (purchase progress), and **delivery** (value and retention). Diagnose upstream demand/targeting before treating downstream friction as a script or feature problem. Changing the buyer/project requires rechecking acquisition, sales, and delivery assumptions that depended on it. Choose the evidenced bottleneck or what to measure next; test it before adding segments or volume.
+
+Choose improvements by their plausible effect on completed customer outcomes, with capacity, time, cost, and uncertainty explicit; the lowest conversion rate is not automatically the constraint. Review source records regularly and leave with one concrete change or test. Check that local activity targets do not reward bringing in buyers whom delivery cannot serve.
 
 **Complete when:** the repeatable unit, current constraint, and next learning checkpoint are explicit. A promising pattern is stronger evidence, not a guarantee of market size or enduring PMF.
 
@@ -105,4 +117,4 @@ Save to the selected workspace's existing opportunity/learning record when autho
 
 ## Source
 
-Adapted from Rob Snyder on Lenny's Podcast: https://www.youtube.com/watch?v=19qrLchbQEc, plus five primary-author essays, including his September 2026 anecdote update. See `references/field-guide.md` for timestamps, dated sources, and operational adaptations. Book access covered only the contents and four introduction pages, not the full book. No source fetch or API credential required.
+Adapted from Rob Snyder's *The Power of Pull* (Basic Venture, 2026), his Lenny's Podcast appearance (https://www.youtube.com/watch?v=19qrLchbQEc), and five primary-author essays, including his later September 2026 anecdote update. See `references/power-of-pull.md` for book methods, printed-page locators, and reading scope; `references/field-guide.md` maps the podcast and essays. No source fetch or API credential required.
