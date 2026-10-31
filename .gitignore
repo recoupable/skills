@@ -36,3 +36,4 @@ tests/fixtures/*
 
 !tests/test_catalog_transfer_packet.py
 !tests/test_catalog_amendment_packet.py
+!tests/test_catalog_member_match_packet.py
