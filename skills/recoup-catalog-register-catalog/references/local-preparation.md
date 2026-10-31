@@ -3,7 +3,7 @@
 `python3 scripts/prepare-provider-packet.py --case case.json --mapping preparation-map.json --output new-packet.json`
 
 This command supports the sourced `mlc-new-work`, `mlc-transfer` and
-`mlc-amend-work` profiles. It produces
+`mlc-amend-work` and `mlc-member-match` profiles. It produces
 an evidence preparation JSON artifact, **not an MLC form, CWR file, submission,
 external preflight or filing-ready payload**. It reads the existing catalog case and
 never edits it, grants authorization, records an attempt or invents a provider receipt.
@@ -224,3 +224,51 @@ Current Member Hub form/account review is still required before any separately
 authorized operation; no provider form, transport, filing-ready payload or receipt
 is generated. Preserve submission, acceptance and observed correction as distinct
 actual events when they later occur.
+
+
+## Member recording-to-work matching
+
+Use the existing Member matching action with provider `The MLC`, operation
+`recording_work_match`, stage `register`, and local scope
+`subject_type: "recording_work_link"`, `rights: ["composition mechanical"]`.
+Retain the exact work/group subjects, account, represented party, territory, dates,
+disclosure, costs and payload hash. Do not change an existing action or create a
+replacement to bypass previous attempts or outcomes.
+
+Set `profile_id: "mlc-member-match"`, `profile_version: "2026-10-22.1"` and retain
+the same case/revision/action/payload binding fields. The existing profile accepts
+only the supplied role `member_rightsholder`. It rejects
+`authorized_member_representative` and Songwriter roles; this local profile limit
+is not a claim about every provider account permission. Actual eligibility remains
+unverified. The helper does not implement `mlc-songwriter-match`.
+
+Map the three existing labels to active sources with exact versions:
+
+```json
+{
+  "work in eligible catalog": [{"source_id": "existing-work-evidence", "version": "v1"}],
+  "recording group/ISRC": [{"source_id": "selected-group-evidence", "version": "v2"}],
+  "identity evidence": [{"source_id": "identity-comparison-evidence", "version": "v3"}]
+}
+```
+
+This is the `required_inputs` fragment of a mapping, not a new case or provider
+form. Compare writers, version, recording artist, identifiers and group details;
+title similarity alone is insufficient. Keep ambiguous identity unresolved. The
+helper binds the supplied action and evidence, but does not inspect source contents,
+validate ISRC format, compare identities, normalize identifiers or automatically
+match a group. A changed group in the action requires a new matching payload hash;
+old mappings cannot silently select another group.
+
+Missing evidence labels yield a blocked packet. Complete mappings yield local
+preparation only. `field_values` is rejected; new-work field checks are not matching
+checks. Read `references/catalog-providers/mlc-member-match-preparation.json` for
+dated public guidance. `member_match_review` keeps actual Hub eligibility, identity
+comparison, group coverage, Match History and authority unverified. It does not
+invent a provider status for any group. Preserve actual per-group partial or rematched
+results separately if later observed; a prior match suggestion is not acceptance.
+
+No Member account is inspected or changed. The original disclosure stays intact;
+a complete packet neither authorizes a suggestion nor claims an accepted match,
+collection entitlement, payment or receipt. Follow the existing uncertain-attempt
+reconciliation rule before any separately authorized provider operation.
