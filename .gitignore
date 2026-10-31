@@ -38,3 +38,4 @@ tests/fixtures/*
 !tests/test_catalog_amendment_packet.py
 !tests/test_catalog_member_match_packet.py
 !tests/test_catalog_songwriter_match_packet.py
+!tests/test_catalog_existing_share_packet.py

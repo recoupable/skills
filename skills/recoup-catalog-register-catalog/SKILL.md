@@ -90,7 +90,7 @@ from implemented transports and live verification; refresh current account rules
 before claiming provider validation or executing an operation.
 
 For local `mlc-new-work`, `mlc-transfer`, `mlc-amend-work`, `mlc-member-match` or
-`mlc-songwriter-match` evidence preparation, read `references/local-preparation.md`
+`mlc-songwriter-match` or `mlc-existing-share` evidence preparation, read `references/local-preparation.md`
 and use `scripts/prepare-provider-packet.py` with an existing case action and explicit
 required-input evidence mapping. The result is a bound preparation artifact, not an
 MLC form/CWR file or verified external preflight. Missing inputs remain blocked;
