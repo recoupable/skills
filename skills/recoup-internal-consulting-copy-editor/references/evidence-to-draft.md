@@ -36,8 +36,26 @@ output, and the human decision or review when relevant. State the evidence statu
 writing: implemented, established method, proposed or illustrative. Build that connection through
 the argument instead of adding an AI sentence at the end.
 
-Use the title and opening to make a promise the body can fulfill. Prefer one worked example that
-develops through the explanation to several disconnected examples.
+Use the title and opening to make a promise the body can fulfill. A worked example can develop
+through the explanation, but it should clarify the argument at its intended scale.
+
+### Preserve the scale and stakes of the idea
+
+Identify the consequential decision before choosing an anecdote. A task guide can center on a task;
+an essay about company autonomy needs to explain effects on company direction, resources,
+commitments, judgment or learning. Do not reduce a systems argument to a small workflow simply to
+make the opening concrete. Do not establish ICP relevance by forcing an industry-specific task
+into the setup. The reader's responsibilities and consequences should establish that relevance.
+
+Earn the stakes by showing how one choice or assumption affects another. Never raise them with
+invented losses, customer stories, exaggerated certainty or dramatic vocabulary. Give the positive
+capability concrete attention too: what work, decisions or learning become possible, how the design
+enables them, and which tradeoffs remain. A failure analysis alone may explain caution without
+explaining why the company would want the system.
+
+Depth comes from mechanisms, dependencies, alternatives, costs and limits. Plain language should
+make those easier to follow. It should not replace a substantive argument with a checklist. Apply
+this proportionately; do not inflate a simple edit or useful task guide into a company-level essay.
 
 ## 3. Choose a shape and test the sequence
 

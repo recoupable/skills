@@ -95,9 +95,9 @@ judgments. Revision invalidates approval for the changed version; keep publicati
 
 Before drafting, write privately: intended reader; their question; one useful answer; next action. Lead public copy with that question or answer, not a surprising slogan or source introduction.
 
-Use one concrete example through the explanation. Name the actor, input, action and output where relevant. Define necessary terms on first use; otherwise use plain words. Prefer 'income received versus the forecast' to 'hold-period monitoring against underwriting'. Do not silently change cash receipts into earned revenue, missing data into zero, plans into shipped results, or a comparison into a guarantee.
+Choose examples that explain the argument at its intended scale. A worked example can connect the sections, but do not shrink a company-level argument into a small task or force an industry-specific setup to signal ICP relevance. Establish relevance through the reader's decisions, responsibilities and consequences. Name the actor, input, action and output where relevant. Define necessary terms on first use; otherwise use plain words. Prefer 'income received versus the forecast' to 'hold-period monitoring against underwriting'. Do not silently change cash receipts into earned revenue, missing data into zero, plans into shipped results, or a comparison into a guarantee.
 
-Keep paragraphs short and remove sections that repeat the point. A useful 400–700-word article is preferable to padding for a target. Longer pieces must earn their length. Readability formulas and word counts are triage aids, not editorial approval.
+Keep paragraphs readable and remove sections that repeat the point. Let the promised explanation determine length. A short task guide and a deep systems essay need different room; neither padding nor compression should replace judgment. Preserve the mechanisms, tradeoffs, counterarguments and limits that earn depth. Explain the positive capability as concretely as the failure modes. Readability formulas and word counts are triage aids, not editorial approval.
 
 A non-technical reader must be able to explain the point after the opening and identify the next step at the end. If they cannot, rewrite before deriving companion posts. Review quotes, numbers and who said/did what across every format after rewriting.
 
