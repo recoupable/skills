@@ -16,6 +16,13 @@ label the result manual/unscored; never invent a numeric score or successful pro
 
 A second set of eyes on a finished draft. The review runs in a **fresh-context subagent** so it reads like a first-time editor, not the author. The **main agent implements** the edits, with judgment. This skill *uses* `recoup-internal-consulting-copy-writer` (the house voice + anti-slop standard) and `evals/content/score_run.py` (the check) — it does not redefine them.
 
+## Evidence and reader journey
+
+Read `references/evidence-to-draft.md` when drafting or revising public copy. Collect supported
+material, choose the reader journey, edit each channel independently and reconcile the actual
+artwork with the final argument. Record per-file decisions and distinguish batch review from
+individual fresh-context reviews. Existing publication authority and evidence rules still apply.
+
 ## Required public-content gate
 
 Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
@@ -76,6 +83,8 @@ Review the draft across these axes:
 - Confusing rhetoric: claims that don't land, buried logic, a section that doesn't deliver what its header promises.
 - Simpler said: the same point in fewer or plainer words, with no loss of meaning.
 - Narrative & storyline: the hook, the throughline, section order, transitions, momentum, and an ending that lands. Flag where the piece sags, repeats itself, or loses the reader.
+- Client recognition: unnecessary counts, dates, roles, quotes or unusual circumstances that identify a client in combination, even without a name. Preserve useful operational detail and private provenance; do not invent substitute facts.
+- Agent throughline: the opening, worked example and result explain a concrete agent task. Flag decorative AI mentions, unsupported implementation claims, vague human-review language and approval steps added without a reason. Explain who checks what at which point when relevant; do not make every piece use the same workflow.
 - Anything else a great editor would flag: title, evidence/specificity, balance, repetition, length.
 
 Hard rules:

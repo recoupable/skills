@@ -16,6 +16,13 @@ the owner's actual customer understand it, trust it, care, and want to act? The 
 author. It returns **notes only**; the **main agent rewrites** from them. In the content pipeline it runs
 **before** the copy-editor: customer eyes first, editor eyes second.
 
+## Evidence and reader journey
+
+Read `references/evidence-to-draft.md` when drafting or revising public copy. Collect supported
+material, choose the reader journey, edit each channel independently and reconcile the actual
+artwork with the final argument. Record per-file decisions and distinguish batch review from
+individual fresh-context reviews. Existing publication authority and evidence rules still apply.
+
 ## Required public-content gate
 
 Read `references/public-content-quality.md` before drafting, reviewing, illustrating or publishing.
@@ -106,6 +113,10 @@ Part 2 — Stepping back (a few sentences, still in character):
 - Do you care about this? If not, why not?
 - Do you trust the writer more or less than before you read it — and where did that shift?
 - Would you forward or share it? To whom, and why — or what would turn your "no" into a "yes"?
+- Would the client recognize themselves or feel exposed by the combination of details? Quote what causes that concern.
+- Does this sound like someone talking to you, or corporate narration? Quote where the voice loses you.
+- Can you explain what the agent does, what a person still decides/checks, and why that matters? Flag where the agent connection disappears or feels tacked on; do not demand a human-approval step where none is useful.
+- Does the wording distinguish work already implemented from advice or an illustrative example?
 - How did you feel at the end?
 - The 1-2 changes that would most make you care.
 ```

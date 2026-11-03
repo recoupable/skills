@@ -60,7 +60,10 @@ Plain uncertainty when genuinely uncertain: "I think," "probably," "my guess is.
 
 ## Specificity as proof
 
-Numbers, names, dates, tools, prices, percentages, time periods. These are not decoration — they're what makes claims believable.
+Specific inputs, actions, outputs and decisions make a claim understandable. Numbers, names, dates,
+tools and prices can help only when supported, useful and appropriate to disclose. Private client
+recognition risk takes priority over vividness: remove identifying detail that does not explain the
+work, including combinations of otherwise ordinary facts. Never manufacture replacement figures.
 
 **Synthetic examples only:** these invented figures illustrate specificity, not anyone's results.
 
@@ -71,11 +74,15 @@ Numbers, names, dates, tools, prices, percentages, time periods. These are not d
 > "The fictional support team resolved 12 of 20 test cases without escalation. That is test coverage,
 > not a claim about production performance."
 
-In a social post, one specific number can carry the entire hook. In a case study, layer them. In a cold email, one specific result replaces three paragraphs of description.
+A social hook can name the task or unresolved question without a number. In a case study, use only
+the client detail needed to understand the work. In an email, a supported result can replace a long
+description; an unverified outcome cannot.
 
 ### Evidence over vague authority
 
-To a senior reader, vague authority reads as positioning — a setup for a pitch they can feel coming. Phrases like "I keep seeing," "the teams pulling it off," and "everyone is realizing" signal a sales move, not a real observation. Earn the point with one concrete, real, named example, or drop the claim and ask the genuine question instead. Never invent the example to fill the gap: if you don't have a real one, go get it.
+To a senior reader, vague authority reads as positioning — a setup for a pitch they can feel coming. Phrases like "I keep seeing," "the teams pulling it off," and "everyone is realizing" signal a sales move, not a real observation. Earn the point with a supported example whose identifying details are safe to disclose, or clearly
+label an illustrative scenario. A client name is not required proof. Never invent an experience or
+seek missing private originals to fill the gap; qualify or remove an unsupported claim.
 
 ---
 
@@ -188,23 +195,29 @@ Then absorb it into your thesis rather than dismissing it. The reader should fee
 
 ---
 
-## Endings that open, not close
+## Endings that resolve the promise
 
-Don't summarize. Don't restate. Don't end with a call to action unless the format requires it (ads, landing pages).
+Carry the reader through the consequence of the argument or story. If the opening introduces a
+pending decision, failure or change, show what happens to it before ending. Distinguish what was
+resolved from the business question that remains open. This is narrative closure, not a recap of
+section headings.
 
-For social posts: end with the most specific or surprising detail, not a general conclusion. Or end with a question that's genuinely open.
+For essays: return to the opening situation with a changed understanding or completed decision.
+Explain the practical implication in plain language. Do not cut a necessary landing merely because
+it concludes the argument, and do not substitute a list of unanswered questions for a promised
+explanation. Do not introduce an unrelated metaphor or story just to manufacture a literary ending.
 
-For essays: shift register — a story, an image, or a passage from a completely different domain that refracts the argument. The reader makes the connection.
+For social posts: finish the specific point or consequence. An open question can work when the post
+has already delivered its answer; it is not a required ending. For emails: finish the thought, then
+make the relevant next step specific.
 
-For emails: end with the specific next step. Not "Let me know your thoughts."
-
-The instinct across all formats: the last sentence should make the reader think, not just nod.
-
+Read the last several paragraphs together. The ending should feel earned and complete, with room
+for what happens next when that helps. Avoid an abrupt stop, generic recap or slogan.
 ---
 
 ## Say it out loud
 
-If a human wouldn't say it out loud, cut it. No corporate narration, no meta-commentary, no jargon or insider verbs. Use the plain word a non-expert would use.
+If a sentence would be awkward to say aloud, revise it. Remove corporate narration and empty meta-commentary. Keep a technical term when it names a useful mechanism; explain it in ordinary language and show its effect in the example. Simple writing can preserve detailed mechanics. Avoid replacing a precise explanation with an abstract promise merely to remove technical vocabulary.
 
 - Bad: "the point worth surfacing for your team" → just say the point.
 - Bad: "the thing your committee will gate on" → "what they'll ask about" or "care about."
