@@ -70,6 +70,17 @@ Where several structures would materially change the argument, show the user con
 if they want to collaborate. For an authorized batch, use editorial judgment and record the chosen
 shape. Do not interrupt a batch for an approval question about every section.
 
+For a technical narrative, let an unfolding decision reveal the mechanisms. Show the relevant
+input or event, the record or state it changes, the system's next action and the consequence for the
+reader. Explain technical terms at first use. A small task record, state diagram or code example can
+make the design simpler to follow; label illustrative notation and avoid implying a proposed schema
+is a deployed API. Preserve the difference between a worked design scenario and observed behavior.
+
+Use section transitions to advance the same decision. Do not repeatedly leave the scene for abstract
+principles. Finish the narrative: resolve the opening decision or incident, state what remains open,
+and explain what the reader can now understand. A list of test questions is not a substitute for
+that ending. Retain a concrete landing even when cutting a redundant summary.
+
 Stop when the reader has the promised answer and useful next step. Word targets are aids, not a
 reason to pad a complete explanation.
 

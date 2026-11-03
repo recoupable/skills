@@ -287,7 +287,7 @@ Use colons for lists, labels, and quotes — not fake drama. Prefer sentence cas
 
 ## Fake-profound kickers
 
-Cut the final "deep" line when it turns the point into a cute metaphor, aphorism, or mic-drop sentence. Do not rewrite it into a better metaphor. Do not preserve the rhythm. Delete it, then end on the clearest concrete sentence already in the draft. If the ending needs more closure, add a plain takeaway or next action.
+Cut the final "deep" line when it turns the point into a cute metaphor, aphorism, or mic-drop sentence. Do not rewrite it into a better metaphor. Do not preserve the rhythm. Delete the flourish, then finish the underlying thought. If the story or decision is unresolved, write the concrete resolution and its implication. Cutting a weak final line must not leave an abrupt stop or a list of questions the article promised to answer.
 
 - Bad: "And maybe that's the real automation — not the code, but the clarity."
 - Fix: delete it. The paragraph already made the point.
@@ -303,7 +303,7 @@ Cut the final "deep" line when it turns the point into a cute metaphor, aphorism
 
 ## Summary-recap endings
 
-"In conclusion," "Ultimately," "Overall," "To sum up," "At the end of the day," or a final paragraph that restates the piece. The reader was just there. End on the last concrete point, takeaway, or next action.
+"In conclusion," "Ultimately," "Overall," "To sum up," "At the end of the day," or a final paragraph that restates the piece. The reader was just there. Distinguish a redundant recap from an earned resolution: returning to the opening decision, showing what changed and explaining what remains is useful closure. Keep that landing; remove only the repetition or slogan.
 
 ## Formatting slop
 

@@ -195,23 +195,29 @@ Then absorb it into your thesis rather than dismissing it. The reader should fee
 
 ---
 
-## Endings that open, not close
+## Endings that resolve the promise
 
-Don't summarize. Don't restate. Don't end with a call to action unless the format requires it (ads, landing pages).
+Carry the reader through the consequence of the argument or story. If the opening introduces a
+pending decision, failure or change, show what happens to it before ending. Distinguish what was
+resolved from the business question that remains open. This is narrative closure, not a recap of
+section headings.
 
-For social posts: end with the most specific or surprising detail, not a general conclusion. Or end with a question that's genuinely open.
+For essays: return to the opening situation with a changed understanding or completed decision.
+Explain the practical implication in plain language. Do not cut a necessary landing merely because
+it concludes the argument, and do not substitute a list of unanswered questions for a promised
+explanation. Do not introduce an unrelated metaphor or story just to manufacture a literary ending.
 
-For essays: shift register — a story, an image, or a passage from a completely different domain that refracts the argument. The reader makes the connection.
+For social posts: finish the specific point or consequence. An open question can work when the post
+has already delivered its answer; it is not a required ending. For emails: finish the thought, then
+make the relevant next step specific.
 
-For emails: end with the specific next step. Not "Let me know your thoughts."
-
-The instinct across all formats: the last sentence should make the reader think, not just nod.
-
+Read the last several paragraphs together. The ending should feel earned and complete, with room
+for what happens next when that helps. Avoid an abrupt stop, generic recap or slogan.
 ---
 
 ## Say it out loud
 
-If a human wouldn't say it out loud, cut it. No corporate narration, no meta-commentary, no jargon or insider verbs. Use the plain word a non-expert would use.
+If a sentence would be awkward to say aloud, revise it. Remove corporate narration and empty meta-commentary. Keep a technical term when it names a useful mechanism; explain it in ordinary language and show its effect in the example. Simple writing can preserve detailed mechanics. Avoid replacing a precise explanation with an abstract promise merely to remove technical vocabulary.
 
 - Bad: "the point worth surfacing for your team" → just say the point.
 - Bad: "the thing your committee will gate on" → "what they'll ask about" or "care about."
