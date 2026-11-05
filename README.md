@@ -93,6 +93,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - recoup-roster-manage-artist
 - recoup-roster-onboard
 - recoup-song
+- recoup-song-analyst-report
 - recoup-song-analyze-audio
 - recoup-song-check-credits
 - recoup-song-find-hook
@@ -176,6 +177,12 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-release-plan-rollout/scripts/build_campaign_timeline.py
 - skills/recoup-release-plan-rollout/scripts/validate_release.py
 - skills/recoup-roster-add-artist/scripts/onboarding_examples.sh
+- skills/recoup-song-analyst-report/scripts/arrangement_density.py
+- skills/recoup-song-analyst-report/scripts/check_render.py
+- skills/recoup-song-analyst-report/scripts/fact_check.py
+- skills/recoup-song-analyst-report/scripts/flatten.py
+- skills/recoup-song-analyst-report/scripts/lines_from_transcript.py
+- skills/recoup-song-analyst-report/scripts/render.py
 - skills/recoup-song-analyze-audio/scripts/test_upload_chat_audio.py
 - skills/recoup-song-analyze-audio/scripts/upload_chat_audio.py
 - skills/recoup-song-check-credits/scripts/build-catalog-report.py
@@ -186,5 +193,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: fc7695cbc5188e7661bf0d3a7ebf314e17b672a0
-Version: 2026.1031.85
+Source commit: fa1e303c06f60a0cfd694068c7a287b69931489a
+Version: 2026.1104.86
