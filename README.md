@@ -98,6 +98,7 @@ Every skill is named `recoup-[domain]-[verb]-[noun]`, so the `/` list clusters b
 |-------|-------------|
 | recoup-song | Original song through Recoup: approved idea, genre, lyrics/prompt, then API call |
 | recoup-song-analyze-audio | Understand a song from its audio (BPM/key/genre, lyrics, mix) |
+| recoup-song-analyst-report | Full analyst report on one song: verdict, nine dimension cards, sync cut windows, score; fact-checked and rendered as one HTML page |
 | recoup-song-find-hook | Find the most clip-worthy 5–15 seconds |
 | recoup-song-placement-pitch | Playlist/editorial pitch + sync brief from the audio |
 | recoup-song-check-credits | Compare writer, producer and performer credits; flag conflicting names, roles and supplied shares |
