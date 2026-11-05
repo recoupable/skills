@@ -13,7 +13,10 @@ there; this skill's examples are fictional.
 
 Start with the previous dated review, the user's latest corrections, recent account activity,
 and the relevant owning project records. Keep the existing project order. Review every project,
-including secondary work, then give the main projects the most space.
+including secondary work, then give the main projects the most space. Inventory the whole
+reporting window before condensing it. If a local checkout stops before the current week,
+review current owning-repository PR bodies and release records rather than relying on
+old local summaries. Merged code is not proof of a live deployment.
 
 Write each project in four parts:
 
@@ -23,6 +26,12 @@ Write each project in four parts:
 - **By next week:** a short list of useful things to finish or demonstrate. Mark proposals as
   proposals until agreed. Use a person's name and a date only when they make responsibility clearer.
 - **Discuss on the call:** decisions, choices or questions needing the participants' judgment.
+
+Use one point per visible bullet. Do not combine a dependency, an unaffected activity and a
+proposed task into one sentence. Keep work that can continue separate from the blocker or
+slowdown. Use all substantive supported progress, with no one-sentence or one-item cap.
+Do not inflate the amount of work by treating parts of one rollout as separate launches;
+briefly identify the shared rollout when listing its useful components.
 
 Use the user's everyday language. Avoid management-field labels such as owner, checkpoint,
 next outcome, workstream, velocity and percent complete. A plain sentence such as
@@ -55,9 +64,14 @@ python3 scripts/render_review.py --input /absolute/private/review.json --output 
 ```
 
 Optional `--brand-css /absolute/inline-fonts.css` embeds a supplied brand stylesheet. Without it,
-the page uses system fonts. No network fonts, analytics, hosted assets or external scripts are used.
+the page uses system fonts. Supplied theme CSS is applied after the base layout.
+Use an explicitly requested client app design as the baseline and preserve its actual
+font, tokens and reading width in the private workspace; do not copy client assets into this skill. No network fonts, analytics, hosted assets or external scripts are used.
 The script also supports `--pdf /absolute/private/review.pdf` and `--font /absolute/body.ttf`.
-PDF output requires reportlab. Keep generated assets in the private workspace.
+PDF output requires reportlab. An optional `pdf_theme` object in the input can set
+`background`, `card`, `text`, `muted`, `line`, `accent`, `warning` and `danger` to six-digit
+hex colors. Primary and secondary projects use visible bullets; secondary text fields
+accept lists or older single strings. PDF pages give two projects their own wide rows. Keep generated assets in the private workspace.
 
 Open the result and inspect a desktop-sized overview, a focused project, a narrow viewport, and
 the PDF when generated. Verify readable text, unclipped content, working navigation, all projects

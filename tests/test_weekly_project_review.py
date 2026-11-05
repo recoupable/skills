@@ -50,6 +50,28 @@ class WeeklyProjectReviewTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             review.validate(self.data)
 
+    def test_secondary_updates_keep_separate_bullets_and_private_notes_out(self):
+        secondary = self.data["other_projects"][0]
+        secondary["progress"] = ["First verified change", "Second verified change"]
+        secondary["next_week"] = ["Review the sample", "Confirm the result"]
+        secondary["internal_notes"] = ["PRIVATE_SECONDARY_NOTE"]
+        result = review.render_html(self.data)
+        self.assertIn("<li>First verified change</li>", result)
+        self.assertIn("<li>Second verified change</li>", result)
+        self.assertIn("<li>Review the sample</li>", result)
+        self.assertIn("<li>Confirm the result</li>", result)
+        self.assertNotIn("PRIVATE_SECONDARY_NOTE", result)
+
+    def test_progress_is_not_capped_and_continuing_work_is_separate(self):
+        project = self.data["projects"][0]
+        project["progress"] = [f"Verified change {i}" for i in range(6)]
+        project["continuing"] = ["Design work can continue"]
+        result = review.render_html(self.data)
+        for item in project["progress"]:
+            self.assertIn(f"<li>{item}</li>", result)
+        self.assertIn("<h3>Work continuing</h3>", result)
+        self.assertIn("<li>Design work can continue</li>", result)
+
 
 if __name__ == "__main__":
     unittest.main()
