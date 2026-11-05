@@ -94,6 +94,12 @@ class WeeklyProjectReviewTests(unittest.TestCase):
                          ["progress", "blockers", "focus"] * expected)
         self.assertTrue(all("open" not in x for x in parser.details))
 
+    def test_no_empty_other_projects_section(self):
+        self.data["other_projects"] = []
+        result = review.render_html(self.data)
+        self.assertNotIn('class="others"', result)
+        self.assertIn(self.data["projects"][0]["name"], result)
+
 
 if __name__ == "__main__":
     unittest.main()

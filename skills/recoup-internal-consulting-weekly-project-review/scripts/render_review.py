@@ -111,10 +111,11 @@ def project_html(project, index):
 def render_html(data, brand_css=""):
     cards = "".join(project_html(p,i) for i,p in enumerate(data["projects"],1))
     secondary = "".join(project_html(secondary_project(p,i),i) for i,p in enumerate(data["other_projects"],len(data["projects"])+1))
+    others = f'<section class="others"><h2>Other projects</h2><div class="other-grid">{secondary}</div></section>' if secondary else ""
     decisions = '<details class="meeting-decisions"><summary><span>Decisions for Monday</span><span class="section-hint">'+str(len(data["decisions"]))+' decisions</span>'+CHEVRON+'</summary><div class="section-body"><ol>'+"".join(f'<li>{esc(x)}</li>' for x in data["decisions"])+'</ol></div></details>'
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(data["title"])}</title><style>{CSS}\n{brand_css}</style></head><body>
 <header><div><div class="eyebrow">Weekly project review</div><h1>{esc(data["title"])}</h1><p class="meta">{esc(data["period"])}</p></div><div class="header-right"><span class="draft">Draft for discussion</span><p class="meeting">{esc(data["meeting"])}</p><p class="meta">{esc(data["prepared"])}</p></div></header>
-<main><div class="review-toolbar"><p>Open a project, then choose a section.</p><button id="collapse-all" type="button">Collapse all</button></div><section aria-label="Main projects" class="cards">{cards}</section><section class="others"><h2>Other projects</h2><div class="other-grid">{secondary}</div></section>{decisions}<footer class="foot"><p>{esc(data.get("note","Proposed work and dates are for discussion."))}</p><p>Blocker: work stops.<br>Slowdown: work continues, but could move faster.</p></footer></main>
+<main><div class="review-toolbar"><p>Open a project, then choose a section.</p><button id="collapse-all" type="button">Collapse all</button></div><section aria-label="Main projects" class="cards">{cards}</section>{others}{decisions}<footer class="foot"><p>{esc(data.get("note","Proposed work and dates are for discussion."))}</p><p>Blocker: work stops.<br>Slowdown: work continues, but could move faster.</p></footer></main>
 <script>
 const collapseAll=document.getElementById('collapse-all');
 function updateCollapseButton(){{collapseAll.disabled=!document.querySelector('details[open]')}}

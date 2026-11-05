@@ -18,6 +18,11 @@ reporting window before condensing it. If a local checkout stops before the curr
 review current owning-repository PR bodies and release records rather than relying on
 old local summaries. Merged code is not proof of a live deployment.
 
+Follow the user's current project relationships when grouping the review. A vendor,
+collaborator or supporting experiment belongs under the project it advances, unless
+the user treats it as a separate project. Attribute meetings and support to concrete
+results or actionable issues; omit vague activity-only cards and invented status checks.
+
 Present each project as a closed disclosure card with three closed sections:
 
 - **Progress this week:** concrete changes in the reporting window, attributed correctly.
