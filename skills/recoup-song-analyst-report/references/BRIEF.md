@@ -95,6 +95,53 @@ the measurement did. Your job is judgment and prose, anchored to their facts.
 - Each dimension card must earn its own three bullets from its own dimension; do not restate
   the verdict bullets.
 
+## Plain reading (the reader is skimming on a phone)
+
+The reader is a music supervisor, an A&R or a label manager with ninety seconds, not an
+engineer. They read the hero, then the first line of each section, and decide whether to read
+on. Write for that reader first; the detail stays underneath for the one who reads on.
+
+- **Headline: one idea, at most twelve words.** No timestamps, no figures, no mix vocabulary. It
+  is the sentence you would say out loud to a colleague about this song. The same rule holds for
+  every section `headline`.
+- **Subhead: at most two sentences, thirty words in all**, in ordinary words. It may name the
+  song's world and the one thing holding the song back. Same for every section `subhead`.
+- **Verdict bullets: at most twenty words each.** The risk bullet names the problem in words a
+  non-musician understands ("too loud to hear its quiet moment", not "+2.7 dBTP").
+- **Short sentences, one idea each.** No sentence over thirty-six words; a field averages under
+  twenty-six. A semicolon joins two clauses, never three; a sentence does not carry both a
+  semicolon and a colon. Keep every fact: cut clauses, not content, and spend the words on more,
+  shorter sentences.
+- **Timestamps live where a reader can click them**: standout moments, key lines, scene
+  archetypes, edit points, cuts, and inside review, structure and sync paragraphs when they are
+  the evidence. Never in the hero (headline, subhead, bullets), never in a section headline or
+  subhead, never in a dimension summary.
+- **Measurement words live in Production and in `technical.notes`**: LUFS, dBTP, dB, Hz, kHz,
+  true peak, stereo image, correlation, spectral, band profile, energy curve, headroom, limiter.
+  Everywhere else say what it sounds like: "too loud to hear the quiet bit", "no air on top",
+  "the band drops out under her".
+- **The first sentence of every section is the plain takeaway**: what the reader needs if they
+  read nothing else of it. `opening_read`, `craft`, `form`, `positioning`, `pitch`, each
+  dimension `summary` and the first sentence of each review paragraph all open this way.
+- **Say the ordinary word first**: loud, quiet, fast, slow, clean, muddy, thin, big. A term of
+  art may follow it, in Production only, once the plain word has done the work.
+- **The hero answers three questions and nothing else**: what is this song, should you pitch it
+  and for what, and what is the one catch with what to do about it. The headline is the call
+  ("Pitch it for leaving-town scenes; ask for a clean master first" is the shape, in your own
+  words). The subhead says what the song is and its world. The three bullets are the strength,
+  the best use, and the single catch with its fix. Name one catch in the hero; the others live in
+  their sections. Judge for the person licensing or signing the song as it stands, not for a
+  future artist version.
+- **No figures of speech on the skim path**: headlines, subheads, dimension summaries and the
+  first sentence of each section say the thing literally ("the band drops out before the last
+  chorus", not "a trapdoor"; "it sounds dark and soft", not "lit from the middle"). An image may
+  follow in the second sentence, once the literal sentence has done the work. Never run one
+  metaphor through the whole report.
+- **Avoid words that mean something else to a lay reader**: write "on the beat", not "on the
+  downbeat"; "the backing track", not "the bed"; "the version that was released", not "the
+  master", outside Production and sync. Supervisor terms (cue sheet, a :30, needle drop, button,
+  promo) are fine in sync and nowhere earlier.
+
 ## Shape rules
 
 - Every standout moment and every scene archetype carries three measured cut windows (:06, :15,
