@@ -166,8 +166,12 @@ You write the report. Read `references/BRIEF.md` (role, facts-only rules, voice)
    answer; every double-quoted lyric is in the transcript, an answer or the context; names,
    year and label are in the context; tempo, duration, LUFS and true peak match the measurement;
    the score adds up; every dimension card has one strength, one neutral and one risk bullet; no
-   figure, finding or timestamp repeats past its cap; identity fields carry no provenance; and
-   no instrument-panel words reach reader prose.
+   figure, finding or timestamp repeats past its cap; identity fields carry no provenance; no
+   instrument-panel words reach reader prose; and the page reads plainly (`READ` lines): the
+   headline is one idea in at most twelve words, the subhead at most thirty, each verdict bullet
+   at most twenty; no timestamp or unit figure in the hero, a section headline or a dimension
+   summary; no sentence over thirty-six words or field averaging over twenty-six; measurement
+   words (LUFS, dBTP, Hz, true peak, stereo image) only in Production and the technical notes.
 4. Stop after three passes. Whatever still cannot be anchored comes out of the prose and goes into
    `technical.notes` as a line saying what was dropped and why.
 
@@ -183,8 +187,11 @@ python3 "$SKILL/scripts/flatten.py" report.json report.txt
   `m:ss` becomes a play link. Fix any `warning:` the renderer prints, then re-render.
 - `--audio` adds a sticky player that the play links seek. Leave it out when the audio URL is
   private or expires; the page then shows times without playback.
-- Read `report.txt` once start to finish as a reader would; cut repetition and hedging the
-  checker cannot see.
+- Read `report.txt` as a music supervisor skimming on a phone: the hero, then only the first
+  sentence of each section. After the hero alone you must be able to say what the song is,
+  whether to pitch it and for what, and the one catch with its fix; rewrite the hero until you
+  can. Then cut repetition, hedging and figures of speech on the skim path that the checker
+  cannot see.
 - Hand over the HTML (publish it if the user wants a link) with a two-line summary: the verdict
   headline and the score.
 
@@ -195,8 +202,9 @@ librosa.
 
 ## What good looks like
 
-- The opening paragraph starts in the song's own world (an image, a place, a line), not a genre
-  label. The verdict headline is one opinionated, complete sentence.
+- The verdict headline is the call in plain words ("Pitch it for leaving-town scenes; get a
+  clean file first"): one idea, no timestamps or figures. The opening paragraph starts in the
+  song's own world (an image, a place, a line), not a genre label.
 - Every claim is anchored: a timestamp, a named element ("808 sub", "fingerpicked acoustic"), a
   short lyric fragment, or a measured number.
 - Each dimension card: one summary line and exactly three bullets (strength, neutral, risk). The

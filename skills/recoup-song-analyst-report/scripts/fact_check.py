@@ -176,6 +176,63 @@ def main():
         if re.search(r"\b" + re.escape(jargon) + r"\b", blob, re.I):
             problems.append(f"JARGON {jargon!r} in reader prose; keep it in technical.notes or say what it sounds like")
 
+    # Plain reading: the reader skims the hero and the first line of each section on a phone.
+    # Headlines carry one idea in at most twelve words; heroes and section heads carry no
+    # timestamps or unit figures; sentences stay short; measurement words stay in Production.
+    def words(s):
+        return len(re.findall(r"[A-Za-z0-9’'\-]+", s))
+
+    def sentences(s):
+        s = TS.sub(lambda m: m.group(0).replace(":", "·"), s)  # keep m:ss out of the splitter
+        return [x.strip() for x in re.split(r"(?<=[.!?])[”\"’)]?\s+", s) if x.strip()]
+
+    UNIT = re.compile(r"[+\-−]?\d+(?:\.\d+)? ?(?:dBTP|dB|LUFS|LU|BPM|%|k?Hz)\b", re.I)
+    HERO = [("report.verdict.headline", report.get("verdict", {}).get("headline", "")),
+            ("report.verdict.subhead", report.get("verdict", {}).get("subhead", ""))]
+    for i, b in enumerate((report.get("verdict", {}).get("bullets") or [])):
+        HERO.append((f"report.verdict.bullets[{i}]", b.get("text", "") if isinstance(b, dict) else str(b)))
+    for sec in ("sonic_identity", "production_craft", "songwriting", "structure", "sync", "growth"):
+        for fld in ("headline", "subhead"):
+            v = (report.get(sec) or {}).get(fld)
+            if isinstance(v, str):
+                HERO.append((f"report.{sec}.{fld}", v))
+    for name, card in (report.get("dimensions") or {}).items():
+        if isinstance(card.get("summary"), str):
+            HERO.append((f"report.dimensions.{name}.summary", card["summary"]))
+    for path, text in HERO:
+        if TS.search(text):
+            problems.append(f"READ timestamp in {path}; timestamps belong where a reader can click them")
+        if UNIT.search(text):
+            problems.append(f"READ figure with a unit in {path}; say what it sounds like")
+        if path.endswith("headline") and words(text) > 12:
+            problems.append(f"READ {path} runs {words(text)} words (max 12, one idea)")
+        if path.endswith("subhead") and words(text) > 30:
+            problems.append(f"READ {path} runs {words(text)} words (max 30)")
+        if ".bullets[" in path and words(text) > 20:
+            problems.append(f"READ {path} runs {words(text)} words (max 20)")
+    for path, text in HERO:
+        if re.search(r"\bdownbeat\b|\bthe bed\b|\btrapdoor\b", text, re.I):
+            problems.append(f"READ {path} uses a word a lay reader misreads (downbeat, bed, trapdoor); say it literally")
+    MEASURE = re.compile(r"\bLUFS\b|\bdBTP\b|\bdB\b|\bk?Hz\b|\btrue peak\b|\bstereo (?:image|field|width)\b|\bcorrelation\b|\bspectral\b|\bband profile\b|\benergy curve\b|\bheadroom\b|\blimiter\b|\bRMS\b", re.I)
+    for path, text in walk_strings(report):
+        if path.startswith(("report.technical", "report.identity", "report.score", "report.production_craft", "report.sonic_identity.fingerprint_note")):
+            continue
+        tail = path.split(".")[-1].split("[")[0]
+        if tail in ("time", "cut", "6", "15", "30", "lyric", "line", "tag", "band", "kind", "type", "name", "medium", "era", "url", "deep_dive", "id", "home", "words"):
+            continue
+        for m in MEASURE.finditer(text):
+            problems.append(f"READ measurement word {m.group(0)!r} in {path}; keep it in Production or technical.notes")
+            break
+        sents = sentences(text)
+        for s in sents:
+            if words(s) > 36:
+                problems.append(f"READ sentence of {words(s)} words in {path} (max 36): {s[:70]!r}…")
+            body = re.sub(r"\d·\d\d", "", s)
+            if body.count(";") >= 2 or (";" in body and ":" in body.replace("Subject:", "")):
+                problems.append(f"READ sentence in {path} joins three clauses with ; and :; split it: {s[:70]!r}…")
+        if len(sents) >= 3 and words(text) / len(sents) > 26:
+            problems.append(f"READ {path} averages {words(text) / len(sents):.0f} words a sentence (max 26)")
+
     if problems:
         print("\n".join(problems))
         print(f"\n{len(problems)} problem(s)")
