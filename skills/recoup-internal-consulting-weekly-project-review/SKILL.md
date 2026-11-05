@@ -18,14 +18,19 @@ reporting window before condensing it. If a local checkout stops before the curr
 review current owning-repository PR bodies and release records rather than relying on
 old local summaries. Merged code is not proof of a live deployment.
 
-Write each project in four parts:
+Present each project as a closed disclosure card with three closed sections:
 
-- **Progress this week:** concrete changes in the reporting window. Attribute team work correctly.
-- **Blockers / slowdowns:** a blocker stops the named piece of work; a slowdown allows progress
-  but reduces its speed. Name the affected work, the dependency, and what would help.
-- **By next week:** a short list of useful things to finish or demonstrate. Mark proposals as
-  proposals until agreed. Use a person's name and a date only when they make responsibility clearer.
-- **Discuss on the call:** decisions, choices or questions needing the participants' judgment.
+- **Progress this week:** concrete changes in the reporting window, attributed correctly.
+- **Blockers:** preserve the distinction between blockers that stop the named work and
+  slowdowns that allow other progress. Name the dependency and what would help.
+- **Focus:** proposed priorities, work that can continue now, and questions to discuss.
+  Use names and dates inside the content when useful; avoid deadline-heavy section titles.
+
+Use native accessible disclosures for both levels. Start all projects and sections closed,
+keep each independently operable, and provide a simple way to collapse everything after a
+call topic. Keep important Focus and continuing-work text at normal body contrast, not
+muted gray. Smaller muted text is for metadata and evidence limits only. Printed exports
+can expand all content; the interactive review keeps it progressively disclosed.
 
 Use one point per visible bullet. Do not combine a dependency, an unaffected activity and a
 proposed task into one sentence. Keep work that can continue separate from the blocker or
@@ -54,8 +59,7 @@ decisions and unresolved facts. Link to implementation issues rather than creati
 ## Render a visual draft
 
 The scripts ship alongside this skill. Use `fixtures/example.json` for the input shape and
-`scripts/render_review.py` for a self-contained HTML review. It supports an overview and focused
-project views; there is no backend or browser-side editing. It can be sent as an HTML file.
+`scripts/render_review.py` for a self-contained HTML review. It supports nested project/section disclosures; there is no backend or browser-side editing. It can be sent as an HTML file.
 
 From the installed skill directory, with explicit input/output paths:
 

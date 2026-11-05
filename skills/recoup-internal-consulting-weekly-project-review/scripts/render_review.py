@@ -49,6 +49,15 @@ main{max-width:1376px;margin:0 auto;padding:24px 28px 40px}nav{display:flex;gap:
 @media(max-width:900px){.project .cols{grid-template-columns:minmax(0,1fr)}.cards{grid-template-columns:1fr}.desc{min-height:0}.other-grid{grid-template-columns:1fr}.focus .cols{grid-template-columns:1fr}.focus .project{padding:24px}.focus .part li{font-size:18px}.intro{display:block}.intro p{margin-top:6px}}
 @media(max-width:550px){header{padding:20px;display:block}.header-right{text-align:left;margin-top:14px}h1{font-size:29px}main{padding:20px 16px}.decisions{grid-template-columns:1fr;gap:12px}.foot{display:block}.focus h2{font-size:28px}}
 @media print{body{background:white}header{padding:0 0 18px}main{padding:18px 0;max-width:none}nav,.focus-link,.back{display:none}.cards{display:block}.project{break-inside:avoid;margin-bottom:16px}.other-grid{display:block}.other{break-inside:avoid;margin-bottom:8px}.decisions{background:white;color:#152e37;border:1px solid #152e37;break-inside:avoid}.decisions .eyebrow{color:#586f78}.focus{display:none!important}#overview{display:block!important}.focus .cols{display:block}}
+summary{cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.chevron{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;flex:none;transition:transform .15s}details[open]>summary>.chevron{transform:rotate(90deg)}
+.review-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}.review-toolbar p{font-size:14px;color:var(--muted)}#collapse-all{border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink);font:inherit;font-size:12px;padding:7px 13px;cursor:pointer}#collapse-all:disabled{opacity:.4;cursor:default}
+details.project{display:block;padding:0;border-top-width:1px}.project-summary{display:flex;align-items:center;gap:12px;padding:20px 24px}.project-summary h2{flex:1;margin:0;font-size:22px}.project-meta{display:flex;gap:12px;align-items:center}.update-count{font-size:12px;color:var(--muted)}.project-content{padding:0 24px 24px}.project-description{font-size:15px;color:var(--muted);margin:0 0 19px}
+.review-section{border:1px solid var(--line);border-radius:10px;margin-top:10px}.review-section>summary,.meeting-decisions>summary{display:flex;align-items:center;gap:14px;padding:16px 18px;font-weight:500}.section-label{flex:1}.section-hint{font-size:12px;color:var(--muted);margin-left:auto;font-weight:400}.section-body{padding:3px 20px 23px;max-width:76ch}.section-body ul,.section-body ol{padding-left:21px;margin:0}.section-body li{font-size:17px;line-height:1.65}.section-body li+li{margin-top:10px}.section-body .issues{list-style:none;padding:0}.section-body .issues li{display:flex;align-items:baseline;gap:9px}.focus-group+.focus-group{margin-top:25px}.focus-group h4{font-size:14px;font-weight:600;margin:0 0 11px;color:var(--ink)}.focus-group li{color:var(--ink)}.discussion{border-top:1px solid var(--line);padding-top:21px}.meeting-decisions{border:1px solid var(--line);border-radius:12px;margin-top:24px}.meeting-decisions>summary>span:first-child{flex:1}
+@media(max-width:650px){.project-summary{padding:18px 17px;gap:10px}.project-summary h2{font-size:20px}.project-meta .update-count{display:none}.project-meta{gap:0}.project-content{padding:0 16px 18px}.review-section>summary{padding:16px 14px;gap:10px}.review-section .section-hint{display:none}.section-body{padding:3px 16px 20px}.section-body li{font-size:16.5px}.review-toolbar p{font-size:12px}.review-toolbar{gap:10px}}
+@media(prefers-reduced-motion:reduce){.chevron{transition:none}}
+@media print{.review-toolbar{display:none}details.project{break-inside:avoid}.project-meta{display:none}}
+
 """
 
 
@@ -73,40 +82,48 @@ def secondary_project(project, index):
     }
 
 
-def project_html(project, index, next_label, focused=False, secondary=False):
+CHEVRON = '<svg class="chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6"/></svg>'
+
+
+def disclosure_section(label, content, key, hint=""):
+    meta = f'<span class="section-hint">{esc(hint)}</span>' if hint else ""
+    return f'<details class="review-section" data-section="{esc(key)}"><summary><span class="section-label">{esc(label)}</span>{meta}{CHEVRON}</summary><div class="section-body">{content}</div></details>'
+
+
+def project_html(project, index):
     labels = {"blocker": "Blocker", "slowdown": "Slowdown", "check": "To confirm", "none": "Continuing"}
-    issues = "".join(f'<li><span class="tag {esc(x["kind"])}">{esc(labels[x["kind"]])}</span><span>{esc(x["text"])}</span></li>' for x in project["issues"])
+    updates = len(items(project["progress"]))
+    update_label = f"{updates} update" + ("s" if updates != 1 else "")
+    tone = next((kind for kind in ("blocker", "slowdown", "check") if any(x["kind"] == kind for x in project["issues"])), "none")
+    status = f'<span class="tag {tone}">{esc(labels[tone])}</span>'
     note = f'<p class="progress-note">{esc(project["progress_note"])}</p>' if project.get("progress_note") else ""
-    continuing = f'<section class="part continuing"><h3>Work continuing</h3>{list_html(project["continuing"])}</section>' if project.get("continuing") else ""
-    first = f'<section class="part"><h3>Progress this week</h3>{list_html(project["progress"])}{note}</section><section class="part"><h3>Blockers / slowdowns</h3><ul class="issues">{issues}</ul></section>{continuing}'
-    second = f'<section class="part"><h3>{esc(next_label)} <span class="proposed">Proposed</span></h3>{list_html(project["next_week"])}</section><section class="part discuss"><h3>Discuss on Monday</h3>{list_html(project["discuss"])}</section>'
-    body = f'<div class="cols"><div>{first}</div><div>{second}</div></div>'
-    link = "" if secondary else f'<button class="focus-link" data-view="{esc(project["id"])}">Open project view &rarr;</button>'
-    description = f'<p class="desc">{esc(project["description"])}</p>' if project.get("description") else ""
-    return f'<article class="project"><div class="project-top"><span class="number">{index:02d}</span><h2>{esc(project["name"])}</h2></div>{description}{body}{link}</article>'
+    progress = disclosure_section("Progress this week", list_html(project["progress"]) + note, "progress", update_label)
+    issue_rows = "".join(f'<li><span class="tag {esc(x["kind"])}">{esc(labels[x["kind"]])}</span><span>{esc(x["text"])}</span></li>' for x in project["issues"])
+    blockers = disclosure_section("Blockers", f'<ul class="issues">{issue_rows}</ul>', "blockers", "Blockers and slowdowns")
+    continuing = f'<div class="focus-group"><h4>Can continue now</h4>{list_html(project["continuing"])}</div>' if project.get("continuing") else ""
+    discussion = f'<div class="focus-group discussion"><h4>Discuss together</h4>{list_html(project["discuss"])}</div>' if project.get("discuss") else ""
+    focus_content = f'<div class="focus-group"><h4>Priorities to agree</h4>{list_html(project["next_week"])}</div>{continuing}{discussion}'
+    focus = disclosure_section("Focus", focus_content, "focus", "Priorities and decisions")
+    description = f'<p class="project-description">{esc(project["description"])}</p>' if project.get("description") else ""
+    return f'<details class="project" data-project="{esc(project["id"])}"><summary class="project-summary"><span class="number">{index:02d}</span><h2>{esc(project["name"])}</h2><span class="project-meta"><span class="update-count">{esc(update_label)}</span>{status}</span>{CHEVRON}</summary><div class="project-content">{description}{progress}{blockers}{focus}</div></details>'
 
 
 def render_html(data, brand_css=""):
-    next_label = data.get("next_week_label", "By next week")
-    nav = '<button data-view="overview" aria-pressed="true">All projects</button>' + "".join(f'<button data-view="{esc(p["id"])}" aria-pressed="false">{esc(p["name"])}</button>' for p in data["projects"])
-    cards = "".join(project_html(p, i, next_label) for i, p in enumerate(data["projects"], 1))
-    secondary = "".join(project_html(secondary_project(p,i),i,next_label,secondary=True) for i,p in enumerate(data["other_projects"],len(data["projects"])+1))
-    decisions = '<section class="decisions"><div><div class="eyebrow">Monday discussion</div><h2>Decisions to make</h2></div><ol>' + "".join(f'<li>{esc(x)}</li>' for x in data["decisions"]) + '</ol></section>'
-    focused = "".join(f'<section class="focus" id="view-{esc(p["id"])}" hidden><button class="back" data-view="overview">&larr; All projects</button>{project_html(p,i,next_label,True)}</section>' for i,p in enumerate(data["projects"],1))
+    cards = "".join(project_html(p,i) for i,p in enumerate(data["projects"],1))
+    secondary = "".join(project_html(secondary_project(p,i),i) for i,p in enumerate(data["other_projects"],len(data["projects"])+1))
+    decisions = '<details class="meeting-decisions"><summary><span>Decisions for Monday</span><span class="section-hint">'+str(len(data["decisions"]))+' decisions</span>'+CHEVRON+'</summary><div class="section-body"><ol>'+"".join(f'<li>{esc(x)}</li>' for x in data["decisions"])+'</ol></div></details>'
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(data["title"])}</title><style>{CSS}\n{brand_css}</style></head><body>
 <header><div><div class="eyebrow">Weekly project review</div><h1>{esc(data["title"])}</h1><p class="meta">{esc(data["period"])}</p></div><div class="header-right"><span class="draft">Draft for discussion</span><p class="meeting">{esc(data["meeting"])}</p><p class="meta">{esc(data["prepared"])}</p></div></header>
-<main><nav aria-label="Project views">{nav}</nav><section id="overview"><div class="intro"><h2>The projects</h2><p>Progress, what is slowing us down, and what we want done next.</p></div><div class="cards">{cards}</div>{decisions}<section class="others"><h2>Other projects and ongoing work</h2><div class="other-grid">{secondary}</div></section></section>{focused}<footer class="foot"><p>{esc(data.get("note","Proposed work and dates are for discussion."))}</p><p>Blocker: work stops.<br>Slowdown: work continues, but could move faster.</p></footer></main>
+<main><div class="review-toolbar"><p>Open a project, then choose a section.</p><button id="collapse-all" type="button">Collapse all</button></div><section aria-label="Main projects" class="cards">{cards}</section><section class="others"><h2>Other projects</h2><div class="other-grid">{secondary}</div></section>{decisions}<footer class="foot"><p>{esc(data.get("note","Proposed work and dates are for discussion."))}</p><p>Blocker: work stops.<br>Slowdown: work continues, but could move faster.</p></footer></main>
 <script>
-function showView(name){{
- const allowed=['overview',...Array.from(document.querySelectorAll('.focus')).map(x=>x.id.slice(5))];
- if(!allowed.includes(name)) name='overview';
- document.getElementById('overview').hidden=name!=='overview';
- document.querySelectorAll('.focus').forEach(x=>x.hidden=x.id!=='view-'+name);
- document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.view===name)));
- window.scrollTo(0,0);
-}}
-document.querySelectorAll('[data-view]').forEach(x=>x.addEventListener('click',()=>showView(x.dataset.view)));
-document.addEventListener('keydown',e=>{{if(e.key==='Escape')showView('overview')}});
+const collapseAll=document.getElementById('collapse-all');
+function updateCollapseButton(){{collapseAll.disabled=!document.querySelector('details[open]')}}
+document.querySelectorAll('details').forEach(item=>item.addEventListener('toggle',updateCollapseButton));
+collapseAll.addEventListener('click',()=>{{document.querySelectorAll('details[open]').forEach(item=>item.open=false);updateCollapseButton()}});
+updateCollapseButton();
+let beforePrintOpen=[];
+window.addEventListener('beforeprint',()=>{{beforePrintOpen=Array.from(document.querySelectorAll('details[open]'));document.querySelectorAll('details').forEach(item=>item.open=true)}});
+window.addEventListener('afterprint',()=>{{document.querySelectorAll('details').forEach(item=>item.open=beforePrintOpen.includes(item));updateCollapseButton()}});
 </script></body></html>'''
 
 
@@ -175,7 +192,7 @@ def render_pdf(data, path, font_path=None):
             middle=section(x2,y,"Blockers / slowdowns",[issue_labels[v["kind"]]+": "+v["text"] for v in p["issues"]],colw)
             if p.get("continuing"):
                 middle=section(x2,middle,"Work continuing",p["continuing"],colw)
-            right=section(x3,y,"By next week (proposed)",items(p["next_week"]),colw)
+            right=section(x3,y,"Focus (proposed)",items(p["next_week"]),colw)
             right=section(x3,right,"Discuss on Monday",items(p["discuss"]),colw)
             if min(left,middle,right)<bottom+6:
                 raise ValueError(f"PDF project too long: {p['name']}; preserve content by allocating more space ({min(left,middle,right):.0f} < {bottom+6:.0f})")

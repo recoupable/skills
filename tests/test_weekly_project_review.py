@@ -1,6 +1,7 @@
 import copy
 import importlib.util
 import json
+from html.parser import HTMLParser
 import unittest
 from pathlib import Path
 
@@ -69,8 +70,29 @@ class WeeklyProjectReviewTests(unittest.TestCase):
         result = review.render_html(self.data)
         for item in project["progress"]:
             self.assertIn(f"<li>{item}</li>", result)
-        self.assertIn("<h3>Work continuing</h3>", result)
+        self.assertIn("<h4>Can continue now</h4>", result)
         self.assertIn("<li>Design work can continue</li>", result)
+
+    def test_projects_and_sections_start_closed_without_duplicate_views(self):
+        class Disclosures(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.details = []
+
+            def handle_starttag(self, tag, attrs):
+                if tag == "details":
+                    self.details.append(dict(attrs))
+
+        parser = Disclosures()
+        parser.feed(review.render_html(self.data))
+        projects = [x for x in parser.details if x.get("class") == "project"]
+        sections = [x for x in parser.details if x.get("class") == "review-section"]
+        expected = len(self.data["projects"]) + len(self.data["other_projects"])
+        self.assertEqual(len(projects), expected)
+        self.assertEqual(len({x["data-project"] for x in projects}), expected)
+        self.assertEqual([x["data-section"] for x in sections],
+                         ["progress", "blockers", "focus"] * expected)
+        self.assertTrue(all("open" not in x for x in parser.details))
 
 
 if __name__ == "__main__":
