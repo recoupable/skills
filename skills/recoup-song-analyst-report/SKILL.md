@@ -172,6 +172,12 @@ You write the report. Read `references/BRIEF.md` (role, facts-only rules, voice)
    at most twenty; no timestamp or unit figure in the hero, a section headline or a dimension
    summary; no sentence over thirty-six words or field averaging over twenty-six; measurement
    words (LUFS, dBTP, Hz, true peak, stereo image) only in Production and the technical notes.
+
+   It also lists `CLAIM` lines, which never fail the check: each sentence with an absolute
+   ("never", "every", "always", "nothing") or an intent claim ("meant for", "written for"). Every
+   remaining fact error in the parity rounds was one of these overstatements. Re-read each against
+   its source (the energy curve, the sections, the lyrics, `context.json`): keep an absolute only
+   if it holds for the whole song, and keep "reads as" or "sounds like" on anything inferred.
 4. Stop after three passes. Whatever still cannot be anchored comes out of the prose and goes into
    `technical.notes` as a line saying what was dropped and why.
 
