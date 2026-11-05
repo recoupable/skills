@@ -1,0 +1,70 @@
+---
+name: recoup-internal-consulting-weekly-project-review
+description: "Prepare and update a visual weekly project review in a selected private workspace for recoup-internal consulting. Use for a Monday project agenda, weekly project progress, or refreshing a sponsor's project review. Group by project: progress this week, blockers or slowdowns, work for next week, and decisions to discuss."
+---
+
+# Weekly project review
+
+Create a brief that people can read together on a call and send as a document. Use the
+selected workspace's instructions and existing client records. Keep private client content
+there; this skill's examples are fictional.
+
+## Update the review
+
+Start with the previous dated review, the user's latest corrections, recent account activity,
+and the relevant owning project records. Keep the existing project order. Review every project,
+including secondary work, then give the main projects the most space.
+
+Write each project in four parts:
+
+- **Progress this week:** concrete changes in the reporting window. Attribute team work correctly.
+- **Blockers / slowdowns:** a blocker stops the named piece of work; a slowdown allows progress
+  but reduces its speed. Name the affected work, the dependency, and what would help.
+- **By next week:** a short list of useful things to finish or demonstrate. Mark proposals as
+  proposals until agreed. Use a person's name and a date only when they make responsibility clearer.
+- **Discuss on the call:** decisions, choices or questions needing the participants' judgment.
+
+Use the user's everyday language. Avoid management-field labels such as owner, checkpoint,
+next outcome, workstream, velocity and percent complete. A plain sentence such as
+"Morgan will show the revised search on Friday" is enough.
+
+Keep dated source pointers in the JSON's `evidence` fields or an internal source note. The
+renderer excludes evidence from the audience-facing HTML/PDF. Evidence should distinguish code
+released, live behavior checked, access granted, actual usage, and measured results. Missing
+evidence stays missing. An old release is background, not new weekly progress. Never infer
+completion from an issue title, a drafted message, or a future meeting invitation.
+
+If the review is prepared before the reporting window ends, label it as a draft through the
+last checked date. Compare last week's agreed work with what happened; explicitly carry forward
+unfinished items. Do not silently replace the original commitment or pretend a date was agreed.
+
+Use the workspace's existing review record when one exists. Otherwise keep one dated JSON review
+and a short index in its client delivery folder. Update account activity with actual preparation,
+decisions and unresolved facts. Link to implementation issues rather than creating a second backlog.
+
+## Render a visual draft
+
+The scripts ship alongside this skill. Use `fixtures/example.json` for the input shape and
+`scripts/render_review.py` for a self-contained HTML review. It supports an overview and focused
+project views; there is no backend or browser-side editing. It can be sent as an HTML file.
+
+From the installed skill directory, with explicit input/output paths:
+
+```sh
+python3 scripts/render_review.py --input /absolute/private/review.json --output /absolute/private/review.html
+```
+
+Optional `--brand-css /absolute/inline-fonts.css` embeds a supplied brand stylesheet. Without it,
+the page uses system fonts. No network fonts, analytics, hosted assets or external scripts are used.
+The script also supports `--pdf /absolute/private/review.pdf` and `--font /absolute/body.ttf`.
+PDF output requires reportlab. Keep generated assets in the private workspace.
+
+Open the result and inspect a desktop-sized overview, a focused project, a narrow viewport, and
+the PDF when generated. Verify readable text, unclipped content, working navigation, all projects
+present, and correct draft dates. Present the visual draft to the user so their feedback can improve it.
+
+Keep the first version simple. A shareable document is usually enough to learn whether the review
+format works. Consider a shared app or board when people need live edits or task history, preserving
+the client's access boundaries. Do not create a database, external account or hosted site just to
+produce the weekly review. Sending, publishing and recurring scheduling retain their normal
+authorization requirements; creating this skill does not authorize them.

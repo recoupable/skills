@@ -1,0 +1,24 @@
+{
+  "title": "Cedar weekly projects",
+  "meeting": "Monday, April 12",
+  "period": "Progress April 5-11",
+  "prepared": "Draft through April 9",
+  "next_week_label": "By next week",
+  "note": "Proposed work for discussion. This fictional example is not client evidence.",
+  "projects": [
+    {
+      "id": "search",
+      "name": "Customer search",
+      "description": "Find the right account without asking another team.",
+      "progress": ["The new search returns account names and cities."],
+      "issues": [{"kind": "slowdown", "text": "Some account names still need Finance's review; interface improvements can continue."}],
+      "next_week": ["Morgan will bring three corrected account examples for review."],
+      "discuss": ["Which account example should we use to test the next version?"],
+      "evidence": ["Fictional review note, April 8"]
+    }
+  ],
+  "other_projects": [
+    {"name": "Import tool", "progress": "A sample file is ready.", "kind": "blocker", "issue": "The import test cannot start until the sample is approved.", "next_week": "Ask the reviewer to approve or correct the sample.", "discuss": "Choose the sample reviewer.", "evidence": ["Fictional sample review"]}
+  ],
+  "decisions": ["Choose the sample reviewer and agree when they can respond."]
+}

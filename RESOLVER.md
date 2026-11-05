@@ -183,6 +183,7 @@ The internal namespace is a routing convention, not an access-control boundary.
 | recoup-internal consulting: Build three-tier pricing for a deal | `recoup-internal-consulting-pricing-builder` |
 | recoup-internal consulting: Turn verified user-facing releases and merged PRs into cited product-update signals and draft article, LinkedIn, and email bundles | `recoup-internal-consulting-product-engine` |
 | recoup-internal consulting: Draft a recurring client progress report from primary evidence, review it for the sponsor, and prepare the authorized delivery format | `recoup-internal-consulting-progress-report` |
+| recoup-internal consulting: Prepare or refresh a visual weekly project review and Monday agenda grouped by project, with progress, blockers or slowdowns, next week and decisions | `recoup-internal-consulting-weekly-project-review` |
 | recoup-internal consulting: Render approved proposal copy and commercial terms as a branded two-page HTML/PDF document | `recoup-internal-consulting-proposal-designer` |
 | recoup-internal consulting: Draft a situational-assessment proposal from a discovery transcript or discovery analysis | `recoup-internal-consulting-proposal-drafting` |
 | recoup-internal consulting: Revive cold/dormant prospects from historical meeting data | `recoup-internal-consulting-prospect-resurrection` |
