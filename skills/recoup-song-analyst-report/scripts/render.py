@@ -641,12 +641,12 @@ def verdict_body(r, emo, by_id):
     src = "the report" if emo.get("from_report") else "the measurement"
     if emo.get("v") is not None:
         reading = (f'<div class="emo-read"><p class="emo-label">{esc(smart(emo.get("label") or ""))}</p>'
-                   f'<dl class="mini"><div><dt>Valence</dt><dd>{emo["v"]:.2f}</dd></div>'
-                   f'<div><dt>Arousal</dt><dd>{emo["a"]:.2f}</dd></div></dl>'
-                   f'<p class="small muted">Valence runs from negative to positive feeling, arousal from calm '
-                   f'to energetic; both on a 0\u20131 scale, taken from {src}.</p></div>')
+                   f'<dl class="mini"><div><dt>Brightness</dt><dd>{round(emo["v"] * 100)}</dd></div>'
+                   f'<div><dt>Energy</dt><dd>{round(emo["a"] * 100)}</dd></div></dl>'
+                   f'<p class="small muted">Brightness runs from dark (0) to happy (100); energy from calm (0) '
+                   f'to driving (100); taken from {src}.</p></div>')
     else:
-        reading = '<div class="emo-read"><p class="small muted">No valence or arousal reading.</p></div>'
+        reading = '<div class="emo-read"><p class="small muted">No mood reading.</p></div>'
     emo_html = f'<div class="emo"><div class="panel"><div class="chart" id="ch-emotion"></div></div>{reading}</div>'
     rv, dives = [], []
     for it in v.get("review") or []:
@@ -1882,7 +1882,7 @@ JS = r"""
   function drawEmotion() {
     var id = 'ch-emotion', host = document.getElementById(id), e = R.emo || {};
     if (!host) return;
-    if (!fin(e.v) || !fin(e.a)) return na(id, 'No valence or arousal reading.');
+    if (!fin(e.v) || !fin(e.a)) return na(id, 'No mood reading.');
     var W = clamp(hostWidth(host), 260, 380), x0 = 46, y0 = 10, P = W - x0 - 12, H = y0 + P + 38;
     var X = function (v) { return x0 + clamp(v, 0, 1) * P; }, Y = function (a) { return y0 + (1 - clamp(a, 0, 1)) * P; };
     var g = [RC(x0, y0, P, P, 'emo-bg', 12)];
@@ -1891,12 +1891,12 @@ JS = r"""
     var q = P / 2 - 20;
     g.push(T(x0 + 10, y0 + 22, wrapW('Tense \u00b7 Angry', 'emo-qt', q, 1)[0], 'emo-qt') + T(x0 + P - 10, y0 + 22, wrapW('Joyful \u00b7 Excited', 'emo-qt', q, 1)[0], 'emo-qt', ' text-anchor="end"'));
     g.push(T(x0 + 10, y0 + P - 12, wrapW('Sad \u00b7 Low', 'emo-qt', q, 1)[0], 'emo-qt') + T(x0 + P - 10, y0 + P - 12, wrapW('Serene \u00b7 Content', 'emo-qt', q, 1)[0], 'emo-qt', ' text-anchor="end"'));
-    var by = y0 + P + 26, wn = tw('Negative', 'ax-e'), wp = tw('Positive', 'ax-e');
-    g.push(T(x0, by, 'Negative', 'ax-e') + T(x0 + P, by, 'Positive', 'ax-e', ' text-anchor="end"'));
+    var by = y0 + P + 26, wn = tw('Dark', 'ax-e'), wp = tw('Happy', 'ax-e');
+    g.push(T(x0, by, 'Dark', 'ax-e') + T(x0 + P, by, 'Happy', 'ax-e', ' text-anchor="end"'));
     if (P - wn - wp > 60) g.push(arrowRight(x0 + wn + 12, x0 + P - wp - 20, by - 4));
-    var lx = 26, wc = tw('Calm', 'ax-e'), we = tw('Energetic', 'ax-e');
+    var lx = 26, wc = tw('Calm', 'ax-e'), we = tw('Driving', 'ax-e');
     g.push(T(lx, y0 + P, 'Calm', 'ax-e', ' transform="rotate(-90 ' + lx + ' ' + (y0 + P) + ')"'));
-    g.push(T(lx, y0, 'Energetic', 'ax-e', ' text-anchor="end" transform="rotate(-90 ' + lx + ' ' + y0 + ')"'));
+    g.push(T(lx, y0, 'Driving', 'ax-e', ' text-anchor="end" transform="rotate(-90 ' + lx + ' ' + y0 + ')"'));
     if (P - wc - we > 60) g.push(arrowUp(lx - 4, y0 + P - wc - 12, y0 + we + 20));
     var px = X(e.v), py = Y(e.a);
     g.push(LN(px, py, px, y0 + P, 'emo-guide') + LN(x0, py, px, py, 'emo-guide'));
@@ -1906,7 +1906,7 @@ JS = r"""
     var ty = clamp(py - 3 - (lines.length - 1) * 8, y0 + 36, y0 + P - 28 - lines.length * 16);
     lines.forEach(function (ln, j) { g.push(T(tx, ty + j * 16, ln, 'emo-l halo', anchor)); });
     g.push(T(tx, ty + lines.length * 16, 'V ' + e.v.toFixed(2) + ' \u00b7 A ' + e.a.toFixed(2), 'emo-v halo', anchor));
-    put(id, svg(W, H, g.join(''), 'Emotional position: valence ' + e.v.toFixed(2) + ', arousal ' + e.a.toFixed(2) + (e.label ? ', ' + e.label : '')));
+    put(id, svg(W, H, g.join(''), 'Mood: brightness ' + Math.round(e.v * 100) + ', energy ' + Math.round(e.a * 100) + (e.label ? ', ' + e.label : '')));
   }
 
   // ---- Radar (mood profile, sonic fingerprint) ----------------------------

@@ -18,8 +18,8 @@
       "type": "object",
       "required": ["headline", "subhead", "bullets", "review"],
       "properties": {
-        "headline": {"type": "string", "description": "One opinionated sentence."},
-        "subhead": {"type": "string", "description": "One or two sentences that set up the argument."},
+        "headline": {"type": "string", "description": "One idea in at most twelve plain words; no timestamps, figures or mix vocabulary. The sentence you would say out loud about the song."},
+        "subhead": {"type": "string", "description": "At most two sentences, thirty words in all, in ordinary words: the song's world and the one thing holding it back."},
         "bullets": {"$ref": "#/$defs/threeBullets"},
         "emotional_position": {"type": "object", "description": "valence and arousal on 0–1 (0.5 is neutral); copy from the measurement unless the lyric clearly moves valence.", "properties": {"valence": {"type": "number", "minimum": 0, "maximum": 1}, "arousal": {"type": "number", "minimum": 0, "maximum": 1}, "label": {"type": "string"}}},
         "review": {
@@ -50,7 +50,7 @@
       "type": "object",
       "required": ["headline", "subhead", "moods", "fingerprint_note", "issues"],
       "properties": {
-        "headline": {"type": "string"}, "subhead": {"type": "string"},
+        "headline": {"type": "string", "description": "One idea, at most twelve plain words; no timestamps or figures."}, "subhead": {"type": "string", "description": "At most thirty plain words."},
         "moods": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "object", "required": ["tag", "pct"], "properties": {"tag": {"type": "string"}, "pct": {"type": "integer"}}}},
         "fingerprint_note": {"type": "string", "description": "One sentence reading the six measured axes."},
         "issues": {"$ref": "#/$defs/issues"}
@@ -60,7 +60,7 @@
       "type": "object",
       "required": ["headline", "subhead", "bands", "approach", "mix", "issues"],
       "properties": {
-        "headline": {"type": "string"}, "subhead": {"type": "string"},
+        "headline": {"type": "string", "description": "One idea, at most twelve plain words; no timestamps or figures."}, "subhead": {"type": "string", "description": "At most thirty plain words."},
         "bands": {"type": "array", "minItems": 7, "maxItems": 7, "items": {"type": "object", "required": ["band", "annotation", "note"], "properties": {"band": {"type": "string", "enum": ["sub", "low", "low_mid", "mid", "high_mid", "high", "air"]}, "annotation": {"type": "string", "description": "What lives here, e.g. '808 sub-bass'"}, "note": {"type": "string"}}}},
         "approach": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 3},
         "mix": {"type": "array", "items": {"type": "object", "required": ["heading", "paragraphs"], "properties": {"heading": {"type": "string"}, "paragraphs": {"type": "array", "items": {"type": "string"}}}}},
@@ -72,14 +72,14 @@
       "type": "object",
       "required": ["headline", "craft", "narrative_arc", "theme", "key_lines"],
       "properties": {
-        "headline": {"type": "string"}, "craft": {"type": "string"}, "narrative_arc": {"type": "string"}, "theme": {"type": "string"},
+        "headline": {"type": "string", "description": "One idea, at most twelve plain words; no timestamps or figures."}, "craft": {"type": "string"}, "narrative_arc": {"type": "string"}, "theme": {"type": "string"},
         "key_lines": {"type": "array", "items": {"type": "object", "required": ["line", "time", "why"], "properties": {"line": {"type": "string"}, "time": {"type": "string"}, "why": {"type": "string"}}}}
       }
     },
     "structure": {
       "type": "object",
       "required": ["headline", "form", "dynamics", "creative_dna"],
-      "properties": {"headline": {"type": "string"}, "form": {"type": "string"}, "dynamics": {"type": "string"}, "creative_dna": {"type": "string"}}
+      "properties": {"headline": {"type": "string", "description": "One idea, at most twelve plain words; no timestamps or figures."}, "form": {"type": "string"}, "dynamics": {"type": "string"}, "creative_dna": {"type": "string"}}
     },
     "market": {
       "type": "object",
@@ -98,7 +98,7 @@
       "type": "object",
       "required": ["headline", "pitch", "sell", "scene_archetypes", "edit_points", "observations", "issues"],
       "properties": {
-        "headline": {"type": "string"},
+        "headline": {"type": "string", "description": "One idea, at most twelve plain words; no timestamps or figures."},
         "pitch": {"type": "string", "description": "The written pitch to a music supervisor: four or five sentences covering what the cue delivers, the cleanest cut windows, the lyric's constraint, and the one line to put in the email subject."},
         "sell": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 3, "description": "The sync sell, to a supervisor."},
         "scene_archetypes": {"type": "array", "minItems": 3, "maxItems": 6, "items": {"type": "object", "required": ["name", "medium", "time", "cuts", "why"], "properties": {"name": {"type": "string"}, "medium": {"type": "string", "enum": ["series promo", "trailer", "film scene", "ad", "social", "game", "live TV"]}, "time": {"type": "string"}, "cuts": {"$ref": "#/$defs/cuts"}, "why": {"type": "string"}}}},
@@ -110,7 +110,7 @@
     "growth": {
       "type": "object",
       "required": ["headline", "opportunities"],
-      "properties": {"headline": {"type": "string"}, "opportunities": {"type": "array", "minItems": 2, "maxItems": 5, "items": {"type": "object", "required": ["what", "why"], "properties": {"what": {"type": "string"}, "why": {"type": "string"}}}}}
+      "properties": {"headline": {"type": "string", "description": "One idea, at most twelve plain words; no timestamps or figures."}, "opportunities": {"type": "array", "minItems": 2, "maxItems": 5, "items": {"type": "object", "required": ["what", "why"], "properties": {"what": {"type": "string"}, "why": {"type": "string"}}}}}
     },
     "score": {
       "type": "object",
