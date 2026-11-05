@@ -42,6 +42,7 @@
 | create an original song / track through Recoup; approve idea, genre, lyrics/prompt and generation | `recoup-song` |
 | MiniMax Music 3 model-specific caption, lyric timing, genre coverage or past-generation guidance | `recoup-minimax-music-3` |
 | analyze a song's audio: BPM/key/genre/mood, lyrics, mix critique | `recoup-song-analyze-audio` |
+| full analyst report on one song: verdict, dimension cards, production, songwriting, market, comparables, sync cut windows, score, as an HTML page | `recoup-song-analyst-report` |
 | find the hook, best 5–15s to clip | `recoup-song-find-hook` |
 | playlist pitch + sync brief from the audio | `recoup-song-placement-pitch` |
 | check who wrote/produced/performed a song; compare credit records and supplied splits | `recoup-song-check-credits` |

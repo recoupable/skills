@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SongReport",
+  "description": "One analyst report. Every timestamp is m:ss and must exist in the measurement or a model answer.",
+  "type": "object",
+  "required": ["identity", "verdict", "first_impression", "dimensions", "sonic_identity", "production_craft", "songwriting", "structure", "market", "sync", "growth", "score", "technical"],
+  "properties": {
+    "identity": {
+      "type": "object",
+      "required": ["title", "duration_mmss", "tempo_bpm", "key", "time_signature", "genre", "subgenre", "primary_mood"],
+      "properties": {
+        "title": {"type": "string"}, "artists": {"type": "string"}, "writers": {"type": "string"}, "producers": {"type": "string"}, "year": {"type": "string"},
+        "duration_mmss": {"type": "string"}, "tempo_bpm": {"type": "number"}, "key": {"type": "string", "description": "Plain, e.g. 'F major'; no parentheticals. Provenance goes in key_source and technical.notes."}, "key_source": {"type": "string", "enum": ["measured", "metadata", "model", "unresolved"]}, "time_signature": {"type": "string"},
+        "genre": {"type": "string"}, "subgenre": {"type": "string"}, "primary_mood": {"type": "string"}, "explicit": {"type": "boolean"}
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "required": ["headline", "subhead", "bullets", "review"],
+      "properties": {
+        "headline": {"type": "string", "description": "One opinionated sentence."},
+        "subhead": {"type": "string", "description": "One or two sentences that set up the argument."},
+        "bullets": {"$ref": "#/$defs/threeBullets"},
+        "emotional_position": {"type": "object", "description": "valence and arousal on 0–1 (0.5 is neutral); copy from the measurement unless the lyric clearly moves valence.", "properties": {"valence": {"type": "number", "minimum": 0, "maximum": 1}, "arousal": {"type": "number", "minimum": 0, "maximum": 1}, "label": {"type": "string"}}},
+        "review": {
+          "type": "array", "minItems": 2, "maxItems": 4,
+          "description": "Argued sub-heads: each heading is a claim the paragraphs prove, not a chapter title.",
+          "items": {"type": "object", "required": ["heading", "paragraphs"], "properties": {"heading": {"type": "string"}, "paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 3}, "deep_dive": {"type": "string", "enum": ["sonic-identity", "production", "songwriting", "structure", "market", "comparables", "sync", "growth"], "description": "The section that carries the evidence for this argument."}}}
+        }
+      }
+    },
+    "first_impression": {
+      "type": "object",
+      "required": ["opening_read", "sonic_landscape", "production_quality", "standout_moments", "emotional_texture", "weaknesses", "lyrics_and_narrative", "quality_calibration"],
+      "properties": {
+        "opening_read": {"type": "string"}, "sonic_landscape": {"type": "string"}, "production_quality": {"type": "string"},
+        "standout_moments": {"type": "array", "minItems": 3, "maxItems": 6, "items": {"type": "object", "required": ["time", "what", "why", "cuts"], "properties": {"time": {"type": "string"}, "lyric": {"type": "string"}, "what": {"type": "string"}, "why": {"type": "string"}, "cuts": {"$ref": "#/$defs/cuts"}, "use": {"type": "string"}}}},
+        "emotional_texture": {"type": "string"}, "weaknesses": {"type": "string"}, "lyrics_and_narrative": {"type": "string"},
+        "artist_context": {"type": "string", "description": "Only when context.json names people."},
+        "quality_calibration": {"type": "string"}
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "The card strip: one line + three bullets per dimension.",
+      "required": ["sonic_identity", "production_craft", "songwriting", "structure_dynamics", "creative_dna", "market_position", "comparables", "sync_placement", "growth"],
+      "additionalProperties": {"$ref": "#/$defs/dimensionCard"}
+    },
+    "sonic_identity": {
+      "type": "object",
+      "required": ["headline", "subhead", "moods", "fingerprint_note", "issues"],
+      "properties": {
+        "headline": {"type": "string"}, "subhead": {"type": "string"},
+        "moods": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "object", "required": ["tag", "pct"], "properties": {"tag": {"type": "string"}, "pct": {"type": "integer"}}}},
+        "fingerprint_note": {"type": "string", "description": "One sentence reading the six measured axes."},
+        "issues": {"$ref": "#/$defs/issues"}
+      }
+    },
+    "production_craft": {
+      "type": "object",
+      "required": ["headline", "subhead", "bands", "approach", "mix", "issues"],
+      "properties": {
+        "headline": {"type": "string"}, "subhead": {"type": "string"},
+        "bands": {"type": "array", "minItems": 7, "maxItems": 7, "items": {"type": "object", "required": ["band", "annotation", "note"], "properties": {"band": {"type": "string", "enum": ["sub", "low", "low_mid", "mid", "high_mid", "high", "air"]}, "annotation": {"type": "string", "description": "What lives here, e.g. '808 sub-bass'"}, "note": {"type": "string"}}}},
+        "approach": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 3},
+        "mix": {"type": "array", "items": {"type": "object", "required": ["heading", "paragraphs"], "properties": {"heading": {"type": "string"}, "paragraphs": {"type": "array", "items": {"type": "string"}}}}},
+        "techniques": {"type": "array", "items": {"type": "string"}},
+        "issues": {"$ref": "#/$defs/issues"}
+      }
+    },
+    "songwriting": {
+      "type": "object",
+      "required": ["headline", "craft", "narrative_arc", "theme", "key_lines"],
+      "properties": {
+        "headline": {"type": "string"}, "craft": {"type": "string"}, "narrative_arc": {"type": "string"}, "theme": {"type": "string"},
+        "key_lines": {"type": "array", "items": {"type": "object", "required": ["line", "time", "why"], "properties": {"line": {"type": "string"}, "time": {"type": "string"}, "why": {"type": "string"}}}}
+      }
+    },
+    "structure": {
+      "type": "object",
+      "required": ["headline", "form", "dynamics", "creative_dna"],
+      "properties": {"headline": {"type": "string"}, "form": {"type": "string"}, "dynamics": {"type": "string"}, "creative_dna": {"type": "string"}}
+    },
+    "market": {
+      "type": "object",
+      "required": ["positioning", "audience", "playlist_fits", "comparable_artists", "influence_map"],
+      "properties": {
+        "positioning": {"type": "string"},
+        "audience": {"type": "object", "properties": {"age_range": {"type": "string"}, "gender_skew": {"type": "string"}, "lifestyle_tags": {"type": "array", "items": {"type": "string"}}}},
+        "playlist_fits": {"type": "array", "items": {"type": "string"}},
+        "comparable_artists": {"type": "array", "items": {"type": "object", "required": ["name", "why"], "properties": {"name": {"type": "string"}, "why": {"type": "string", "description": "A reason about the sound (voice, groove, production), never the year."}, "era": {"type": "string", "enum": ["same era", "present day"]}, "url": {"type": "string"}}}},
+        "comparable_songs": {"type": "array", "items": {"type": "object", "required": ["title", "artist", "why"], "properties": {"title": {"type": "string"}, "artist": {"type": "string"}, "why": {"type": "string", "description": "What the two records share in sound or premise, never only the year."}, "url": {"type": "string"}}}, "description": "Only when context.json confirms the title exists."},
+        "influence_map": {"type": "array", "items": {"type": "string"}},
+        "brand_categories": {"type": "array", "items": {"type": "object", "required": ["category", "angle", "cut"], "properties": {"category": {"type": "string"}, "angle": {"type": "string"}, "cut": {"type": "string"}}}}
+      }
+    },
+    "sync": {
+      "type": "object",
+      "required": ["headline", "pitch", "sell", "scene_archetypes", "edit_points", "observations", "issues"],
+      "properties": {
+        "headline": {"type": "string"},
+        "pitch": {"type": "string", "description": "The written pitch to a music supervisor: four or five sentences covering what the cue delivers, the cleanest cut windows, the lyric's constraint, and the one line to put in the email subject."},
+        "sell": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 3, "description": "The sync sell, to a supervisor."},
+        "scene_archetypes": {"type": "array", "minItems": 3, "maxItems": 6, "items": {"type": "object", "required": ["name", "medium", "time", "cuts", "why"], "properties": {"name": {"type": "string"}, "medium": {"type": "string", "enum": ["series promo", "trailer", "film scene", "ad", "social", "game", "live TV"]}, "time": {"type": "string"}, "cuts": {"$ref": "#/$defs/cuts"}, "why": {"type": "string"}}}},
+        "edit_points": {"type": "array", "minItems": 3, "items": {"type": "object", "required": ["type", "time", "name", "note"], "properties": {"type": {"type": "string", "enum": ["in", "out"]}, "time": {"type": "string"}, "name": {"type": "string"}, "note": {"type": "string"}}}},
+        "observations": {"type": "array", "items": {"type": "object", "required": ["heading", "paragraphs"], "properties": {"heading": {"type": "string"}, "paragraphs": {"type": "array", "items": {"type": "string"}}}}},
+        "issues": {"$ref": "#/$defs/issues"}
+      }
+    },
+    "growth": {
+      "type": "object",
+      "required": ["headline", "opportunities"],
+      "properties": {"headline": {"type": "string"}, "opportunities": {"type": "array", "minItems": 2, "maxItems": 5, "items": {"type": "object", "required": ["what", "why"], "properties": {"what": {"type": "string"}, "why": {"type": "string"}}}}}
+    },
+    "score": {
+      "type": "object",
+      "description": "0-100. Weights: hook 20, production 20, songwriting 15, structure 10, vocal 10, sync_utility 15, market 10. Each subscore 0-10; total = sum(sub * weight) / 10.",
+      "required": ["total", "subscores", "one_line"],
+      "properties": {
+        "total": {"type": "integer"},
+        "subscores": {"type": "object", "required": ["hook", "production", "songwriting", "structure", "vocal", "sync_utility", "market"], "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 10}},
+        "one_line": {"type": "string"}
+      }
+    },
+    "technical": {
+      "type": "object",
+      "required": ["notes", "findings"],
+      "properties": {
+        "notes": {"type": "array", "items": {"type": "string"}, "description": "Disagreements between model and measurement, file caveats, unknowns."},
+        "findings": {
+          "type": "array", "minItems": 4, "maxItems": 10,
+          "description": "The report's own repeated findings and images, declared so the checker can count each under every wording. Include every finding named in the verdict bullets and review headings, plus any image you expect to reuse (a recurring lyric image, a chant, a list the narrator repeats).",
+          "items": {"type": "object", "required": ["id", "home", "words"], "properties": {
+            "id": {"type": "string"},
+            "home": {"type": "string", "enum": ["verdict", "first_impression", "sonic_identity", "production_craft", "songwriting", "structure", "market", "sync", "growth"]},
+            "words": {"type": "array", "minItems": 3, "maxItems": 14, "items": {"type": "string"}, "description": "Lower-case words or short phrases that name this finding; the checker matches them case-insensitively as whole words."}
+          }}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "cuts": {
+      "type": "object", "required": ["6", "15", "30"],
+      "description": "Measured windows as 'm:ss–m:ss', snapped to the nearest lyric-line end or section edge; taken from the measurement's moments.cuts or built from edit points.",
+      "properties": {"6": {"type": "string"}, "15": {"type": "string"}, "30": {"type": "string"}}
+    },
+    "threeBullets": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {"type": "object", "required": ["kind", "text"], "properties": {"kind": {"type": "string", "enum": ["strength", "neutral", "risk"]}, "text": {"type": "string"}}}
+    },
+    "dimensionCard": {
+      "type": "object", "required": ["summary", "bullets"],
+      "properties": {"summary": {"type": "string"}, "bullets": {"$ref": "#/$defs/threeBullets"}}
+    },
+    "issues": {
+      "type": "array",
+      "items": {"type": "object", "required": ["title", "problem", "fix"], "properties": {"title": {"type": "string"}, "time": {"type": "string"}, "problem": {"type": "string"}, "fix": {"type": "string"}}}
+    }
+  }
+}
