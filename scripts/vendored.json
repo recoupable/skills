@@ -187,14 +187,16 @@
     {
       "canonical": "skills/recoup-internal-consulting-copy-writer/references/anti-slop.md",
       "copies": [
-        "skills/recoup-internal-consulting-copy-editor/references/anti-slop.md"
+        "skills/recoup-internal-consulting-copy-editor/references/anti-slop.md",
+        "skills/recoup-internal-consulting-feature-campaign/references/anti-slop.md"
       ]
     },
     {
       "canonical": "skills/recoup-internal-consulting-copy-writer/references/voice-principles.md",
       "copies": [
         "skills/recoup-internal-consulting-copy-editor/references/voice-principles.md",
-        "skills/recoup-internal-consulting-hyperframes-video/references/voice-principles.md"
+        "skills/recoup-internal-consulting-hyperframes-video/references/voice-principles.md",
+        "skills/recoup-internal-consulting-feature-campaign/references/voice-principles.md"
       ]
     },
     {
@@ -230,7 +232,8 @@
         "skills/recoup-internal-consulting-higgsfield/brand",
         "skills/recoup-internal-consulting-proposal-designer/brand",
         "skills/recoup-internal-consulting-hyperframes-video/brand",
-        "skills/recoup-internal-podcast/brand"
+        "skills/recoup-internal-podcast/brand",
+        "skills/recoup-internal-consulting-feature-campaign/brand"
       ]
     },
     {
@@ -245,7 +248,8 @@
         "skills/recoup-internal-consulting-product-engine/references/public-content-quality.md",
         "skills/recoup-internal-consulting-email-atomizer/references/public-content-quality.md",
         "skills/recoup-internal-consulting-linkedin-post-architect/references/public-content-quality.md",
-        "skills/recoup-internal-consulting-linkedin-publisher/references/public-content-quality.md"
+        "skills/recoup-internal-consulting-linkedin-publisher/references/public-content-quality.md",
+        "skills/recoup-internal-consulting-feature-campaign/references/public-content-quality.md"
       ]
     },
     {
@@ -253,7 +257,8 @@
       "copies": [
         "skills/recoup-internal-consulting-copy-editor/scripts/check_public_copy.py",
         "skills/recoup-internal-consulting-linkedin-publisher/scripts/check_public_copy.py",
-        "skills/recoup-internal-consulting-nightly-content/scripts/check_public_copy.py"
+        "skills/recoup-internal-consulting-nightly-content/scripts/check_public_copy.py",
+        "skills/recoup-internal-consulting-feature-campaign/scripts/check_public_copy.py"
       ]
     },
     {
@@ -398,6 +403,36 @@
       "copies": [
         "skills/recoup-catalog-register-catalog/scripts/mlc-public-fields.py",
         "skills/recoup-catalog-resolve-claims/scripts/mlc-public-fields.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/references/human-texture.md",
+      "copies": [
+        "skills/recoup-internal-consulting-feature-campaign/references/human-texture.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/references/ogilvy-rules.md",
+      "copies": [
+        "skills/recoup-internal-consulting-feature-campaign/references/ogilvy-rules.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/references/formats.md",
+      "copies": [
+        "skills/recoup-internal-consulting-feature-campaign/references/formats.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-copy-writer/references/persuasion-playbook.md",
+      "copies": [
+        "skills/recoup-internal-consulting-feature-campaign/references/persuasion-playbook.md"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-internal-consulting-article-illustrator/references/prompt-kit.md",
+      "copies": [
+        "skills/recoup-internal-consulting-feature-campaign/references/prompt-kit.md"
       ]
     }
   ]
