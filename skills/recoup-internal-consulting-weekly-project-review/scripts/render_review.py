@@ -147,7 +147,7 @@ def render_pdf(data, path, font_path=None):
     for color in theme.values():
         if not re.fullmatch(r"#[0-9a-fA-F]{6}", color):
             raise ValueError("PDF theme colors must be six-digit hex values")
-    W,H=1190,940
+    W,H=1190,1190
     c=canvas.Canvas(str(path),pagesize=(W,H))
     c.setTitle(data["title"])
     def text(x,y,value,size=15,color="text",width=1050):
@@ -174,29 +174,28 @@ def render_pdf(data, path, font_path=None):
             y=text(x+13,y,value,14,width=width-13)-6
         return y-12
     projects=list(data["projects"])+[secondary_project(p,i) for i,p in enumerate(data["other_projects"],len(data["projects"])+1)]
-    for offset in range(0,len(projects),2):
-        header(offset//2+1)
-        for row,p in enumerate(projects[offset:offset+2]):
-            x=38; width=W-76; top=H-145-row*378; bottom=top-360
-            c.setFillColor(HexColor(theme["card"]));c.setStrokeColor(HexColor(theme["line"]));c.roundRect(x,bottom,width,360,12,fill=1,stroke=1)
-            y=text(x+22,top-15,p["name"],22,width=width-44)-5
-            if p.get("description"):
-                y=text(x+22,y,p["description"],11,"muted",width-44)-10
-            else:
-                y-=9
-            colw=(width-44-50)/3
-            x1=x+22; x2=x1+colw+25; x3=x2+colw+25
-            left=section(x1,y,"Progress this week",items(p["progress"]),colw)
-            if p.get("progress_note"):
-                left=text(x1,left+5,p["progress_note"],9,"muted",colw)-8
-            issue_labels={"blocker":"Blocker","slowdown":"Slowdown","check":"To confirm","none":"Continuing"}
-            middle=section(x2,y,"Blockers / slowdowns",[issue_labels[v["kind"]]+": "+v["text"] for v in p["issues"]],colw)
-            if p.get("continuing"):
-                middle=section(x2,middle,"Work continuing",p["continuing"],colw)
-            right=section(x3,y,"Focus (proposed)",items(p["next_week"]),colw)
-            right=section(x3,right,"Discuss on Monday",items(p["discuss"]),colw)
-            if min(left,middle,right)<bottom+6:
-                raise ValueError(f"PDF project too long: {p['name']}; preserve content by allocating more space ({min(left,middle,right):.0f} < {bottom+6:.0f})")
+    for index,p in enumerate(projects,1):
+        header(index)
+        x=38; width=W-76; top=H-145; bottom=60
+        c.setFillColor(HexColor(theme["card"]));c.setStrokeColor(HexColor(theme["line"]));c.roundRect(x,bottom,width,top-bottom,12,fill=1,stroke=1)
+        y=text(x+22,top-15,p["name"],22,width=width-44)-5
+        if p.get("description"):
+            y=text(x+22,y,p["description"],11,"muted",width-44)-10
+        else:
+            y-=9
+        colw=(width-44-50)/3
+        x1=x+22; x2=x1+colw+25; x3=x2+colw+25
+        left=section(x1,y,"Progress this week",items(p["progress"]),colw)
+        if p.get("progress_note"):
+            left=text(x1,left+5,p["progress_note"],9,"muted",colw)-8
+        issue_labels={"blocker":"Blocker","slowdown":"Slowdown","check":"To confirm","none":"Continuing"}
+        middle=section(x2,y,"Blockers / slowdowns",[issue_labels[v["kind"]]+": "+v["text"] for v in p["issues"]],colw)
+        right=section(x3,y,"Focus (proposed)",items(p["next_week"]),colw)
+        if p.get("continuing"):
+            right=section(x3,right,"Can continue now",p["continuing"],colw)
+        right=section(x3,right,"Discuss together",items(p["discuss"]),colw)
+        if min(left,middle,right)<bottom+6:
+            raise ValueError(f"PDF project too long: {p['name']}; preserve content by allocating more space ({min(left,middle,right):.0f} < {bottom+6:.0f})")
         c.showPage()
     c.save()
 

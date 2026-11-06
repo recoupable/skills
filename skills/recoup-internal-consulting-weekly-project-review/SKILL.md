@@ -80,7 +80,7 @@ The script also supports `--pdf /absolute/private/review.pdf` and `--font /absol
 PDF output requires reportlab. An optional `pdf_theme` object in the input can set
 `background`, `card`, `text`, `muted`, `line`, `accent`, `warning` and `danger` to six-digit
 hex colors. Primary and secondary projects use visible bullets; secondary text fields
-accept lists or older single strings. PDF pages give two projects their own wide rows. Keep generated assets in the private workspace.
+accept lists or older single strings. PDF pages give each project its own wide page, keeping continuing work inside Focus. Keep generated assets in the private workspace.
 
 Open the result and inspect a desktop-sized overview, a focused project, a narrow viewport, and
 the PDF when generated. Verify readable text, unclipped content, working navigation, all projects
