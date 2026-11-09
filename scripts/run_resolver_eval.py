@@ -42,7 +42,11 @@ import ssl
 import sys
 import urllib.request
 from pathlib import Path
-from resolver_catalog import skill_dirs, routed_skills
+
+if __package__:
+    from .resolver_catalog import skill_dirs, routed_skills
+else:
+    from resolver_catalog import skill_dirs, routed_skills
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 PLUGIN = REPO_ROOT

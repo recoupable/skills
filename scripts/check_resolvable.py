@@ -19,7 +19,11 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from resolver_catalog import skill_dirs, routed_skills
+
+if __package__:
+    from .resolver_catalog import skill_dirs, routed_skills
+else:
+    from resolver_catalog import skill_dirs, routed_skills
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_PLUGIN = REPO_ROOT

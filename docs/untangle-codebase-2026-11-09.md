@@ -12,7 +12,7 @@ publication policy, opt-in model evaluation, and portability remain unchanged.
 
 - `scripts/check_resolvable.py` and `scripts/run_resolver_eval.py` independently
   enumerate installed skills and parse the same backtick-wrapped table tokens.
-- Commit `faa5469` changed the slug grammar in both files for non-Recoup names;
+- Commit [`faa5469`](https://github.com/recoupable/skills/commit/faa5469c9004131d0407e8df969bb6930330adbd) changed the slug grammar in both files for non-Recoup names;
   this is demonstrated co-change, not hypothetical deduplication.
 - Evaluation's copies read the module-global plugin path, hiding the same input
   already explicit in the reachability gate.
@@ -44,9 +44,9 @@ Baseline: reachability 129 skills; structural evaluation 221 positive, 130 negat
 calls, publishing, or external messages are part of verification.
 
 Final: all five validation gates pass (129 skills; 144 vendored copies across
-51 groups; 8 manifests). Eight focused routing tests pass, including both CLI
+51 groups; 8 manifests). Nine focused routing tests pass, including both CLI
 entrypoints launched from an unrelated working directory. Python 3.13 runs:
-116 catalog tests, 3 Business ownership tests, 15 plugin package tests, and
+117 catalog tests, 3 Business ownership tests, 15 plugin package tests, and
 1 Claude package test pass; all generated package adapters build successfully.
 The host's default Python 3.9 cannot run an existing `Path.hardlink_to` fixture;
 using a supported interpreter resolves this without changing unrelated tests.
@@ -55,3 +55,16 @@ An independent reviewer repeated the synthetic inventory tests and both routing
 gates, inspected the extraction/import boundary and found no actionable issues.
 No model API calls, release creation, or publication occurred. Full test/build
 logs are retained in the ignored monorepo task-evidence directory.
+
+
+## Automated review follow-up
+
+- Negative gate fixtures now assert the expected domain diagnostic and reject
+  tracebacks; a crashing Python process must not count as a successful rejection.
+- Both direct-script and `python -m scripts.<gate>` invocation remain supported.
+  The small package-aware import branch represents those real launch contexts;
+  the catalog logic remains single-owned.
+- GitHub API readback confirms the full co-change revision linked above exists.
+  The automated claim that it was absent was not reproduced.
+- Nine focused routing tests and the five gates pass after these changes; broader
+  catalog coverage is 117 tests on Python 3.13. No live model calls were made.
