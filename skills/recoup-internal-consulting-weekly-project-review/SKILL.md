@@ -36,6 +36,8 @@ keep each independently operable, and provide a simple way to collapse everythin
 call topic. Keep important Focus and continuing-work text at normal body contrast, not
 muted gray. Smaller muted text is for metadata and evidence limits only. Printed exports
 can expand all content; the interactive review keeps it progressively disclosed.
+Do not infer a whole-project status from individual dependencies. Keep project headers
+neutral; blocker/slowdown labels belong beside the specific issues inside Blockers.
 
 Use one point per visible bullet. Do not combine a dependency, an unaffected activity and a
 proposed task into one sentence. Keep work that can continue separate from the blocker or

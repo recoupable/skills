@@ -94,8 +94,6 @@ def project_html(project, index):
     labels = {"blocker": "Blocker", "slowdown": "Slowdown", "check": "To confirm", "none": "Continuing"}
     updates = len(items(project["progress"]))
     update_label = f"{updates} update" + ("s" if updates != 1 else "")
-    tone = next((kind for kind in ("blocker", "slowdown", "check") if any(x["kind"] == kind for x in project["issues"])), "none")
-    status = f'<span class="tag {tone}">{esc(labels[tone])}</span>'
     note = f'<p class="progress-note">{esc(project["progress_note"])}</p>' if project.get("progress_note") else ""
     progress = disclosure_section("Progress this week", list_html(project["progress"]) + note, "progress", update_label)
     issue_rows = "".join(f'<li><span class="tag {esc(x["kind"])}">{esc(labels[x["kind"]])}</span><span>{esc(x["text"])}</span></li>' for x in project["issues"])
@@ -105,7 +103,7 @@ def project_html(project, index):
     focus_content = f'<div class="focus-group"><h4>Priorities to agree</h4>{list_html(project["next_week"])}</div>{continuing}{discussion}'
     focus = disclosure_section("Focus", focus_content, "focus", "Priorities and decisions")
     description = f'<p class="project-description">{esc(project["description"])}</p>' if project.get("description") else ""
-    return f'<details class="project" data-project="{esc(project["id"])}"><summary class="project-summary"><span class="number">{index:02d}</span><h2>{esc(project["name"])}</h2><span class="project-meta"><span class="update-count">{esc(update_label)}</span>{status}</span>{CHEVRON}</summary><div class="project-content">{description}{progress}{blockers}{focus}</div></details>'
+    return f'<details class="project" data-project="{esc(project["id"])}"><summary class="project-summary"><span class="number">{index:02d}</span><h2>{esc(project["name"])}</h2><span class="project-meta"><span class="update-count">{esc(update_label)}</span></span>{CHEVRON}</summary><div class="project-content">{description}{progress}{blockers}{focus}</div></details>'
 
 
 def render_html(data, brand_css=""):
