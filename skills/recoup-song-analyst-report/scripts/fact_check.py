@@ -16,6 +16,12 @@ import sys
 TS = re.compile(r"\b(\d{1,2}):(\d{2})\b")
 # Only double quotes count as quotations; single quotes are apostrophes in lyric prose.
 QUOTE = re.compile(r"[\"“]([^\"”]{4,120})[\"”]()")
+# Absolutes that must hold for the whole song, and intent stated about people.
+CLAIM = re.compile(
+    r"\b(never|always|every|everything|nothing|no one|nobody|entirely|completely"
+    r"|meant for|written for|designed to|intended (?:for|to))\b",
+    re.I,
+)
 
 
 def seconds(m, s):
@@ -119,14 +125,15 @@ def main():
     # One fact, one home: measured figures and findings must not recur through the prose.
     # Structural fields (times on moments, key lines, edit points, scenes; identity; score;
     # technical notes) are exempt; everything else is reader prose.
-    prose = []
+    prose_items = []
     for path, text in walk_strings(report):
         tail = path.split(".")[-1].split("[")[0]
         if path.startswith(("report.technical", "report.identity", "report.score", "report.sonic_identity.moods")):
             continue
         if tail in ("time", "cut", "cut_15", "6", "15", "30", "lyric", "line", "tag", "band", "kind", "type", "name", "medium", "era", "url", "deep_dive") and "review" not in path:
             continue
-        prose.append(text)
+        prose_items.append((path, text))
+    prose = [text for _, text in prose_items]
     blob = " ".join(prose)
     figures = re.findall(r"[+\-−]?\d+(?:\.\d+)? ?(?:dBTP|dB|LUFS|%|LU)\b", blob)
     counts = {}
@@ -233,10 +240,26 @@ def main():
         if len(sents) >= 3 and words(text) / len(sents) > 26:
             problems.append(f"READ {path} averages {words(text) / len(sents):.0f} words a sentence (max 26)")
 
+    # Claims to re-read (advisory; they never fail the check). Every remaining fact error in
+    # the parity rounds was an overstatement: an absolute the measurement contradicts ("the
+    # volume never changes" over one-second dips) or an inference stated as fact ("a co-write
+    # meant for an artist"). These sentences get a second read against their source.
+    claims = []
+    for path, text in prose_items:
+        for s in sentences(text):
+            m = CLAIM.search(s)
+            if m:
+                claims.append(f"CLAIM {m.group(0).lower()!r} at {path}: {s[:90]!r}")
+
     if problems:
         print("\n".join(problems))
-        print(f"\n{len(problems)} problem(s)")
+        if claims:
+            print("\n" + "\n".join(claims))
+        print(f"\n{len(problems)} problem(s), {len(claims)} claim(s) to re-read")
         sys.exit(1)
+    if claims:
+        print("\n".join(claims))
+        print(f"\n{len(claims)} claim(s) to re-read; they do not fail the check")
     print("clean")
 
 

@@ -65,8 +65,18 @@ the measurement did. Your job is judgment and prose, anchored to their facts.
 - Sync prose speaks to a supervisor: "the first downbeat is already the mood", "a zero-bleed cut
   on beat four", "a 26-second chorus block that pads to a 30-second promo with a four-second
   title card".
-- Short sentences. No hedging ("may", "could potentially"), no generic praise ("great energy"),
-  no filler ("it's worth noting"). No em-dash asides. Never say "this track" twice in a row.
+- Short sentences. No vague hedging ("may", "could potentially"), no generic praise ("great
+  energy"), no filler ("it's worth noting"). No em-dash asides. Never say "this track" twice in a
+  row.
+- **Attribute what you infer.** Hedging is banned; attribution is required. A judgment drawn from
+  inference rather than from a source keeps its verb: "reads as a co-write aimed at an artist",
+  "sounds like a live band", "the lyric suggests". Never upgrade an inference to a fact when
+  shortening a sentence.
+- **Absolutes hold for the whole song or go.** "Never", "every", "always" and "nothing" claim the
+  entire record: check each against the energy curve, the sections and the lyrics before keeping
+  it ("the level barely moves after the opening swell", not "the volume never changes" over
+  one-second dips). Keep a claim's scope: "fails broadcast delivery checks" does not become "fails
+  TV checks", and an unknown (a session file nobody has measured) is not described as clean.
 - Admit what is not known in one clause and move on. Do not apologise.
 - **One fact, one home.** Each measured finding appears with its number in one section only:
   a clipping file in the production issue (plus one clause in the verdict risk), the big drop in
