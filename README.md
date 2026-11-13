@@ -213,7 +213,12 @@ Add a route for the new skill in [`RESOLVER.md`](RESOLVER.md) and a fixture in `
 
 ## Internal consulting workflows
 
-The 66 `recoup-internal-consulting-*` skills cover enablement offers, PMF discovery, client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
+The `recoup-internal-consulting-*` skills cover enablement offers, PMF discovery, client/deal operations, proposals, reporting, content, graphics and video. Use the consulting section of RESOLVER.md to select one. These are public instructions for staff use; the name does not make their contents private.
+
+### Client AI ROI framework
+
+Use `recoup-internal-consulting-ai-roi-framework` to plan, track and measure client AI portfolios with Tenex’s 1-3-1 framework. Includes funding and pilot gates, roadmap and review templates, a benefit/cost ledger, and period-versus-annualized ROI reconciliation. Example: “recoup-internal: refresh this client’s AI roadmap and recommend what to scale, retest or stop.” Keep client outputs in their selected private workspace.
+
 
 ### PMF finder
 

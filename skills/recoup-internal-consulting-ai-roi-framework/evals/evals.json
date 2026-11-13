@@ -1,0 +1,44 @@
+{
+  "skill_name": "recoup-internal-consulting-ai-roi-framework",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "recoup-internal: Plan an AI portfolio for synthetic Northstar Services. Revenue is $100m; use a 1% ceiling, 10% foundation, and 15% experiments. A $25k pilot finds routine tasks pass quality at 94%, complex tasks at 76%; gate is 90%. An invoicing team reports 2,000 saved hours but no expenses or staffing plans changed. Engineering has only doubled PRs. Make the roadmap and funding recommendations; budget approval is pending.",
+      "expected_output": "Correct denominator arithmetic; pilot segmentation; hours and PRs not realized returns; explicit owners/gates, missing evidence and pending funding authority.",
+      "files": [],
+      "assertions": [
+        "Ceiling 1000000, foundation 100000, experiments 135000, earned pool 765000",
+        "Complex segment excluded from rollout or specifically retested",
+        "No realized dollar savings inferred from hours or PRs",
+        "Now/next/later roadmap with owners, dependencies and decision dates",
+        "Funding remains proposed pending approval"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "recoup-internal: Review synthetic Cedar Ops at six months. Approved hires were genuinely avoided, service held; annualized benefit is $240k, accrued evenly since launch. Build $120k; operating $60k/year evenly; earlier pilot $10k. CFO calls the $240k realized profit and wants to credit the shared data layer with it too. Treatment conversion went 20% to 25%, matched control 20% to 22%. Only half the company was exposed. Provide a benefit reconciliation and review decisions.",
+      "expected_output": "120k six-month gross, -30k rollout net, -40k including pilot before other shared costs; 60k year forecast separate; 3pp attributable lift on exposed volume, margins missing; reject double credit.",
+      "files": [],
+      "assertions": [
+        "Six-month gross 120000 and rollout net -30000",
+        "All-in net -40000 before unknown foundation costs",
+        "Annualized 240000 and year-one projected net 60000 not actual profit",
+        "Attributable lift 3 percentage points; use exposed measured volume only",
+        "No duplicate foundation return and no invented margin/volume"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "recoup-internal: Refresh AI roadmaps for two synthetic clients. Alpha has no accessible revenue/baseline and only training attendance. Beta reports faster second deployment but it is half the original scope. A pilot has run four quarters without a decision. Keep original approved targets and preserve each client privacy; do not contact anyone or change their systems.",
+      "expected_output": "Separate client records, missing inputs, conditional absolute budgets; adoption/reuse beyond attendance; comparable foundation measures; specific revise or stop call; targets preserved and owner/date handoff.",
+      "files": [],
+      "assertions": [
+        "No invented revenue, baseline or realized returns",
+        "Client data kept separate and currencies not pooled",
+        "Foundation claim caveated for scope and actual adoption/reuse sought",
+        "Overdue pilot gets specific capped revision or stop decision",
+        "Original targets preserved; next actions have owners/dates"
+      ]
+    }
+  ]
+}
