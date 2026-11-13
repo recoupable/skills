@@ -1,9 +1,9 @@
 ---
-name: recoup-internal-consulting-ai-roadmap
+name: recoup-internal-consulting-ai-roi-framework
 description: Plan, track, and measure a client's AI initiative portfolio using the 1-3-1 funding and realized-value framework. Use for explicit recoup-internal requests to create or refresh an AI roadmap, prioritize AI investments, set pilot gates, reconcile AI ROI, or run quarterly AI portfolio reviews across clients. Produces a funded roadmap, initiative register, benefit ledger, and scale/revise/stop decisions in the selected private workspace.
 ---
 
-# AI initiative roadmap
+# AI ROI framework
 
 Turn client AI ambitions into an evidence-backed investment portfolio, then maintain it through decisions and captured outcomes. Adapted from Alex Lieberman / Tenex's 1-3-1 framework; read `references/framework.md` before planning or reviewing. Read `references/measurement.md` when defining KPIs or reconciling returns. Use `templates/portfolio.md`, `templates/initiative.md`, and `templates/review.md` for outputs. These resources ship inside this skill; resolve them relative to its directory.
 
