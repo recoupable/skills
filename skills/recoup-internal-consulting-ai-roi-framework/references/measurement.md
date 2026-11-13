@@ -37,4 +37,4 @@ Assign every economic effect a benefit ID and unique population/time window. All
 
 ## Decision discipline
 
-Precommit pass/fail thresholds and quality/service guardrails, not just a savings goal. Log scale, a specific revision with new cap/date, hold for named evidence, or stop. Preserve the original funded target when forecasts change. Review withdrawn and negative results openly. Reconcile budget headroom separately from profitability: financial success does not itself authorize spending.
+Precommit pass/fail thresholds and quality/service guardrails, not just a savings goal. Record a decision to scale, revise with a specific change and new cap/date, hold for named evidence, or stop. Preserve the original funded target when forecasts change. Review withdrawn and negative results openly. Reconcile budget headroom separately from profitability: financial success does not itself authorize spending.

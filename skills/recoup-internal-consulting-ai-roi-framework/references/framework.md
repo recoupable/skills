@@ -17,7 +17,7 @@ The framework has four spending categories: foundation plus three budgets. It do
 
 For early AI programs the author suggests an AI ceiling around 0.5–2% of annual revenue. Foundation is 8–12% of that AI ceiling, with the prose qualifying this range for regulated settings such as insurance. The spending image assigns experiments 10–20% of the amount remaining AFTER foundation. Efficiency and innovation share the residual pool; neither has a mandatory separate percentage. These are starting ranges to adapt to cash position, risk, maturity and goals, not approved spending or universal industry benchmarks.
 
-If R is annual revenue, a the chosen ceiling rate, f the foundation share, and e the post-foundation experiment share:
+Let R denote annual revenue, a denote the chosen ceiling rate, f denote the foundation share, and e denote the post-foundation experiment share:
 
 - AI ceiling B = R × a
 - Foundation F = B × f

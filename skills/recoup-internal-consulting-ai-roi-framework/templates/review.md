@@ -6,13 +6,13 @@ Evidence as of: [ ]; currency/accounting basis: [ ]; portfolio owner and canonic
 
 Release/scale: [bounded amount, evidence, conditions]. Revise/retest: [specific change, cap, deadline]. Hold: [missing evidence, owner/date]. Stop: [scope and reason]. Pending authorization: [ ].
 
-| Initiative / category | Full committed + ongoing cost | Original target at funding | Actual period result / evidence | Provisional / annualized / forecast separately | Net cost reconciliation | Decision / amount / owner / date |
+| Initiative / category | Full committed + ongoing cost | Original target at funding | Actual result / measurement interval / population / evidence | Provisional / annualized / forecast, each with interval and population | Net benefit / ROI ratio, cost denominator and period | Decision / amount / owner / date |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
 ## Is the program improving?
 
-Captured value versus original projections: [gross, net, period, cost coverage, variance]. Unsupported/expired claims withdrawn: [ ]. Benefit/cost overlaps resolved: [ ].
+Captured value versus original projections: [gross benefit, net benefit in currency, ROI ratio with cost denominator, measurement interval and population, cost coverage, variance]. Unsupported/expired claims withdrawn: [ ]. Benefit/cost overlaps resolved: [ ].
 
 Experiment decisions: [started, ended, scaled, specifically revised, stopped, overdue and decision cost]. Do not equate more pilots with success.
 
