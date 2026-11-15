@@ -201,8 +201,9 @@ Rules that hold for every deliverable:
   close belongs to warm threads with existing customers, not to a first cold email. The
   work in the offer is ours; the reader's only job is to answer the question. Operator
   ruling 2026-09-06 after the first two sends ran to five sentences each.
-- **Exactly one link, deep** — the artist page carrying the number. No second link, no
-  signature-only link.
+- **Exactly one link in the body, deep** — the artist page carrying the number. No second
+  link, no signature-only link. The house footer's links (see below) are exempt; the footer
+  always goes out whole.
 - **Run `unslop` on the draft** and grep the body for `—` before presenting it. No em dashes,
   no "not just X but Y", no puffery, no meta-framing ("quick note from a human").
 - Draft file per SKILL.md's lead workspace: `workspace/sales/<lead>/emails/drafts/
