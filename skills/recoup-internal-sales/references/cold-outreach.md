@@ -225,10 +225,11 @@ The following is transport configuration, not permission to send:
   and is not in Resend, so a `from` there 403s. Replies still land in the operator's Google
   inbox via Reply-To. The sent copy does not appear in Gmail's Sent folder, so the
   `emails/sent/` file is the record.
-- **The house footer is mandatory on every agent send.** It lives in the operator's
-  workspace at `workspace/sales/cold-outreach/signature/` (`signature.html` + the inline icon
+- **The house footer is mandatory on every agent send.** It lives in
+  `templates/email-signature/` (`signature.html`, `signature.txt` and the inline icon
   `recoup-icon-black.png`, attached with `content_id: recoup-icon` and referenced as
-  `cid:recoup-icon`; `README.md` has the colors and links). Black rounded icon, vertical bar,
+  `cid:recoup-icon`). If the operator's workspace copy at
+  `workspace/sales/cold-outreach/signature/` differs, the workspace copy wins. Black rounded icon, vertical bar,
   bold name, "Cofounder, Recoup", then `recoupable.dev · LinkedIn · Schedule a meeting`
   (Calendly). Do not retype it; read the file and append it to the HTML body **before
   review**. Show both the plain-text message and rendered HTML/preview with the footer
