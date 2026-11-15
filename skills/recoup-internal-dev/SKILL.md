@@ -15,7 +15,7 @@ The two reference issues this skill is built from are [chat#1747](https://github
 
 ## Issues live in a repository
 
-**File every issue in `recoupable/chat`**, even when the code lands in `api`, `database`, or `docs` -- one home repo means one place to find open work. Never pick the repo by "where the diff lands"; link out to sibling-repo PRs/files by full ref instead. Wrong repo? `gh issue transfer <n> recoupable/chat --repo <wrong-repo>` preserves body/comments and leaves a redirect.
+**File every issue in `recoupable/app`** (formerly `recoupable/chat`, which now redirects there), even when the code lands in `api`, `database`, or `docs` -- one home repo means one place to find open work. Never pick the repo by "where the diff lands"; link out to sibling-repo PRs/files by full ref instead. Wrong repo? `gh issue transfer <n> recoupable/app --repo <wrong-repo>` preserves body/comments and leaves a redirect.
 
 ## Anatomy of a tracking issue
 
