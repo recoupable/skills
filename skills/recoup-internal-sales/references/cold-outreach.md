@@ -226,7 +226,8 @@ The following is transport configuration, not permission to send:
   inbox via Reply-To. The sent copy does not appear in Gmail's Sent folder, so the
   `emails/sent/` file is the record.
 - **The house footer is mandatory on every agent send.** It lives in
-  `templates/email-signature/` (`signature.html`, `signature.txt` and the inline icon
+  `templates/email-signature/` (`signature.html` for the HTML part, `signature.txt` at the end of
+  the text part, and the inline icon
   `recoup-icon-black.png`, attached with `content_id: recoup-icon` and referenced as
   `cid:recoup-icon`). If the operator's workspace copy at
   `workspace/sales/cold-outreach/signature/` differs, the workspace copy wins. Black rounded icon, vertical bar,

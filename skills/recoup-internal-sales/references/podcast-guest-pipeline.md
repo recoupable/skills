@@ -74,8 +74,9 @@ Checklist before any review copy leaves (each one was a real defect on 2026-09-2
 - **Links:** "Recoup Podcast" links to
   `https://recoupable.dev/podcast?utm_source=email&utm_medium=invite&utm_campaign=<yyyy-mm>&utm_content=<lead-slug>`
   so a visit attributes to one guest; review copies use `utm_medium=review` so internal
-  clicks never count. The source link is the only other link. No booking link in a first
-  touch; scheduling comes after they say yes.
+  clicks never count. The source link is the only other link in the body. No booking link in
+  the body of a first touch; scheduling comes after they say yes. The house footer's links
+  (LinkedIn, Schedule a meeting) are exempt: the footer stays whole on every email.
 - **Before sending:** email verified; not a customer or a live agency lead (CRM and login
   records, read-only); not on the exclusion list; a review copy in the operator's inbox;
   the exact draft approved by the operator. Ten a day is a target, not an approval.
@@ -205,10 +206,11 @@ The recording is the discovery call; close it out before anyone opens the raw fi
 
 Every guest email ends with the house footer from `templates/email-signature/`: the Recoup icon,
 a vertical bar, the bold name, "Cofounder, Recoup", then `recoupable.dev · LinkedIn · Schedule a
-meeting`. Read the files; do not retype them. Send `html` and `text` both, with `signature.txt` at
+meeting`. It goes out whole on every email, first touches included; the Links rule above limits
+the body, not the footer. Read the files; do not retype them. Send `html` and `text` both, with `signature.txt` at
 the end of the text part.
 
-- **Resend (from `sweetman@recoupable.dev`):** attach `recoup-icon-black.png` with
+- **Resend (from `sweetman@recoupable.dev`, with `reply_to: sweetman@recoupable.com`):** attach `recoup-icon-black.png` with
   `content_id: recoup-icon`; `signature.html` already points at `cid:recoup-icon`.
 - **Gmail connector (from `sweetman@recoupable.com`, e.g. a reply on a thread the guest started
   there):** the send tool strips hosted images, so the icon must be an inline attachment. Attach
