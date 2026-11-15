@@ -201,8 +201,9 @@ Rules that hold for every deliverable:
   close belongs to warm threads with existing customers, not to a first cold email. The
   work in the offer is ours; the reader's only job is to answer the question. Operator
   ruling 2026-09-06 after the first two sends ran to five sentences each.
-- **Exactly one link, deep** — the artist page carrying the number. No second link, no
-  signature-only link.
+- **Exactly one link in the body, deep** — the artist page carrying the number. No second
+  link, no signature-only link. The house footer's links (see below) are exempt; the footer
+  always goes out whole.
 - **Run `unslop` on the draft** and grep the body for `—` before presenting it. No em dashes,
   no "not just X but Y", no puffery, no meta-framing ("quick note from a human").
 - Draft file per SKILL.md's lead workspace: `workspace/sales/<lead>/emails/drafts/
@@ -225,10 +226,12 @@ The following is transport configuration, not permission to send:
   and is not in Resend, so a `from` there 403s. Replies still land in the operator's Google
   inbox via Reply-To. The sent copy does not appear in Gmail's Sent folder, so the
   `emails/sent/` file is the record.
-- **The house footer is mandatory on every agent send.** It lives in the operator's
-  workspace at `workspace/sales/cold-outreach/signature/` (`signature.html` + the inline icon
+- **The house footer is mandatory on every agent send.** It lives in
+  `templates/email-signature/` (`signature.html` for the HTML part, `signature.txt` at the end of
+  the text part, and the inline icon
   `recoup-icon-black.png`, attached with `content_id: recoup-icon` and referenced as
-  `cid:recoup-icon`; `README.md` has the colors and links). Black rounded icon, vertical bar,
+  `cid:recoup-icon`). If the operator's workspace copy at
+  `workspace/sales/cold-outreach/signature/` differs, the workspace copy wins. Black rounded icon, vertical bar,
   bold name, "Cofounder, Recoup", then `recoupable.dev · LinkedIn · Schedule a meeting`
   (Calendly). Do not retype it; read the file and append it to the HTML body **before
   review**. Show both the plain-text message and rendered HTML/preview with the footer

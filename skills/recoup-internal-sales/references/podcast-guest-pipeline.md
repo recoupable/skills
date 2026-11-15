@@ -51,7 +51,8 @@ Checklist before any review copy leaves (each one was a real defect on 2026-09-2
 1. **Subject is `Interview request: <their topic>`**, e.g. `Interview request: the
    transparency report`. Not `Recoup Podcast: <Name>?` and not a headline.
 2. **No sign-off in the body.** The house footer already carries the name; a name line
-   above it is redundant.
+   above it is redundant. Every guest email, review copies included, ends with that footer:
+   `templates/email-signature/` (see "The house footer" below).
 3. **No stock close.** "Up for it?" and its cousins ("worth it?", "still open to it?") read
    as automation, worse when repeated across a batch. End on the specific question or a
    plain ask that no other email in the batch uses.
@@ -73,8 +74,9 @@ Checklist before any review copy leaves (each one was a real defect on 2026-09-2
 - **Links:** "Recoup Podcast" links to
   `https://recoupable.dev/podcast?utm_source=email&utm_medium=invite&utm_campaign=<yyyy-mm>&utm_content=<lead-slug>`
   so a visit attributes to one guest; review copies use `utm_medium=review` so internal
-  clicks never count. The source link is the only other link. No booking link in a first
-  touch; scheduling comes after they say yes.
+  clicks never count. The source link is the only other link in the body. No booking link in
+  the body of a first touch; scheduling comes after they say yes. The house footer's links
+  (LinkedIn, Schedule a meeting) are exempt: the footer stays whole on every email.
 - **Before sending:** email verified; not a customer or a live agency lead (CRM and login
   records, read-only); not on the exclusion list; a review copy in the operator's inbox;
   the exact draft approved by the operator. Ten a day is a target, not an approval.
@@ -199,6 +201,22 @@ The recording is the discovery call; close it out before anyone opens the raw fi
 4. **Collect build angles** for the day-7 email while the call is fresh: each workflow the guest described,
    with the numbers they gave. Not an offer until drafted and approved.
 5. **Hand over to post-production** at the raw files (`recoup-internal-podcast` → `references/podcast-episode.md`).
+
+### The house footer
+
+Every guest email ends with the house footer from `templates/email-signature/`: the Recoup icon,
+a vertical bar, the bold name, "Cofounder, Recoup", then `recoupable.dev · LinkedIn · Schedule a
+meeting`. It goes out whole on every email, first touches included; the Links rule above limits
+the body, not the footer. Read the files; do not retype them. Send `html` and `text` both, with `signature.txt` at
+the end of the text part.
+
+- **Resend (from `sweetman@recoupable.dev`, with `reply_to: sweetman@recoupable.com`):** attach `recoup-icon-black.png` with
+  `content_id: recoup-icon`; `signature.html` already points at `cid:recoup-icon`.
+- **Gmail connector (from `sweetman@recoupable.com`, e.g. a reply on a thread the guest started
+  there):** the send tool strips hosted images, so the icon must be an inline attachment. Attach
+  `recoup-icon-black.png` with `inline: true` and change the `img` src to `cid:attN`, where N is its
+  position in `attachments`. Read the sent copy back and confirm the `img` survived before telling
+  the operator the review copy is right; a blank first cell means the icon was dropped.
 
 ### The live-links email (release day)
 
