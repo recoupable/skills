@@ -297,6 +297,30 @@ class RemittanceTests(unittest.TestCase):
         self.assertEqual(result["verified_receipts_by_currency"], {})
         self.assertIsNone(result["current_payable"])
 
+    def test_nonstring_or_blank_account_references_cannot_verify_receipt(self):
+        for value in (None, [], ["ACCOUNT-A"], {"id": "ACCOUNT-A"}, True, 7, "", "   "):
+            with self.subTest(value=value):
+                data = copy.deepcopy(self.data)
+                data["remittances"][0]["receiving_account_ref"] = value
+                data["receipts"][0]["account_ref"] = value
+                result = remittance.reconcile(data)
+                self.assertEqual(result["status"], "partial")
+                self.assertEqual(result["verified_receipts_by_currency"], {})
+                self.assertEqual(len(result["unresolved"]), 1)
+                self.assertEqual(result["allocations"][0]["status"], "allocated_statement")
+
+    def test_access_metadata_must_be_nonblank_text_and_never_changes_payable(self):
+        for value in (None, [], {}, True, 7, "", "   "):
+            with self.subTest(value=value):
+                data = copy.deepcopy(self.data)
+                data["receiving_account_access"] = value
+                with self.assertRaisesRegex(ValueError, "receiving_account_access"):
+                    remittance.reconcile(data)
+        data = copy.deepcopy(self.data)
+        del data["receiving_account_access"]
+        self.assertEqual(remittance.reconcile(data)["receiving_account_access"], "unknown")
+        self.assertIsNone(remittance.reconcile(data)["current_payable"])
+
     def test_evidenced_fee_receipt(self):
         result = remittance.reconcile(self.data)
         self.assertEqual(result["status"], "ok")

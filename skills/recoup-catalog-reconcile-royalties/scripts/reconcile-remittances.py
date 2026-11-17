@@ -18,6 +18,9 @@ def reconcile(data):
         raise ValueError("Input must be a JSON object")
     if data.get("schema_version") != "1":
         raise ValueError("schema_version must be '1'")
+    access = data.get("receiving_account_access", "unknown")
+    if not isinstance(access, str) or not access.strip():
+        raise ValueError("receiving_account_access must be nonblank text when supplied")
     sets = {name: unique(data.get(name, []), "id") for name in ("statements", "remittances", "receipts")}
     for name, items in sets.items():
         unique(list(items.values()), "source_record_id")
@@ -83,7 +86,10 @@ def reconcile(data):
             if stage == "remittance_to_receipt":
                 if right.get("status") != "posted":
                     raise ValueError("Pending/returned receipt is not posted receiving-account evidence")
-                if not left.get("receiving_account_ref") or left.get("receiving_account_ref") != right.get("account_ref"):
+                receiving_ref, account_ref = left.get("receiving_account_ref"), right.get("account_ref")
+                if (not isinstance(receiving_ref, str) or not receiving_ref.strip()
+                        or not isinstance(account_ref, str) or not account_ref.strip()
+                        or receiving_ref != account_ref):
                     raise ValueError("Receiving-account scope mismatch or unknown; resolve changed payee with evidence")
                 if right.get("evidence_status") != "observed":
                     status = "user_reported_receipt_unverified"
@@ -113,7 +119,7 @@ def reconcile(data):
             "completion_scope": scope, "unverified_allocation_ids": unverified, "unmatched_required_records": len(remaining), "missing_required_stages": absent_stages,
             "arithmetic_limits": "Inputs <=24 coefficient/integer digits and <=18 fractional places; <=10000 records per collection; Decimal precision 128.",
             "unresolved": errors, "residuals": residuals, "verified_receipts_by_currency": dict(received),
-            "current_payable": None, "receiving_account_access": data.get("receiving_account_access", "unknown"),
+            "current_payable": None, "receiving_account_access": access,
             "limitations": "Paid labels and historical credits do not establish current payable or bank receipt. Unallocated amounts are unmatched, not automatically debts."}
 
 
