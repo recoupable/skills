@@ -2,6 +2,15 @@
 
 We welcome contributions — especially new skills for the music industry.
 
+This is the authoring repository for the consolidated `recoup-plugin` and its
+generated packages. Broad reusable skills belong in `skills/` here. Existing
+standalone catalog, platform, content and research bundles have separate source
+repositories registered in [recoupable/marketplace](https://github.com/recoupable/marketplace).
+Read its [ownership and maintenance policy](https://github.com/recoupable/marketplace/blob/main/MAINTENANCE.md)
+before changing a shared behavior: identify affected consumers, use a PR and
+validation in each owner, and release each package separately. Do not copy or
+remove a standalone workflow just to align directory layouts.
+
 ## Adding a Skill
 
 1. Create a new directory under `skills/` with a `SKILL.md`:
