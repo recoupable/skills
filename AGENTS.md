@@ -92,6 +92,16 @@ description: What it does and when to use it
 
 ## The plugin (this repo)
 
+These authoring rules apply to `recoupable/skills` and its generated distributions.
+The separate [Recoup marketplace](https://github.com/recoupable/marketplace)
+registers independently maintained catalog, platform, content and research
+plugins. Their source is not generated from this repository. Follow the shared
+[package ownership and maintenance policy](https://github.com/recoupable/marketplace/blob/main/MAINTENANCE.md)
+when selecting an owner or propagating a bug fix across families. Broad reusable
+skills belong here; changes to an existing standalone workflow belong in that
+child repository. Preserve each family's identifiers, compatibility files and
+release process; a Skills release does not update an installed standalone plugin.
+
 The whole repo is one flat plugin. There is **no `plugins/` directory** and no per-plugin subfolders — add capabilities by adding **skills** to `skills/`, not by creating new plugins.
 
 - **Add a skill** by creating `skills/recoup-[domain]-[verb]-[noun]/SKILL.md` (see "Skill Format"), then add a route in `RESOLVER.md` and a fixture in `resolver-eval.jsonl`. CI fails on any skill that isn't reachable from the resolver.
@@ -101,7 +111,7 @@ The whole repo is one flat plugin. There is **no `plugins/` directory** and no p
 
 ## No slash-commands — skills only
 
-**Do not author `commands/` (slash-command files) in any plugin.** This repo
+**Do not author `commands/` (slash-command files) in this repository or its generated packages.** This repo
 standardizes on **skills** as the single authoring primitive across every harness.
 
 Why:
