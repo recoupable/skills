@@ -237,3 +237,34 @@ class WorkpaperTests(unittest.TestCase):
         self.assertEqual(before, [self.source.read_bytes(), self.result.read_bytes()])
         export.build(self.source, self.result, self.output, '2026-11-18')
         self.assertTrue((self.output / 'manifest.json').is_file())
+
+    def test_adjustment_bridge_output_grows_linearly_and_resolves_line_evidence(self):
+        sizes, payloads = [], []
+        for count in (64, 128):
+            self.data['recoupment_accounts'] = []
+            self.data['lines'][0]['adjustments'] = [
+                {'adjustment_id': f'ADJ-{index:04}', 'kind': 'deduction', 'amount': '-0.00001',
+                 'evidence_refs': [f'synthetic-adjustment:{index:04}']}
+                for index in range(count)
+            ]
+            self.output = self.root / f'growth-{count}'
+            payload = self.build()
+            sizes.append(sum(path.stat().st_size for path in self.output.iterdir()))
+            payloads.append(payload)
+        # Doubling adjustments/references must not quadruple serialized output.
+        self.assertLess(sizes[1], sizes[0] * 2.5, sizes)
+        for count, payload in zip((64, 128), payloads):
+            line = payload['schedules']['entitlement-lines'][0]
+            bridges = payload['schedules']['calculation-bridge']
+            self.assertEqual(len(bridges), count + 3)
+            self.assertEqual(len(line['evidence_refs']), count + 2)
+            self.assertTrue(set(line['evidence_refs']).issubset(
+                {row['evidence_ref'] for row in payload['schedules']['evidence']}))
+            for step, row in enumerate(bridges):
+                self.assertNotIn('evidence_refs', row)
+                self.assertEqual(row['step'], step)
+                for key in ('line_ref', 'rule_ref', 'rule_version_ref', 'currency',
+                            'period_start', 'period_end', 'freshness', 'as_of'):
+                    self.assertEqual(row[key], line[key])
+            from decimal import Decimal
+            self.assertEqual(Decimal(line['expected_amount']), Decimal('45.002205') - Decimal(count) * Decimal('0.00001'))

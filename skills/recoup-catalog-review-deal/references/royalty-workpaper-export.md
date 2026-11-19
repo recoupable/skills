@@ -40,6 +40,9 @@ directory.
 - `entitlement-lines.csv`: exact basis, rates, expected/reported amounts and signed
   variance, with currency, period, rule version alias and evidence references.
 - `calculation-bridge.csv`: ordered intermediate steps, not additive earnings.
+  Resolve each row's complete evidence list through `line_ref` in the entitlement
+  schedule; the bridge retains currency, period, rule, order and freshness without
+  repeating that potentially large list for every adjustment.
 - `recoupment-accounts.csv`: opening/movements/earnings/closing/payable bridge, with
   the exact eligible line references and their periods. The calculator does not
   supply a balance date; it remains explicitly unknown, not the report date.

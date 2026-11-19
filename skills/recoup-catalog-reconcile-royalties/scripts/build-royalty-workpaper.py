@@ -117,8 +117,10 @@ def build(input_path, result_path, output, as_of, evidence_path=None):
                       "basis_amount": source[rule["basis"]], "participation_rate": rule["participation_rate"],
                       "commission_rate": rule["commission_rate"], "commission_basis": "participation",
                       **{key: line[key] for key in ("expected_amount", "reported_amount", "variance", "variance_direction", "recovered_cash")}})
+        # Evidence is stored once per line; bridge rows resolve it via line_ref.
+        bridge_context = {key: value for key, value in common.items() if key != "evidence_refs"}
         for index, step in enumerate(line["bridge"]):
-            bridges.append({**common, "step": index, "operation": step["operation"],
+            bridges.append({**bridge_context, "step": index, "operation": step["operation"],
                             "amount": step["amount"], "rate": step.get("rate")})
     for account in result["recoupment_accounts"]:
         periods = sorted({(calculated[key]["period_start"], calculated[key]["period_end"]) for key in account["earnings_line_ids"]})
