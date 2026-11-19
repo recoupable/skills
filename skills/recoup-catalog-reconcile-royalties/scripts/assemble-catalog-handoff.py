@@ -7,7 +7,7 @@ import importlib.util
 import io
 import json
 import os
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 import shutil
 
@@ -77,12 +77,18 @@ def parse(raw):
         raise ValueError('Unsupported JSON numeric token')
     def exact_float(token):
         require(len(token) <= 256)
-        value = Decimal(token)
+        try:
+            value = Decimal(token)
+        except InvalidOperation:
+            raise ValueError('Unsupported JSON numeric token') from None
         require(value.is_finite() and -128 <= value.as_tuple().exponent <= 128)
         return value
+    def bounded_int(token):
+        require(len(token) <= 256)
+        return int(token)
     # Preserve finite private-extension tokens without binary rounding. Decimal
     # tokens are not accepted by the exact string/integer financial wire schema.
-    data = json.loads(raw, object_pairs_hook=unique, parse_constant=bad, parse_float=exact_float)
+    data = json.loads(raw, object_pairs_hook=unique, parse_constant=bad, parse_float=exact_float, parse_int=bounded_int)
     def bounded(value, depth=0):
         require(depth <= 16)
         if isinstance(value, dict):
