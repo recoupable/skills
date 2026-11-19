@@ -44,9 +44,9 @@ def copy_hash(path, target=None):
     return digest.hexdigest()
 
 
-def bounded_shape(value):
+def bounded_shape(value, depth=0):
     """Cap decoded per-record fields, nesting and reasons before retaining it."""
-    stack, nodes = [(value, 0)], 0
+    stack, nodes = [(value, depth)], 0
     while stack:
         item, depth = stack.pop(); nodes += 1
         if depth > 16 or nodes > 4096:
@@ -81,9 +81,9 @@ def read_rows(path, parse):
             raw = row.pop('raw_values', None)
             if isinstance(raw, dict):
                 for key, value in raw.items():
-                    bounded_shape(key); bounded_shape(value)
+                    bounded_shape(key, depth=2); bounded_shape(value, depth=2)
             else:
-                bounded_shape(raw)
+                bounded_shape(raw, depth=1)
             bounded_shape(row)
             rows.append({key: row[key] for key in ('source_version_id', 'source_sheet', 'source_row', 'disposition', 'reasons', 'ledger_line_id')})
     return rows, digest.hexdigest()

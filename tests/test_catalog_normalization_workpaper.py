@@ -372,6 +372,25 @@ class NormalizationWorkpaperTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.build()
         self.assertFalse(self.output.exists())
 
+    def test_raw_depth_uses_record_root_for_dict_and_non_dict(self):
+        self.normalize()
+        original=json.loads(self.rows_path.read_text())
+        for dictionary,offset in [(True,2),(False,1)]:
+            for depth in (16,17):
+                with self.subTest(raw_dict=dictionary,leaf_depth=depth):
+                    if self.output.exists():shutil.rmtree(self.output)
+                    nested='PRIVATE_DEPTH_VALUE'
+                    for _ in range(depth-offset):nested=[nested]
+                    row={**original,'raw_values':{'PRIVATE_COLUMN':nested} if dictionary else nested}
+                    self.rows_path.write_text(json.dumps(row)+'\n')
+                    if depth==16:
+                        self.build()
+                        self.assertNotIn('PRIVATE_DEPTH_VALUE',''.join(f.read_text() for f in self.output.iterdir()))
+                        shutil.rmtree(self.output)
+                    else:
+                        with self.assertRaises(ValueError):self.build()
+                        self.assertFalse(self.output.exists())
+
     def test_stream_guard_detects_unbounded_read_regressions(self):
         self.normalize()
         for name,target in [('read_small',self.receipt_path),('read_rows',self.rows_path),('copy_hash',self.ledger)]:
