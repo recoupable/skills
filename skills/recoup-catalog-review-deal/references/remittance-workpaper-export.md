@@ -59,8 +59,8 @@ not changed.
   record link for period/evidence. The same remittance can appear on both stages;
   do not add those residuals. Unmatched does not mean debt.
 - `verified-receipts.csv`: the calculator's sparse signed net totals by currency.
-  Every total links to allocations of that to_currency with verified_receipt or
-  verified_return status, then to source records and evidence. No additional
+  Each total lists its concrete `allocation_refs` with that to_currency and
+  verified_receipt/verified_return status, then links to source records and evidence. No additional
   sum is computed by the exporter. Missing currency means no supplied verified
   total, not observed zero; a present zero can reflect receipts net of returns.
 - `unresolved.csv`: rejected allocation aliases, known/unsupported stage and unknown
@@ -74,7 +74,8 @@ not changed.
   and formula-like CSV values have a display-only apostrophe; do not recalculate
   from that display representation.
 - `report.md`: readable scope, counts, verified currency nets and limitations.
-- `manifest.json`: hashes of all output files plus original input/result bytes,
+- `manifest.json`: hashes of all other generated output files (excluding itself),
+  plus original input/result bytes,
   optional evidence inventory, calculator, finance primitives, exporter and its
   local export-contract helper (`scripts/build-royalty-workpaper.py`).
 

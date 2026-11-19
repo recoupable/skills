@@ -31,7 +31,7 @@ FIELDS = {
                     'status', 'evidence_refs', 'fx_evidence_refs', 'freshness', 'calculation_basis'),
     'adjustments': ('allocation_ref', 'adjustment_ref', 'kind', 'amount', 'currency', 'evidence_refs', 'freshness'),
     'residuals': ('stage', 'side', 'record_ref', 'in_completion_scope', 'currency', 'amount', 'allocated', 'unallocated'),
-    'verified-receipts': ('currency', 'amount', 'basis', 'evidence_link'),
+    'verified-receipts': ('currency', 'amount', 'basis', 'allocation_refs'),
     'unresolved': ('allocation_ref', 'stage', 'status', 'amount', 'reason', 'freshness'),
     'evidence': common.SCHEDULE_FIELDS['evidence'],
 }
@@ -103,10 +103,13 @@ def build(input_path, result_path, output, as_of, evidence_path=None):
                 'evidence_status_ref': alias('evidence_status', item['evidence_status']) if 'evidence_status' in item else None,
                 **ctx})
     scope = result['completion_scope']
+    verified_contributors = {}
     for edge in result['allocations']:
         original = inputs[edge['allocation_id']]
         left, right = STAGES[edge['stage']]
         ref = alias('allocation', edge['allocation_id'])
+        if edge['status'] in ('verified_receipt', 'verified_return'):
+            verified_contributors.setdefault(edge['to_currency'], []).append(ref)
         ctx = context(original)
         states = [ctx['freshness'], object_states[(left, edge['from_id'])], object_states[(right, edge['to_id'])]]
         fx_refs = evidence_refs(original, 'fx_evidence_refs')
@@ -129,7 +132,7 @@ def build(input_path, result_path, output, as_of, evidence_path=None):
     for currency, value in result['verified_receipts_by_currency'].items():
         schedules['verified-receipts'].append({'currency': currency, 'amount': value,
             'basis': 'signed net of supplied verified_receipt and verified_return allocations; not recovery',
-            'evidence_link': 'allocations with matching to_currency and verified_receipt/verified_return status'})
+            'allocation_refs': verified_contributors[currency]})
     for item in result['unresolved']:
         original = inputs[item['allocation_id']]
         stage = original.get('stage')
@@ -184,7 +187,7 @@ def build(input_path, result_path, output, as_of, evidence_path=None):
             'Adjustment totals are already included in allocation to_amount. Adjustment detail is explanatory, never additional money.',
             'Verified returns remain signed negative allocations. Posted user-reported receipts remain unverified.',
             'Unmatched residuals are not debt. Repeated residual records across stages are not additional earnings or recoveries.',
-            'Totals link to verified allocations by currency and status; each allocation links its source records, FX and adjustment evidence.',
+            'Totals list their exact contributing verified allocation aliases; each allocation links its source records, FX and adjustment evidence.',
             'Statement periods live on records. Follow allocation links to those periods; receipt dates are not earning periods.',
             'Empty schedules, unknown freshness, missing stages and partial results are not passed checks. An ok result covers only requested calculator scope.',
             'Hash aliases resolve against private hash-bound inputs. Source names, account references, locations, originals and error prose are excluded.',

@@ -52,6 +52,7 @@ class RemittanceWorkpaperTests(unittest.TestCase):
     def test_exact_bridge_totals_and_period_lineage(self):
         p = self.build(); s = p['schedules']; c = p['controls']
         self.assertEqual(s['verified-receipts'][0]['amount'], '97')
+        self.assertEqual(s['verified-receipts'][0]['allocation_refs'], [export.alias('allocation', 'ALLOC-B')])
         self.assertEqual(s['allocations'][1]['adjustments'], '-3')
         self.assertEqual(s['adjustments'][0]['amount'], '-3')
         self.assertEqual(s['adjustments'][0]['allocation_ref'], s['allocations'][1]['allocation_ref'])
@@ -113,6 +114,8 @@ class RemittanceWorkpaperTests(unittest.TestCase):
             self.data['allocations'].append(row)
         p = self.build()
         self.assertEqual(p['schedules']['verified-receipts'][0]['amount'], '0')
+        self.assertEqual(p['schedules']['verified-receipts'][0]['allocation_refs'],
+                         [export.alias('allocation', 'ALLOC-B'), export.alias('allocation', 'ALLOC-B-RETURN')])
         self.assertEqual(p['schedules']['allocations'][-1]['status'], 'verified_return')
         self.assertEqual(p['schedules']['allocations'][-1]['to_amount'], '-97')
         with (self.output / 'allocations.csv').open() as f:
@@ -227,6 +230,29 @@ class RemittanceWorkpaperTests(unittest.TestCase):
             shutil.rmtree(self.output)
         self.assertLess(sizes[1] / sizes[0], 2.2)
 
+    def test_contributor_links_exclude_unverified_and_grow_linearly(self):
+        sizes = []
+        for n in (32, 64):
+            for name in ('statements', 'remittances'):
+                self.data[name][0]['amount'] = str(n + 1)
+            receipt = self.data['receipts'][0]
+            receipt['amount'] = str(n)
+            receipt['evidence_refs'] = ['synthetic:receipt:' + str(i) for i in range(n)]
+            user = copy.deepcopy(receipt)
+            user.update(id='USER', source_record_id='USER-SOURCE', amount='1', evidence_status='user_reported')
+            self.data['receipts'] = [receipt, user]
+            self.data['allocations'] = [{'allocation_id': 'edge-' + str(i), 'stage': 'remittance_to_receipt',
+                'from_id': 'PAY-A', 'to_id': 'BANK-A' if i < n else 'USER', 'from_amount': '1',
+                'to_amount': '1', 'evidence_refs': ['synthetic:allocation:' + str(i)]} for i in range(n + 1)]
+            p = self.build()
+            total = p['schedules']['verified-receipts'][0]
+            self.assertEqual(total['amount'], str(n))
+            self.assertEqual(total['allocation_refs'], [export.alias('allocation', 'edge-' + str(i)) for i in range(n)])
+            self.assertEqual(p['controls']['result_status'], 'partial')
+            sizes.append((self.output / 'workpaper.json').stat().st_size)
+            shutil.rmtree(self.output)
+        self.assertLess(sizes[1] / sizes[0], 2.2)
+
     def test_multiple_currencies_remain_separate(self):
         for name in ('statements', 'remittances', 'receipts'):
             row = copy.deepcopy(self.data[name][0])
@@ -239,6 +265,9 @@ class RemittanceWorkpaperTests(unittest.TestCase):
             self.data['allocations'].append(row)
         rows = self.build()['schedules']['verified-receipts']
         self.assertEqual({r['currency']: r['amount'] for r in rows}, {'USD': '97', 'EUR': '97'})
+        self.assertEqual({r['currency']: r['allocation_refs'] for r in rows},
+                         {'USD': [export.alias('allocation', 'ALLOC-B')],
+                          'EUR': [export.alias('allocation', 'ALLOC-B-EUR')]})
 
     def test_wrong_account_and_missing_fx_evidence_never_create_cash(self):
         for mode in ('account', 'fx'):
