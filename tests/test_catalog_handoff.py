@@ -440,6 +440,64 @@ class HandoffTests(unittest.TestCase):
                     export.parse(('{"private":' + token + '}').encode())
         self.assertEqual(str(export.parse(b'{"private":0.10000000000000001}')['private']), '0.10000000000000001')
 
+    def test_empty_completion_scope_refused_but_empty_missing_stages_valid(self):
+        from _catalog_handoff_schema import field
+        for scope in (['statement_to_remittance'], ['remittance_to_receipt'], ['statement_to_remittance', 'remittance_to_receipt']):
+            self.assertEqual(field('completion_scope', scope), scope)
+        self.assertEqual(field('missing_required_stages', []), [])
+        directory = self.financial('remittance')
+        for name in ('workpaper.json', 'manifest.json'):
+            p = directory / name; data = json.loads(p.read_text())
+            (data['controls'] if name == 'workpaper.json' else data)['completion_scope'] = []
+            p.write_text(json.dumps(data))
+        self.rehash(directory)
+        with self.assertRaises(ValueError):
+            self.build()
+        self.assertFalse(self.output.exists())
+
+    def test_reversed_earnings_period_refused_and_valid_spelling_preserved(self):
+        from _catalog_handoff_schema import field
+        import csv, io
+        for periods in ([['20260101','20261231']], [['2026-01-01','2026-01-01']], []):
+            self.assertEqual(field('earnings_periods', periods), periods)
+        directory = self.financial('entitlement')
+        p = directory / 'workpaper.json'; data = json.loads(p.read_text())
+        rows = data['schedules']['recoupment-accounts'];rows[0]['earnings_periods'] = [['2024-03-31','2024-01-01']]
+        p.write_text(json.dumps(data))
+        stream = io.StringIO(newline='');writer = csv.DictWriter(stream,fieldnames=export.royalty.SCHEDULE_FIELDS['recoupment-accounts'])
+        writer.writeheader();writer.writerows({k:export.royalty.cell(v) for k,v in row.items()} for row in rows)
+        (directory/'recoupment-accounts.csv').write_text(stream.getvalue(),newline='');self.rehash(directory)
+        with self.assertRaises(ValueError):
+            self.build()
+        self.assertFalse(self.output.exists())
+
+    def test_unlisted_directory_files_are_ignored_not_certified(self):
+        directory = self.financial('entitlement')
+        private = directory / 'unlisted-private.txt';private.write_text('PRIVATE_UNLISTED')
+        original_open = Path.open
+        def guarded(path,*args,**kwargs):
+            if path == private:raise AssertionError('unlisted private file must not be read')
+            return original_open(path,*args,**kwargs)
+        with patch.object(Path,'open',guarded):
+            self.build()
+        self.assertEqual(private.read_text(),'PRIVATE_UNLISTED')
+        self.assertFalse((self.output/'entitlement/unlisted-private.txt').exists())
+        self.assertNotIn('PRIVATE_UNLISTED',''.join(p.read_text() for p in self.output.rglob('*') if p.is_file()))
+
+    def test_new_session_resolves_scope_specific_provenance(self):
+        self.financial('entitlement');self.financial('remittance');self.case();self.build()
+        index = json.loads((self.output/'handoff.json').read_text())
+        for entry in index['exports']:
+            record = json.loads((self.output/entry['workpaper']).read_text());controls = record['controls']
+            if entry['kind'] == 'case':
+                self.assertEqual(controls['case_sha256'],export.sha((self.root/'case.json').read_bytes()))
+                self.assertEqual(controls['revision'],3)
+                self.assertNotIn('producer_hashes',record);self.assertNotIn('result_sha256',controls)
+            else:
+                for key,suffix in (('input_sha256','-input.json'),('result_sha256','-result.json')):
+                    self.assertEqual(controls[key],export.sha((self.root/(entry['kind']+suffix)).read_bytes()))
+                self.assertIsNone(controls['evidence_inventory_sha256']);self.assertTrue(record['producer_hashes'])
+
     def test_new_session_cli_and_standalone_skill(self):
         self.financial('remittance')
         self.selection.write_text(json.dumps({'schema_version': '1', 'exports': self.entries}))

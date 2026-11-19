@@ -88,6 +88,7 @@ def field(key, value):
             reference(value)
     elif key in {'completion_scope', 'missing_required_stages'}:
         require(isinstance(value, list) and len(value) <= 2 and len(set(value)) == len(value))
+        require(key != 'completion_scope' or len(value) >= 1)
         require(all(v in ('statement_to_remittance', 'remittance_to_receipt') for v in value))
     elif key == 'earnings_periods':
         require(isinstance(value, list) and len(value) <= 10000)
@@ -95,6 +96,7 @@ def field(key, value):
             require(isinstance(pair, list) and len(pair) == 2)
             for item in pair:
                 field('as_of', item)
+            require(iso_date(pair[0], 'period_start') <= iso_date(pair[1], 'period_end'))
     elif key in {'step', 'unmatched_required_records'}:
         require(type(value) is int and 0 <= value <= 100000)
     elif key == 'in_completion_scope':

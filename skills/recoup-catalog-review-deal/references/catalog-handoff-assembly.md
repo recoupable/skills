@@ -77,8 +77,10 @@ split a total from its complete contributor/evidence schedules to fit these boun
 JSON floating-point tokens are decoded exactly, without binary rounding, only to
 admit discarded private extensions (finite, at most 256 characters and exponent
 from -128 to 128). Financial fields still refuse these tokens: they require the
-supported exact decimal strings or integers. Duplicate JSON keys, non-finite numbers, duplicate manifest members, unknown file
-names, unsafe paths, mismatched file hashes and incompatible schemas are refused.
+supported exact decimal strings or integers. Duplicate JSON keys, non-finite numbers, duplicate manifest members, unknown names listed in the manifest, unsafe paths,
+mismatched file hashes and incompatible schemas are refused. Additional unlisted
+files in an input directory are ignored: they are neither read nor included, and
+acceptance does not certify the integrity or contents of the whole directory.
 
 ## What is verified and what is preserved
 
@@ -120,8 +122,10 @@ passed checks. Assembly never refreshes an evidence-check date.
 1. Verify output `manifest.json` against the received files. It hashes every output
    except itself; retain its digest separately when transferring an authorized copy.
 2. Read `handoff.json` for included/excluded scopes, the selection digest and exact
-   input manifest hashes. Read each listed `workpaper.json` for preserved controls,
-   source/result/evidence inventory hashes, producer hashes and complete schedules.
+   input manifest hashes. Read each listed `workpaper.json` for its controls and
+   complete schedules. For entitlement/remittance, use input/result hashes, the
+   optional evidence-inventory hash and producer hashes. For a case export, use
+   case_sha256 and revision; it has no financial result/inventory or producer hashes.
 3. Resolve those hashes and aliases against the authorized private evidence inventory
    and case revision. No source locations or originals are embedded in the handoff.
 4. Check whether newer source/case versions supersede these snapshots. Current-record
