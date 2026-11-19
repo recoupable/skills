@@ -104,3 +104,5 @@ not authority to execute those actions from this review.
   build-deal-readiness. Ship alongside this skill; invoke relatively.
 
 For entitlement exports, read `references/royalty-workpaper-export.md`.
+
+For statement/remittance/receipt exports, read `references/remittance-workpaper-export.md`.
