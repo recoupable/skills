@@ -106,3 +106,5 @@ not authority to execute those actions from this review.
 For entitlement exports, read `references/royalty-workpaper-export.md`.
 
 For statement/remittance/receipt exports, read `references/remittance-workpaper-export.md`.
+
+For normalization/import-control exports, read `references/normalization-workpaper-export.md`.
