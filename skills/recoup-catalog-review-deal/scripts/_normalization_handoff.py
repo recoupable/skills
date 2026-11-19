@@ -42,6 +42,18 @@ CHECKS = {
         'written_row_association', 'written_totals', 'additional_controls_vs_supplied_source_totals',
         'existing_ledger_validator'),
 }
+CHECK_STATES = {
+    'original_source_bytes': ('unknown_not_supplied', 'matches', 'mismatch'),
+    'source_totals': ('not_recomputed',),
+    'append_baseline': ('unknown_not_bound_by_receipt', 'not_applicable'),
+    'source_authenticity_current_rights_and_completeness': ('not_verified',),
+    'row_receipt_identity': ('consistent', 'mismatch'),
+    'written_row_association': ('consistent', 'mismatch'),
+    'written_totals': ('mismatch', 'no_observed_amounts'),
+    'additional_controls_vs_supplied_source_totals': ('mismatch', 'matches_supplied_claims_only', 'unavailable'),
+    'existing_ledger_validator': ('ok', 'errors_found'),
+}
+
 SCOPES = {
     'counts': ('row receipt', 'row receipt detail plus held', 'entire supplied ledger count only',
         'nonappend has only new rows; append baseline not independently known', 'row receipt disposition',
@@ -107,4 +119,19 @@ def project(record, fields, reason_codes, schedule=None):
         else:
             require(key in ENUMS and isinstance(value, str) and value in ENUMS[key])
         result[key] = value
+    if schedule == 'checks':
+        require(result['status'] in CHECK_STATES[result['check']])
+    elif schedule == 'counts':
+        supplied_only = result['metric'] in ('economic_duplicate_rows', 'duplicate_held_rows')
+        require((result['observed'] is None and result['check'] == 'not_recomputed') if supplied_only else
+                (type(result['observed']) is int and result['check'] in ('matches', 'mismatch')))
+    elif schedule == 'totals':
+        if result['basis'] == 'source_detail_supplied':
+            require(result['observed_amount'] is None and not result['line_refs'] and result['check'] == 'not_recomputed')
+        else:
+            require(result['check'] in ('matches', 'mismatch', 'unsupported_association_or_value'))
+            if result['check'] == 'unsupported_association_or_value':
+                require(result['observed_amount'] is None and not result['line_refs'])
+    elif schedule == 'rows':
+        require(len(result['reason_codes']) == len(result['reason_refs']))
     return result

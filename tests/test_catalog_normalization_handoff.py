@@ -189,6 +189,21 @@ class NormalizationHandoffTests(unittest.TestCase):
         self.assertEqual(result['controls']['additional_controls_sha256'],assembly.sha(controls.read_bytes()))
         self.assertEqual(result['controls']['source_authenticity'],'not_verified')
 
+    def test_unknown_checks_cannot_be_promoted_by_self_consistent_wire(self):
+        import io
+        directory=self.export(self.normalize());p=directory/'workpaper.json';saved=p.read_bytes()
+        for check in ('source_totals','append_baseline','source_authenticity_current_rights_and_completeness'):
+            with self.subTest(check=check):
+                self.fixture.output=self.root/('handoff-'+check)
+                data=json.loads(saved);rows=data['schedules']['checks']
+                next(row for row in rows if row['check']==check)['status']='matches'
+                p.write_text(json.dumps(data))
+                stream=io.StringIO(newline='');writer=csv.DictWriter(stream,fieldnames=producer.FIELDS['checks'])
+                writer.writeheader();writer.writerows({k:producer.common.cell(v) for k,v in row.items()} for row in rows)
+                (directory/'checks.csv').write_text(stream.getvalue(),newline='');self.fixture.rehash(directory)
+                with self.assertRaises(ValueError):self.build()
+                self.assertFalse(self.fixture.output.exists())
+
     def test_standalone_cli_uses_only_saved_workpaper(self):
         self.export(self.normalize());self.fixture.selection.write_text(json.dumps({'schema_version':'1','exports':self.fixture.entries}))
         self.source.unlink();self.ledger.unlink()  # Assembly has no original-source dependency.
