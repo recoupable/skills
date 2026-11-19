@@ -96,3 +96,5 @@ For a named provider, read `references/catalog-providers/index.md` and only its
 applicable family/profile. The dated registry separates documented preparation
 from implemented transports and live verification; refresh current account rules
 before claiming provider validation or executing an operation.
+
+For entitlement exports, read `references/royalty-workpaper-export.md`.
