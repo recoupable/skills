@@ -124,6 +124,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-reconcile-royalties/scripts/_finance.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_royalty_archive.py
 - skills/recoup-catalog-reconcile-royalties/scripts/build-catalog-report.py
+- skills/recoup-catalog-reconcile-royalties/scripts/build-royalty-workpaper.py
 - skills/recoup-catalog-reconcile-royalties/scripts/calculate-entitlements.py
 - skills/recoup-catalog-reconcile-royalties/scripts/catalog-case.py
 - skills/recoup-catalog-reconcile-royalties/scripts/normalize-royalty-statement.py
@@ -145,6 +146,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-review-deal/scripts/build-deal-readiness.py
 - skills/recoup-catalog-review-deal/scripts/build-file-manifest.py
 - skills/recoup-catalog-review-deal/scripts/build-manual-review-queue.py
+- skills/recoup-catalog-review-deal/scripts/build-royalty-workpaper.py
 - skills/recoup-catalog-review-deal/scripts/calculate-concentration.py
 - skills/recoup-catalog-review-deal/scripts/calculate-entitlements.py
 - skills/recoup-catalog-review-deal/scripts/calculate-nps-nls-bridge.py
@@ -193,5 +195,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: 3fe022851f1122ed102803b80d15692209bf21a7
-Version: 2026.1118.93
+Source commit: fc6002296239d6f3d5a83705670effd8a7031e55
+Version: 2026.1118.94

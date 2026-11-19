@@ -102,3 +102,5 @@ not authority to execute those actions from this review.
   red-flags, output-templates, methodology, recoup-api, seller-prep.
 - `scripts/` — ingest/normalize, calculate-*, validate-*, run-deal-checks,
   build-deal-readiness. Ship alongside this skill; invoke relatively.
+
+For entitlement exports, read `references/royalty-workpaper-export.md`.
