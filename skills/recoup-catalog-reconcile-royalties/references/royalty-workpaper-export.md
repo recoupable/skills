@@ -15,10 +15,13 @@ python3 scripts/build-royalty-workpaper.py --input entitlement-input.json --resu
 If a new calculation is required, choose a new versioned directory. The calculator
 itself overwrites its output, so the exclusive `mkdir` below must succeed before
 it runs. If that directory exists, select another version; never reuse or clear it.
-Retain the exact input version alongside its result receipt.
+The subshell applies a private umask only to this calculation: directory mode is
+0700 and newly created result files are 0600; the invoking shell is unchanged.
+Retain the exact input version alongside its result receipt in an authorized
+private location. This does not change permissions on pre-existing inputs.
 
 ```bash
-mkdir entitlement-run-v2 && python3 scripts/calculate-entitlements.py --input entitlement-input.json --output entitlement-run-v2/result.json
+( umask 077 && mkdir -m 700 entitlement-run-v2 && python3 scripts/calculate-entitlements.py --input entitlement-input.json --output entitlement-run-v2/result.json )
 python3 scripts/build-royalty-workpaper.py --input entitlement-input.json --result entitlement-run-v2/result.json --as-of 2026-11-18 --output-directory private-workpaper-v2
 ```
 

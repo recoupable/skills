@@ -306,3 +306,28 @@ class WorkpaperTests(unittest.TestCase):
             'evidence_ref': 'source', 'source_sha256': 'a'*64, 'current_sha256': 'a'*64,
             'checked_on': '2026-11-18'}]}, '20261118')
         self.assertEqual(rows['source']['freshness'], 'current_as_supplied')
+
+    def test_documented_new_calculation_is_private_scoped_and_nonoverwriting(self):
+        import shlex
+        import stat
+        guide = (SCRIPTS.parent / 'references/royalty-workpaper-export.md').read_text()
+        command = next(line for line in guide.splitlines()
+                       if 'mkdir ' in line and 'scripts/calculate-entitlements.py' in line)
+        command = command.replace('scripts/calculate-entitlements.py',
+                                  shlex.quote(str(SCRIPTS / 'calculate-entitlements.py')))
+        (self.root / 'entitlement-input.json').write_text(json.dumps(self.data))
+        # Simulate a normal shared-machine default; the documented subshell must
+        # tighten only its own writes and leave the invoking shell unchanged.
+        wrapper = 'umask 022\n' + command + '\nresult=$?\n: > after.txt\nexit "$result"\n'
+        first = subprocess.run(['/bin/sh', '-c', wrapper], cwd=self.root, capture_output=True, text=True)
+        self.assertEqual(first.returncode, 0, first.stderr)
+        directory = self.root / 'entitlement-run-v2'
+        result = directory / 'result.json'
+        self.assertEqual(stat.S_IMODE(directory.stat().st_mode), 0o700)
+        self.assertEqual(stat.S_IMODE(result.stat().st_mode), 0o600)
+        self.assertEqual(stat.S_IMODE((self.root / 'after.txt').stat().st_mode), 0o644)
+        before = result.read_bytes()
+        repeated = subprocess.run(['/bin/sh', '-c', wrapper], cwd=self.root, capture_output=True, text=True)
+        self.assertNotEqual(repeated.returncode, 0)
+        self.assertEqual(result.read_bytes(), before)
+        self.assertEqual(stat.S_IMODE(result.stat().st_mode), 0o600)
