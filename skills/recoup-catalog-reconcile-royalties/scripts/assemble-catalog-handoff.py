@@ -12,6 +12,7 @@ from pathlib import Path
 import shutil
 
 from _catalog_handoff_schema import CONTROLS, digest, project, require
+import _normalization_handoff as normalization_contract
 
 HERE = Path(__file__).resolve().parent
 MAX_FILE = 16 * 1024 * 1024
@@ -30,6 +31,11 @@ royalty = load('build-royalty-workpaper')
 remittance = load('build-remittance-workpaper')
 case_export = load('build-catalog-report')
 case_contract = load('catalog-case')
+normalization = load('build-normalization-workpaper')
+SCOPES = ('case', 'entitlement', 'remittance', 'normalization')
+SCHEDULES = {'case': {name: case_export.FIELDS for name in case_export.COLLECTIONS},
+             'entitlement': royalty.SCHEDULE_FIELDS, 'remittance': remittance.FIELDS,
+             'normalization': normalization.FIELDS}
 
 
 def sha(raw):
@@ -133,30 +139,42 @@ def files(directory, manifest, names, budget):
 
 
 def financial(kind, manifest, contents):
-    exporter = royalty if kind == 'entitlement' else remittance
-    fields = royalty.SCHEDULE_FIELDS if kind == 'entitlement' else remittance.FIELDS
+    fields = SCHEDULES[kind]
     pins = {'exporter_sha256': 'build-royalty-workpaper.py' if kind == 'entitlement' else 'build-remittance-workpaper.py',
             'calculator_sha256': 'calculate-entitlements.py' if kind == 'entitlement' else 'reconcile-remittances.py',
             'finance_primitives_sha256': '_finance.py'}
     if kind == 'remittance':
         pins['export_contract_sha256'] = 'build-royalty-workpaper.py'
-    for key, name in pins.items():
-        require(manifest.get(key) == sha((HERE / name).read_bytes()))
+    projector = lambda record, columns, schedule=None: project(record, columns)
+    control_fields = CONTROLS.get(kind)
+    if kind == 'normalization':
+        helper_hashes = {name: sha((HERE / name).read_bytes()) for name in normalization_contract.HELPERS}
+        require(manifest.get('helper_hashes') == helper_hashes)
+        producer_hashes = helper_hashes
+        projector = lambda record, columns, schedule=None: normalization_contract.project(record, columns, normalization.REASON_CODES, schedule)
+        control_fields = normalization_contract.CONTROLS
+    else:
+        for key, name in pins.items():
+            require(manifest.get(key) == sha((HERE / name).read_bytes()))
+        producer_hashes = {key: manifest[key] for key in pins}
     require(manifest.get('originals_included') is False)
     payload = parse(contents['workpaper.json'])
-    controls = project(payload['controls'], CONTROLS[kind])
-    require(controls == project(manifest, CONTROLS[kind]))
-    require(controls['stage'] == ('contractual_entitlement' if kind == 'entitlement' else 'statement_remittance_receipt'))
+    controls = projector(payload['controls'], control_fields)
+    require(controls == projector(manifest, control_fields))
+    require(controls['stage'] == {'entitlement': 'contractual_entitlement', 'remittance': 'statement_remittance_receipt',
+                                  'normalization': 'normalization_import_controls'}[kind])
     schedules = payload['schedules']
     require(isinstance(schedules, dict) and set(schedules) == set(fields))
     selected = {}
     for name, columns in fields.items():
         require(isinstance(schedules[name], list) and len(schedules[name]) <= MAX_ROWS)
-        rows = [project(row, columns) for row in schedules[name]]
-        expected = [{key: exporter.common.cell(value) if kind == 'remittance' else royalty.cell(value) for key, value in row.items()} for row in rows]
+        rows = [projector(row, columns, name) for row in schedules[name]]
+        expected = [{key: royalty.cell(value) for key, value in row.items()} for row in rows]
         require(csv_rows(contents[name + '.csv'], columns) == expected)
         selected[name] = rows
-    return {'controls': controls, 'schedules': selected, 'producer_hashes': {key: manifest[key] for key in pins}}, fields
+    if kind == 'normalization':
+        normalization_contract.validate_headlines(controls, selected)
+    return {'controls': controls, 'schedules': selected, 'producer_hashes': producer_hashes}, fields
 
 
 def case_index(manifest, contents):
@@ -219,20 +237,20 @@ def build(selection_path, output):
     selection = parse(raw)
     require(selection.get('schema_version') == '1')
     entries = selection.get('exports')
-    require(isinstance(entries, list) and 1 <= len(entries) <= 3)
+    require(isinstance(entries, list) and 1 <= len(entries) <= len(SCOPES))
     output = physical(output)
     require(not output.exists() and output.parent.is_dir())
     prepared = {}
     for entry in entries:
         kind = entry.get('kind')
-        require(kind in ('case', 'entitlement', 'remittance') and kind not in prepared)
+        require(kind in SCOPES and kind not in prepared)
         directory = physical(entry['directory'])
         require(directory.is_dir())
         require(not output.is_relative_to(directory) and not directory.is_relative_to(output))
         manifest_raw = read(directory / 'manifest.json', budget, 1024 * 1024)
         require(sha(manifest_raw) == digest(entry.get('manifest_sha256')))
         manifest = parse(manifest_raw)
-        fields = {name: case_export.FIELDS for name in case_export.COLLECTIONS} if kind == 'case' else royalty.SCHEDULE_FIELDS if kind == 'entitlement' else remittance.FIELDS
+        fields = SCHEDULES[kind]
         names = {name + '.csv' for name in fields} | {'report.md'} | (set() if kind == 'case' else {'workpaper.json'})
         contents = files(directory, manifest, names, budget)
         payload, fields = case_index(manifest, contents) if kind == 'case' else financial(kind, manifest, contents)
@@ -254,11 +272,13 @@ def build(selection_path, output):
             index.append({'kind': kind, 'workpaper': kind + '/workpaper.json', 'input_manifest_sha256': manifest_hash,
                           'controls': payload['controls'], 'schedules': {name: len(rows) for name, rows in payload['schedules'].items()}})
         handoff = {'schema_version': '1', 'selection_sha256': sha(raw), 'exports': index,
-                   'excluded_stages': sorted(set(('case', 'entitlement', 'remittance')) - set(prepared)),
+                   'excluded_stages': sorted(set(SCOPES) - set(prepared)),
                    'readiness': 'review_required', 'current_record_check': 'not_performed',
                    'cross_stage_money_rollup': 'not_calculated', 'originals_included': False,
                    'publication_authorized': False, 'assembler_sha256': sha(Path(__file__).read_bytes()),
                    'schema_contract_sha256': sha((HERE / '_catalog_handoff_schema.py').read_bytes())}
+        if 'normalization' in prepared:
+            handoff['normalization_contract_sha256'] = sha((HERE / '_normalization_handoff.py').read_bytes())
         write(output / 'handoff.json', royalty.dumps(handoff))
         report = ['# Selected catalog handoff', '', 'Private review artifact: CSV and exact JSON, not an XLSX workbook.',
                   'Read handoff.json, then each listed workpaper.json and its CSV schedules.',
@@ -272,8 +292,11 @@ def build(selection_path, output):
                   'No financial arithmetic is performed. Bridge steps, recoupment, statements, remittances and receipts are not additive recovery.',
                   'Report approval grants no publication, sharing, provider-action or payment authority.', '', '| Included scope | Exact record |', '|---|---|']
         report += [f"| {item['kind']} | [{item['workpaper']}]({item['workpaper']}) |" for item in index]
-        report += ['', 'Excluded supported scopes: ' + (', '.join(handoff['excluded_stages']) or 'none') + '.',
-                   'Normalization and other stage formats are unsupported in this version; never silently include them.', '']
+        report += ['', 'Excluded supported scopes: ' + (', '.join(handoff['excluded_stages']) or 'none') + '.']
+        if 'normalization' in prepared:
+            report += ['Normalization source and written totals overlap; held values are not eligible earnings. Never add these bases or prior-ledger amounts.',
+                   'Append baseline financial controls and historical receipt-to-ledger byte binding remain unknown; assembly does not rerun any checks.']
+        report += ['Other stage formats are unsupported in this version; never silently include them.', '']
         write(output / 'report.md', '\n'.join(report))
         manifest = {'schema_version': '1', 'scope': 'selected_catalog_handoff', 'files': [
             {'file': str(p.relative_to(output)), 'sha256': sha(p.read_bytes())} for p in sorted(output.rglob('*')) if p.is_file()]}
