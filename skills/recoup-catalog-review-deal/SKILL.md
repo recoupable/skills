@@ -102,3 +102,8 @@ not authority to execute those actions from this review.
   red-flags, output-templates, methodology, recoup-api, seller-prep.
 - `scripts/` — ingest/normalize, calculate-*, validate-*, run-deal-checks,
   build-deal-readiness. Ship alongside this skill; invoke relatively.
+
+For a controlled entitlement CSV/JSON workpaper and hashed report, read
+`references/royalty-workpaper-export.md`. Use `scripts/build-royalty-workpaper.py`
+with the original calculator input and saved result; unknown/stale evidence stays
+visible and no monetary recovery rollup is inferred.

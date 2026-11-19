@@ -399,6 +399,18 @@
         "skills/recoup-catalog-register-catalog/scripts/mlc-public-fields.py",
         "skills/recoup-catalog-resolve-claims/scripts/mlc-public-fields.py"
       ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/build-royalty-workpaper.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/build-royalty-workpaper.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/references/royalty-workpaper-export.md",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/references/royalty-workpaper-export.md"
+      ]
     }
   ]
 }

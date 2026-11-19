@@ -96,3 +96,8 @@ For a named provider, read `references/catalog-providers/index.md` and only its
 applicable family/profile. The dated registry separates documented preparation
 from implemented transports and live verification; refresh current account rules
 before claiming provider validation or executing an operation.
+
+For a controlled entitlement CSV/JSON workpaper and hashed report, read
+`references/royalty-workpaper-export.md`. Use `scripts/build-royalty-workpaper.py`
+with the original calculator input and saved result; unknown/stale evidence stays
+visible and no monetary recovery rollup is inferred.
