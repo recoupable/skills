@@ -411,6 +411,18 @@
       "copies": [
         "skills/recoup-catalog-reconcile-royalties/references/royalty-workpaper-export.md"
       ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/build-remittance-workpaper.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/build-remittance-workpaper.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/references/remittance-workpaper-export.md",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/references/remittance-workpaper-export.md"
+      ]
     }
   ]
 }
