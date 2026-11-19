@@ -289,6 +289,100 @@ class HandoffTests(unittest.TestCase):
         with patch.object(export.royalty, 'calculator', side_effect=AssertionError('no new math')), patch.object(export.remittance.calculator, 'reconcile', side_effect=AssertionError('no new math')):
             self.build()
 
+    def test_dot_alias_output_inside_input_refused_before_mutation(self):
+        directory = self.financial('entitlement')
+        spelling = self.root / 'spelling'; spelling.mkdir()
+        before = {p.name: p.read_bytes() for p in directory.iterdir()}
+        for alias_input in (True, False):
+            with self.subTest(alias_input=alias_input):
+                self.entries[0]['directory'] = str(spelling / '..' / directory.name) if alias_input else str(directory)
+                self.output = directory / 'nested' if alias_input else spelling / '..' / directory.name / 'nested'
+                with patch.object(export, 'write', side_effect=AssertionError('must refuse before write')):
+                    with self.assertRaises(ValueError):
+                        self.build()
+                self.assertEqual({p.name: p.read_bytes() for p in directory.iterdir()}, before)
+
+    def test_dot_alias_input_inside_existing_output_refused(self):
+        directory = self.financial('entitlement')
+        spelling = self.root / 'spelling'; spelling.mkdir()
+        self.entries[0]['directory'] = str(spelling / '..' / directory.name)
+        self.output = spelling / '..'
+        before = {p.name: p.read_bytes() for p in directory.iterdir()}
+        with patch.object(export, 'write', side_effect=AssertionError('must refuse before write')):
+            with self.assertRaises(ValueError):
+                self.build()
+        self.assertEqual({p.name: p.read_bytes() for p in directory.iterdir()}, before)
+
+    def test_unrelated_dot_aliases_pass_and_cancelled_symlinks_refuse(self):
+        directory = self.financial('entitlement')
+        spelling = self.root / 'spelling'; spelling.mkdir()
+        self.entries[0]['directory'] = str(spelling / '..' / directory.name)
+        self.output = spelling / '..' / 'good-handoff'
+        self.build()
+        self.assertTrue((self.root / 'good-handoff/manifest.json').is_file())
+        link = self.root / 'linked'; link.symlink_to(spelling, target_is_directory=True)
+        self.entries[0]['directory'] = str(link / '..' / directory.name)
+        self.output = self.root / 'denied'
+        with self.assertRaises(ValueError):
+            self.build()
+        self.entries[0]['directory'] = str(directory)
+        self.output = link / '..' / 'denied'
+        with self.assertRaises(ValueError):
+            self.build()
+        self.assertFalse((self.root / 'denied').exists())
+
+    def test_ambiguous_scalar_csv_identity_refused_without_alias_guess(self):
+        for index, raw_id in enumerate(("'=foo", '=foo', "' +foo", '+foo', "'-foo", '-foo', "'@foo", '@foo')):
+            with self.subTest(raw_id=raw_id):
+                self.output = self.root / ('handoff-' + str(index))
+                case = {'schema_version': 1, 'case_id': 'case', 'revision': 1,
+                        **{g: {} for g in export.case_export.COLLECTIONS}}
+                case['sources'][raw_id] = {'id': raw_id, 'status': 'active'}
+                source = self.root / 'raw-case.json'; source.write_text(json.dumps(case))
+                directory = self.root / ('case-' + str(index))
+                export.case_export.build(source, directory)
+                self.entries = []; self.add('case', directory)
+                with self.assertRaises(ValueError):
+                    self.build()
+                self.assertFalse(self.output.exists())
+
+    def test_unambiguous_apostrophe_and_structured_formula_refs_preserved(self):
+        case = {'schema_version': 1, 'case_id': "'=case", 'revision': 1,
+                **{g: {} for g in export.case_export.COLLECTIONS}}
+        case['sources']["'plain"] = {'id': "'plain", 'status': 'active'}
+        case['findings']['f'] = {'id': 'f', 'stage': 'reconcile', 'status': 'open',
+            'source_refs': [{'source_id': "'=foo", 'version': '=v1'}, {'source_id': '=foo', 'version': "'=v1"}],
+            'depends_on': ["'=foo", '=foo']}
+        source = self.root / 'raw-case.json'; source.write_text(json.dumps(case))
+        directory = self.root / 'case'; export.case_export.build(source, directory); self.add('case', directory)
+        self.build()
+        data = json.loads((self.output / 'case/workpaper.json').read_text())
+        alias = lambda value: 'case:' + export.sha(value.encode())
+        self.assertEqual(data['controls']['case_ref'], alias("'=case"))
+        self.assertEqual(data['schedules']['sources'][0]['id'], alias("'plain"))
+        row = data['schedules']['findings'][0]
+        self.assertEqual(row['depends_on'], [alias("'=foo"), alias('=foo')])
+        self.assertNotEqual(row['source_refs'][0]['source_id'], row['source_refs'][1]['source_id'])
+
+    def test_json_float_wire_refused_before_rounding(self):
+        directory = self.financial('entitlement')
+        p = directory / 'workpaper.json'
+        data = json.loads(p.read_text())
+        data['schedules']['entitlement-lines'][0]['basis_amount'] = 0.1
+        raw = json.dumps(data).replace('"basis_amount": 0.1', '"basis_amount": 0.10000000000000001')
+        p.write_text(raw)
+        # Match the rounded decoder projection so the parent incorrectly accepts.
+        import csv, io
+        stream = io.StringIO(newline='')
+        rows = data['schedules']['entitlement-lines']
+        writer = csv.DictWriter(stream, fieldnames=export.royalty.SCHEDULE_FIELDS['entitlement-lines'])
+        writer.writeheader(); writer.writerows({k: export.royalty.cell(v) for k,v in row.items()} for row in rows)
+        (directory / 'entitlement-lines.csv').write_text(stream.getvalue(), newline='')
+        self.rehash(directory)
+        with self.assertRaises(ValueError):
+            self.build()
+        self.assertFalse(self.output.exists())
+
     def test_new_session_cli_and_standalone_skill(self):
         self.financial('remittance')
         self.selection.write_text(json.dumps({'schema_version': '1', 'exports': self.entries}))

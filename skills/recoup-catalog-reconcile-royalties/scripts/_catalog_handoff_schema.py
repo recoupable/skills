@@ -63,7 +63,7 @@ def field(key, value):
     elif key in NULLS:
         require(value is None)
     elif key in MONEY:
-        require(value is None or (type(value) in (str, int, float) and re.fullmatch(r'[+-]?(?:\d{1,128}(?:\.\d{0,128})?|\.\d{1,128})(?:[eE][+-]?\d{1,3})?', str(value)) is not None))
+        require(value is None or (type(value) in (str, int) and re.fullmatch(r'[+-]?(?:\d{1,128}(?:\.\d{0,128})?|\.\d{1,128})(?:[eE][+-]?\d{1,3})?', str(value)) is not None))
         if value is not None:
             parsed = Decimal(str(value))
             require(parsed.is_finite() and -128 <= parsed.as_tuple().exponent <= 128)

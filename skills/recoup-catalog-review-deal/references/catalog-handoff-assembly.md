@@ -56,7 +56,8 @@ python3 scripts/assemble-catalog-handoff.py \
 ```
 
 Paths are local filesystem paths, relative to the invocation directory if not
-absolute. Use physical paths: symlinks, including linked parent directories, are
+absolute. Dot components are canonicalized before containment checks and all IO;
+the original spelling is checked for links before resolution. Use physical paths: symlinks, including linked parent directories, are
 refused (on macOS use `/private/tmp` rather than `/tmp`). The output parent must
 already exist. The new output cannot exist or be inside an input export, and input
 exports cannot be inside the output. No overwrite or automatic parent creation.
@@ -70,7 +71,8 @@ schedule/list, JSON depth 16, 256 keys per object and 65,536 characters per JSON
 string. These bounds intentionally support review-sized exports, not every possible
 calculator output. Oversized exports require a separately reviewed workflow; do not
 split a total from its complete contributor/evidence schedules to fit these bounds.
-Duplicate JSON keys, non-finite numbers, duplicate manifest members, unknown file
+JSON floating-point tokens are refused before decoding; financial values must use
+the supported exact decimal strings or integers. Duplicate JSON keys, non-finite numbers, duplicate manifest members, unknown file
 names, unsafe paths, mismatched file hashes and incompatible schemas are refused.
 
 ## What is verified and what is preserved
@@ -91,7 +93,12 @@ account identifiers and credentials are not copied. Reports are rebuilt from fix
 text. Case IDs, rule versions, source references, dependencies, shared-cause IDs and
 evidence-gap prose become consistent SHA256 aliases. Case stages and statuses remain
 visible, including stale and rejected states; gap text must be resolved against the
-private case. Financial values and aliases remain sensitive, even without originals.
+private case. Legacy scalar CSV fields beginning with an apostrophe followed by a
+formula-leading character are ambiguous and refused: the original might contain
+the apostrophe or the exporter might have added it. Do not strip or rename private
+identities to bypass refusal. Such cases need a separately coordinated, versioned
+lossless exporter contract. Unambiguous apostrophes and identities inside structured
+JSON reference cells retain their exact original spelling before aliasing. Financial values and aliases remain sensitive, even without originals.
 
 Case and financial exports retain separate scopes. The assembler does not invent a
 crosswalk between their IDs, assert that they belong to one case, establish present

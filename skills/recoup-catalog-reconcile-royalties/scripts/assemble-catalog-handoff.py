@@ -39,9 +39,18 @@ def no_links(path):
     require(not any(p.is_symlink() for p in (path, *path.parents)))
 
 
+def physical(path):
+    supplied = Path(path).absolute()
+    # Check supplied spelling first: resolving must never hide a linked component.
+    no_links(supplied)
+    require(supplied.parent.is_dir())
+    resolved = supplied.resolve(strict=False)
+    no_links(resolved)
+    return resolved
+
+
 def read(path, budget, limit=MAX_FILE):
-    path = Path(path)
-    no_links(path)
+    path = physical(path)
     require(path.is_file() and path.stat().st_size <= limit)
     with path.open('rb') as stream:
         raw = stream.read(limit + 1)
@@ -58,8 +67,8 @@ def parse(raw):
             result[key] = value
         return result
     def bad(value):
-        raise ValueError('Non-finite JSON')
-    data = json.loads(raw, object_pairs_hook=unique, parse_constant=bad)
+        raise ValueError('Unsupported JSON numeric token')
+    data = json.loads(raw, object_pairs_hook=unique, parse_constant=bad, parse_float=bad)
     def bounded(value, depth=0):
         require(depth <= 16)
         if isinstance(value, dict):
@@ -145,10 +154,9 @@ def case_index(manifest, contents):
         for row in rows:
             item = {}
             for key, value in row.items():
-                # The old CSV writer guards formula-leading raw IDs; undo exactly
-                # that display prefix before producing stable private aliases.
-                if value.startswith("'") and value[1:].lstrip().startswith(('=', '+', '-', '@', '\t', '\r')):
-                    value = value[1:]
+                # Legacy CSV is lossy here: a literal apostrophe and an added
+                # formula guard have identical wire bytes. Never guess identity.
+                require(not (value.startswith("'") and value[1:].lstrip().startswith(('=', '+', '-', '@', '\t', '\r'))))
                 if key in ('id', 'cause_id', 'action_id', 'rule_version', 'evidence_gap'):
                     item[key] = alias(value)
                 elif key == 'source_refs':
@@ -192,15 +200,13 @@ def build(selection_path, output):
     require(selection.get('schema_version') == '1')
     entries = selection.get('exports')
     require(isinstance(entries, list) and 1 <= len(entries) <= 3)
-    output = Path(output).absolute()
-    no_links(output)
+    output = physical(output)
     require(not output.exists() and output.parent.is_dir())
     prepared = {}
     for entry in entries:
         kind = entry.get('kind')
         require(kind in ('case', 'entitlement', 'remittance') and kind not in prepared)
-        directory = Path(entry['directory']).absolute()
-        no_links(directory)
+        directory = physical(entry['directory'])
         require(directory.is_dir())
         require(not output.is_relative_to(directory) and not directory.is_relative_to(output))
         manifest_raw = read(directory / 'manifest.json', budget, 1024 * 1024)
