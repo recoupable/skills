@@ -459,6 +459,12 @@
       "copies": [
         "skills/recoup-catalog-reconcile-royalties/scripts/_normalization_workpaper_io.py"
       ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/_normalization_handoff.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/_normalization_handoff.py"
+      ]
     }
   ]
 }

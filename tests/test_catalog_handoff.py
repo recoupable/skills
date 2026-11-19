@@ -110,7 +110,7 @@ class HandoffTests(unittest.TestCase):
         (self.root / 'remittance/manifest.json').write_text('SECRET NOT JSON')
         self.build()
         handoff = json.loads((self.output / 'handoff.json').read_text())
-        self.assertEqual(handoff['excluded_stages'], ['case', 'remittance'])
+        self.assertEqual(handoff['excluded_stages'], ['case', 'normalization', 'remittance'])
         self.assertFalse((self.output / 'remittance').exists())
 
     def test_partial_out_of_scope_and_unknown_are_preserved(self):
@@ -233,7 +233,7 @@ class HandoffTests(unittest.TestCase):
         self.selection.write_text('{"schema_version":"1","schema_version":"1","exports":' + json.dumps(self.entries) + '}')
         with self.assertRaises(ValueError):
             export.build(self.selection, self.output)
-        for change in ({'kind': 'normalization'}, {'directory': str(self.root / 'absent')}, {'manifest_sha256': 'x'}):
+        for change in ({'kind': 'unsupported'}, {'directory': str(self.root / 'absent')}, {'manifest_sha256': 'x'}):
             entry = self.entries[0].copy()
             self.entries[0].update(change)
             with self.assertRaises((ValueError, OSError)):
