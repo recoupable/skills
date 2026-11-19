@@ -239,7 +239,7 @@ class WorkpaperTests(unittest.TestCase):
         self.assertTrue((self.output / 'manifest.json').is_file())
 
     def test_adjustment_bridge_output_grows_linearly_and_resolves_line_evidence(self):
-        sizes, payloads = [], []
+        sizes, payloads, expected_bridges = [], [], []
         for count in (64, 128):
             self.data['recoupment_accounts'] = []
             self.data['lines'][0]['adjustments'] = [
@@ -251,18 +251,25 @@ class WorkpaperTests(unittest.TestCase):
             payload = self.build()
             sizes.append(sum(path.stat().st_size for path in self.output.iterdir()))
             payloads.append(payload)
+            expected_bridges.append(json.loads(self.result.read_text())['lines'][0]['bridge'])
         # Doubling adjustments/references must not quadruple serialized output.
         self.assertLess(sizes[1], sizes[0] * 2.5, sizes)
-        for count, payload in zip((64, 128), payloads):
+        for count, payload, calculated_steps in zip((64, 128), payloads, expected_bridges):
             line = payload['schedules']['entitlement-lines'][0]
             bridges = payload['schedules']['calculation-bridge']
             self.assertEqual(len(bridges), count + 3)
             self.assertEqual(len(line['evidence_refs']), count + 2)
+            expected_refs = {'synthetic-contract:section-4', 'synthetic-statement:row-2'} | {
+                f'synthetic-adjustment:{index:04}' for index in range(count)}
+            self.assertEqual(set(line['evidence_refs']),
+                             {export.alias('evidence', ref) for ref in expected_refs})
             self.assertTrue(set(line['evidence_refs']).issubset(
                 {row['evidence_ref'] for row in payload['schedules']['evidence']}))
             for step, row in enumerate(bridges):
                 self.assertNotIn('evidence_refs', row)
                 self.assertEqual(row['step'], step)
+                for key in ('operation', 'amount', 'rate'):
+                    self.assertEqual(row[key], calculated_steps[step].get(key))
                 for key in ('line_ref', 'rule_ref', 'rule_version_ref', 'currency',
                             'period_start', 'period_end', 'freshness', 'as_of'):
                     self.assertEqual(row[key], line[key])
