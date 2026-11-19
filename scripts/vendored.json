@@ -423,6 +423,24 @@
       "copies": [
         "skills/recoup-catalog-reconcile-royalties/references/remittance-workpaper-export.md"
       ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/assemble-catalog-handoff.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/assemble-catalog-handoff.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/_catalog_handoff_schema.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/_catalog_handoff_schema.py"
+      ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/references/catalog-handoff-assembly.md",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/references/catalog-handoff-assembly.md"
+      ]
     }
   ]
 }
