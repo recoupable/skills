@@ -123,6 +123,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-organize-publishing/scripts/catalog-case.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_catalog_handoff_schema.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_finance.py
+- skills/recoup-catalog-reconcile-royalties/scripts/_normalization_handoff.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_normalization_workpaper_io.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_royalty_archive.py
 - skills/recoup-catalog-reconcile-royalties/scripts/assemble-catalog-handoff.py
@@ -146,6 +147,7 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-review-deal/scripts/_catalog_handoff_schema.py
 - skills/recoup-catalog-review-deal/scripts/_finance.py
 - skills/recoup-catalog-review-deal/scripts/_helpers.py
+- skills/recoup-catalog-review-deal/scripts/_normalization_handoff.py
 - skills/recoup-catalog-review-deal/scripts/_normalization_workpaper_io.py
 - skills/recoup-catalog-review-deal/scripts/_royalty_archive.py
 - skills/recoup-catalog-review-deal/scripts/assemble-catalog-handoff.py
@@ -205,5 +207,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: f7b2acd884228550bfdf50ecae3087632cd5d73d
-Version: 2026.1118.97
+Source commit: 70ba0a7327bc66006ba1013145ec2fe4f787fef9
+Version: 2026.1118.98
