@@ -102,3 +102,5 @@ For entitlement exports, read `references/royalty-workpaper-export.md`.
 For statement/remittance/receipt exports, read `references/remittance-workpaper-export.md`.
 
 For selective assembly of existing case and financial exports, read `references/catalog-handoff-assembly.md`.
+
+For normalization/import-control exports, read `references/normalization-workpaper-export.md`.
