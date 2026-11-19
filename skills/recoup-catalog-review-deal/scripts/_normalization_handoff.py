@@ -135,3 +135,14 @@ def project(record, fields, reason_codes, schedule=None):
     elif schedule == 'rows':
         require(len(result['reason_codes']) == len(result['reason_refs']))
     return result
+
+
+def validate_headlines(controls, schedules):
+    """Mirror saved producer state invariants, never replay ledger checks or money."""
+    mismatch = any(row['check'] in ('mismatch', 'unsupported_association_or_value')
+                   for name in ('counts', 'totals') for row in schedules[name]) or any(
+                       row['status'] == 'mismatch' for row in schedules['checks'])
+    expected = 'mismatch' if mismatch else 'no_detected_mismatch_within_supported_checks'
+    require(controls['artifact_consistency'] == expected)
+    validators = [row for row in schedules['checks'] if row['check'] == 'existing_ledger_validator']
+    require(len(validators) == 1 and controls['ledger_validator_status'] == validators[0]['status'])

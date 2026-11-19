@@ -204,6 +204,71 @@ class NormalizationHandoffTests(unittest.TestCase):
                 with self.assertRaises(ValueError):self.build()
                 self.assertFalse(self.fixture.output.exists())
 
+    def rewrite_workpaper(self, directory, data):
+        (directory/'workpaper.json').write_text(json.dumps(data))
+        for name,rows in data['schedules'].items():
+            with (directory/(name+'.csv')).open('w',newline='') as stream:
+                writer=csv.DictWriter(stream,fieldnames=producer.FIELDS[name]);writer.writeheader()
+                writer.writerows({key:producer.common.cell(value) for key,value in row.items()} for row in rows)
+        path=directory/'manifest.json';manifest=json.loads(path.read_text());manifest.update(data['controls'])
+        path.write_text(json.dumps(manifest));self.fixture.rehash(directory)
+
+    def test_headline_controls_cannot_contradict_rehashed_schedules(self):
+        directory=self.export(self.normalize());original=json.loads((directory/'workpaper.json').read_text())
+        for kind in ('count','total','withheld','check','validator_false_ok','validator_false_error','false_mismatch'):
+            with self.subTest(kind=kind):
+                self.fixture.output=self.root/('handoff-'+kind)
+                data=copy.deepcopy(original);schedules=data['schedules']
+                if kind=='count':
+                    schedules['counts'][0]['supplied']+=1;schedules['counts'][0]['check']='mismatch'
+                elif kind in ('total','withheld'):
+                    row=next(r for r in schedules['totals'] if r['basis']=='newly_written_only')
+                    if kind=='total':row.update(supplied_amount='999',check='mismatch')
+                    else:row.update(observed_amount=None,line_refs=[],check='unsupported_association_or_value')
+                elif kind=='check':
+                    next(r for r in schedules['checks'] if r['check']=='original_source_bytes')['status']='mismatch'
+                elif kind=='validator_false_ok':
+                    next(r for r in schedules['checks'] if r['check']=='existing_ledger_validator')['status']='errors_found'
+                elif kind=='validator_false_error':data['controls']['ledger_validator_status']='errors_found'
+                else:data['controls']['artifact_consistency']='mismatch'
+                self.rewrite_workpaper(directory,data)
+                before={p.name:p.read_bytes() for p in directory.iterdir()}
+                with self.assertRaises(ValueError):self.build()
+                self.assertFalse(self.fixture.output.exists())
+                self.assertEqual(before,{p.name:p.read_bytes() for p in directory.iterdir()})
+
+    def test_validator_check_missing_or_duplicated_refused(self):
+        directory=self.export(self.normalize());original=json.loads((directory/'workpaper.json').read_text())
+        for duplicate in (False,True):
+            with self.subTest(duplicate=duplicate):
+                self.fixture.output=self.root/('handoff-'+str(duplicate))
+                data=copy.deepcopy(original);checks=data['schedules']['checks']
+                row=next(r for r in checks if r['check']=='existing_ledger_validator')
+                if duplicate:checks.append(copy.deepcopy(row))
+                else:checks.remove(row)
+                self.rewrite_workpaper(directory,data)
+                with self.assertRaises(ValueError):self.build()
+                self.assertFalse(self.fixture.output.exists())
+
+    def test_held_baseline_does_not_conflate_eligibility_with_consistency(self):
+        self.row['Net']='';self.normalize()
+        self.row.update(Net='2.0049',**{'Transaction ID':'SECOND'})
+        directory=self.export(self.normalize(append=True));result=self.build()
+        self.assertEqual(result['controls']['receipt_status_supplied'],'ok')
+        self.assertEqual(result['controls']['ledger_validator_status'],'errors_found')
+        self.assertEqual(result['controls']['ledger_held_rows'],1)
+        self.assertEqual(result['controls']['artifact_consistency'],'no_detected_mismatch_within_supported_checks')
+        self.assertEqual(result['controls']['readiness'],'review_required')
+        self.assertEqual(result['schedules'],json.loads((directory/'workpaper.json').read_text())['schedules'])
+        self.assertEqual(result['schedules']['written-lines'][0]['row_status'],'ready')
+
+    def test_normalization_report_caveats_require_selected_scope(self):
+        self.fixture.case();self.fixture.build()
+        self.assertNotIn('Normalization source and written totals', (self.fixture.output/'report.md').read_text())
+        self.fixture.output=self.root/'with-normalization'
+        self.export(self.normalize());self.build()
+        self.assertIn('Normalization source and written totals', (self.fixture.output/'report.md').read_text())
+
     def test_standalone_cli_uses_only_saved_workpaper(self):
         self.export(self.normalize());self.fixture.selection.write_text(json.dumps({'schema_version':'1','exports':self.fixture.entries}))
         self.source.unlink();self.ledger.unlink()  # Assembly has no original-source dependency.

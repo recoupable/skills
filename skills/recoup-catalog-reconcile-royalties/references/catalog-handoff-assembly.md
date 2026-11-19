@@ -97,6 +97,10 @@ allowlisted fields and typed values; its controls must match the manifest, and e
 CSV must match its JSON schedule using the existing display/formula-guard contract.
 Amounts, negative signs, sub-cent precision, unknown nulls, periods, allocation
 references, rule aliases, source hashes, supplied freshness and scope are preserved.
+The assembler admits bounded exact producer output, including calculated amounts;
+the producer input calculator's 24-digit/18-place limits are not output limits.
+It preserves producer-accepted decimal text rather than imposing a new canonical
+spelling. Admission is not a fresh arithmetic validation.
 No arithmetic is rerun by assembly. `matches_recomputed_input` is the producer's
 saved calculation check, not a new calculation or independent source verification.
 Hashes bind supplied bytes; self-consistent fabricated files do not become authentic
@@ -160,7 +164,13 @@ integer counts retain their types. Reason codes are the producer's supported cod
 private reasons remain opaque aliases. Arbitrary prose and extensions are excluded.
 
 Assembly never calls the normalizer, producer projection or ledger validator.
-Saved producer checks are preserved, not rerun or promoted. Source totals remain
+Saved producer checks are preserved, not rerun or promoted. Before output, headline
+artifact_consistency must match the producer rule over saved count/total mismatch
+or unsupported-association states and saved check statuses named mismatch. Exactly
+one existing_ledger_validator check must agree with ledger_validator_status. A
+ledger errors_found status alone does not imply artifact mismatch: a new ok receipt
+can have consistent current rows while an older held baseline remains ineligible.
+These are saved-state consistency checks, not fresh source, ledger or money checks. Source totals remain
 supplied claims; additional controls remain comparisons to those supplied claims.
 Newly written detail/held totals retain their concrete line references. Held values
 are not eligible earnings. Duplicate-only imports have no new written rows, not new

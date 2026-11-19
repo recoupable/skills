@@ -172,6 +172,8 @@ def financial(kind, manifest, contents):
         expected = [{key: royalty.cell(value) for key, value in row.items()} for row in rows]
         require(csv_rows(contents[name + '.csv'], columns) == expected)
         selected[name] = rows
+    if kind == 'normalization':
+        normalization_contract.validate_headlines(controls, selected)
     return {'controls': controls, 'schedules': selected, 'producer_hashes': producer_hashes}, fields
 
 
@@ -290,10 +292,11 @@ def build(selection_path, output):
                   'No financial arithmetic is performed. Bridge steps, recoupment, statements, remittances and receipts are not additive recovery.',
                   'Report approval grants no publication, sharing, provider-action or payment authority.', '', '| Included scope | Exact record |', '|---|---|']
         report += [f"| {item['kind']} | [{item['workpaper']}]({item['workpaper']}) |" for item in index]
-        report += ['', 'Excluded supported scopes: ' + (', '.join(handoff['excluded_stages']) or 'none') + '.',
-                   'Normalization source and written totals overlap; held values are not eligible earnings. Never add these bases or prior-ledger amounts.',
-                   'Append baseline financial controls and historical receipt-to-ledger byte binding remain unknown; assembly does not rerun any checks.',
-                   'Other stage formats are unsupported in this version; never silently include them.', '']
+        report += ['', 'Excluded supported scopes: ' + (', '.join(handoff['excluded_stages']) or 'none') + '.']
+        if 'normalization' in prepared:
+            report += ['Normalization source and written totals overlap; held values are not eligible earnings. Never add these bases or prior-ledger amounts.',
+                   'Append baseline financial controls and historical receipt-to-ledger byte binding remain unknown; assembly does not rerun any checks.']
+        report += ['Other stage formats are unsupported in this version; never silently include them.', '']
         write(output / 'report.md', '\n'.join(report))
         manifest = {'schema_version': '1', 'scope': 'selected_catalog_handoff', 'files': [
             {'file': str(p.relative_to(output)), 'sha256': sha(p.read_bytes())} for p in sorted(output.rglob('*')) if p.is_file()]}
