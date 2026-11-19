@@ -162,6 +162,8 @@ class HandoffTests(unittest.TestCase):
         p.write_text(json.dumps(data)); self.rehash(directory)
         self.build()
         self.assertNotIn('SECRET', (self.output / 'entitlement/workpaper.json').read_text())
+        self.assertNotIn('finite_measurement', (self.output / 'entitlement/workpaper.json').read_text())
+        self.assertNotIn('0.125', (self.output / 'entitlement/workpaper.json').read_text())
         shutil.rmtree(self.output)
         data['schedules']['entitlement-lines'][0]['freshness'] = 'SECRET_STATUS'
         p.write_text(json.dumps(data)); self.rehash(directory)
@@ -411,13 +413,29 @@ class HandoffTests(unittest.TestCase):
     def test_large_supported_evidence_csv_cell_and_limit_restoration(self):
         import csv
         def change(data):
-            data['lines'][0]['evidence_refs'] = ['evidence-' + str(i) for i in range(2000)]
+            data['lines'][0]['evidence_refs'] = ['evidence-' + str(i) for i in range(3000)]
         directory = self.financial('entitlement', change)
         previous = csv.field_size_limit()
+        original = json.loads((directory / 'workpaper.json').read_text())
+        aliases = original['schedules']['entitlement-lines'][0]['evidence_refs']
+        self.assertGreaterEqual(len(aliases), 3000)
+        self.assertEqual(len(aliases), len(set(aliases)))
+        csv.field_size_limit(export.MAX_FILE)
+        try:
+            with (directory / 'entitlement-lines.csv').open(newline='') as stream:
+                actual_cell = next(csv.DictReader(stream))['evidence_refs']
+        finally:
+            csv.field_size_limit(previous)
+        self.assertEqual(actual_cell, export.royalty.cell(aliases))
+        self.assertGreater(len(actual_cell), previous)
+        self.assertGreater(len(actual_cell), 128 * 1024)
+        with (directory / 'entitlement-lines.csv').open(newline='') as stream:
+            with self.assertRaises(csv.Error):
+                list(csv.DictReader(stream))
         self.build()
         self.assertEqual(csv.field_size_limit(), previous)
         value = json.loads((self.output / 'entitlement/workpaper.json').read_text())
-        self.assertEqual(value['schedules'], json.loads((directory / 'workpaper.json').read_text())['schedules'])
+        self.assertEqual(value['schedules'], original['schedules'])
 
     def test_csv_parser_exception_has_sanitized_cli_refusal(self):
         import csv, io
@@ -497,6 +515,37 @@ class HandoffTests(unittest.TestCase):
                 for key,suffix in (('input_sha256','-input.json'),('result_sha256','-result.json')):
                     self.assertEqual(controls[key],export.sha((self.root/(entry['kind']+suffix)).read_bytes()))
                 self.assertIsNone(controls['evidence_inventory_sha256']);self.assertTrue(record['producer_hashes'])
+
+    def test_invalid_decimal_exponent_has_sanitized_cli_refusal(self):
+        token = '1e' + '9' * 40
+        with self.assertRaises(ValueError):
+            export.parse(('{"private":' + token + '}').encode())
+
+    def test_invalid_decimal_exponent_cli_returns_two_without_traceback(self):
+        self.financial('entitlement')
+        wire = json.dumps({'schema_version':'1','exports':self.entries,'private':0})
+        self.selection.write_text(wire.replace('"private": 0','"private": 1e' + '9' * 40))
+        result = subprocess.run([sys.executable,str(SCRIPTS/'assemble-catalog-handoff.py'),'--selection',str(self.selection),'--output-directory',str(self.output)],capture_output=True,text=True,cwd=self.root)
+        self.assertEqual(result.returncode,2)
+        for forbidden in ('Traceback','InvalidOperation',str(self.root)):
+            self.assertNotIn(forbidden,result.stderr)
+        self.assertFalse(self.output.exists())
+
+    def test_json_integer_wire_bound_and_valid_exact_values(self):
+        for token in ('9'*256, '-'+'9'*255, '9007199254740993'):
+            self.assertEqual(export.parse(('{"private":'+token+'}').encode())['private'],int(token))
+        for token in ('9'*257, '-'+'9'*256):
+            with self.subTest(length=len(token)):
+                with self.assertRaises(ValueError):
+                    export.parse(('{"private":'+token+'}').encode())
+
+    def test_large_supported_integer_financial_basis_stays_exact(self):
+        def change(data):
+            data['lines'][0]['gross_amount'] = 9007199254740993
+        self.financial('entitlement',change)
+        self.build()
+        value=json.loads((self.output/'entitlement/workpaper.json').read_text())['schedules']['entitlement-lines'][0]['basis_amount']
+        self.assertIs(type(value),int);self.assertEqual(value,9007199254740993)
 
     def test_new_session_cli_and_standalone_skill(self):
         self.financial('remittance')

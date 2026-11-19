@@ -68,7 +68,8 @@ untouched; do not edit their manifests to bypass refusal.
 Limits: selection 64 KiB, each input manifest 1 MiB, other input files 16 MiB,
 128 MiB combined admitted input bytes, three unique export kinds, 10,000 rows per
 schedule/list, JSON depth 16, 256 keys per object and 65,536 characters per JSON
-string (numeric fields are additionally limited to 256 characters). CSV fields use
+string (numeric fields and all JSON numeric tokens, including discarded extensions,
+are additionally limited to 256 characters before decoding). CSV fields use
 an explicit 16 MiB parser limit, restored after each read; file and row caps still
 apply. Producer-accepted ISO date spellings and whitespace/underscore decimal
 spellings are validated without rewriting their stored text. These bounds intentionally support review-sized exports, not every possible
