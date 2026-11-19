@@ -121,9 +121,11 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-import-catalog/tests/test_scoped_identity.py
 - skills/recoup-catalog-organize-publishing/scripts/build-catalog-report.py
 - skills/recoup-catalog-organize-publishing/scripts/catalog-case.py
+- skills/recoup-catalog-reconcile-royalties/scripts/_catalog_handoff_schema.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_finance.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_normalization_workpaper_io.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_royalty_archive.py
+- skills/recoup-catalog-reconcile-royalties/scripts/assemble-catalog-handoff.py
 - skills/recoup-catalog-reconcile-royalties/scripts/build-catalog-report.py
 - skills/recoup-catalog-reconcile-royalties/scripts/build-normalization-workpaper.py
 - skills/recoup-catalog-reconcile-royalties/scripts/build-remittance-workpaper.py
@@ -141,10 +143,12 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-resolve-claims/scripts/catalog-case.py
 - skills/recoup-catalog-resolve-claims/scripts/mlc-public-fields.py
 - skills/recoup-catalog-resolve-claims/scripts/prepare-provider-packet.py
+- skills/recoup-catalog-review-deal/scripts/_catalog_handoff_schema.py
 - skills/recoup-catalog-review-deal/scripts/_finance.py
 - skills/recoup-catalog-review-deal/scripts/_helpers.py
 - skills/recoup-catalog-review-deal/scripts/_normalization_workpaper_io.py
 - skills/recoup-catalog-review-deal/scripts/_royalty_archive.py
+- skills/recoup-catalog-review-deal/scripts/assemble-catalog-handoff.py
 - skills/recoup-catalog-review-deal/scripts/auto-column-map.py
 - skills/recoup-catalog-review-deal/scripts/build-catalog-report.py
 - skills/recoup-catalog-review-deal/scripts/build-deal-readiness.py
@@ -201,5 +205,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: 2efefa5ce359dfd751f6b2345c0bd759c326a869
-Version: 2026.1118.96
+Source commit: f7b2acd884228550bfdf50ecae3087632cd5d73d
+Version: 2026.1118.97
