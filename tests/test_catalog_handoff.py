@@ -156,7 +156,7 @@ class HandoffTests(unittest.TestCase):
         directory = self.financial('entitlement')
         p = directory / 'workpaper.json'
         data = json.loads(p.read_text())
-        data['private'] = {'token': 'SECRET_TOKEN'}
+        data['private'] = {'token': 'SECRET_TOKEN', 'finite_measurement': 0.125}
         data['controls']['source_path'] = '/SECRET_PATH'
         data['schedules']['entitlement-lines'][0]['private'] = 'SECRET_FIELD'
         p.write_text(json.dumps(data)); self.rehash(directory)
@@ -171,7 +171,7 @@ class HandoffTests(unittest.TestCase):
 
     def test_stale_negative_large_and_subcent_amounts_are_not_rounded(self):
         def change(data):
-            data['lines'][0]['reported_amount'] = '9007199254740993.000001'
+            data['lines'][0]['reported_amount'] = '-9007199254740993.000001'
         inventory = {'schema_version': '1', 'sources': [{'evidence_ref': 'statement-line-1', 'source_sha256': 'a' * 64, 'current_sha256': 'b' * 64, 'checked_on': '2026-11-18'}]}
         # Use actual fixture evidence reference, not an assumed reference name.
         fixture = json.loads((SCRIPTS.parent / 'fixtures/finance/entitlement-input.json').read_text())
@@ -182,8 +182,10 @@ class HandoffTests(unittest.TestCase):
         original = json.loads((directory / 'workpaper.json').read_text())
         self.assertEqual(result['schedules'], original['schedules'])
         self.assertEqual(result['controls']['freshness'], 'stale')
-        self.assertEqual(result['schedules']['entitlement-lines'][0]['reported_amount'], '9007199254740993.000001')
-        self.assertIn("'-", (self.output / 'entitlement/entitlement-lines.csv').read_text())
+        self.assertEqual(result['schedules']['entitlement-lines'][0]['reported_amount'], '-9007199254740993.000001')
+        import csv
+        with (self.output / 'entitlement/entitlement-lines.csv').open() as stream:
+            self.assertEqual(next(csv.DictReader(stream))['reported_amount'], "'-9007199254740993.000001")
 
     def test_supported_exponent_input_spelling_preserved(self):
         def change(data):
@@ -228,7 +230,7 @@ class HandoffTests(unittest.TestCase):
 
     def test_duplicate_keys_unsupported_schema_and_paths(self):
         directory = self.financial('entitlement')
-        self.selection.write_text('{"schema_version":"1","schema_version":"1","exports":[]}')
+        self.selection.write_text('{"schema_version":"1","schema_version":"1","exports":' + json.dumps(self.entries) + '}')
         with self.assertRaises(ValueError):
             export.build(self.selection, self.output)
         for change in ({'kind': 'normalization'}, {'directory': str(self.root / 'absent')}, {'manifest_sha256': 'x'}):
@@ -274,8 +276,9 @@ class HandoffTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.build()
         with patch.object(export, 'MAX_ROWS', 1):
+            self.assertEqual(export.csv_rows(b'id\nx\n', ('id',)), [{'id': 'x'}])
             with self.assertRaises(ValueError):
-                self.build()
+                export.csv_rows(b'id\nx\ny\n', ('id',))
         large = self.root / 'large'
         large.write_bytes(b'x' * 100)
         with patch.object(Path, 'open', side_effect=AssertionError('must reject before read')):
@@ -382,6 +385,60 @@ class HandoffTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.build()
         self.assertFalse(self.output.exists())
+
+    def test_producer_iso_date_spellings_preserved(self):
+        module = export.royalty
+        data = json.loads((SCRIPTS.parent / 'fixtures/finance/entitlement-input.json').read_text())
+        source, result, evidence = [self.root / name for name in ('input.json', 'result.json', 'evidence.json')]
+        source.write_text(json.dumps(data)); result.write_text(module.dumps(module.calculator().calculate(data)))
+        evidence.write_text(json.dumps({'schema_version':'1','sources':[{'evidence_ref':data['lines'][0]['evidence_refs'][0],'checked_on':'20261118','source_sha256':'a'*64,'current_sha256':'a'*64}]}))
+        directory = self.root / 'entitlement'
+        module.build(source,result,directory,'20261118',evidence);self.add('entitlement',directory)
+        self.build()
+        value = json.loads((self.output / 'entitlement/workpaper.json').read_text())
+        self.assertEqual(value['controls']['as_of'], '20261118')
+        self.assertIn('20261118', [row['checked_on'] for row in value['schedules']['evidence']])
+
+    def test_producer_decimal_whitespace_and_underscore_spellings_preserved(self):
+        def change(data):
+            data['rules'][0]['participation_rate'] = ' 0.5 '
+            data['rules'][0]['commission_rate'] = '0.2_0'
+        directory = self.financial('entitlement', change)
+        self.build()
+        value = json.loads((self.output / 'entitlement/workpaper.json').read_text())
+        self.assertEqual(value['schedules'], json.loads((directory / 'workpaper.json').read_text())['schedules'])
+
+    def test_large_supported_evidence_csv_cell_and_limit_restoration(self):
+        import csv
+        def change(data):
+            data['lines'][0]['evidence_refs'] = ['evidence-' + str(i) for i in range(2000)]
+        directory = self.financial('entitlement', change)
+        previous = csv.field_size_limit()
+        self.build()
+        self.assertEqual(csv.field_size_limit(), previous)
+        value = json.loads((self.output / 'entitlement/workpaper.json').read_text())
+        self.assertEqual(value['schedules'], json.loads((directory / 'workpaper.json').read_text())['schedules'])
+
+    def test_csv_parser_exception_has_sanitized_cli_refusal(self):
+        import csv, io
+        from contextlib import redirect_stderr
+        self.financial('entitlement')
+        self.selection.write_text(json.dumps({'schema_version':'1','exports':self.entries}))
+        previous = csv.field_size_limit(); errors = io.StringIO()
+        args=['assemble-catalog-handoff','--selection',str(self.selection),'--output-directory',str(self.output)]
+        with patch.object(sys,'argv',args), patch.object(export.csv,'DictReader',side_effect=csv.Error('PRIVATE_SENTINEL')), redirect_stderr(errors):
+            with self.assertRaises(SystemExit) as caught:
+                export.main()
+        self.assertEqual(caught.exception.code,2)
+        self.assertNotIn('PRIVATE_SENTINEL',errors.getvalue());self.assertNotIn('Traceback',errors.getvalue())
+        self.assertEqual(csv.field_size_limit(),previous);self.assertFalse(self.output.exists())
+
+    def test_nonfinite_and_oversized_private_numeric_tokens_refused(self):
+        for token in ('NaN', 'Infinity', '-Infinity', '1e1000', '1e-1000'):
+            with self.subTest(token=token):
+                with self.assertRaises(ValueError):
+                    export.parse(('{"private":' + token + '}').encode())
+        self.assertEqual(str(export.parse(b'{"private":0.10000000000000001}')['private']), '0.10000000000000001')
 
     def test_new_session_cli_and_standalone_skill(self):
         self.financial('remittance')

@@ -1,6 +1,6 @@
 """Allowlisted wire projection for supported local financial workpapers (no math)."""
 import re
-from datetime import date
+from _finance import iso_date
 from decimal import Decimal
 
 FRESH = ('unknown', 'stale', 'current_as_supplied')
@@ -58,19 +58,21 @@ def reference(value):
 
 def field(key, value):
     if key == 'as_of':
-        require(isinstance(value, str) and re.fullmatch(r'\d{4}-\d{2}-\d{2}', value) is not None)
-        date.fromisoformat(value)
+        require(isinstance(value, str))
+        iso_date(value, key)
     elif key in NULLS:
         require(value is None)
     elif key in MONEY:
-        require(value is None or (type(value) in (str, int) and re.fullmatch(r'[+-]?(?:\d{1,128}(?:\.\d{0,128})?|\.\d{1,128})(?:[eE][+-]?\d{1,3})?', str(value)) is not None))
+        require(value is None or (type(value) in (str, int) and len(str(value)) <= 256))
         if value is not None:
-            parsed = Decimal(str(value))
+            normalized = str(value).strip().replace('_', '')
+            require(re.fullmatch(r'[+-]?(?:\d{1,128}(?:\.\d{0,128})?|\.\d{1,128})(?:[eE][+-]?\d{1,3})?', normalized) is not None)
+            parsed = Decimal(normalized)
             require(parsed.is_finite() and -128 <= parsed.as_tuple().exponent <= 128)
     elif key in DATES:
         if value is not None:
-            require(isinstance(value, str) and re.fullmatch(r'\d{4}-\d{2}-\d{2}', value) is not None)
-            date.fromisoformat(value)
+            require(isinstance(value, str))
+            iso_date(value, key)
     elif key in {'currency', 'from_currency', 'to_currency'}:
         require(value == 'unknown_not_calculated' or (isinstance(value, str) and re.fullmatch('[A-Z]{3}', value) is not None))
     elif key.endswith('_sha256'):

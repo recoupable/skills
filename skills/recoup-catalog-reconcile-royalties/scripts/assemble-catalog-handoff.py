@@ -7,6 +7,7 @@ import importlib.util
 import io
 import json
 import os
+from decimal import Decimal
 from pathlib import Path
 import shutil
 
@@ -68,7 +69,14 @@ def parse(raw):
         return result
     def bad(value):
         raise ValueError('Unsupported JSON numeric token')
-    data = json.loads(raw, object_pairs_hook=unique, parse_constant=bad, parse_float=bad)
+    def exact_float(token):
+        require(len(token) <= 256)
+        value = Decimal(token)
+        require(value.is_finite() and -128 <= value.as_tuple().exponent <= 128)
+        return value
+    # Preserve finite private-extension tokens without binary rounding. Decimal
+    # tokens are not accepted by the exact string/integer financial wire schema.
+    data = json.loads(raw, object_pairs_hook=unique, parse_constant=bad, parse_float=exact_float)
     def bounded(value, depth=0):
         require(depth <= 16)
         if isinstance(value, dict):
@@ -87,13 +95,19 @@ def parse(raw):
 
 
 def csv_rows(raw, fields):
-    reader = csv.DictReader(io.StringIO(raw.decode('utf-8'), newline=''))
-    require(reader.fieldnames == list(fields))
-    rows = []
-    for row in reader:
-        require(len(rows) < MAX_ROWS and None not in row and all(v is not None for v in row.values()))
-        rows.append(row)
-    return rows
+    previous_limit = csv.field_size_limit(MAX_FILE)
+    try:
+        reader = csv.DictReader(io.StringIO(raw.decode('utf-8'), newline=''))
+        require(reader.fieldnames == list(fields))
+        rows = []
+        for row in reader:
+            require(len(rows) < MAX_ROWS and None not in row and all(v is not None for v in row.values()))
+            rows.append(row)
+        return rows
+    except csv.Error:
+        raise ValueError('Unsupported CSV input') from None
+    finally:
+        csv.field_size_limit(previous_limit)
 
 
 def files(directory, manifest, names, budget):

@@ -68,11 +68,16 @@ untouched; do not edit their manifests to bypass refusal.
 Limits: selection 64 KiB, each input manifest 1 MiB, other input files 16 MiB,
 128 MiB combined admitted input bytes, three unique export kinds, 10,000 rows per
 schedule/list, JSON depth 16, 256 keys per object and 65,536 characters per JSON
-string. These bounds intentionally support review-sized exports, not every possible
+string (numeric fields are additionally limited to 256 characters). CSV fields use
+an explicit 16 MiB parser limit, restored after each read; file and row caps still
+apply. Producer-accepted ISO date spellings and whitespace/underscore decimal
+spellings are validated without rewriting their stored text. These bounds intentionally support review-sized exports, not every possible
 calculator output. Oversized exports require a separately reviewed workflow; do not
 split a total from its complete contributor/evidence schedules to fit these bounds.
-JSON floating-point tokens are refused before decoding; financial values must use
-the supported exact decimal strings or integers. Duplicate JSON keys, non-finite numbers, duplicate manifest members, unknown file
+JSON floating-point tokens are decoded exactly, without binary rounding, only to
+admit discarded private extensions (finite, at most 256 characters and exponent
+from -128 to 128). Financial fields still refuse these tokens: they require the
+supported exact decimal strings or integers. Duplicate JSON keys, non-finite numbers, duplicate manifest members, unknown file
 names, unsafe paths, mismatched file hashes and incompatible schemas are refused.
 
 ## What is verified and what is preserved
