@@ -41,6 +41,12 @@ class WorkpaperTests(unittest.TestCase):
         manifest = export.build(self.source, self.result, self.output, '2026-11-18', inventory_path)
         self.assertEqual(before, [p.read_bytes() for p in [self.source, self.result]])
         payload = json.loads((self.output / 'workpaper.json').read_text())
+        expected_files = {'entitlement-lines.csv', 'calculation-bridge.csv',
+                          'recoupment-accounts.csv', 'unresolved.csv', 'evidence.csv',
+                          'workpaper.json', 'report.md'}
+        self.assertEqual({item['file'] for item in manifest['files']}, expected_files)
+        self.assertEqual(len(manifest['files']), len(expected_files))
+        self.assertEqual({p.name for p in self.output.iterdir()}, expected_files | {'manifest.json'})
         for item in manifest['files']:
             self.assertEqual(item['sha256'], hashlib.sha256((self.output / item['file']).read_bytes()).hexdigest())
         return payload
@@ -150,8 +156,10 @@ class WorkpaperTests(unittest.TestCase):
 
     def test_duplicate_lines_rejected_by_existing_validator(self):
         self.data['lines'].append(copy.deepcopy(self.data['lines'][0]))
+        self.source.write_text(json.dumps(self.data))
+        self.result.write_text('{}')
         with self.assertRaisesRegex(ValueError, 'duplicate'):
-            self.build()
+            export.build(self.source, self.result, self.output, '2026-11-18')
         self.assertFalse(self.output.exists())
 
     def test_source_and_existing_output_aliases_not_overwritten(self):

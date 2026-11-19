@@ -5,10 +5,25 @@ supported contractual-entitlement/recoupment result; it is not a general stateme
 remittance, bank or data-room exporter. The generic case report remains an evidence
 index, not a source of monetary totals. Scripts ship alongside this skill.
 
+If a saved result already exists, reuse it with its original input; **do not rerun
+the calculator over that result**. Export it directly to a new directory:
+
 ```bash
-python3 scripts/calculate-entitlements.py --input entitlement-input.json --output entitlement-result.json
-python3 scripts/build-royalty-workpaper.py --input entitlement-input.json --result entitlement-result.json --as-of 2026-11-18 --output-directory private-workpaper-v1
+python3 scripts/build-royalty-workpaper.py --input entitlement-input.json --result entitlement-result-v1.json --as-of 2026-11-18 --output-directory private-workpaper-v1
 ```
+
+If a new calculation is required, choose a new versioned directory. The calculator
+itself overwrites its output, so the exclusive `mkdir` below must succeed before
+it runs. If that directory exists, select another version; never reuse or clear it.
+Retain the exact input version alongside its result receipt.
+
+```bash
+mkdir entitlement-run-v2 && python3 scripts/calculate-entitlements.py --input entitlement-input.json --output entitlement-run-v2/result.json
+python3 scripts/build-royalty-workpaper.py --input entitlement-input.json --result entitlement-run-v2/result.json --as-of 2026-11-18 --output-directory private-workpaper-v2
+```
+
+Inspect the calculator status before exporting. A failed new calculation does not
+justify replacing a historical result.
 
 A partial calculation is exportable: unresolved rows retain unknown amounts and
 require the private result's detailed blockers. An invalid top-level input or a
