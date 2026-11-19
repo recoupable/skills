@@ -1,5 +1,6 @@
 """Synthetic existing-normalizer receipts only; exports never invoke an import."""
 import copy
+from contextlib import contextmanager
 import csv
 import importlib.util
 import json
@@ -29,6 +30,41 @@ class NormalizationWorkpaperTests(unittest.TestCase):
             'Period End': '2024-03-31', 'Currency': 'USD', 'Gross': '100.0001', 'Net': '97.0001', 'Deductions': '-3',
             'Rights Type': 'master', 'Income Type': 'streaming', 'Account ID': 'PRIVATE_ACCOUNT', 'Statement ID': 'PRIVATE_STATEMENT',
             'Transaction ID': 'PRIVATE_TRANSACTION', 'Row Type': 'detail'}
+
+    @contextmanager
+    def guard_input_streams(self):
+        limits={self.receipt_path:export.bounded.MAX_JSON_BYTES+1,
+                self.rows_path:export.bounded.MAX_JSONL_RECORD_BYTES+1,
+                self.ledger:export.bounded.CHUNK,self.source:export.bounded.CHUNK,
+                self.root/'controls.json':export.bounded.MAX_JSON_BYTES+1}
+        observed={'opens':[], 'reads':[]}
+        original_open=Path.open
+        class Guard:
+            def __init__(self,stream,path):self.stream,self.path=stream,path
+            def __enter__(self):return self
+            def __exit__(self,*args):return self.stream.__exit__(*args)
+            def read(self,size=-1):return self.consume('read',size)
+            def readline(self,size=-1):return self.consume('readline',size)
+            def readlines(self,*args):raise AssertionError('unbounded input readlines')
+            def __iter__(self):return self
+            def __next__(self):
+                line=self.readline()
+                if not line:raise StopIteration
+                return line
+            def consume(self,method,size):
+                observed['reads'].append((self.path,method,size))
+                if not isinstance(size,int) or size<=0 or size>limits[self.path]:
+                    raise AssertionError('unbounded input stream read')
+                return getattr(self.stream,method)(size)
+            def __getattr__(self,name):return getattr(self.stream,name)
+        def opened(path,*args,**kwargs):
+            mode=args[0] if args else kwargs.get('mode','r')
+            stream=original_open(path,*args,**kwargs)
+            if path in limits and 'r' in mode:
+                observed['opens'].append(path)
+                return Guard(stream,path)
+            return stream
+        with patch.object(Path,'open',opened):yield observed
 
     def normalize(self, rows=None, append=False, controls=None):
         rows = [self.row] if rows is None else rows
@@ -276,12 +312,13 @@ class NormalizationWorkpaperTests(unittest.TestCase):
         self.normalize()
         original=self.receipt_path.read_bytes()
         self.receipt_path.write_text(json.dumps({**self.receipt,'warnings':['X'*(2*1024*1024)]}))
-        with patch.object(Path,'read_bytes',side_effect=AssertionError('unbounded read')):
+        with self.guard_input_streams() as observed:
             with self.assertRaises(ValueError):
                 export.build(self.receipt_path,self.ledger,self.rows_path,self.output,'2026-11-18')
+        self.assertEqual(observed,{'opens':[], 'reads':[]})
         self.assertFalse(self.output.exists());self.receipt_path.write_bytes(original)
         for name,limit in [('MAX_JSONL_RECORD_BYTES',32),('MAX_ROW_RECEIPT_BYTES',32),('MAX_LEDGER_BYTES',32),('MAX_CURRENT_ROWS',0),('MAX_FIELD_CHARS',4),('MAX_CSV_RECORD_CHARS',32),('MAX_LEDGER_ROWS',0)]:
-            with self.subTest(limit=name),patch.object(export.bounded,name,limit):
+            with self.subTest(limit=name),patch.object(export.bounded,name,limit),self.guard_input_streams():
                 with self.assertRaises(ValueError):
                     export.build(self.receipt_path,self.ledger,self.rows_path,self.output,'2026-11-18')
                 self.assertFalse(self.output.exists())
@@ -301,23 +338,52 @@ class NormalizationWorkpaperTests(unittest.TestCase):
                 writer.writerow({**old,'ledger_line_id':'baseline-'+str(i),'raw_values':'X'*32768})
             writer.writerow(new)
         self.receipt['ledger_total_rows']=513;self.receipt_path.write_text(json.dumps(self.receipt))
-        original_read=Path.read_bytes
-        forbidden={self.receipt_path,self.rows_path,self.ledger}
-        def guarded(path):
-            if path in forbidden:raise AssertionError('whole input read')
-            return original_read(path)
         tracemalloc.start()
         try:
-            with patch.object(Path,'read_bytes',guarded):
+            with self.guard_input_streams() as observed:
                 manifest=export.build(self.receipt_path,self.ledger,self.rows_path,self.output,'2026-11-18')
             _,peak=tracemalloc.get_traced_memory()
         finally:tracemalloc.stop()
+        self.assertEqual(set(observed['opens']),{self.receipt_path,self.rows_path,self.ledger})
+        self.assertEqual({path for path,_,_ in observed['reads']},set(observed['opens']))
+        self.assertGreater(sum(path==self.ledger for path,_,_ in observed['reads']),1)
         self.assertLess(peak,self.ledger.stat().st_size//2)
         self.assertEqual(manifest['ledger_sha256'],export.normalizer.sha256_file(self.ledger))
         p=json.loads((self.output/'workpaper.json').read_text())
         self.assertEqual(len(p['schedules']['written-lines']),1)
         self.assertEqual(p['schedules']['written-lines'][0]['owner_net_amount'],'2.0049')
         self.assertEqual(self.check(p,'append_baseline'),'unknown_not_bound_by_receipt')
+
+    def test_wide_normalizer_source_preserves_projection_and_limits(self):
+        self.row.update({'PRIVATE_COLUMN_'+str(i):'PRIVATE_VALUE' for i in range(300)})
+        self.normalize()
+        self.assertGreater(len(json.loads(self.rows_path.read_text())['raw_values']),256)
+        p=self.build()
+        self.assertEqual(p['controls']['artifact_consistency'],'no_detected_mismatch_within_supported_checks')
+        self.assertEqual(p['schedules']['written-lines'][0]['owner_net_amount'],'97.0001')
+        self.assertNotIn('PRIVATE',''.join(f.read_text() for f in self.output.iterdir()))
+        shutil.rmtree(self.output)
+        with patch.object(export.bounded,'MAX_JSONL_RECORD_BYTES',64):
+            with self.assertRaises(ValueError):self.build()
+        self.assertFalse(self.output.exists())
+        row=json.loads(self.rows_path.read_text())
+        row['raw_values']['PRIVATE_OVERSIZE']='X'*(export.bounded.MAX_FIELD_CHARS+1)
+        self.rows_path.write_text(json.dumps(row)+'\n')
+        with self.assertRaises(ValueError):self.build()
+        self.assertFalse(self.output.exists())
+
+    def test_stream_guard_detects_unbounded_read_regressions(self):
+        self.normalize()
+        for name,target in [('read_small',self.receipt_path),('read_rows',self.rows_path),('copy_hash',self.ledger)]:
+            original=getattr(export.bounded,name)
+            def unbounded(path,*args):
+                with Path(path).open('rb') as stream:stream.read()
+                return original(path,*args)
+            with self.subTest(reader=name),patch.object(export.bounded,name,unbounded),self.guard_input_streams() as observed:
+                with self.assertRaisesRegex(AssertionError,'unbounded input stream'):
+                    export.build(self.receipt_path,self.ledger,self.rows_path,self.output,'2026-11-18')
+            self.assertEqual(observed['reads'][-1],(target,'read',-1))
+            self.assertFalse(self.output.exists())
 
     def test_snapshot_hash_and_checks_do_not_reread_changed_original(self):
         self.normalize();before=export.normalizer.sha256_file(self.ledger)

@@ -73,10 +73,18 @@ def read_rows(path, parse):
             if not line.strip(): continue
             if len(rows) >= MAX_CURRENT_ROWS:
                 raise ValueError('Too many current import rows')
-            row = parse(line); bounded_shape(row)
+            row = parse(line)
             if not isinstance(row, dict) or not isinstance(row.get('reasons'), list) or len(row['reasons']) > MAX_REASONS:
                 raise ValueError('Unsupported row reasons')
-            # Raw values are not needed after shape admission; do not retain them.
+            # Source CSV column count is not a projected-object shape constraint.
+            # Keep wire-byte and individual private field bounds, then discard raw columns.
+            raw = row.pop('raw_values', None)
+            if isinstance(raw, dict):
+                for key, value in raw.items():
+                    bounded_shape(key); bounded_shape(value)
+            else:
+                bounded_shape(raw)
+            bounded_shape(row)
             rows.append({key: row[key] for key in ('source_version_id', 'source_sheet', 'source_row', 'disposition', 'reasons', 'ledger_line_id')})
     return rows, digest.hexdigest()
 

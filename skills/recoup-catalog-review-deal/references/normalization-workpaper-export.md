@@ -115,8 +115,11 @@ Supported limits are explicit: summary and optional controls JSON at most 1 MiB
 each; row-receipt JSONL at most 16 MiB and 10,000 nonblank records; each JSONL record
 at most 256 KiB including its newline. Per-record JSON admits at most 16 levels,
 4,096 nodes, 256 object fields, 2,048 list entries, 64 reasons and 65,536 characters
-per string. Ignored raw_values are discarded after admission, not retained in the
-row schedule. Retained written-line records are also capped at 10,000.
+per string. The top-level raw_values source-column dictionary is exempt from
+projected-object field/node counts: ordinary normalization accepts wide CSVs. Each
+raw column name/value still receives the string/nested-shape bounds, and the entire
+record retains its 256 KiB wire-byte cap. Raw columns are then discarded, not
+retained in the row schedule. Retained written-line records are also capped at 10,000.
 
 Ledger and optional original-source files are at most 256 MiB. Ledger CSV permits
 at most 1,000,000 rows, 262,144 Unicode characters per logical record (quoted
