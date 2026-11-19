@@ -174,3 +174,58 @@ class WorkpaperTests(unittest.TestCase):
                                 cwd=self.root, capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue((self.output / 'report.md').is_file())
+
+    def test_numeric_hashes_are_rejected_before_output(self):
+        for key in ('source_sha256', 'current_sha256'):
+            with self.subTest(key=key):
+                self.output = self.root / key
+                inventory = self.inventory()
+                inventory['sources'][0][key] = int('1' * 64)
+                with self.assertRaisesRegex(ValueError, 'SHA256'):
+                    self.build(inventory)
+                self.assertFalse(self.output.exists())
+
+    def test_boolean_version_cannot_impersonate_integer_version(self):
+        self.data['rules'][0]['rule_version'] = 1
+        self.prepare()
+        result = json.loads(self.result.read_text())
+        result['lines'][0]['rule_version'] = True
+        self.result.write_text(json.dumps(result))
+        with self.assertRaisesRegex(ValueError, 'differs'):
+            export.build(self.source, self.result, self.output, '2026-11-18')
+        self.assertFalse(self.output.exists())
+
+    def test_result_number_cannot_impersonate_exact_decimal_string(self):
+        self.prepare()
+        result = json.loads(self.result.read_text())
+        result['lines'][0]['expected_amount'] = 40.002205
+        self.result.write_text(json.dumps(result))
+        with self.assertRaisesRegex(ValueError, 'differs'):
+            export.build(self.source, self.result, self.output, '2026-11-18')
+        self.assertFalse(self.output.exists())
+
+    def test_original_integer_version_and_decimal_input_contract_still_work(self):
+        self.data['rules'][0]['rule_version'] = 1
+        inventory = self.inventory()
+        for row in inventory['sources']:
+            row['source_sha256'] = row['current_sha256'] = '1' * 64
+        payload = self.build(inventory)
+        self.assertEqual(payload['schedules']['entitlement-lines'][0]['rule_version_ref'], export.alias('version', '1'))
+        self.assertEqual(payload['controls']['freshness'], 'current_as_supplied')
+
+    def test_write_failure_removes_partial_output_and_can_retry(self):
+        from unittest.mock import patch
+        self.prepare()
+        before = [self.source.read_bytes(), self.result.read_bytes()]
+        original = Path.open
+        def fail_csv(path, *args, **kwargs):
+            if path.name == 'calculation-bridge.csv' and args and args[0] == 'w':
+                raise OSError('synthetic disk full')
+            return original(path, *args, **kwargs)
+        with patch.object(Path, 'open', fail_csv):
+            with self.assertRaisesRegex(OSError, 'disk full'):
+                export.build(self.source, self.result, self.output, '2026-11-18')
+        self.assertFalse(self.output.exists())
+        self.assertEqual(before, [self.source.read_bytes(), self.result.read_bytes()])
+        export.build(self.source, self.result, self.output, '2026-11-18')
+        self.assertTrue((self.output / 'manifest.json').is_file())

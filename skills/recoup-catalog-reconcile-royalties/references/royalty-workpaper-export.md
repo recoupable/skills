@@ -12,10 +12,13 @@ python3 scripts/build-royalty-workpaper.py --input entitlement-input.json --resu
 
 A partial calculation is exportable: unresolved rows retain unknown amounts and
 require the private result's detailed blockers. An invalid top-level input or a
-result that does not exactly match recomputation is refused before creating output.
+result that does not match recomputation with JSON types preserved is refused before creating output.
 Do not replace historical results to make them pass; retain old outputs and make a
 new version with its original inputs. Input/result paths can be anywhere authorized;
-the destination must not exist. No source file is modified.
+the destination must not exist. No source file is modified. If a write fails, the
+new partial destination is removed so the same version path can be retried.
+A final manifest identifies successful completion; do not consume an in-progress
+directory.
 
 ## Files and interpretation
 
@@ -66,7 +69,8 @@ by the authorized reviewer. Different non-null hashes mean stale. Equal hashes
 with `checked_on` equal to `--as-of` mean current **as supplied**, never independently
 verified. Missing entries/hashes or older checks mean unknown. Future check dates
 are refused. Source control totals and authenticity remain not verified by this
-exporter. Hashes must be lowercase SHA256 strings; values can be null for unknown.
+exporter. Hashes must be lowercase SHA256 strings (numeric JSON values are rejected);
+values can be null for unknown.
 
 Identifiers and evidence strings are exported as `kind:SHA256(UTF-8 original)`.
 For example, resolve an `evidence:` alias by hashing the original `evidence_refs`

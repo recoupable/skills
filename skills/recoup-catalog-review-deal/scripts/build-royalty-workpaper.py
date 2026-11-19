@@ -6,6 +6,7 @@ import hashlib
 import importlib.util
 import json
 import re
+import shutil
 from pathlib import Path
 from _finance import dumps, iso_date
 
@@ -27,9 +28,9 @@ def alias(kind, value):
     return kind + ":" + digest(value.encode("utf-8"))
 
 
-def read_json(path):
+def read_json(path, decimal_inputs=False):
     raw = Path(path).read_bytes()
-    return json.loads(raw, parse_float=str), digest(raw)
+    return json.loads(raw, **({"parse_float": str} if decimal_inputs else {})), digest(raw)
 
 
 def freshness(refs, evidence):
@@ -49,7 +50,8 @@ def evidence_rows(refs, supplied, as_of):
         if not isinstance(ref, str) or not ref.strip() or ref in inventory:
             raise ValueError("Evidence references must be unique nonblank strings")
         for key in ("source_sha256", "current_sha256"):
-            if item.get(key) is not None and not re.fullmatch(r"[0-9a-f]{64}", str(item[key])):
+            if item.get(key) is not None and (not isinstance(item[key], str)
+                                               or not re.fullmatch(r"[0-9a-f]{64}", item[key])):
                 raise ValueError("Source versions must be lowercase SHA256 values or null")
         checked = item.get("checked_on")
         if checked is not None and iso_date(checked, "checked_on") > iso_date(as_of, "as_of"):
@@ -76,10 +78,11 @@ def cell(value):
 
 def build(input_path, result_path, output, as_of, evidence_path=None):
     iso_date(as_of, "as_of")
-    data, input_hash = read_json(input_path)
+    data, input_hash = read_json(input_path, decimal_inputs=True)
     result, result_hash = read_json(result_path)
     expected = json.loads(dumps(calculator().calculate(data)))
-    if result != expected:
+    # JSON identity must distinguish booleans, numbers and exact decimal strings.
+    if json.dumps(result, sort_keys=True, allow_nan=False) != json.dumps(expected, sort_keys=True, allow_nan=False):
         raise ValueError("Result differs from current calculator and input; regenerate or retain as historical evidence")
     supplied, evidence_hash = read_json(evidence_path) if evidence_path else ({"schema_version": "1", "sources": []}, None)
     all_refs = set()
@@ -145,37 +148,43 @@ def build(input_path, result_path, output, as_of, evidence_path=None):
     if output.exists() or output.is_symlink():
         raise ValueError("Output destination already exists; choose a new version")
     output.mkdir(parents=True, mode=0o700)
-    (output / "workpaper.json").write_text(dumps({"controls": controls, "schedules": schedules}), encoding="utf-8")
-    for name, rows in schedules.items():
-        fields = list(rows[0]) if rows else ["status"]
-        with (output / (name + ".csv")).open("w", newline="", encoding="utf-8") as stream:
-            writer = csv.DictWriter(stream, fieldnames=fields)
-            writer.writeheader()
-            for row in rows:
-                writer.writerow({key: cell(value) for key, value in row.items()})
-    report = ["# Royalty entitlement workpaper", "", "Scope: supplied fixed-rate entitlement and recoupment calculations only.",
-              "Normalization, source control totals, remittance and bank matching are not checked by this export.",
-              f"As of: {as_of}. Calculation result: {result['status']}. Evidence freshness: {overall}.",
-              "The calculation matches the hash-bound input; this is not verification of the supplied facts or terms.", "",
-              "| Schedule | Rows |", "|---|---:|"]
-    report += [f"| {name}.csv | {len(rows)} |" for name, rows in schedules.items()]
-    report += ["", "Exact decimals and null unknowns are authoritative in workpaper.json; CSV formula guards are display-only.",
-               "Bridge rows are intermediate steps, not additive earnings. Recoupment uses the same entitlement lines.",
-               "Do not add line variances, recoupment payable, adjustments or later cash as separate recoveries.",
-               "No shared-cause monetary recovery total is calculated. Potential variance is neither accepted debt nor recovered cash.",
-               "Empty schedules mean no supplied calculated records, not a passed check. Unresolved amounts remain unknown.",
-               "Missing/old evidence checks remain unknown; differing supplied source versions are stale. No live freshness was verified.",
-               "Source references and record IDs are SHA256 aliases; resolve them against the hash-bound private inputs.",
-               "Source paths, names, account details, source prose and originals are excluded. Financial values remain private.",
-               "Report review grants no permission to share, publish, contact providers or move money.", ""]
-    (output / "report.md").write_text("\n".join(report), encoding="utf-8")
-    manifest = {**controls, "originals_included": False, "identifier_projection": "sha256_aliases",
-                "calculator_sha256": digest((HERE / "calculate-entitlements.py").read_bytes()),
-                "finance_primitives_sha256": digest((HERE / "_finance.py").read_bytes()),
-                "exporter_sha256": digest(Path(__file__).read_bytes()),
-                "files": [{"file": path.name, "sha256": digest(path.read_bytes())} for path in sorted(output.iterdir())]}
-    (output / "manifest.json").write_text(dumps(manifest), encoding="utf-8")
-    return manifest
+    try:
+        (output / "workpaper.json").write_text(dumps({"controls": controls, "schedules": schedules}), encoding="utf-8")
+        for name, rows in schedules.items():
+            fields = list(rows[0]) if rows else ["status"]
+            with (output / (name + ".csv")).open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=fields)
+                writer.writeheader()
+                for row in rows:
+                    writer.writerow({key: cell(value) for key, value in row.items()})
+        report = ["# Royalty entitlement workpaper", "", "Scope: supplied fixed-rate entitlement and recoupment calculations only.",
+                  "Normalization, source control totals, remittance and bank matching are not checked by this export.",
+                  f"As of: {as_of}. Calculation result: {result['status']}. Evidence freshness: {overall}.",
+                  "The calculation matches the hash-bound input; this is not verification of the supplied facts or terms.", "",
+                  "| Schedule | Rows |", "|---|---:|"]
+        report += [f"| {name}.csv | {len(rows)} |" for name, rows in schedules.items()]
+        report += ["", "Exact decimals and null unknowns are authoritative in workpaper.json; CSV formula guards are display-only.",
+                   "Bridge rows are intermediate steps, not additive earnings. Recoupment uses the same entitlement lines.",
+                   "Do not add line variances, recoupment payable, adjustments or later cash as separate recoveries.",
+                   "No shared-cause monetary recovery total is calculated. Potential variance is neither accepted debt nor recovered cash.",
+                   "Empty schedules mean no supplied calculated records, not a passed check. Unresolved amounts remain unknown.",
+                   "Missing/old evidence checks remain unknown; differing supplied source versions are stale. No live freshness was verified.",
+                   "Source references and record IDs are SHA256 aliases; resolve them against the hash-bound private inputs.",
+                   "Source paths, names, account details, source prose and originals are excluded. Financial values remain private.",
+                   "Report review grants no permission to share, publish, contact providers or move money.", ""]
+        (output / "report.md").write_text("\n".join(report), encoding="utf-8")
+        manifest = {**controls, "originals_included": False, "identifier_projection": "sha256_aliases",
+                    "calculator_sha256": digest((HERE / "calculate-entitlements.py").read_bytes()),
+                    "finance_primitives_sha256": digest((HERE / "_finance.py").read_bytes()),
+                    "exporter_sha256": digest(Path(__file__).read_bytes()),
+                    "files": [{"file": path.name, "sha256": digest(path.read_bytes())} for path in sorted(output.iterdir())]}
+        (output / "manifest.json").write_text(dumps(manifest), encoding="utf-8")
+        return manifest
+    except BaseException:
+        # Only this invocation's exclusively created directory is removed.
+        # Failed schedules must not masquerade as a completed report or block retry.
+        shutil.rmtree(output)
+        raise
 
 
 def main():
