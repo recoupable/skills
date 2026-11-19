@@ -6,7 +6,6 @@ import csv
 from decimal import Decimal
 import hashlib
 import importlib.util
-import io
 import json
 import os
 from pathlib import Path
@@ -15,6 +14,7 @@ import shutil
 import sys
 import tempfile
 from _finance import amount, dumps, iso_date
+import _normalization_workpaper_io as bounded
 
 HERE = Path(__file__).resolve().parent
 
@@ -142,15 +142,15 @@ def project(receipt, rowlog, ledger, source_hash=None, controls=None, controls_s
         observed_counts[disposition] += 1
     check('row_receipt_identity', 'consistent' if association_ok else 'mismatch', 'source version, sheet, position and deterministic row identity')
     new_ids = {key for key, row in by_id.items() if row['disposition'] in ('detail', 'held')}
-    reader = csv.DictReader(io.StringIO(ledger.decode('utf-8-sig'), newline=''))
-    if reader.fieldnames != normalizer.CANONICAL_COLUMNS:
-        raise ValueError('Unsupported ledger schema')
+    reader = bounded.ledger_rows(ledger, normalizer.CANONICAL_COLUMNS)
     found = Counter(); observed_totals = defaultdict(Decimal); contributors = defaultdict(list)
     ledger_count = 0; provenance_ok = association_ok; amounts_ok = True
     for row in reader:
         ledger_count += 1
         identity = row['ledger_line_id']
         if identity not in new_ids: continue
+        if len(schedules['written-lines']) >= bounded.MAX_CURRENT_ROWS:
+            raise ValueError('Too many retained written rows')
         found[identity] += 1
         original = by_id[identity]
         expected_status = 'ready' if original['disposition'] == 'detail' else 'held'
@@ -207,7 +207,9 @@ def project(receipt, rowlog, ledger, source_hash=None, controls=None, controls_s
         schedules['totals'].append({'basis': 'newly_written_only', 'currency': safe_currency(currency), 'currency_ref': alias('currency', currency),
             'field': field, 'supplied_amount': claimed, 'observed_amount': observed, 'check': status,
             'line_refs': contributors[key] if totals_supported else []})
-    if not written_totals and not observed_totals:
+    if not amounts_ok:
+        check('written_totals', 'mismatch', 'invalid nonempty value in newly written row; no observed total can be established')
+    elif not written_totals and not observed_totals:
         check('written_totals', 'no_observed_amounts', 'empty is not an observed zero or passed source control')
     if controls_supplied:
         errors = normalizer.validate_source_controls(controls, {k: Decimal(v) for k, v in source_totals.items()})
@@ -221,14 +223,17 @@ def project(receipt, rowlog, ledger, source_hash=None, controls=None, controls_s
 
 def build(receipt_path, ledger_path, row_receipt_path, output, as_of, source_path=None, controls_path=None):
     as_of = iso_date(as_of, 'as_of').isoformat()
-    raw = {name: Path(path).read_bytes() for name, path in [('receipt', receipt_path), ('ledger', ledger_path), ('row_receipt', row_receipt_path)]}
-    receipt = read_json(raw['receipt'])
-    rows = [read_json(line) for line in raw['row_receipt'].splitlines() if line.strip()]
-    controls_raw = Path(controls_path).read_bytes() if controls_path else None
-    source_hash = normalizer.sha256_file(Path(source_path)) if source_path else None
-    schedules = project(receipt, rows, raw['ledger'], source_hash, read_json(controls_raw) if controls_raw is not None else None, controls_raw is not None)
+    receipt_raw = bounded.read_small(receipt_path)
+    receipt = read_json(receipt_raw)
+    rows, row_hash = bounded.read_rows(row_receipt_path, read_json)
+    controls_raw = bounded.read_small(controls_path) if controls_path else None
+    source_hash = bounded.copy_hash(source_path) if source_path else None
     with tempfile.TemporaryDirectory(prefix='normalization-workpaper-check-') as directory:
-        path = Path(directory) / 'ledger.csv'; path.write_bytes(raw['ledger'])
+        path = Path(directory) / 'ledger.csv'
+        with path.open('xb') as stream:
+            os.chmod(path, 0o600)
+            ledger_hash = bounded.copy_hash(ledger_path, stream)
+        schedules = project(receipt, rows, path, source_hash, read_json(controls_raw) if controls_raw is not None else None, controls_raw is not None)
         validation = validator.validate(path)
     schedules['checks'].append({'check': 'existing_ledger_validator', 'status': validation['status'],
         'scope': 'entire supplied ledger shape/values, not source controls, authenticity or rights', 'evidence_refs': []})
@@ -243,7 +248,7 @@ def build(receipt_path, ledger_path, row_receipt_path, output, as_of, source_pat
         'ledger_held_rows': validation['held_rows'], 'ledger_error_sample_count': len(validation['errors']),
         'source_version_ref': alias('source_version', receipt['source_version_id']),
         'transform_ref': alias('transform', receipt['transform_id']), 'parser_ref': alias('parser', receipt['parser_version']),
-        **{name + '_sha256': common.digest(value) for name, value in raw.items()},
+        'receipt_sha256': common.digest(receipt_raw), 'ledger_sha256': ledger_hash, 'row_receipt_sha256': row_hash,
         'original_source_sha256': source_hash, 'additional_controls_sha256': common.digest(controls_raw) if controls_raw is not None else None,
         'historical_receipt_to_ledger_byte_binding': 'not_provided_by_normalizer; current supplied bytes hashed here'}
     output = Path(output)
@@ -276,7 +281,7 @@ def build(receipt_path, ledger_path, row_receipt_path, output, as_of, source_pat
             'Aliases link rows, source version and transform to the private hash-bound inputs. Raw names/accounts/paths/headers/warnings/raw_values are excluded.',
             'Financial data and aliases remain private. Report review authorizes no sharing, imports, provider actions or money movement.', '']
         write('report.md', '\n'.join(report))
-        dependencies = ['normalize-royalty-statement.py', 'validate-normalized-ledger.py', 'build-royalty-workpaper.py', '_finance.py', Path(__file__).name]
+        dependencies = ['normalize-royalty-statement.py', 'validate-normalized-ledger.py', 'build-royalty-workpaper.py', '_finance.py', '_normalization_workpaper_io.py', '_royalty_archive.py', Path(__file__).name]
         manifest = {**control, 'originals_included': False, 'helper_hashes': {name: common.digest((HERE/name).read_bytes()) for name in dependencies},
                     'files': [{'file': path.name, 'sha256': common.digest(path.read_bytes())} for path in sorted(output.iterdir())]}
         write('manifest.json', dumps(manifest)); return manifest
@@ -290,7 +295,7 @@ def main():
     parser.add_argument('--source'); parser.add_argument('--controls')
     args = parser.parse_args()
     try: print(dumps(build(args.receipt, args.ledger, args.row_receipt, args.output_directory, args.as_of, args.source, args.controls)), end='')
-    except (OSError, ValueError, KeyError, TypeError, AttributeError, csv.Error):
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, csv.Error, RecursionError):
         parser.exit(2, 'build-normalization-workpaper: unsupported input or output failure; inspect private originals without replacing them\n')
 
 

@@ -30,7 +30,11 @@ additional control therefore means `matches_supplied_claims_only`.
 - The existing ledger validator runs on an exact local snapshot of the supplied
   ledger. Its shape/value/held-row result is separate from source controls and
   monetary readiness. Raw error prose is not exported; the result includes bounded
-  error sample count, not an asserted total count of every error.
+  error sample count, not an asserted total count of every error. Ledger eligibility
+  and cross-artifact consistency are separate: consistently represented held/empty
+  records may have no artifact mismatch while the ledger validator reports errors.
+  Neither is ready; readiness remains review_required. Detected invalid nonempty
+  new-row amounts always create a mismatch, even when both receipt total maps are empty.
 - Row-receipt dispositions are counted and compared with supplied summary counts.
   This is conservation between supplied artifacts, not an independent count of
   original CSV/XLSX rows. Source version, sheet, position and deterministic ledger
@@ -98,6 +102,34 @@ apostrophe before negative amounts. Every CSV has fixed headers even when empty.
 An empty file, header-only source, unavailable controls, held row or supplied partial
 state never becomes a passed source control. Unknown currency is null with a typed
 alias, not an invented currency. Report date is not a statement or payment date.
+
+## Supported input bounds
+
+The ledger is hashed and copied in chunks of at most 1 MiB into a private temporary
+snapshot; projection and the existing validator both stream that same snapshot.
+An append baseline is never decoded/materialized as a whole string. The snapshot
+is removed on success or failure. No original is reread to validate a different
+version after its bytes have been bound.
+
+Supported limits are explicit: summary and optional controls JSON at most 1 MiB
+each; row-receipt JSONL at most 16 MiB and 10,000 nonblank records; each JSONL record
+at most 256 KiB including its newline. Per-record JSON admits at most 16 levels,
+4,096 nodes, 256 object fields, 2,048 list entries, 64 reasons and 65,536 characters
+per string. Ignored raw_values are discarded after admission, not retained in the
+row schedule. Retained written-line records are also capped at 10,000.
+
+Ledger and optional original-source files are at most 256 MiB. Ledger CSV permits
+at most 1,000,000 rows, 262,144 Unicode characters per logical record (quoted
+newlines share the budget), 65,536 characters per field and the exact canonical
+column layout. These are exporter admission limits, not new importer limits.
+Unsupported inputs fail before the output directory is created; do not truncate
+or rewrite originals to bypass a refusal. Preserve a deliberately scoped snapshot
+and receipt or use another separately reviewed route for larger artifacts.
+
+The bounded readers ship in `scripts/_normalization_workpaper_io.py`, reusing the
+existing CSV record limiter in `scripts/_royalty_archive.py`. Both are included in
+the manifest's executable hashes. Output-size tests establish bounded fixture
+growth and complete links, not a proof of general algorithmic complexity.
 
 Output must be a new versioned directory. Existing files/directories/symlinks are
 refused; the leaf directory is 0700 and generated files 0600. Failed writes remove

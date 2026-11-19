@@ -435,6 +435,12 @@
       "copies": [
         "skills/recoup-catalog-reconcile-royalties/references/normalization-workpaper-export.md"
       ]
+    },
+    {
+      "canonical": "skills/recoup-catalog-review-deal/scripts/_normalization_workpaper_io.py",
+      "copies": [
+        "skills/recoup-catalog-reconcile-royalties/scripts/_normalization_workpaper_io.py"
+      ]
     }
   ]
 }

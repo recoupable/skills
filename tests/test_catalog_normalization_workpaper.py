@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import tracemalloc
 import unittest
 from unittest.mock import patch
 
@@ -213,7 +214,7 @@ class NormalizationWorkpaperTests(unittest.TestCase):
             with self.assertRaises(OSError):self.build()
         self.assertFalse(self.output.exists());self.assertTrue(self.ledger.exists())
 
-    def test_linear_row_and_total_joins(self):
+    def test_complete_total_links_and_linear_output_size(self):
         sizes=[]
         for n in (32,64):
             self.normalize([{**self.row,'Transaction ID':str(i)} for i in range(n)])
@@ -225,11 +226,26 @@ class NormalizationWorkpaperTests(unittest.TestCase):
             shutil.rmtree(self.output)
         self.assertLess(sizes[1]/sizes[0],2.2)
 
+    def test_invalid_nonempty_amount_with_empty_receipt_totals_is_mismatch(self):
+        self.row.update(Gross='', Net='', Deductions='')
+        self.normalize()
+        self.assertEqual(self.receipt['source_totals'], [])
+        self.assertEqual(self.receipt['written_totals'], [])
+        self.rewrite_ledger(lambda rows: rows[0].update(owner_net_amount='PRIVATE_INVALID_AMOUNT'))
+        p=self.build()
+        self.assertEqual(self.check(p,'written_totals'),'mismatch')
+        self.assertEqual(p['controls']['artifact_consistency'],'mismatch')
+        self.assertIsNone(p['schedules']['written-lines'][0]['owner_net_amount'])
+        self.assertEqual(p['schedules']['totals'],[])
+        self.assertEqual(p['controls']['readiness'],'review_required')
+        self.assertNotIn('PRIVATE_INVALID_AMOUNT',''.join(f.read_text() for f in self.output.iterdir()))
+
     def test_unknown_currency_supplied_totals_and_empty_are_not_zero(self):
         self.row.update(Currency='',Gross='',Net='',Deductions='')
         self.normalize();p=self.build()
         self.assertEqual(p['schedules']['totals'],[])
         self.assertEqual(self.check(p,'written_totals'),'no_observed_amounts')
+        self.assertEqual(p['controls']['artifact_consistency'],'no_detected_mismatch_within_supported_checks')
         self.assertIsNone(p['schedules']['written-lines'][0]['owner_net_amount'])
 
     def test_old_held_baseline_and_new_ok_import_are_separate(self):
@@ -239,6 +255,7 @@ class NormalizationWorkpaperTests(unittest.TestCase):
         self.assertEqual(p['controls']['receipt_status_supplied'],'ok')
         self.assertEqual(p['controls']['ledger_validator_status'],'errors_found')
         self.assertEqual(p['controls']['ledger_held_rows'],1)
+        self.assertEqual(p['controls']['artifact_consistency'],'no_detected_mismatch_within_supported_checks')
         self.assertEqual(p['controls']['readiness'],'review_required')
 
     def test_duplicate_json_unsupported_versions_and_destination_links_refused(self):
@@ -255,6 +272,65 @@ class NormalizationWorkpaperTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.build()
         self.assertTrue(self.output.is_symlink())
 
+    def test_input_bounds_refuse_before_output_and_unbounded_reads(self):
+        self.normalize()
+        original=self.receipt_path.read_bytes()
+        self.receipt_path.write_text(json.dumps({**self.receipt,'warnings':['X'*(2*1024*1024)]}))
+        with patch.object(Path,'read_bytes',side_effect=AssertionError('unbounded read')):
+            with self.assertRaises(ValueError):
+                export.build(self.receipt_path,self.ledger,self.rows_path,self.output,'2026-11-18')
+        self.assertFalse(self.output.exists());self.receipt_path.write_bytes(original)
+        for name,limit in [('MAX_JSONL_RECORD_BYTES',32),('MAX_ROW_RECEIPT_BYTES',32),('MAX_LEDGER_BYTES',32),('MAX_CURRENT_ROWS',0),('MAX_FIELD_CHARS',4),('MAX_CSV_RECORD_CHARS',32),('MAX_LEDGER_ROWS',0)]:
+            with self.subTest(limit=name),patch.object(export.bounded,name,limit):
+                with self.assertRaises(ValueError):
+                    export.build(self.receipt_path,self.ledger,self.rows_path,self.output,'2026-11-18')
+                self.assertFalse(self.output.exists())
+        row=json.loads(self.rows_path.read_text());row['reasons']=['synthetic']*65
+        self.rows_path.write_text(json.dumps(row)+'\n')
+        with self.assertRaises(ValueError):
+            export.build(self.receipt_path,self.ledger,self.rows_path,self.output,'2026-11-18')
+        self.assertFalse(self.output.exists())
+
+    def test_large_baseline_streams_with_small_current_receipt(self):
+        self.normalize();self.row.update(Net='2.0049',**{'Transaction ID':'SECOND'});self.normalize(append=True)
+        with self.ledger.open(newline='') as f:
+            reader=csv.DictReader(f);fields=reader.fieldnames;old,new=list(reader)
+        with self.ledger.open('w',newline='') as f:
+            writer=csv.DictWriter(f,fieldnames=fields);writer.writeheader()
+            for i in range(512):
+                writer.writerow({**old,'ledger_line_id':'baseline-'+str(i),'raw_values':'X'*32768})
+            writer.writerow(new)
+        self.receipt['ledger_total_rows']=513;self.receipt_path.write_text(json.dumps(self.receipt))
+        original_read=Path.read_bytes
+        forbidden={self.receipt_path,self.rows_path,self.ledger}
+        def guarded(path):
+            if path in forbidden:raise AssertionError('whole input read')
+            return original_read(path)
+        tracemalloc.start()
+        try:
+            with patch.object(Path,'read_bytes',guarded):
+                manifest=export.build(self.receipt_path,self.ledger,self.rows_path,self.output,'2026-11-18')
+            _,peak=tracemalloc.get_traced_memory()
+        finally:tracemalloc.stop()
+        self.assertLess(peak,self.ledger.stat().st_size//2)
+        self.assertEqual(manifest['ledger_sha256'],export.normalizer.sha256_file(self.ledger))
+        p=json.loads((self.output/'workpaper.json').read_text())
+        self.assertEqual(len(p['schedules']['written-lines']),1)
+        self.assertEqual(p['schedules']['written-lines'][0]['owner_net_amount'],'2.0049')
+        self.assertEqual(self.check(p,'append_baseline'),'unknown_not_bound_by_receipt')
+
+    def test_snapshot_hash_and_checks_do_not_reread_changed_original(self):
+        self.normalize();before=export.normalizer.sha256_file(self.ledger)
+        original=export.project
+        def project_then_change(*args,**kwargs):
+            result=original(*args,**kwargs)
+            self.ledger.write_text('changed after snapshot')
+            return result
+        with patch.object(export,'project',project_then_change):
+            manifest=export.build(self.receipt_path,self.ledger,self.rows_path,self.output,'2026-11-18')
+        self.assertEqual(manifest['ledger_sha256'],before)
+        self.assertEqual(manifest['ledger_validator_status'],'ok')
+
     def test_export_never_calls_normalizer_import(self):
         self.normalize()
         with patch.object(export.normalizer,'normalize',side_effect=AssertionError('must not import')):
@@ -262,7 +338,7 @@ class NormalizationWorkpaperTests(unittest.TestCase):
 
     def test_standalone_cli_with_local_dependencies_only(self):
         self.normalize();folder=self.root/'standalone';folder.mkdir()
-        for name in ('build-normalization-workpaper.py','normalize-royalty-statement.py','validate-normalized-ledger.py','build-royalty-workpaper.py','_finance.py'):
+        for name in ('build-normalization-workpaper.py','normalize-royalty-statement.py','validate-normalized-ledger.py','build-royalty-workpaper.py','_finance.py','_normalization_workpaper_io.py','_royalty_archive.py'):
             shutil.copyfile(SCRIPTS/name,folder/name)
         run=subprocess.run([sys.executable,str(folder/'build-normalization-workpaper.py'),'--receipt',str(self.receipt_path),
             '--ledger',str(self.ledger),'--row-receipt',str(self.rows_path),'--output-directory',str(self.output),'--as-of','2026-11-18'],
