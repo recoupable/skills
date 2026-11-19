@@ -268,3 +268,41 @@ class WorkpaperTests(unittest.TestCase):
                     self.assertEqual(row[key], line[key])
             from decimal import Decimal
             self.assertEqual(Decimal(line['expected_amount']), Decimal('45.002205') - Decimal(count) * Decimal('0.00001'))
+
+    def test_rule_version_alias_preserves_supported_json_types(self):
+        aliases = []
+        for index, version in enumerate((1, '1', True, 'true')):
+            self.data['rules'][0]['rule_version'] = version
+            self.output = self.root / f'version-{index}'
+            payload = self.build()
+            aliases.append(payload['schedules']['entitlement-lines'][0]['rule_version_ref'])
+        self.assertEqual(len(set(aliases)), 4)
+
+    def test_empty_schedules_keep_their_full_csv_headers(self):
+        self.build()
+        def headers():
+            return {path.stem: next(csv.reader(path.read_text().splitlines())) for path in self.output.glob('*.csv')}
+        original = headers()
+        self.assertIn('record_ref', original['unresolved'])
+        self.data['rules'][0]['unsupported_terms'] = 'manual interpretation'
+        self.output = self.root / 'partial'
+        self.build()
+        self.assertEqual(headers(), original)
+        self.data.update(rules=[], lines=[], recoupment_accounts=[])
+        self.output = self.root / 'empty'
+        payload = self.build()
+        self.assertEqual(headers(), original)
+        self.assertTrue(all(not rows for rows in payload['schedules'].values()))
+        self.assertEqual(payload['controls']['result_status'], 'partial')
+
+    def test_equivalent_valid_iso_dates_use_same_day_semantics(self):
+        inventory = self.inventory()
+        for row in inventory['sources']:
+            row['checked_on'] = '20261118'
+        payload = self.build(inventory)
+        self.assertEqual(payload['controls']['freshness'], 'current_as_supplied')
+        self.assertEqual(payload['controls']['source_control'], 'not_verified_by_exporter')
+        rows = export.evidence_rows({'source'}, {'schema_version': '1', 'sources': [{
+            'evidence_ref': 'source', 'source_sha256': 'a'*64, 'current_sha256': 'a'*64,
+            'checked_on': '2026-11-18'}]}, '20261118')
+        self.assertEqual(rows['source']['freshness'], 'current_as_supplied')

@@ -63,6 +63,9 @@ later payable/payment are not separate recoveries. No totals are inferred from
 case findings or cause IDs; shared-cause recovery deduplication is outside this
 export, so no monetary recovery total is emitted.
 
+CSV schedules always retain their full fixed header, including when no rows are
+calculated. An empty schedule is not a passed control.
+
 ## Optional source-version inventory
 
 Without `--evidence inventory.json`, evidence freshness is **unknown**, even when
@@ -84,7 +87,7 @@ Supply an entry for every relevant `evidence_refs` value, including terms,
 adjustments and recoupment movements. `source_sha256` identifies the exact source
 version used in the calculation; `current_sha256` identifies the version observed
 by the authorized reviewer. Different non-null hashes mean stale. Equal hashes
-with `checked_on` equal to `--as-of` mean current **as supplied**, never independently
+with `checked_on` on the same parsed calendar date as `--as-of` mean current **as supplied**, never independently
 verified. Missing entries/hashes or older checks mean unknown. Future check dates
 are refused. Source control totals and authenticity remain not verified by this
 exporter. Hashes must be lowercase SHA256 strings (numeric JSON values are rejected);
@@ -92,8 +95,12 @@ values can be null for unknown.
 
 Identifiers and evidence strings are exported as `kind:SHA256(UTF-8 original)`.
 For example, resolve an `evidence:` alias by hashing the original `evidence_refs`
-strings in the private input matching manifest `input_sha256`. Rule versions are
-similarly aliased; the exact private rule remains in that input. This lets another
+strings in the private input matching manifest `input_sha256`. Rule version aliases instead hash canonical JSON of the validated calculator
+result's `rule_version`: Python `json.dumps(value, sort_keys=True,
+separators=(",", ":"), allow_nan=False)` with its default ASCII escaping. Thus
+numeric `1` hashes `1`, while string `"1"` hashes the quoted JSON string `"1"`;
+booleans remain distinct too. The exact private rule remains in the input, parsed
+with the calculator's existing exact-decimal input contract. This lets another
 authorized session reproduce the output without publishing source locations,
 account references, titles, free-text blockers or source prose. Hash aliases are
 not anonymization; the financial rows and hashes still require a private reviewed

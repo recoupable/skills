@@ -13,6 +13,23 @@ from _finance import dumps, iso_date
 HERE = Path(__file__).resolve().parent
 
 
+LINE_CONTEXT = ("line_ref", "rule_ref", "rule_version_ref", "currency", "period_start",
+                "period_end", "evidence_refs", "freshness", "as_of")
+SCHEDULE_FIELDS = {
+    "entitlement-lines": LINE_CONTEXT + ("calculation_status", "basis", "basis_amount",
+        "participation_rate", "commission_rate", "commission_basis", "expected_amount",
+        "reported_amount", "variance", "variance_direction", "recovered_cash"),
+    "calculation-bridge": tuple(key for key in LINE_CONTEXT if key != "evidence_refs") +
+        ("step", "operation", "amount", "rate"),
+    "recoupment-accounts": ("account_ref", "currency", "earnings_periods", "balance_as_of",
+        "evidence_refs", "freshness", "as_of", "earnings_line_refs", "calculation_basis",
+        "opening_balance", "movements", "eligible_earnings", "closing_balance",
+        "reported_closing_balance", "closing_variance", "potential_payable", "cash_received"),
+    "unresolved": ("record_ref", "status", "amount", "currency", "period", "reason", "as_of", "freshness"),
+    "evidence": ("evidence_ref", "source_sha256", "current_sha256", "checked_on", "freshness"),
+}
+
+
 def calculator():
     spec = importlib.util.spec_from_file_location("workpaper_entitlements", HERE / "calculate-entitlements.py")
     module = importlib.util.module_from_spec(spec)
@@ -28,6 +45,11 @@ def alias(kind, value):
     return kind + ":" + digest(value.encode("utf-8"))
 
 
+def version_alias(value):
+    """Preserve the validated calculator result's JSON type in version identity."""
+    return alias("version", json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False))
+
+
 def read_json(path, decimal_inputs=False):
     raw = Path(path).read_bytes()
     return json.loads(raw, **({"parse_float": str} if decimal_inputs else {})), digest(raw)
@@ -41,6 +63,7 @@ def freshness(refs, evidence):
 def evidence_rows(refs, supplied, as_of):
     if not isinstance(supplied, dict) or supplied.get("schema_version") != "1":
         raise ValueError("Evidence inventory requires schema_version '1'")
+    report_date = iso_date(as_of, "as_of")
     records = supplied.get("sources")
     if not isinstance(records, list):
         raise ValueError("Evidence sources must be a list")
@@ -54,7 +77,7 @@ def evidence_rows(refs, supplied, as_of):
                                                or not re.fullmatch(r"[0-9a-f]{64}", item[key])):
                 raise ValueError("Source versions must be lowercase SHA256 values or null")
         checked = item.get("checked_on")
-        if checked is not None and iso_date(checked, "checked_on") > iso_date(as_of, "as_of"):
+        if checked is not None and iso_date(checked, "checked_on") > report_date:
             raise ValueError("Evidence check cannot be after report as_of")
         inventory[ref] = item
     rows = {}
@@ -62,8 +85,10 @@ def evidence_rows(refs, supplied, as_of):
         item = inventory.get(ref, {})
         source, current = item.get("source_sha256"), item.get("current_sha256")
         state = "unknown"
+        checked = item.get("checked_on")
+        same_day = checked is not None and iso_date(checked, "checked_on") == report_date
         if source and current:
-            state = "stale" if source != current else "current_as_supplied" if item.get("checked_on") == as_of else "unknown"
+            state = "stale" if source != current else "current_as_supplied" if same_day else "unknown"
         rows[ref] = {"evidence_ref": alias("evidence", ref), "source_sha256": source,
                      "current_sha256": current, "checked_on": item.get("checked_on"), "freshness": state}
     return rows
@@ -110,7 +135,7 @@ def build(input_path, result_path, output, as_of, evidence_path=None):
         source = input_lines[line["line_id"]]
         rule = rules[line["rule_id"]]
         common = {"line_ref": alias("line", line["line_id"]), "rule_ref": alias("rule", line["rule_id"]),
-                  "rule_version_ref": alias("version", str(line["rule_version"])),
+                  "rule_version_ref": version_alias(line["rule_version"]),
                   "currency": line["currency"], "period_start": line["period_start"],
                   "period_end": line["period_end"], **context(line)}
         lines.append({**common, "calculation_status": line["status"], "basis": rule["basis"],
@@ -153,7 +178,7 @@ def build(input_path, result_path, output, as_of, evidence_path=None):
     try:
         (output / "workpaper.json").write_text(dumps({"controls": controls, "schedules": schedules}), encoding="utf-8")
         for name, rows in schedules.items():
-            fields = list(rows[0]) if rows else ["status"]
+            fields = SCHEDULE_FIELDS[name]
             with (output / (name + ".csv")).open("w", newline="", encoding="utf-8") as stream:
                 writer = csv.DictWriter(stream, fieldnames=fields)
                 writer.writeheader()
