@@ -122,8 +122,10 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-organize-publishing/scripts/build-catalog-report.py
 - skills/recoup-catalog-organize-publishing/scripts/catalog-case.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_finance.py
+- skills/recoup-catalog-reconcile-royalties/scripts/_normalization_workpaper_io.py
 - skills/recoup-catalog-reconcile-royalties/scripts/_royalty_archive.py
 - skills/recoup-catalog-reconcile-royalties/scripts/build-catalog-report.py
+- skills/recoup-catalog-reconcile-royalties/scripts/build-normalization-workpaper.py
 - skills/recoup-catalog-reconcile-royalties/scripts/build-remittance-workpaper.py
 - skills/recoup-catalog-reconcile-royalties/scripts/build-royalty-workpaper.py
 - skills/recoup-catalog-reconcile-royalties/scripts/calculate-entitlements.py
@@ -141,12 +143,14 @@ retention policies. The plugin is not specifically intended for users under 18.
 - skills/recoup-catalog-resolve-claims/scripts/prepare-provider-packet.py
 - skills/recoup-catalog-review-deal/scripts/_finance.py
 - skills/recoup-catalog-review-deal/scripts/_helpers.py
+- skills/recoup-catalog-review-deal/scripts/_normalization_workpaper_io.py
 - skills/recoup-catalog-review-deal/scripts/_royalty_archive.py
 - skills/recoup-catalog-review-deal/scripts/auto-column-map.py
 - skills/recoup-catalog-review-deal/scripts/build-catalog-report.py
 - skills/recoup-catalog-review-deal/scripts/build-deal-readiness.py
 - skills/recoup-catalog-review-deal/scripts/build-file-manifest.py
 - skills/recoup-catalog-review-deal/scripts/build-manual-review-queue.py
+- skills/recoup-catalog-review-deal/scripts/build-normalization-workpaper.py
 - skills/recoup-catalog-review-deal/scripts/build-remittance-workpaper.py
 - skills/recoup-catalog-review-deal/scripts/build-royalty-workpaper.py
 - skills/recoup-catalog-review-deal/scripts/calculate-concentration.py
@@ -197,5 +201,5 @@ retention policies. The plugin is not specifically intended for users under 18.
 
 ## Release provenance
 
-Source commit: 11724c63039ccdaf5d7326244bbd1cd03e0568e3
-Version: 2026.1118.95
+Source commit: 2efefa5ce359dfd751f6b2345c0bd759c326a869
+Version: 2026.1118.96
