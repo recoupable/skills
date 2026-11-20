@@ -165,6 +165,7 @@ have a separate API/database release dependency. See [catalog coverage](docs/cat
 | Skill | What it does |
 |-------|-------------|
 | recoup-internal-dev | Write, maintain & ship GitHub issues end-to-end (tracking issues, docs-first, TDD) |
+| recoup-internal-board | Share issues and PRs on the Vercel Board: one code-review thread per goal, kept current |
 | recoup-internal-content-normalize-text | Audit and normalize batches of AI-generated interface text for consistent, evidence-backed scanning |
 | recoup-internal-eval-skill-benchmark | Benchmark a skill pack/plugin against the frontier |
 | recoup-internal-sales | Daily sales sweep across Stripe/Privy/valuations/Attio/credits/tasks/chats → one ranked follow-up list |
