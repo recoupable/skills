@@ -54,6 +54,8 @@ Heading is `## PRs (updated <ISO date>)` so staleness is visible. Columns:
 
 **Update a row in the same session its PR changes state.** Replace `#TBD` with the live ref the moment the PR opens -- never batch for "when they're all open"; an open PR whose row still says `#TBD` is drift of the same class as a merged PR without a closure note (caught in practice on chat#1841). Follow the table with a merge-sequencing blockquote when order matters; when everything is one state, say so (*"all seven merged and on prod"*).
 
+**Mirror the tracker on the board.** The issue is a board task and every row is a task it waits for (`recoup-internal-board`). Add the task when you add the row, and move it in the same pass as the row's state.
+
 ## The Open -> Done lifecycle (the most important rule)
 
 Items are **not** closed by flipping `- [ ]` to `- [x]`. When an item ships, **rewrite it into a closure note** and move it under `## Done`:
@@ -255,6 +257,7 @@ gh pr comment <n> --repo recoupable/api --body-file results.md
 - [ ] Implemented against a real tracking issue (contract + Done-when present); upgraded it first if not.
 - [ ] Docs PR opened **first**; api PR links it and states the docs->api merge order.
 - [ ] Every opened PR's **matrix row updated** (`#TBD` -> live ref + status) in the same session it was opened.
+- [ ] The issue is a board task, every matrix row has a task it waits for, and each task's state matches its row.
 - [ ] Every api unit was **RED before GREEN**; full domain suite + `tsc` + lint all clean.
 - [ ] Preview confirmed **built from your commit**; **every Done-when criterion** exercised against it with real data.
 - [ ] **Every behavior-changing push** (including review-fix rounds) was re-preview-tested on **that** SHA -- not only the first implementation push.
