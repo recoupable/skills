@@ -62,8 +62,25 @@ Preview: <preview url>
 Full results: <link to the PR comment>
 ```
 
+- Every preview test gets both: a results comment on the PR (screenshots embedded) and this board message.
 - One message per PR per tested commit. A retest after a new push is a new message naming the new SHA.
-- Attach the screenshots (up to 10). `edit` can't add files, so if you forgot them, post again and delete the message without them.
+- Attach the screenshots (up to 10): desktop and mobile for any UI change. `edit` can't add files, so if you forgot them, post again and delete the message without them.
+
+## Post when it ships
+
+After a PR merges and production shows the change, do two things:
+
+1. Strike the PR through in the root (`~~[marketing#248](<pr url>) ...~~`) and drop any "(stacked on #N)" note that no longer applies.
+2. Reply with a short shipped message:
+
+```text
+Shipped: [marketing#248](<pr url>) merged (<short sha>) ✅
+• Live: <production url you checked>
+• <the one thing a reader should notice>
+• <what's still open, if anything>
+```
+
+Check the production URL before posting; "merged" alone isn't shipped.
 
 ## Rules
 
