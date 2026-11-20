@@ -1,6 +1,6 @@
 ---
 name: recoup-internal-board
-description: INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal post this PR to the board"). Never use for customer-facing or artist requests. Share issues and PRs with the team on Recoup's Vercel Board (board.recoupable.dev) in the house format — one `code-review` thread per goal, mirroring Slack #code-review —, track the issue and each PR-matrix row as board tasks, and keep both current as PRs open, verify and merge. Use when asked to "post this to the board", "post this PR to code-review", "update the code-review thread", "tell the team on the board", or "what's on the board".
+description: INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal post this PR to the board"). Never use for customer-facing or artist requests. Share issues and PRs with the team on Recoup's Vercel Board (board.recoupable.dev) in the house format — one `code-review` thread per goal, mirroring Slack #code-review — with the issue as a task there and each PR-matrix row as a task in `tasks`, and keep both current as PRs open, verify and merge. Use when asked to "post this to the board", "post this PR to code-review", "update the code-review thread", "tell the team on the board", or "what's on the board".
 ---
 
 # Recoup Board: share work with the team
@@ -15,7 +15,7 @@ Recoup's people and agents talk on the `recoup` team's [Vercel Board](https://ve
 
 ## Channels
 
-- **`code-review`** — issues and PRs. **`general`** — everything else.
+- **`code-review`** — issues and PRs. **`tasks`** — one task per PR-matrix row. **`general`** — everything else.
 - Read a channel before your first post there: `vercel board read code-review --scope recoup`.
 
 ## One thread per goal in `code-review`
@@ -41,7 +41,7 @@ vercel board post code-review --file root.md --as claude --no-sync --scope recou
 
 ## The issue is a task; each matrix row is a task it waits for
 
-The board has no subtasks, so `needs` stands in for them: the goal's thread is the issue's task, and it waits for one task per matrix row (`repo#TBD` rows included).
+The board has no subtasks, so `needs` stands in for them: the goal's `code-review` thread is the issue's task, and it waits for one task per matrix row (`repo#TBD` rows included) in the `tasks` channel. Keep row tasks out of `code-review` so it stays one thread per issue.
 
 1. Make the goal's root a task: `vercel board tasks create <root-id> --as claude --scope recoup`.
 2. Queue the rows as one plan, labelled with the goal so they list together. `needs` mirrors "(stacked on #N)":
@@ -57,7 +57,7 @@ The board has no subtasks, so `needs` stands in for them: the goal's thread is t
    ```
 
    ```bash
-   vercel board tasks create code-review --file rows.json --as claude --scope recoup --idempotency-key <goal-slug>-rows
+   vercel board tasks create tasks --file rows.json --as claude --scope recoup --idempotency-key <goal-slug>-rows
    ```
 
    `--no-sync` is refused with `--file`; set `"noSync": true` on each task. A `repo#TBD` row's key is `repo-tbd-<slug>`: keys can't change, so when its PR opens, reply with the live ref.
@@ -75,7 +75,7 @@ Move each row's task with its matrix state:
 
 - Claim only while you're working it. If the session ends before the row ships, `tasks release <id>`.
 - The issue's task stays `waiting` until every row completes, then turns `ready`. When the GitHub issue closes, claim and complete it with the closing note.
-- One issue's rows: `vercel board tasks code-review --label goal=<goal-slug> --state all`.
+- One issue's rows: `vercel board tasks tasks --label goal=<goal-slug> --state all`.
 
 ## Keep it current
 
