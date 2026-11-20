@@ -146,6 +146,8 @@ Only start when the issue is a proper spec -- it should carry a **Goal**, a **pr
 
 Run it in order. Docs-first and tests-first are not optional -- they are the method.
 
+**Keep the team's board current as you go.** Load the `recoup-internal-board` skill alongside this one: the goal gets one thread in the board's `code-review` channel, and each PR opened (step 3), preview test (step 7) and merge (step 8) gets a post there, in that skill's format.
+
 **After every push that changes behavior -- including review fixes, UI tweaks, and follow-up commits on an open PR -- re-run steps 4->7 on that new commit before you say the work is done.** Unit tests alone are not enough. Do not hand back "fixed" or "addressed feedback" until the preview for *that* SHA is Ready, exercised live, and the results (with screenshots for **app and marketing** UI PRs) are posted on the PR. Skipping preview after a mid-PR change is the same failure mode as shipping untested code.
 
 ## 1. Read the issue + the ground
@@ -176,7 +178,7 @@ Branch from `main`. Mirror the sibling implementation's layering (route -> handl
 
 Then: the implementation must match the **documented** contract exactly (params, response envelope, status codes). Run the **full domain test suite** (not just your files) to prove no regressions, then `tsc --noEmit` and lint. Commit, push, open the api PR (base `main`) -- link the issue and the docs PR, and state the docs->api merge order in the body.
 
-**Every time you open a PR (docs, api, or any sibling): update its row in the tracking issue's PR matrix in the same session** -- replace the `repo#TBD` placeholder with the live ref and a `open -- <verification status>` state. Don't wait until all PRs are open or until merge; an open PR with a `#TBD` row is tracker drift.
+**Every time you open a PR (docs, api, or any sibling): update its row in the tracking issue's PR matrix in the same session** -- replace the `repo#TBD` placeholder with the live ref and a `open -- <verification status>` state. Don't wait until all PRs are open or until merge; an open PR with a `#TBD` row is tracker drift. Add the PR to the goal's board thread in the same pass (`recoup-internal-board`).
 
 ## 4. Wait for the preview deployment
 
@@ -209,6 +211,7 @@ All three must agree before you call it done. This step is the entire point of t
 ## 7. Comment on the PR as you test
 
 - Post your verification as a **results table on the PR** -- *documented* vs *actual* for each path, with the hard numbers and status codes you observed. For **app and marketing UI PR preview testing**, always include screenshots in the PR comment alongside the results (desktop + mobile when layout matters). Do this on the api PR; comment on the docs PR too when you reconciled it. After a follow-up push, post a **new** comment for the new SHA (or clearly update) -- do not leave only the old SHA's results.
+- **Post the same test to the board:** one reply per PR per tested SHA in the goal's `code-review` thread, with the screenshots attached (`recoup-internal-board`).
 - **Reply on review threads** when you address them, citing the commit **and** the preview verification for that commit.
 - **Triage bot review findings critically -- validate before applying.** A bot's "P1" can be a false positive (a suggested revert that would reintroduce a bug; a "missing 501" the endpoint never emits). Confirm against the code/live behavior, then either fix it or reply with the reasoning for not. Don't rubber-stamp, don't blanket-dismiss.
 
@@ -217,6 +220,7 @@ All three must agree before you call it done. This step is the entire point of t
 - Merge order is **docs -> api** (the contract lands first). Honor hard dependencies (a database migration before the api that reads it).
 - **Never merge without explicit user approval.** On approval, squash-merge to `main`.
 - On merge, **update the tracking issue to Done** with a closure note (PR links, ISO date, merge path, what shipped, and a Verified clause citing the live results), and check off the Done-when boxes you actually verified.
+- Once production shows the change, strike the PR through in the board thread's root and post the shipped message (`recoup-internal-board`).
 
 ## Quick reference
 
