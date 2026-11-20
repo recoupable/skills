@@ -32,6 +32,7 @@ Goal: <the outcome, one line>
 
 - **Every PR on its own line**, in merge order. Never join PRs with `→`; say "(stacked on #N)" instead.
 - **Link every ref** as `[repo#N](url)`; planned PRs are plain `repo#TBD`.
+- **Issues are always `issue#N`**, never `app#N`, whatever repo they live in: `[issue#2399](<issue url>)`. PRs keep their repo name.
 - **Strike a PR through** (`~~[repo#N](url)~~`) once it merges.
 - Before writing, check Slack `#code-review` for a post on the same goal and reuse its wording.
 
