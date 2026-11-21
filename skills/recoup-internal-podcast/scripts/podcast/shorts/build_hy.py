@@ -133,7 +133,9 @@ def captions(sh):
     ws = []
     for who in ('g', 'h'):
         for x in W[who]:
-            if sh.muted(who, x['start']):
+            # a word whose onset falls just before a piece's in-point (Scribe stretches onsets) still counts
+            ref = x['start'] if any(p['in'] <= x['start'] < p['out'] for p in sh.P) else x['end'] - 0.01
+            if sh.muted(who, ref):
                 continue
             t = x['text'].strip()
             if re.fullmatch(r"\w{1,2}-", t):          # false starts like "y-"
@@ -145,7 +147,7 @@ def captions(sh):
     ws.sort()
     for k, w in enumerate(ws):            # a cut can land mid-sentence: the first word and any word after . ? ! get a capital
         if k == 0 or re.search(r'[.?!]["\u201d]?$', ws[k - 1][2]):
-            w[2] = re.sub(r'^(["\u201c]?)(\w)', lambda m: m.group(1) + m.group(2).upper(), w[2])
+            w[2] = re.sub(r'^(["\u201c\u00bf\u00a1]*)(\w)', lambda m: m.group(1) + m.group(2).upper(), w[2])
     n = sh.c.get('caption_words', 3)
     chunks, cur = [], []
     for w in ws:
