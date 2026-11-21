@@ -154,6 +154,9 @@ Write each short's beats in `edit/shorts/<id>.html` (kinetic: `kinetic-beats.exa
   text on the knob.
 - **Keep low text clear of the circle**: kinetic text below `top:600` gets right padding automatically
   (template rule); size it so the line still fits.
+- **Check text fit in every language you ship.** A line that fits in English can overflow in Spanish (longer
+  words, no wrap point); both reviewers missed one. On the frame strip and contact sheet, look for any text
+  touching or crossing the stage edge, per language, before the owner sees it.
 - **Quote marks mean verbatim** (ellipses allowed); check stutters ("being, being honored"). A number the
   guest cites from someone else is "as cited by <guest>".
 - **Deterministic animation only**: no `Math.random()` (use the template's seeded `rnd()`), no `tl.call`
@@ -192,6 +195,15 @@ Write each short's beats in `edit/shorts/<id>.html` (kinetic: `kinetic-beats.exa
      company. FIX only for what a viewer would notice or what is untrue; nits listed separately.
    - f. readcheck.js (section 3) is optional when no browser is allowed.
 4. **Prototype one short, get the look approved, then build the rest.**
+
+### Dubbed shorts (a second language from an AI dub)
+
+- Dub on the raw guest audio, not the cut: the shorts' in/out points then map one to one, and the mixed track
+  (dub over the ducked original) is what the short plays.
+- **Check every dubbed sentence against the source before cutting**, not just the clips' lines: transcribe the
+  dub, align it sentence by sentence to the source transcript and read both. Machine dubs reverse negations
+  ("can't be used without X" became "can be used"), swap subjects and add adjectives. One release found two
+  reversed lines in the full episode only while cutting its shorts, after the episode was scheduled.
 
 ## 5. Distribution kit (drafts; the owner approves before anything posts)
 
