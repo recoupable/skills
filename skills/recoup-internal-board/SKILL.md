@@ -86,7 +86,7 @@ Work with no PR yet (a check, a decision, an access request) is a task in `tasks
 vercel board tasks create tasks "<what to do>" --label owner=<sweets|sid> --as claude --no-sync --scope recoup
 ```
 
-When it turns into a PR, it becomes a matrix row: complete the to-do with the PR link.
+When it turns into a PR, it becomes a matrix row: `tasks claim <id>`, then `tasks complete <id> "<PR link>"` (completing always needs your claim).
 
 ## Keep it current
 
