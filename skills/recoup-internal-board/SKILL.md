@@ -33,7 +33,7 @@ Goal: <the outcome, one line>
 - **Every PR on its own line**, in merge order. Never join PRs with `→`; say "(stacked on #N)" instead.
 - **Link every ref** as `[repo#N](url)`; planned PRs are plain `repo#TBD`.
 - **On the board, issues are always `issue#N`**, never `app#N`, whatever repo they live in: `[issue#2399](<issue url>)`. PRs keep their repo name. (GitHub text keeps repo refs, which auto-link.)
-- **Strike a PR through** (`~~[repo#N](url)~~`) once it merges.
+- **Strike a PR through** (`~~[repo#N](url)~~`) once it merges, and **the issue line** (`~~[issue#N](url) <title>~~`) once the issue closes.
 - Before writing, check Slack `#code-review` for a post on the same goal and reuse its wording.
 
 ```bash
@@ -75,7 +75,7 @@ Move each row's task with its matrix state. Row replies go in the row's task thr
 | Waiting on a person | `tasks block <id> "<question>"` |
 
 - Claim only while you're working it. If the session ends before the row ships, `tasks release <id>`.
-- The issue's task stays `waiting` until every row completes, then turns `ready`. When the GitHub issue closes, claim and complete it with the closing note, and reply in its thread: `Closed: [issue#N](url) ✅`.
+- The issue's task stays `waiting` until every row completes, then turns `ready`. When the GitHub issue closes, claim and complete it with the closing note, strike the issue line in the root, and reply in its thread: `Closed: [issue#N](url) ✅`.
 - One issue's rows: `vercel board tasks tasks --label goal=<goal-slug> --state all`.
 
 ## Standalone to-dos
