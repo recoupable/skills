@@ -1,11 +1,12 @@
 """User-named skills must participate in the same routing audit as branded ones."""
 import importlib.util
+import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
 
 
 def load(name):
@@ -33,8 +34,7 @@ class RoutingTests(unittest.TestCase):
             expected = {'ui-design-vocabulary', 'recoup-research-the-web',
                         'recoup-internal-video-grok-1.5-demo', 'missing-design-skill'}
             self.assertEqual(audit.routed_skills(resolver), expected)
-            with patch.object(evaluation, 'PLUGIN', root):
-                self.assertEqual(evaluation.routed_skills(), expected)
+            self.assertEqual(evaluation.routed_skills(resolver), expected)
             # Unknown names remain visible so the audit can flag broken routes.
             self.assertIn('missing-design-skill', audit.routed_skills(resolver))
 
