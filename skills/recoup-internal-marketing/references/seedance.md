@@ -207,7 +207,7 @@ cost one.
 Seedance is a plate source, not a pipeline: `sd25-pe` writes the prompt → Seedance on fal makes the plate →
 `media-use` registers it and owns VO + loudness → `hyperframes` composites (`motion-graphics` carries every
 number, `embedded-captions` handles captions over a face, `general-video` assembles several plates) →
-`hyperframes-cli snapshot` is the cheap QC rung. `recoup-internal-video-grok-1.5-imagine-facetime` is the
+`hyperframes-cli snapshot` is the cheap QC rung. `recoup-internal-video-grok-1-5-imagine-facetime` is the
 precedent for a fal video call; `recoup-content-make-video` is customer-facing and credit-metered, so it never
 runs for our own accounts. HyperFrames stays the default for typography, UI and data panels; Seedance earns
 its place where we need filmed reality we cannot shoot; the house i2v for a photoreal cast is MiniMax H3 Max.

@@ -1,21 +1,13 @@
 ---
 name: recoup-internal-upwork
 description: >-
-  INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke
-  ONLY when the request explicitly includes "recoup-internal" (e.g.
-  "recoup-internal apply to this Upwork job"). Never use for customer-facing or
-  artist requests.
-  Find, win and close Upwork contract work end to end: run the daily pipeline,
-  triage a client before writing anything, verify every claim against the actual
-  repositories, draft the cover letter and screening answers, pick the right
-  work-sample pack, set the rate, then follow up, handle the reply, run the call
-  and convert a trial into ongoing work. Use when asked to "apply to this Upwork
-  job", "write an Upwork proposal", "should I bid on this", "triage this client",
-  "is this job worth connects", "find Upwork jobs worth applying to", "run the
-  Upwork pipeline", "a client replied", "prep for the client call", "follow up on
-  my proposals", "why is nothing converting", or when an Upwork job posting is
-  pasted in. Requires a local workspace directory and read access to the
-  repositories behind any claim being made.
+  INTERNAL — Recoup staff tooling. Invoke only when the request includes
+  "recoup-internal". Run the Upwork pipeline from job search and bid triage
+  through proposals, replies, client calls, and converting trials. Use for
+  "apply to this Upwork job", "write an Upwork proposal", "should I bid on this",
+  "find jobs worth applying to", "prep for the client call", or "follow up on my
+  proposals". Requires a local workspace and read access to repositories behind
+  any claims in the proposal.
 ---
 
 # Upwork: find work and win it
