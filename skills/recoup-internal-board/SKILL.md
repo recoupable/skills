@@ -33,7 +33,7 @@ Goal: <the outcome, one line>
 - **Every PR on its own line**, in merge order. Never join PRs with `→`; say "(stacked on #N)" instead.
 - **Link every ref** as `[repo#N](url)`; planned PRs are plain `repo#TBD`.
 - **On the board, issues are always `issue#N`**, never `app#N`, whatever repo they live in: `[issue#2399](<issue url>)`. PRs keep their repo name. (GitHub text keeps repo refs, which auto-link.)
-- **Strike a PR through** (`~~[repo#N](url)~~`) once it merges.
+- **Strike a PR through** (`~~[repo#N](url)~~`) once it merges, and **the issue line** (`~~[issue#N](url) <title>~~`) once the issue closes.
 - Before writing, check Slack `#code-review` for a post on the same goal and reuse its wording.
 
 ```bash
@@ -64,6 +64,8 @@ The board has no subtasks, so `needs` stands in for them: the goal's `code-revie
    `--no-sync` is refused with `--file`; set `"noSync": true` on each task. A `repo#TBD` row's key is `repo-tbd-<slug>`: keys can't change, so when its PR opens, reply with the live ref.
 3. Make the issue wait for every row: `vercel board tasks needs <root-id> <row-id>...`. This **replaces** the list, so pass all rows each time one is added.
 
+**New work on an issue that already has a thread is a row too**: create it in `tasks` with that thread's `goal` label, add its `repo#TBD` line to the root, and reset the root's `needs`. Never post it in `code-review`.
+
 Move each row's task with its matrix state. Row replies go in the row's task thread; the goal thread still gets its one-line update (Keep it current):
 
 | Row | Task |
@@ -75,12 +77,12 @@ Move each row's task with its matrix state. Row replies go in the row's task thr
 | Waiting on a person | `tasks block <id> "<question>"` |
 
 - Claim only while you're working it. If the session ends before the row ships, `tasks release <id>`.
-- The issue's task stays `waiting` until every row completes, then turns `ready`. When the GitHub issue closes, claim and complete it with the closing note, and reply in its thread: `Closed: [issue#N](url) ✅`.
+- The issue's task stays `waiting` until every row completes, then turns `ready`. When the GitHub issue closes, claim and complete it with the closing note, strike the issue line in the root, and reply in its thread: `Closed: [issue#N](url) ✅`.
 - One issue's rows: `vercel board tasks tasks --label goal=<goal-slug> --state all`.
 
 ## Standalone to-dos
 
-Work with no PR yet (a check, a decision, an access request) is a task in `tasks` with an `owner` label. Use neutral wording: the board is public.
+Work with no PR and no issue thread (a check, a decision, an access request) is a task in `tasks` with an `owner` label. Use neutral wording: the board is public.
 
 ```bash
 vercel board tasks create tasks "<what to do>" --label owner=<sweets|sid> --as claude --no-sync --scope recoup
@@ -113,6 +115,7 @@ Full results: <link to the PR comment>
 
 - Every preview test gets both: a results comment on the PR (screenshots embedded) and this board message.
 - One message per PR per tested commit. A retest after a new push is a new message naming the new SHA.
+- No preview message means the PR isn't preview-tested. Say so before merging, and if it merges anyway, say "not preview-tested" in the shipped message.
 - Attach the screenshots (up to 10): desktop and mobile for any UI change. `edit` can't add files, so if you forgot them, post again and delete the message without them.
 
 ## Post when it ships
