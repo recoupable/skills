@@ -1,6 +1,14 @@
 ---
 name: recoup-internal-marketing
-description: 'INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke ONLY when the request explicitly includes "recoup-internal" (e.g. "recoup-internal do today''s marketing"). Never use for customer-facing or artist requests. The daily marketing run for one of our own social accounts, in order: read the account workspace (narrative canon, hook doctrine, video styles, post ledger), scrape the account''s own socials to learn what is working and what flopped, pick today''s topic (continue an arc, pull a logged idea, or draft a new one), then build the asset and hand off. Use when the user says "do today''s marketing", "today''s content run", "make today''s video", "our hooks are weak", or asks what to post today for one of OUR OWN accounts. Runs the whole day end to end. Its stated goal: convert a free content viewer into a paying Recoup subscriber — and know which post did it; so the run opens on the funnel numbers and refuses to ship into a destination that cannot convert. **Not for a single post''s copy** — drafting/publishing/measuring one LinkedIn or X post is recoup-internal-social-ship-posts, which this skill calls at step 5. Orchestrates: routes video production to the format skills and publish/measure to recoup-internal-social-ship-posts. Recoup Podcast episodes and their shorts are recoup-internal-podcast; a day whose post is an episode short builds it there.'
+description: >-
+  INTERNAL — Recoup staff tooling. Invoke only when the request includes
+  "recoup-internal". Run the daily marketing workflow for one of Recoup's own
+  accounts. Use for "do today's marketing", "today's content run", "make today's
+  video", "our hooks are weak", or "what should we post today". Check funnel
+  numbers and the account workspace, analyze posts, pick a topic, then build and
+  hand off the asset. Use recoup-internal-social-ship-posts for single-post
+  drafting, publishing, or measurement and recoup-internal-podcast for episode
+  production and clips.
 ---
 
 # Recoup Internal — Marketing (the daily run)

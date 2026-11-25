@@ -1,25 +1,13 @@
 ---
 name: recoup-internal-eval-skill-benchmark
 description: >-
-  INTERNAL — Recoup staff tooling, gated by the recoup-internal keyword. Invoke
-  ONLY when the request explicitly includes "recoup-internal" (e.g.
-  "recoup-internal benchmark this skill pack"). Never use for customer-facing or
-  artist requests.
-  Benchmark ANY plugin, skill pack, or skills folder against the current
-  frontier of skill/plugin design (gstack, gbrain, compound-engineering, PM OS).
-  Use whenever someone wants to grade, audit, review, or compare a skills
-  directory or plugin and asks things like "is this skill pack good?", "how does
-  our plugin compare to the frontier?", "are these skills fat enough?", "should
-  these skills be combined or split?", "what should we steal from gstack?",
-  "benchmark this plugin", "rate my skills folder", or "audit this skill bundle".
-  Works on any domain (engineering, music, finance, bio — anything) and any
-  harness layout. It measures the pack deterministically (skill count, SKILL.md
-  body sizes, tests/evals/resolver/hooks/learnings signals, catalog token
-  budget, description-overlap risks), grades it on a 15-dimension scorecard, then
-  produces a fat-enough / combine / split / parameterize diagnosis and a
-  prioritized list of frontier moves to steal — each with its boundary. Do NOT
-  use this to author a single new skill (use a skill-creator) or to run a pack's
-  own tests.
+  INTERNAL — Recoup staff tooling. Invoke only when the request includes
+  "recoup-internal". Benchmark a plugin, skill pack, or skills folder against
+  current design practices. Use for "is this skill pack good?", "benchmark this
+  plugin", "rate my skills folder", or questions about combining or splitting
+  skills. Measures the catalog, tests, routing, hooks, and overlap, then grades
+  the pack on a 15-dimension scorecard and prioritizes improvements. For drafting
+  one skill, use skill-creator.
 ---
 
 # Skill Benchmark

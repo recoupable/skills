@@ -12,7 +12,7 @@ and handoffs are owned by `SKILL.md`.
 | Announce a **shipped feature** where seeing the real UI is the point | **3D product reveal** | Clone the reference project. Validated winner for feature announcements |
 | Brand film, manifesto, hype piece where the *feeling* is the point | **Kinetic keynote** | Clone the reference project. **Not** for feature explainers |
 | Entertainment: emotional live-action carrying a **value**, not a feature | **Cinematic narrative** (face guide → stills → i2v → composite) | Clone the reference project; character kit from `cast/` |
-| A two-person conversation / talking-head ad with real dialogue | **FaceTime call** | `recoup-internal-video-grok-1.5-imagine-facetime` |
+| A two-person conversation / talking-head ad with real dialogue | **FaceTime call** | `recoup-internal-video-grok-1-5-imagine-facetime` |
 | Teach a **process** in ~30s: what we shipped or learned this week, a presenter to camera | **Builder Diary short** (Style I, the weekly default): Jenny hook → 3 animated product steps → output → Jenny CTA | Clone `content/builder-diary-week/`; `SKILL.md` → Step 4 |
 | Explain a **method** at length (a 2-minute recipe walk) | **Recipe / BTS artifact walk** (Style E/H) | Clone the reference project |
 | Captions or graphic overlays onto existing footage | hyperframes caption / overlay workflows | `embedded-captions`, `talking-head-recut` |
