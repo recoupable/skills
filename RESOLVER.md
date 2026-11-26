@@ -105,7 +105,8 @@
 | "recoup-internal" + audit or normalize a collection of AI-generated dashboard/feed/card text, session titles, notifications or issue summaries for fast scanning; preserve evidence and use consistent syntax and vocabulary | `recoup-internal-content-normalize-text` |
 | "recoup-internal" + write/maintain/implement/ship a GitHub issue (tracking issues, docs-first delivery, TDD) | `recoup-internal-dev` |
 | "recoup-internal" + verify compiled CLI command discovery, account output, credential failures, or HTTP errors | `recoup-internal-dev-verify-cli` |
-| "recoup-internal" + post an issue or PR to the Vercel Board, update the code-review thread, share work with the team on the board | `recoup-internal-board` |
+| "recoup-internal" + draft, post, or update a Recoup project delivery or review summary in Slack #code-review | `recoup-internal-dev-post-review` |
+| "recoup-internal" + post an issue or PR to the Vercel Board, update its code-review thread, or share work with the team on the board | `recoup-internal-board` |
 | "recoup-internal" + benchmark/audit/grade a skill pack or plugin | `recoup-internal-eval-skill-benchmark` |
 | "recoup-internal" + run the daily sales sweep / who to follow up with (Stripe + Privy + valuations + Attio + credits + tasks + chats) | `recoup-internal-sales` |
 | "recoup-internal" + podcast guest outreach: find today's invite list, draft invites or nudges | `recoup-internal-sales` |
