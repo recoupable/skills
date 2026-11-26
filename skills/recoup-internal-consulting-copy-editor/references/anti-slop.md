@@ -238,6 +238,10 @@ When a header or line asks a question, answer it plainly and first. Circling it 
 - Good: "At most non-technical companies, IT is the slowest team to pick up frontier tech. When something new shows up, the safe, easy call is to block it. With AI that's an expensive mistake: the tools move fast enough that blocking what you haven't understood leaves you behind."
 
 ### The client-work trust lens (highest stakes)
+Run the client-recognition check in `public-content-quality.md` as well as the factual check.
+Portfolio counts, timing, unusual events and distinctive wording can expose a client without naming
+them. Keep operational detail that explains the agent task; remove unnecessary identifying detail.
+
 Before publishing anything that touches a client engagement (money, IP, ownership, who did what), read it from the client's chair. Brevity that glosses a sensitive claim reads as dismissive or self-serving and quietly costs trust. Add the sentence or parenthetical that shows respect and shared understanding, even at the cost of a few words.
 
 **Fictional contract example:** assume Cedar Lantern Studio's invented agreement assigns deliverables
@@ -254,7 +258,7 @@ or a promise about any real engagement.
 Two enumerations in consecutive sentences read mechanically; the cadence is a tell that the model is padding. Keep the one list that earns its place, and turn the other into a concrete claim.
 
 - Bad: "...into skills an agent can run, and you've built an operating system the company owns. It lowers labor cost, makes delivery faster and more consistent, shortens onboarding, and holds onto institutional knowledge when people leave."
-- Good: "...into skills an agent can run, and you've built an operating system the company owns. Every time it runs, labor cost drops and onboarding gets shorter."
+- Good: "...into skills an agent can run, and you've built an operating system the company owns. The saved instructions give a new teammate a process they can read, try and question."
 
 The fix usually kills a repetition the second list was hiding (here, "knowledge leaves when people leave" had already been said twice earlier in the piece).
 
@@ -283,7 +287,7 @@ Use colons for lists, labels, and quotes — not fake drama. Prefer sentence cas
 
 ## Fake-profound kickers
 
-Cut the final "deep" line when it turns the point into a cute metaphor, aphorism, or mic-drop sentence. Do not rewrite it into a better metaphor. Do not preserve the rhythm. Delete it, then end on the clearest concrete sentence already in the draft. If the ending needs more closure, add a plain takeaway or next action.
+Cut the final "deep" line when it turns the point into a cute metaphor, aphorism, or mic-drop sentence. Do not rewrite it into a better metaphor. Do not preserve the rhythm. Delete the flourish, then finish the underlying thought. If the story or decision is unresolved, write the concrete resolution and its implication. Cutting a weak final line must not leave an abrupt stop or a list of questions the article promised to answer.
 
 - Bad: "And maybe that's the real automation — not the code, but the clarity."
 - Fix: delete it. The paragraph already made the point.
@@ -299,7 +303,7 @@ Cut the final "deep" line when it turns the point into a cute metaphor, aphorism
 
 ## Summary-recap endings
 
-"In conclusion," "Ultimately," "Overall," "To sum up," "At the end of the day," or a final paragraph that restates the piece. The reader was just there. End on the last concrete point, takeaway, or next action.
+"In conclusion," "Ultimately," "Overall," "To sum up," "At the end of the day," or a final paragraph that restates the piece. The reader was just there. Distinguish a redundant recap from an earned resolution: returning to the opening decision, showing what changed and explaining what remains is useful closure. Keep that landing; remove only the repetition or slogan.
 
 ## Formatting slop
 
