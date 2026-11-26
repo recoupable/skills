@@ -19,7 +19,38 @@ what changed and what to review or try. Use GitHub for routine PR, CI, and work-
 2. Verify which PRs merged, what was deployed, and what was tested. Name the client or account role in a test when it matters. Keep any unverified rollout or acceptance visible.
 3. Consolidate related work across repositories under the same goal. Post when the team has a useful result, an actionable review request, or a decision to make.
 
-## Write the post
+## Draft and revise before showing the post
+
+Run these passes yourself, then return or post the polished version. Use the
+conversation as a starting point and check delivery claims against the work item
+and PRs. Keep draft iterations private unless the user asks to see them.
+
+1. **Draft from the facts.** Write a plain account of the change, the old setup,
+   what shipped, what was verified, and who needs to act. Preserve details that
+   determine whether the rollout is ready.
+2. **Find the product capability.** Move the goal one level above the patch,
+   connector, or client used in the conversation. Ask what common capability was
+   added and whether the goal still makes sense in another supported client.
+   Keep the specific system or feature that makes the goal recognizable. If the
+   goal could describe many unrelated projects, bring it back down a level. Keep
+   client-specific evidence in the delivery bullets.
+3. **Rewrite the change from the user's side.** Make Previous the actual setup,
+   including any extra step the change removes. Make Expected describe the user
+   action, the system behavior that matters, and the result. Preserve real access
+   boundaries. Put implementation details and verification in the bullets so the
+   opening can stay short. Give a teammate enough detail to check the result.
+4. **Make the handoff runnable.** Read the next step as the recipient. Remove
+   assumptions about their client, setup, or habits. Name a particular client
+   only when the check requires it. Include the setup, the action, the observable
+   success condition and any follow-on step that depends on success.
+5. **Polish and read back.** Link unfamiliar capabilities to official docs or
+   the owning work item. Verify links and PR states. Check the Slack spacing and
+   remove repetition. Read the post once as a teammate who has not seen the chat.
+   Revise any line that makes them guess what changed, what is proven, or what to
+   do. Ask the user only for a missing fact or decision that changes the outcome,
+   audience, or authorized action.
+
+## Use the Slack format
 
 - **Goal:** Name the epic or the concrete capability this work implements. Link an existing epic or authoritative documentation when it helps explain the capability.
 - **Previous:** Describe the setup or behavior this work changes. Use this baseline even when posting after delivery.
@@ -34,7 +65,7 @@ in the bullet text. Avoid counting a merge, a deploy, and a user test as the sam
 
 End with **Next for [person]:** when someone has a concrete review, decision,
 or acceptance check. Say where to do it, what to try, and what success looks like.
-See `references/example.md` for the Skills over MCP delivery post.
+See `references/example.md` for the revision history and final Skills over MCP post.
 
 ## Post or maintain the summary
 
