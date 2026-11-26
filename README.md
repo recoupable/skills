@@ -165,6 +165,7 @@ have a separate API/database release dependency. See [catalog coverage](docs/cat
 | Skill | What it does |
 |-------|-------------|
 | recoup-internal-dev | Write, maintain & ship GitHub issues end-to-end (tracking issues, docs-first, TDD) |
+| recoup-internal-dev-post-review | Draft, post, and maintain Recoup project summaries in Slack #code-review |
 | recoup-internal-board | Share issues and PRs on the Vercel Board: one code-review thread per goal, kept current |
 | recoup-internal-content-normalize-text | Audit and normalize batches of AI-generated interface text for consistent, evidence-backed scanning |
 | recoup-internal-eval-skill-benchmark | Benchmark a skill pack/plugin against the frontier |
@@ -328,7 +329,33 @@ retained unchanged.
 GitHub release publication is automatic. OpenAI directory updates still require
 uploading the customer ZIP, completing checks, review and publication in the
 publisher portal. This workflow does not promise automatic refresh of existing
-GitHub marketplace installations. It does not change the live MCP deployment.
+GitHub marketplace installations. Live MCP uses the separate release path below.
+
+### Deliver a skill through Recoup MCP
+
+Author the skill once under `skills/<name>/` and register its resolver route and
+fixture. The marketplace registers the whole plugin, so a new skill needs no
+individual manifest entry. The plugin release builds its versioned packages from
+the same source tree. The API build separately bundles that tree from a pinned
+Skills commit. To promote a Skills change to live MCP, update the pin in the API
+repository to the validated Skills `main` commit and deploy the API build.
+[API catalog build](https://github.com/recoupable/api/blob/main/scripts/mcp-skills/build.mjs)
+
+A native client discovers the catalog with `skills/list`, resolves individual
+entries with `skills/get`, and reads instructions and supporting files with
+`resources/read`. Recoup also serves the catalog through the `recoup_skills`
+tool for clients that use tool calls. A new skill changes the data returned by
+that tool. Its action schema stays the same. Native clients can cache catalog
+entries and refresh them using the extension's freshness and integrity rules.
+[MCP Skills extension](https://modelcontextprotocol.io/extensions/skills/overview)
+
+Use the Slack code-review posting skill as a release check. Its `recoup-internal-`
+prefix puts it in the full plugin package and the authenticated staff MCP catalog.
+After deploying the source pin, verify that a staff connection can discover the
+skill and read its example, and that a customer connection cannot discover or
+read it. In ChatGPT, verify the same lookup through the existing Recoup Skills
+tool. Loading the example is a read-only check and requires no Slack post.
+Source code is public, so use shareable examples even in staff skills.
 
 To build locally after staging new files:
 
