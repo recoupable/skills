@@ -43,7 +43,12 @@ and PRs. Keep draft iterations private unless the user asks to see them.
    assumptions about their client, setup, or habits. Name a particular client
    only when the check requires it. Include the setup, the action, the observable
    success condition and any follow-on step that depends on success.
-5. **Polish and read back.** Link unfamiliar capabilities to official docs or
+5. **Capture one useful screenshot.** Show the actual result when possible. For
+   a UI change, capture the changed screen. For code or infrastructure, capture
+   the relevant diff, verified output, or the official docs section that explains
+   the capability. Choose a screenshot that helps the reader understand or check
+   the post. See the screenshot guidance below.
+6. **Polish and read back.** Link unfamiliar capabilities to official docs or
    the owning work item. Verify links and PR states. Check the Slack spacing and
    remove repetition. Read the post once as a teammate who has not seen the chat.
    Revise any line that makes them guess what changed, what is proven, or what to
@@ -66,6 +71,21 @@ in the bullet text. Avoid counting a merge, a deploy, and a user test as the sam
 End with **Next for [person]:** when someone has a concrete review, decision,
 or acceptance check. Say where to do it, what to try, and what success looks like.
 See `references/example.md` for the revision history and final Skills over MCP post.
+
+## Include the screenshot
+
+Capture the real screen with an available screenshot tool and inspect the image.
+Crop to the relevant area and check that the text is readable. Omit credentials,
+customer data, and material the channel cannot access. Use a short caption that
+identifies what readers are seeing and, for a product result, its environment
+when relevant. A screenshot of docs explains the capability. Use a delivery
+bullet for any separate verification claim.
+
+Include the image with the draft when possible. For an authorized post, attach
+it to the same Slack message using the available upload surface. Verify the
+attachment after sending. If capture or upload is unavailable, use the relevant
+source link and keep the written update. If text is already posted, preserve the
+existing message and report any attachment failure without posting it again.
 
 ## Post or maintain the summary
 

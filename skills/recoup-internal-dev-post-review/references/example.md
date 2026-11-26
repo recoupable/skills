@@ -23,3 +23,12 @@ Based on the approved Recoup Slack post, with account details generalized.
 | Name the precise capability | The goal became “Add the MCP-Skills extension to Recoup MCP.” Previous explained the two setup steps. Expected described signing in once and discovering the skills available to your account. | The goal was specific to the product change, and the value was visible in what users could do. |
 | Refine the handoff | The draft first asked Sweets to find one skill in ChatGPT. The final post let him choose his harness, test both internal and public discovery, and remove the separate plugin once verified. | The next step tested adoption and had a clear condition for removing the plugin. |
 | Polish for Slack | The goal linked the extension to official docs. Each bold label stayed on the same line as its text, with a blank line between sections. Merged PR labels stayed linked and struck through. | The post was easier to scan, and readers could follow the terms and evidence that mattered. |
+
+## Screenshot choice for this post
+
+Capture the Recoup Skills tool in the refreshed connector if the view can be
+shared in Slack. Caption it “Recoup Skills in the refreshed ChatGPT connector.”
+If that view cannot be captured or shared, capture the **Listing Skills** section
+of the linked MCP docs. Caption it “How MCP clients discover skills with
+`skills/list`.” The official docs screenshot explains the extension, while the
+post's verification bullet records the signed-in Recoup test.
