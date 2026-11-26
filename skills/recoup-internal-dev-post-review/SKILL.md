@@ -1,11 +1,11 @@
 ---
 name: recoup-internal-dev-post-review
 description: >-
-  Recoup staff only. With the explicit recoup-internal keyword, draft, post, or
-  update a Recoup project delivery or review summary in Slack #code-review. Use
-  for "post this to Slack code review", "summarize what shipped for the team",
-  or "update the existing Slack review post". Use a different workflow for
-  technical PR review, GitHub delivery, or the Vercel Board.
+  Draft, post, or update Recoup delivery and review summaries in Slack #code-review.
+  Recoup staff only. Requires the explicit recoup-internal keyword. Use for
+  "post this to Slack code review", "summarize what shipped for the team", or
+  "update the existing Slack review post". Technical PR review, GitHub delivery,
+  and Vercel Board posts have their own workflows.
 ---
 
 # Recoup code review posts
@@ -43,11 +43,9 @@ and PRs. Keep draft iterations private unless the user asks to see them.
    assumptions about their client, setup, or habits. Name a particular client
    only when the check requires it. Include the setup, the action, the observable
    success condition and any follow-on step that depends on success.
-5. **Capture one useful screenshot.** Show the actual result when possible. For
-   a UI change, capture the changed screen. For code or infrastructure, capture
-   the relevant diff, verified output, or the official docs section that explains
-   the capability. Choose a screenshot that helps the reader understand or check
-   the post. See the screenshot guidance below.
+5. **Capture a screenshot when it helps and you can.** Show the changed screen,
+   relevant diff, verified output, or official docs that explain the capability.
+   See the screenshot guidance below.
 6. **Polish and read back.** Link unfamiliar capabilities to official docs or
    the owning work item. Verify links and PR states. Check the Slack spacing and
    remove repetition. Read the post once as a teammate who has not seen the chat.
@@ -74,8 +72,7 @@ See `references/example.md` for the revision history and final Skills over MCP p
 
 ## Include the screenshot
 
-Capture the real screen with an available screenshot tool and inspect the image.
-Crop to the relevant area and check that the text is readable. Omit credentials,
+Capture and inspect the real screen. Crop for readability. Omit credentials,
 customer data, and material the channel cannot access. Use a short caption that
 identifies what readers are seeing and, for a product result, its environment
 when relevant. A screenshot of docs explains the capability. Use a delivery

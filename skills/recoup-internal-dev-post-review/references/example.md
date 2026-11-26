@@ -1,6 +1,10 @@
 # Example: Skills over MCP delivery
 
 Based on the approved Recoup Slack post, with account details generalized.
+The delivery bullet records the signed-in ChatGPT test. Claude and other
+compatible clients are part of the expected scope. This example uses Markdown
+for Slack interfaces that accept Markdown input. Convert bold, links, and
+strikethrough to Slack mrkdwn if the selected interface expects native syntax.
 
 **Goal:** Add the **[MCP-Skills extension](https://modelcontextprotocol.io/extensions/skills/overview)** to **`Recoup MCP`**.
 
